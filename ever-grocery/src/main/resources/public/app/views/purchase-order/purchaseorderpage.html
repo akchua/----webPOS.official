@@ -1,0 +1,56 @@
+<form class="form-inline" role="form">
+	<pre>
+	Purchase ID: <span data-bind="text: purchaseOrderPageModel.purchaseOrderId" class="text-danger"></span>			Company Name: <span data-bind="text: purchaseOrderPageModel.companyName" class="text-danger"></span>			Status:	<span data-bind="text: purchaseOrderPageModel.status" class="text-danger"></span>			Receipt Type:	<span data-bind="text: purchaseOrderPageModel.receiptType" class="text-danger"></span></pre>
+	
+	<div class="row">
+		<div class="col-md-offset-3 col-md-6">
+			<h1 class="text-center">Total Amount: <span class="label label-success">Php <span data-bind="text: purchaseOrderPageModel.totalAmount"></span></span></h1>
+		</div>
+	</div>
+	<br>
+	
+	<div class="row">
+		<div class="form-group col-md-offset-1 col-md-1">
+			<button data-bind="click: search" type="button" class="btn btn-info"><span> </span><span class="glyphicon glyphicon-search"></span> Search </button>
+		</div>
+		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-10"></div>
+	</div>
+	
+	<div class="row">
+    	<div class="col-md-12">
+    		<table class="table table-hover">
+    			<thead>
+    				<tr>
+    					<th class = "text-center">Quantity</th>
+    					<th>Unit</th>
+    					<th>Product Name</th>
+    					<th data-bind="visible: beforeVatAndDiscount" class="text-center">No VAT Price</th>
+    					<th data-bind="visible: beforeVatAfterDiscount" class="text-center">No VAT w/ Disc Price</th>
+    					<th data-bind="visible: afterVatBeforeDiscount" class="text-center">Gross Price</th>
+    					<th class = "text-center">Net Price</th>
+    					<th class = "text-center">Total Price</th>
+    				</tr>
+    			</thead>
+    			
+    			<tbody data-bind="foreach: { data: purchaseOrderDetailList, as: 'orderDetail' }">
+    				<tr>
+    					<td class = "text-center"><input data-bind="value: orderDetail.quantity, event: { change: function() { $parent.changeQuantity(orderDetail.id, orderDetail.quantity) } }" type="text" size="5" class="form-control"></td>
+    					<td data-bind="text: orderDetail.unitType"></td>
+    					<td data-bind="text: orderDetail.productName"></td>
+    					<td data-bind="text: Math.round(orderDetail.grossPrice * 100 / 1.12) / 100, visible: $parent.beforeVatAndDiscount" class = "text-center"></td>
+    					<td data-bind="text: Math.round(orderDetail.totalPrice * 100 / 1.12) / 100, visible: $parent.beforeVatAfterDiscount" class = "text-center"></td>
+    					<td data-bind="text: orderDetail.grossPrice, visible: $parent.afterVatBeforeDiscount" class = "text-center"></td>
+    					<td data-bind="text: orderDetail.netPrice" class = "text-center"></td>
+    					<td data-bind="text: orderDetail.totalPrice" class = "text-center"></td>
+    					<td>
+    						<div class="pull-right">
+    							<button data-bind="click: function() { $parent.remove(orderDetail.id, orderDetail.quantity, orderDetail.productName, orderDetail.unitType) }" type="button" class="btn btn-danger btn-sm">Remove</button>
+    						</div>
+    					</td>
+    				</tr>
+    			</tbody>
+    		</table>
+    	</div>
+    </div>
+</form>
+

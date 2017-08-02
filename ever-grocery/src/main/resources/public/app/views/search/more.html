@@ -1,0 +1,30 @@
+<div id="divMoreModal" class="modal-content modal-md">
+    <div class="modal-header">
+        <h3 align="center"><strong data-bind="text: product.name"></strong></h3>
+    </div>
+    
+    <div class="modal-body">
+    	<div class="container-fluid">
+	    	<dl class="dl-horizontal">
+				<dt>ID:</dt>
+				<dd data-bind="text: product.id"></dd>
+				<dt>Category:</dt>
+				<dd data-bind="text: product.category.name"></dd>
+				<dt>Company:</dt>
+				<dd data-bind="text: product.company.name"></dd>
+	    	</dl>
+	    	<hr>
+	    	<br>
+	    	<dl data-bind="foreach: { data: productDetailList, as: 'productDetail' }" class="dl-horizontal">
+	    		<!-- ko if: productDetail.quantity != 0 -->
+				<dt><span data-bind="text: productDetail.quantity"></span> <span data-bind="text: productDetail.unitType" class="text-info"></span> @</dt>
+				<dd>Php <span data-bind="text: productDetail.sellingPrice"></span></dd>
+				<!-- /ko -->
+	    	</dl>
+    	</div>
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn btn-primary autofocus" data-bind="click: cancel">Done</button>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<div id="divCustomerOrderPageSearchModal" class="modal-content modal-lg">
+	<div class="modal-header">
+        <h3 align="center">Search</h3>
+    </div>
+
+	<div class="modal-body">
+		<div class="row">
+			<form class="form-inline" role="form">
+				<div class="form-group">
+					<input data-bind="textInput: searchKey" size="45" type="text" class="form-control autofocus" placeholder="Search Product">
+				</div>
+				<div class="form-group">
+					<button data-bind="click: search" class="btn btn-default glyphicon glyphicon-search"></button>
+				</div>
+			</form>
+		</div>
+		<br>
+		<div class="row">
+			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }"></div>
+		</div>
+		
+		<div class="row">
+    		<table class="table table-fixed">
+    			<thead>
+    				<tr>
+    					<th class="col-xs-12">Name</th>
+    				</tr>
+    			</thead>
+    		
+    			<tbody data-bind="foreach: { data: productList, as: 'product' }">
+    				<tr>
+    					<td data-bind="text: product.name" class="col-xs-10"></td>
+    					<td class="col-xs-2">
+    						<div class="pull-right">
+    							<button data-bind="click: function() { $parent.details(product.id) }" type="button" class="btn btn-info btn-sm">Add</button>
+    						</div>
+    					</td>
+    				</tr>
+    			</tbody>
+    		</table>
+	    </div>
+	</div>
+	
+	<div class="modal-footer">
+        <button data-bind="click: cancel" class="btn btn-warning">Done</button>
+    </div>
+</div>

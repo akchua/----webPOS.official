@@ -1,0 +1,19 @@
+<div id="divCustomerOrderFormModal" class="modal-content">
+	<form>
+	    <div class="modal-header">
+	        <h3 align="center"><span data-bind="text: preTitle"></span> Purchase Order</h3>
+	    </div>
+	    
+	    <div class="modal-body">
+			<div class="form-group">
+				<label for="inputCompany">Company</label>
+				<select data-bind="options: companyList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- Select Company --', value: purchaseOrderFormModel.companyId" class="form-control" id="inputCompany"></select>
+			</div>
+	    </div>
+	    
+	    <div class="modal-footer">
+	    	<button data-bind="click: save" type="submit" class="btn btn-primary">Create</button>
+	        <button data-bind="click: cancel" class="btn btn-warning">Cancel</button>
+	    </div>
+    </form>
+</div>

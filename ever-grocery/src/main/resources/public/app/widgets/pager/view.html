@@ -1,0 +1,13 @@
+<ul class="pagination pagination-sm pull-right" style="margin:0px">
+	<li data-bind="enable: currentPage() > 1"><a data-bind="click: function() { first() }" href="javascript:void(0)">First</a></li>
+	<li data-bind="enable: currentPage() > 1"><a data-bind="click: function() { back() }" href="javascript:void(0)">&laquo;</a></li>
+	
+	<!-- ko foreach: computePageNumbers() -->
+		<li data-bind="attr: { class: $parent.currentPage() === $data ? 'active' : '' }">
+			<a data-bind="text: $data, click: function() { $parent.page($data) }, attr: { href: 'javascript:void(0)' }"></a>
+		</li>
+	<!-- /ko -->
+	
+	<li data-bind="enable: currentPage() !== numberOfPages()"><a data-bind="click: function() { next() }" href="javascript:void(0)">&raquo;</a></li>
+	<li data-bind="enable: currentPage() !== numberOfPages()"><a data-bind="click: function() { last() }" href="javascript:void(0)">Last</a></li>
+</ul>

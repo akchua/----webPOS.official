@@ -1,0 +1,65 @@
+\<section>
+	<div class="row">
+		<div class="col-md-4 col-xs-4">
+			<button type="button" class="btn btn-success">Generate Report</button>
+		</div>
+		<form role="search" class="form-inline">
+			<div class="input-group pull-right col-md-4 col-xs-4">
+	          	<input data-bind="value: quickId" type="text" size="6em" class="form-control" placeholder="Quick View">
+		        <span class="input-group-btn">
+		        	<button data-bind="click: quickView" type="submit" class="btn btn-info"><i class="fa fa-eye"></i></button>
+		        </span>
+				<span class="input-group-addon" style="width:5px; padding-left:0px; padding-right:0px; border:none;"></span>
+				<select data-bind="options: companyList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- All Company --', value: companyId, event: { change: refreshPurchaseOrderList }" class="form-control" id="inputCompany"></select>
+			</div>
+		</form>
+	</div>
+	<br />
+	
+	<div class="row">
+		<label class="checkbox-inline col-xs-offset-1 col-xs-1">
+			<input data-bind="checked: showChecked" type="checkbox" name="paidcheckbox">Show Checked
+		</label>
+		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-10"></div>
+	</div>
+	
+    <div class="row">
+    	<div class="col-md-12">
+    		<table class="table table-hover">
+    			<thead>
+    				<tr>
+    					<th>ID</th>
+    					<th>Company</th>
+    					<th>Creator</th>
+    					<th>Total Amount</th>
+    					<th>Status</th>
+    				</tr>
+    			</thead>
+    		
+    			<tbody data-bind="foreach: { data: purchaseOrderList, as: 'purchaseOrder' }">
+    				<tr>
+    					<td data-bind="text: purchaseOrder.id"></td>
+    					<td>
+    						<span data-bind="if: purchaseOrder.company">
+    							<span data-bind="text: purchaseOrder.company.name"></span>
+    						</span>
+    					</td>
+    					<td>
+    						<span data-bind="if: purchaseOrder.creator">
+    							<span data-bind="text: purchaseOrder.creator.lastName"></span><span>, </span><span data-bind="text: purchaseOrder.creator.firstName"></span>
+    						</span>
+    					</td>
+    					<td>Php <span data-bind="text: purchaseOrder.totalAmount"></span></td>
+    					<td data-bind="text: purchaseOrder.status"></td>
+    					<td>
+    						<div class="pull-right">
+    							<button data-bind="click: function() { $parent.view(purchaseOrder.id) }" type="button" class="btn btn-info btn-sm">View</button>
+    							<button data-bind="click: function() { $parent.check(purchaseOrder.id, purchaseOrder.company.name, purchaseOrder.totalAmount) }" type="button" class="btn btn-primary btn-sm">Check</button>
+    						</div>
+    					</td>
+    				</tr>
+    			</tbody>
+    		</table>
+    	</div>
+    </div>
+</section>

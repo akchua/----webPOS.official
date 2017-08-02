@@ -1,0 +1,67 @@
+<section>
+	<div class="row">
+		<div class="col-md-4 col-xs-4">
+			<button data-bind="click: create" type="button" class="btn btn-success">Add New Product</button>
+		</div>
+		<form class="form-inline" role="form">
+			<div class="input-group col-md-5 col-xs-5 pull-right">
+				<select data-bind="options: companyList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- All Company --', value: companyId, event: { change: search }" class="form-control" id="inputCompany"></select>
+				<span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+				<input data-bind="textInput: searchKey" size="40" type="text" class="form-control" placeholder="Search Product">
+				<span class="input-group-btn">
+		        	<button data-bind="click: search" type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+		        </span>
+			</div>
+		</form>
+	</div>
+	<br />
+	
+	<div class="row">
+		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
+	</div>
+	
+    <div class="row">
+    	<div class="col-md-12">
+    		<table class="table table-hover">
+    			<thead>
+    				<tr>
+    					<th>Name</th>
+    					<th>Display Name</th>
+    					<th>Company</th>
+    					<th>Distributor</th>
+    					<th>Receipt Type</th>
+    				</tr>
+    			</thead>
+    		
+    			<tbody data-bind="foreach: { data: productList, as: 'product' }">
+    				<tr>
+    					<td data-bind="text: product.name"></td>
+    					<td data-bind="text: product.displayName"></td>
+    					<td>
+    						<span data-bind="if: product.company">
+    							<span data-bind="text: product.company.name"></span>
+    						</span>
+    					</td>
+    					<td>
+    						<span data-bind="if: product.distributor">
+    							<span data-bind="text: product.distributor.name"></span>
+    						</span>
+    					</td>
+    					<td>
+    						<span data-bind="if: product.company">
+    							<span data-bind="text: product.company.receiptType"></span>
+    						</span>
+    					</td>
+    					<td>
+    						<div class="pull-right">
+    							<button data-bind="click: function() { $parent.details(product.id) }" type="button" class="btn btn-info btn-sm">Details</button>
+    							<button data-bind="click: function() { $parent.edit(product.id) }" type="button" class="btn btn-warning btn-sm">Edit</button>
+    							<button data-bind="click: function() { $parent.remove(product.id, product.name) }" type="button" class="btn btn-danger btn-sm">Remove</button>
+    						</div>
+    					</td>
+    				</tr>
+    			</tbody>
+    		</table>
+    	</div>
+    </div>
+</section>

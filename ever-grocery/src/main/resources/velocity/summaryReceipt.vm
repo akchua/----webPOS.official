@@ -1,0 +1,24 @@
+
+${summaryReceipt.formattedHeader}
+${summaryReceipt.formattedDateTime} 
+
+Summary Report
+User: ${summaryReceipt.username}
+From: ${summaryReceipt.from}
+To: ${summaryReceipt.to}
+
+==========================================
+Payment Mode               #     Amount
+==========================================     
+#foreach( $item in $summaryReceipt.summaryPayMode )
+$item.formattedLine
+#end
+                               ----------
+Total Amount                   ${summaryReceipt.total}
+          
+==========================================
+     
+     
+     
+     
+          

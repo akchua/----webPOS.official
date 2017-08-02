@@ -1,0 +1,50 @@
+<section>
+	<div class="row">
+		<div class="col-md-4 col-xs-4">
+			<button data-bind="click: create" type="button" class="btn btn-success">Add New Distributor</button>
+		</div>
+		<form role="search" class="form-inline">
+			<div class="input-group pull-right col-md-4 col-xs-4">
+	          	<input data-bind="textInput: searchKey" type="text" class="form-control" placeholder="Search">
+		        <span class="input-group-btn">
+		        	<button data-bind="click: search" type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+		        </span>
+	        </div>
+        </form>
+	</div>
+	<br />
+	
+	<div class="row">
+		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
+	</div>
+	
+    <div class="row">
+    	<div class="col-md-12">
+    		<table class="table table-hover">
+    			<thead>
+    				<tr>
+    					<th>Name</th>
+    					<th>Address</th>
+    					<th>Agent</th>
+    					<th>Phone Number</th>
+    				</tr>
+    			</thead>
+    		
+    			<tbody data-bind="foreach: { data: distributorList, as: 'distributor' }">
+    				<tr>
+    					<td data-bind="text: distributor.name"></td>
+    					<td data-bind="text: distributor.address"></td>
+    					<td data-bind="text: distributor.agent"></td>
+    					<td data-bind="text: distributor.phoneNumber"></td>
+    					<td>
+    						<div class="pull-right">
+    							<button data-bind="click: function() { $parent.edit(distributor.id) }" type="button" class="btn btn-warning btn-sm">Edit</button>
+    							<button data-bind="click: function() { $parent.remove(distributor.id, distributor.name) }" type="button" class="btn btn-danger btn-sm">Remove</button>
+    						</div>
+    					</td>
+    				</tr>
+    			</tbody>
+    		</table>
+    	</div>
+    </div>
+</section>

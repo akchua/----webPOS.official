@@ -1,0 +1,47 @@
+<h3 align="center"><span data-bind="text: formModel.title"></span></h3>
+<form>
+	<div class="form-group">
+		<label for="inputBarcode" class="control-label">Barcode</label>
+		<input data-bind="textInput: formModel.barcode, enable: enableBarcode()" type="text" class="form-control" id="inputBarcode">
+	</div>
+	<div class="form-group">
+		<label for="inputQuantity" class="control-label">Quantity</label>
+		<input data-bind="textInput: formModel.quantity, enable: enableQuantity()" type="text" class="form-control" id="inputQuantity">
+	</div>
+	<div class="form-group">
+		<label for="inputUnit">Unit</label>
+		<select data-bind="value: formModel.unitType, options: unitTypeList, optionsCaption: '-- Select Unit --', enable: enableUnitType()" class="form-control" id="inputUnit"></select>
+	</div>
+	<div class="form-group">
+		<label for="inputGrossPrice" class="control-label">Gross Price</label>
+		<input data-bind="textInput: formModel.grossPrice, enable: enableGrossPrice()" type="text" class="form-control" id="inputGrossPrice">
+	</div>
+	<div class="form-group">
+		<label for="inputDiscount" class="control-label">% Discount</label>
+		<input data-bind="textInput: formModel.discount, enable: enableDiscount()" type="text" class="form-control" id="inputDiscount">
+	</div>
+	<div class="form-group">
+		<label for="inputNetPrice" class="control-label">Net Price</label>
+		<input data-bind="textInput: formModel.netPrice, enable: enableNetPrice()" type="text" class="form-control" id="inputNetPrice">
+	</div>
+	<div class="form-group">
+		<label for="inputPercentProfit" class="control-label">% Profit</label>
+		<input data-bind="textInput: formModel.percentProfit, enable: enablePercentProfit()" type="number" step="any" class="form-control" id="inputPercentProfit">
+	</div>
+	<div class="form-group">
+		<label for="inputSellingPrice" class="control-label">Selling Price</label>
+		<input data-bind="textInput: formModel.sellingPrice, enable: enableSellingPrice()" type="text" class="form-control" id="inputSellingPrice">
+	</div>
+	<div class="form-group">
+		<label for="inputNetProfit" class="control-label">Net Profit</label>
+		<input data-bind="textInput: formModel.netProfit, enable: enableNetProfit()" type="text" class="form-control" id="inputNetProfit">
+	</div>
+	<div class="form-group">
+		<label for="inputStorageStockCount" class="control-label">Storage Stock Count</label>
+		<input data-bind="textInput: formModel.storageStockCount, enable: enableStorageStockCount()" type="text" class="form-control" id="inputStorageStockCount">
+	</div>
+	<div class="form-group">
+		<label for="inputStoreStockCount" class="control-label">Store Stock Count</label>
+		<input data-bind="textInput: formModel.storeStockCount, enable: enableStoreStockCount()" type="text" class="form-control" id="inputStoreStockCount">
+	</div>
+</form>

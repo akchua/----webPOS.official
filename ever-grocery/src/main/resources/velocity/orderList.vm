@@ -1,0 +1,8 @@
+ ${orderList.formattedOrderNumber}
+==========================================
+Qty Item(s)                    Amount
+#foreach( $item in $orderList.orderItems )
+ $item.transaction
+#end
+==========================================
+Prepared by : ${orderList.creator}

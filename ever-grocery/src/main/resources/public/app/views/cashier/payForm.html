@@ -1,0 +1,19 @@
+<div id="divPayModal" class="modal-content">
+	<form>
+	    <div class="modal-header">
+	        <h2 align="center">Total: Php<span data-bind="text: totalAmount"></span></h2>
+	    </div>
+	    
+	    <div class="modal-body">
+	        <div class="form-inline">
+				<label for="inputCash" class="control-label">CASH</label>
+				<input data-bind="value: cash" type="text" class="form-control autofocus" id="inputCash" placeholder="Cash Php ...">
+			</div>
+	    </div>
+	    
+	    <div class="modal-footer">
+	    	<button class="btn btn-primary" type="submit" data-bind="click: pay">Pay</button>
+	        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
+	    </div>
+    </form>
+</div>

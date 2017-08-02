@@ -1,0 +1,24 @@
+<div id="divCustomerModal" class="modal-content">
+	<form>
+	    <div class="modal-header">
+	        <h3 align="center"><span data-bind="text: preTitle"></span> Customer</h3>
+	    </div>
+	    
+	    <div class="modal-body">
+	        <div class="form-inline">
+				<input data-bind="value: customerFormModel.firstName" type="text" class="form-control autofocus" id="inputFirstName" placeholder="First Name">
+				<input data-bind="value: customerFormModel.lastName" type="text" class="form-control" id="inputLastName" placeholder="Last Name">
+			</div>
+			<br/>
+			<div class="form-group">
+				<label for="inputAddress" class="control-label">Address</label>
+				<input data-bind="value: customerFormModel.address" type="text" class="form-control" id="inputAddress" placeholder="Address">
+			</div>
+	    </div>
+	    
+	    <div class="modal-footer">
+	    	<button data-bind="click: save" type="submit" class="btn btn-primary">Save</button>
+	        <button data-bind="click: cancel" class="btn btn-warning">Cancel</button>
+	    </div>
+    </form>
+</div>
