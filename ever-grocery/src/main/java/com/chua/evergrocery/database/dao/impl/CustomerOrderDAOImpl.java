@@ -26,11 +26,9 @@ public class CustomerOrderDAOImpl
 		
 		if(StringUtils.isNotBlank(searchKey))
 		{
-			final Disjunction disjunction = Restrictions.disjunction();
-			
-			disjunction.add(Restrictions.ilike("name", searchKey, MatchMode.ANYWHERE));
-			
-			conjunction.add(disjunction);
+			for(String s : searchKey.split("\\s+")) {
+				conjunction.add(Restrictions.ilike("name", s, MatchMode.ANYWHERE));
+			}
 		}
 		
 		if(status != null && status.length > 0) {

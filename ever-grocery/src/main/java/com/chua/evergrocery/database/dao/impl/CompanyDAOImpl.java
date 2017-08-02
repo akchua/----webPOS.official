@@ -25,8 +25,9 @@ public class CompanyDAOImpl
 		
 		if(StringUtils.isNotBlank(searchKey))
 		{
-			conjunction.add(Restrictions.disjunction()
-					.add(Restrictions.ilike("name", searchKey, MatchMode.ANYWHERE)));
+			for(String s : searchKey.split("\\s+")) {
+				conjunction.add(Restrictions.ilike("name", s, MatchMode.ANYWHERE));
+			}
 		}
 		
 		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
