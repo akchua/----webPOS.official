@@ -63,12 +63,12 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'modules/com
 		});
 	};
 
-	PurchaseOrder.prototype.check = function(purchaseOrderId, companyName, totalAmount) {
+	PurchaseOrder.prototype.check = function(purchaseOrderId, companyName, formattedTotalAmount) {
 		var self = this;
 		
 		app.showMessage('<div class="container-fluid"><dl class="dl-horizontal"><dt>Purchase ID  :</dt><dd>' + purchaseOrderId + '</dd>' +
 						'<dt>Company Name :</dt><dd>' + companyName + '</dd>' +
-						'<dt>Total Amount :</dt><dd>Php ' + totalAmount + '</dd></div>',
+						'<dt>Total Amount :</dt><dd>Php ' + formattedTotalAmount + '</dd></div>',
 				'Confirm Check',
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {

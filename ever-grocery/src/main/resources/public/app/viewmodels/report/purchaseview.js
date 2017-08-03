@@ -15,7 +15,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 		
 		this.purchaseOrderViewModel = {
 			purchaseOrderId: ko.observable(),
-			totalAmount: ko.observable(),
+			formattedTotalAmount: ko.observable(),
 			companyName: ko.observable(),
 			receiptType: ko.observable(),
 			status: ko.observable()
@@ -26,7 +26,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
     	var self = this;
     	
     	self.purchaseOrderViewModel.purchaseOrderId(self.purchaseOrder.id);
-    	self.purchaseOrderViewModel.totalAmount(self.purchaseOrder.totalAmount);
+    	self.purchaseOrderViewModel.formattedTotalAmount(self.purchaseOrder.formattedTotalAmount);
 		self.purchaseOrderViewModel.companyName(self.purchaseOrder.company.name);
 		self.purchaseOrderViewModel.receiptType(self.purchaseOrder.company.receiptType);
 		self.purchaseOrderViewModel.status(self.purchaseOrder.status);
@@ -70,16 +70,12 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 		});
     };
     
-    PurchaseView.prototype.cancel = function() {
-        dialog.close(this);
-    };
-    
     PurchaseView.prototype.check = function() {
 		var self = this;
 		
 		app.showMessage('<div class="container-fluid"><dl class="dl-horizontal"><dt>Purchase ID  :</dt><dd>' + self.purchaseOrderViewModel.purchaseOrderId() + '</dd>' +
 						'<dt>Company Name :</dt><dd>' + self.purchaseOrderViewModel.companyName() + '</dd>' +
-						'<dt>Total Amount :</dt><dd>Php ' + self.purchaseOrderViewModel.totalAmount() + '</dd></div>',
+						'<dt>Total Amount :</dt><dd>Php ' + self.purchaseOrderViewModel.formattedTotalAmount() + '</dd></div>',
 				'Confirm Check',
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {
@@ -93,6 +89,10 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 			}
 		})
 	};
+    
+    PurchaseView.prototype.cancel = function() {
+        dialog.close(this);
+    };
     
     return PurchaseView;
 });

@@ -4,7 +4,7 @@
 	</div>
 	
 	<div class="modal-body">
-		<h1 class="text-center">Total Amount: <span class="label label-success">Php <span data-bind="text: purchaseOrderViewModel.totalAmount"></span></span></h1>
+		<h1 class="text-center">Total Amount: <span class="label label-success">Php <span data-bind="text: purchaseOrderViewModel.formattedTotalAmount"></span></span></h1>
 		<div class="row">
 			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
 		</div>
@@ -17,11 +17,11 @@
 	    					<th class = "text-center">Quantity</th>
 	    					<th>Unit</th>
 	    					<th>Product Name</th>
-	    					<th data-bind="visible: beforeVatAndDiscount" class="text-center">No VAT Price</th>
-	    					<th data-bind="visible: beforeVatAfterDiscount" class="text-center">No VAT w/ Disc Price</th>
-	    					<th data-bind="visible: afterVatBeforeDiscount" class="text-center">Gross Price</th>
-	    					<th class="text-center">Net Price</th>
-	    					<th class="text-center">Total Price</th>
+	    					<th data-bind="visible: beforeVatAndDiscount" class="text-right">No VAT Price</th>
+	    					<th data-bind="visible: beforeVatAfterDiscount" class="text-right">No VAT w/ Disc Price</th>
+	    					<th data-bind="visible: afterVatBeforeDiscount" class="text-right">Gross Price</th>
+	    					<th class="text-right">Net Price</th>
+	    					<th class="text-right">Total Price</th>
 	    				</tr>
 	    			</thead>
 	    			
@@ -30,11 +30,11 @@
 	    					<td data-bind="text: orderDetail.quantity" class = "text-center"></td>
 	    					<td data-bind="text: orderDetail.unitType"></td>
 	    					<td data-bind="text: orderDetail.productName"></td>
-	    					<td data-bind="text: Math.round(orderDetail.grossPrice * 100 / 1.12) / 100, visible: $parent.beforeVatAndDiscount" class = "text-center"></td>
-	    					<td data-bind="text: Math.round(orderDetail.totalPrice * 100 / 1.12) / 100, visible: $parent.beforeVatAfterDiscount" class = "text-center"></td>
-	    					<td data-bind="text: orderDetail.grossPrice, visible: $parent.afterVatBeforeDiscount" class = "text-center"></td>
-	    					<td data-bind="text: orderDetail.netPrice" class = "text-center"></td>
-	    					<td data-bind="text: orderDetail.totalPrice" class = "text-center"></td>
+	    					<td data-bind="text: orderDetail.formattedBeforeVatAndDiscountPrice, visible: $parent.beforeVatAndDiscount" class = "text-center"></td>
+	    					<td data-bind="text: orderDetail.formattedBeforeVatAfterDiscountPrice, visible: $parent.beforeVatAfterDiscount" class = "text-center"></td>
+	    					<td data-bind="text: orderDetail.formattedGrossPrice, visible: $parent.afterVatBeforeDiscount" class = "text-center"></td>
+	    					<td data-bind="text: orderDetail.formattedNetPrice" class = "text-right"></td>
+	    					<td data-bind="text: orderDetail.formattedTotalPrice" class = "text-right"></td>
 	    				</tr>
 	    			</tbody>
 	    		</table>

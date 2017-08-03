@@ -11,7 +11,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		this.customerOrderViewModel = {
 			customerOrderId: ko.observable(),
 			name: ko.observable(),
-			totalAmount: ko.observable()
+			formattedTotalAmount: ko.observable()
 		};
     };
     
@@ -20,7 +20,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     	
     	self.customerOrderViewModel.customerOrderId(self.customerOrder.id);
     	self.customerOrderViewModel.name(self.customerOrder.name);
-    	self.customerOrderViewModel.totalAmount(self.customerOrder.totalAmount);
+    	self.customerOrderViewModel.formattedTotalAmount(self.customerOrder.formattedTotalAmount);
     	
     	self.currentPage(1);
     	self.currentPageSubscription = self.currentPage.subscribe(function() {

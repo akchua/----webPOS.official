@@ -4,7 +4,7 @@
 	</div>
 	
 	<div class="modal-body">
-		<h1 class="text-center">Total Amount: <span class="label label-success">Php <span data-bind="text: customerOrderViewModel.totalAmount"></span></span></h1>
+		<h1 class="text-center">Total Amount: <span class="label label-success">Php <span data-bind="text: customerOrderViewModel.formattedTotalAmount"></span></span></h1>
 		<div class="row">
 			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
 		</div>
@@ -17,8 +17,8 @@
 	    					<th class = "text-center">Quantity</th>
 	    					<th>Unit</th>
 	    					<th>Product Name</th>
-	    					<th class = "text-center">Unit Price</th>
-	    					<th class = "text-center">Total Price</th>
+	    					<th class = "text-right">Unit Price</th>
+	    					<th class = "text-right">Total Price</th>
 	    				</tr>
 	    			</thead>
 	    			
@@ -27,8 +27,8 @@
 	    					<td data-bind="text: orderDetail.quantity" class = "text-center"></td>
 	    					<td data-bind="text: orderDetail.unitType"></td>
 	    					<td data-bind="text: orderDetail.productName"></td>
-	    					<td data-bind="text: orderDetail.unitPrice" class = "text-center"></td>
-	    					<td data-bind="text: orderDetail.totalPrice" class = "text-center"></td>
+	    					<td data-bind="text: orderDetail.formattedUnitPrice" class = "text-right"></td>
+	    					<td data-bind="text: orderDetail.formattedTotalPrice" class = "text-right"></td>
 	    				</tr>
 	    			</tbody>
 	    		</table>
