@@ -13,7 +13,7 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'viewmodels/
 		
 		this.purchaseOrderPageModel = {
 			purchaseOrderId: ko.observable(),
-			totalAmount: ko.observable(),
+			formattedTotalAmount: ko.observable(),
 			companyName: ko.observable(),
 			receiptType: ko.observable(),
 			status: ko.observable()
@@ -49,7 +49,7 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'viewmodels/
     	var self = this;
     	
     	purchaseOrderService.getPurchaseOrder(self.purchaseOrderPageModel.purchaseOrderId()).done(function(data) { 
-    		self.purchaseOrderPageModel.totalAmount(data.totalAmount);
+    		self.purchaseOrderPageModel.formattedTotalAmount(data.formattedTotalAmount);
     		self.purchaseOrderPageModel.companyName(data.company.name);
     		self.purchaseOrderPageModel.receiptType(data.company.receiptType);
     		self.purchaseOrderPageModel.status(data.status);

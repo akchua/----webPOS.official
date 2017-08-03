@@ -28,7 +28,7 @@
     					<th>Customer</th>
     					<th>Creator</th>
     					<th class="text-right">Total Amount</th>
-    					<th>Status</th>
+    					<th class="text-center">Status</th>
     				</tr>
     			</thead>
     		
@@ -46,8 +46,8 @@
     							<span data-bind="text: customerOrder.creator.lastName"></span><span>, </span><span data-bind="text: customerOrder.creator.firstName"></span>
     						</span>
     					</td>
-    					<td class="text-right"><span data-bind="text: customerOrder.totalAmount"></span></td>
-    					<td data-bind="text: customerOrder.status"></td>
+    					<td class="text-right"><span data-bind="text: customerOrder.formattedTotalAmount"></span></td>
+    					<td data-bind="text: customerOrder.status" class="text-center"></td>
     					<td>
     						<div class="pull-right">
     							<button data-bind="click: function() { $parent.print(customerOrder.id, customerOrder.name) }" type="button" class="btn btn-primary btn-sm">Print</button>

@@ -18,7 +18,7 @@
     				<tr data-bind="if: productDetail.quantity != 0">
     					<th data-bind="text: productDetail.unitType"></th>
     					<td data-bind="text: productDetail.quantity" class = "text-center"></td>
-    					<td data-bind="text: productDetail.netPrice" class = "text-right"></td>
+    					<td data-bind="text: productDetail.formattedNetPrice" class = "text-right"></td>
     					<td>
     						<div class="pull-right">
     							<button data-bind="click: function() { $parent.add(productDetail.id, productDetail.unitType) }" type="button" class="btn btn-info btn-sm">Add</button>

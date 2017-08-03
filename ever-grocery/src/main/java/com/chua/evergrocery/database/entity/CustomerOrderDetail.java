@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -16,6 +17,7 @@ import org.hibernate.annotations.Where;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
 import com.chua.evergrocery.enums.UnitType;
+import com.chua.evergrocery.utility.format.CurrencyFormatter;
 
 @Entity(name = "CustomerOrderDetail")
 @Table(name = CustomerOrderDetail.TABLE_NAME)
@@ -100,6 +102,11 @@ public class CustomerOrderDetail extends BaseObject {
 	public Float getUnitPrice() {
 		return unitPrice;
 	}
+	
+	@Transient
+	public String getFormattedUnitPrice() {
+		return CurrencyFormatter.pesoFormat(getUnitPrice());
+	}
 
 	public void setUnitPrice(Float unitPrice) {
 		this.unitPrice = unitPrice;
@@ -119,6 +126,11 @@ public class CustomerOrderDetail extends BaseObject {
 	@Column(name = "total_price")
 	public Float getTotalPrice() {
 		return totalPrice;
+	}
+	
+	@Transient
+	public String getFormattedTotalPrice() {
+		return CurrencyFormatter.pesoFormat(getTotalPrice());
 	}
 
 	public void setTotalPrice(Float totalPrice) {

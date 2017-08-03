@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -16,6 +17,7 @@ import org.hibernate.annotations.Where;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
 import com.chua.evergrocery.enums.UnitType;
+import com.chua.evergrocery.utility.format.CurrencyFormatter;
 
 @Entity(name = "PurchaseOrderDetail")
 @Table(name = PurchaseOrderDetail.TABLE_NAME)
@@ -90,6 +92,21 @@ public class PurchaseOrderDetail extends BaseObject {
 	public Float getGrossPrice() {
 		return grossPrice;
 	}
+	
+	@Transient
+	public String getFormattedGrossPrice() {
+		return CurrencyFormatter.pesoFormat(getGrossPrice());
+	}
+	
+	@Transient
+	public String getFormattedBeforeVatAndDiscountPrice() {
+		return CurrencyFormatter.pesoFormat((getGrossPrice() * 100 / 1.12) / 100);
+	}
+	
+	@Transient
+	public String getFormattedBeforeVatAfterDiscountPrice() {
+		return CurrencyFormatter.pesoFormat((getTotalPrice() * 100 / 1.12) / 100);
+	}
 
 	public void setGrossPrice(Float grossPrice) {
 		this.grossPrice = grossPrice;
@@ -100,6 +117,12 @@ public class PurchaseOrderDetail extends BaseObject {
 	public Float getNetPrice() {
 		return netPrice;
 	}
+	
+	@Transient
+	public String getFormattedNetPrice() {
+		return CurrencyFormatter.pesoFormat(getNetPrice());
+	}
+
 
 	public void setNetPrice(Float netPrice) {
 		this.netPrice = netPrice;
@@ -119,6 +142,11 @@ public class PurchaseOrderDetail extends BaseObject {
 	@Column(name = "total_price")
 	public Float getTotalPrice() {
 		return totalPrice;
+	}
+	
+	@Transient
+	public String getFormattedTotalPrice() {
+		return CurrencyFormatter.pesoFormat(getTotalPrice());
 	}
 
 	public void setTotalPrice(Float totalPrice) {

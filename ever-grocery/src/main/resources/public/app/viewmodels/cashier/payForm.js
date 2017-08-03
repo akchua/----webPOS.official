@@ -2,14 +2,14 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 	var PayForm = function(customerOrder) {
 		this.customerOrder = customerOrder;
 		
-		this.totalAmount = ko.observable();
+		this.formattedTotalAmount = ko.observable();
 		this.cash = ko.observable();
 	};
 	
 	PayForm.prototype.activate = function() {
 		var self = this;
 		
-		self.totalAmount(self.customerOrder.totalAmount);
+		self.formattedTotalAmount(self.customerOrder.formattedTotalAmount);
 	};
 	
 	PayForm.show = function(customerOrder) {

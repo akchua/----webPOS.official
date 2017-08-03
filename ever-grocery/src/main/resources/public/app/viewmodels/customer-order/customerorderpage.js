@@ -12,7 +12,7 @@ define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/customerord
 		
 		this.customerOrderPageModel = {
 			customerOrderId: ko.observable(),
-			totalAmount: ko.observable(),
+			formattedTotalAmount: ko.observable(),
 			customerOrderName: ko.observable(),
 			status: ko.observable()
 		};
@@ -48,7 +48,7 @@ define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/customerord
     	var self = this;
     	
     	customerOrderService.getCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(data) { 
-    		self.customerOrderPageModel.totalAmount(data.totalAmount);
+    		self.customerOrderPageModel.formattedTotalAmount(data.formattedTotalAmount);
     		self.customerOrderPageModel.customerOrderName(data.name);
     		self.customerOrderPageModel.status(data.status);
     	});

@@ -29,7 +29,7 @@
     					<th>Creator</th>
     					<th class="text-right">Total Amount</th>
     					<th data-bind="if: showPaid">Cashier</th>
-    					<th>Status</th>
+    					<th class="text-center">Status</th>
     				</tr>
     			</thead>
     		
@@ -47,13 +47,13 @@
     							<span data-bind="text: customerOrder.creator.lastName"></span><span>, </span><span data-bind="text: customerOrder.creator.firstName"></span>
     						</span>
     					</td>
-    					<td class="text-right"><span data-bind="text: customerOrder.totalAmount"></span></td>
+    					<td class="text-right"><span data-bind="text: customerOrder.formattedTotalAmount"></span></td>
     					<td data-bind="if: $parent.showPaid">
     						<span data-bind="if: customerOrder.cashier">
     							<span data-bind="text: customerOrder.cashier.lastName"></span><span>, </span><span data-bind="text: customerOrder.cashier.firstName"></span>
     						</span>
     					</td>
-    					<td data-bind="text: customerOrder.status"></td>
+    					<td data-bind="text: customerOrder.status" class="text-center"></td>
     					<td>
     						<div class="pull-right">
     							<button data-bind="click: function() { $parent.view(customerOrder.id) }" type="button" class="btn btn-info btn-sm">View</button>

@@ -1,8 +1,5 @@
 package com.chua.evergrocery.enums;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum UnitType {
 	
 	BAG ("bg"),

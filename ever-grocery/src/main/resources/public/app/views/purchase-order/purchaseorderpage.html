@@ -4,7 +4,7 @@
 	
 	<div class="row">
 		<div class="col-md-offset-3 col-md-6">
-			<h1 class="text-center">Total Amount: <span class="label label-success">Php <span data-bind="text: purchaseOrderPageModel.totalAmount"></span></span></h1>
+			<h1 class="text-center">Total Amount: <span class="label label-success">Php <span data-bind="text: purchaseOrderPageModel.formattedTotalAmount"></span></span></h1>
 		</div>
 	</div>
 	<br>
@@ -37,11 +37,11 @@
     					<td class = "text-center"><input data-bind="value: orderDetail.quantity, event: { change: function() { $parent.changeQuantity(orderDetail.id, orderDetail.quantity) } }" type="text" size="5" class="form-control"></td>
     					<td data-bind="text: orderDetail.unitType"></td>
     					<td data-bind="text: orderDetail.productName"></td>
-    					<td data-bind="text: Math.round(orderDetail.grossPrice * 100 / 1.12) / 100, visible: $parent.beforeVatAndDiscount" class = "text-right"></td>
-    					<td data-bind="text: Math.round(orderDetail.totalPrice * 100 / 1.12) / 100, visible: $parent.beforeVatAfterDiscount" class = "text-right"></td>
-    					<td data-bind="text: orderDetail.grossPrice, visible: $parent.afterVatBeforeDiscount" class = "text-right"></td>
-    					<td data-bind="text: orderDetail.netPrice" class = "text-right"></td>
-    					<td data-bind="text: orderDetail.totalPrice" class = "text-right"></td>
+    					<td data-bind="text: orderDetail.formattedBeforeVatAndDiscountPrice, visible: $parent.beforeVatAndDiscount" class = "text-right"></td>
+    					<td data-bind="text: orderDetail.formattedBeforeVatAfterDiscountPrice, visible: $parent.beforeVatAfterDiscount" class = "text-right"></td>
+    					<td data-bind="text: orderDetail.formattedGrossPrice, visible: $parent.afterVatBeforeDiscount" class = "text-right"></td>
+    					<td data-bind="text: orderDetail.formattedNetPrice" class = "text-right"></td>
+    					<td data-bind="text: orderDetail.formattedTotalPrice" class = "text-right"></td>
     					<td>
     						<div class="pull-right">
     							<button data-bind="click: function() { $parent.remove(orderDetail.id, orderDetail.quantity, orderDetail.productName, orderDetail.unitType) }" type="button" class="btn btn-danger btn-sm">Remove</button>
