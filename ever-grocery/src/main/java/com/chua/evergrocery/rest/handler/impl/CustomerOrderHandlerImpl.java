@@ -90,7 +90,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				result.setSuccess(customerOrderService.insert(customerOrder) != null);
 				if(result.getSuccess()) {
 					Map<String, Object> extras = new HashMap<String, Object>();
-					extras.put("purchaseOrderId", customerOrder.getId());
+					extras.put("customerOrderId", customerOrder.getId());
 					result.setExtras(extras);
 					
 					result.setMessage("Customer order successfully created.");

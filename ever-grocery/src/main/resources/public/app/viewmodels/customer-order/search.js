@@ -4,6 +4,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
 		this.productList = ko.observable();
 		
 		this.searchKey = ko.observable();
+		this.searchFocus = ko.observable(true);
 		
 		this.itemsPerPage = ko.observable(app.user.itemsPerPage);
 		this.totalItems = ko.observable();
@@ -52,7 +53,10 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
 		var self = this;
 
 		productService.getProduct(productId).done(function (data) {
-			SearchDetails.show(data, self.customerOrder);
+			SearchDetails.show(data, self.customerOrder).then(function() {
+				self.searchKey('');
+				self.searchFocus(true);
+			});
 		});
 	};
 	

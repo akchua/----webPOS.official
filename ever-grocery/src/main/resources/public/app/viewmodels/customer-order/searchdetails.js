@@ -1,10 +1,10 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productService', 'modules/customerorderservice'], function (dialog, app, ko, productService, customerOrderService) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productService', 'modules/customerorderservice', 'viewmodels/customer-order/quantityform'], 
+		function (dialog, app, ko, productService, customerOrderService, QuantityForm) {
     var SearchDetails = function(product, customerOrder) {
     	this.product = product;
     	this.customerOrder = customerOrder;
     	
     	this.productName = ko.observable();
-    	this.quantity = ko.observable(1);		//setup for dynamic quantity add
     	
     	this.productDetailList = ko.observable();
     };
@@ -19,15 +19,11 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productService', 
     	});
     };
     
-    SearchDetails.prototype.add = function(productDetailId) {
+    SearchDetails.prototype.add = function(productDetailId, productUnitType) {
     	var self = this;
     	
-    	customerOrderService.addItem(productDetailId, self.customerOrder.id, self.quantity()).done(function (result) {
-    		if(result.success) {
-        		dialog.close(self);
-        	}  else {
-        		app.showMessage(result.message);
-        	}
+    	QuantityForm.show(productDetailId, productUnitType, self.customerOrder.id, self.productName()).then(function() {
+    		dialog.close(self);
     	});
     };
     

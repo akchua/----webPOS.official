@@ -37,8 +37,9 @@ public class UserDAOImpl
 		if(StringUtils.isNotBlank(searchKey))
 		{
 			for(String s : searchKey.split("\\s+")) {
-				conjunction.add(Restrictions.ilike("firstName", s, MatchMode.ANYWHERE));
-				conjunction.add(Restrictions.ilike("lastName", s, MatchMode.ANYWHERE));
+				conjunction.add(Restrictions.disjunction()
+						.add(Restrictions.ilike("firstName", s, MatchMode.ANYWHERE))
+						.add(Restrictions.ilike("lastName", s, MatchMode.ANYWHERE)));
 			}
 		}
 		

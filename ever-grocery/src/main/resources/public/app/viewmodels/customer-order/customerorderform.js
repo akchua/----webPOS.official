@@ -36,8 +36,9 @@ define(['plugins/router', 'plugins/dialog', 'durandal/app', 'knockout', 'modules
         	if(result.success) {
         		dialog.close(self);
         		router.navigate('#customerorderpage/' + result.extras.customerOrderId);
-        	} 
-        	app.showMessage(result.message);
+        	} else {
+        		app.showMessage(result.message);
+        	}
         });
     };
     

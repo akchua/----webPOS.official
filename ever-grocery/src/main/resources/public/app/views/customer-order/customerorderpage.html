@@ -9,16 +9,22 @@ Order ID: <span data-bind="text: customerOrderPageModel.customerOrderId" class="
 <br>
 
 <div class="row">
-	<div class="col-md-offset-1 col-md-1 col-xs-2">
-		<button data-bind="click: search" type="button" class="btn btn-info"><span> </span><span class="glyphicon glyphicon-search"></span> Search </button>
-	</div>
 	<form class="form-inline" role="form">
-		<div class="col-md-5 col-xs-6">
-			<input data-bind="value: barcodeKey, hasFocus: barcodeFocus" type="text" size="30" class="form-control" placeholder="Input Barcode Here.......">
-			<button data-bind="click: addItemByBarcode, visible: barcodeFocus" type="submit" class="btn btn-default glyphicon glyphicon-barcode"></button>
+		<div class="col-xs-6">
+			<div class="col-md-offset-2 col-md-2 col-xs-4">
+				<button data-bind="click: search" type="button" class="btn btn-info"><span> </span><span class="glyphicon glyphicon-search"></span> Search </button>
+			</div>
+			<div class="input-group col-md-6 col-xs-6">
+				<input data-bind="value: barcodeKey, hasFocus: barcodeFocus" type="text" class="form-control" placeholder="Input Barcode Here.......">
+				<span class="input-group-btn">
+					<button data-bind="click: addItemByBarcode" type="submit" class="btn btn-default"><i class="fa fa-barcode"></i></button>
+				</span>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12 col-xs-12"></div>
 		</div>
 	</form>
-	<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-5 col-xs-4"></div>
 </div>
 
 <div class="row">
@@ -29,8 +35,8 @@ Order ID: <span data-bind="text: customerOrderPageModel.customerOrderId" class="
    					<th class = "text-center col-md-1 col-xs-1">Quantity</th>
    					<th>Unit</th>
    					<th>Product Name</th>
-   					<th class = "text-center">Unit Price</th>
-   					<th class = "text-center">Total Price</th>
+   					<th class = "text-right">Unit Price</th>
+   					<th class = "text-right">Total Price</th>
    				</tr>
    			</thead>
    			
@@ -39,8 +45,8 @@ Order ID: <span data-bind="text: customerOrderPageModel.customerOrderId" class="
    					<td class = "text-center"><input data-bind="value: orderDetail.quantity, event: { change: function() { $parent.changeQuantity(orderDetail.id, orderDetail.quantity) } }" type="text" size="5" class="form-control"></td>
    					<td data-bind="text: orderDetail.unitType"></td>
    					<td data-bind="text: orderDetail.productName"></td>
-   					<td data-bind="text: orderDetail.unitPrice" class = "text-center"></td>
-   					<td data-bind="text: orderDetail.totalPrice" class = "text-center"></td>
+   					<td data-bind="text: orderDetail.unitPrice" class = "text-right"></td>
+   					<td data-bind="text: orderDetail.totalPrice" class = "text-right"></td>
    					<td>
    						<div class="pull-right">
    							<button data-bind="click: function() { $parent.remove(orderDetail.id, orderDetail.quantity, orderDetail.productName, orderDetail.unitType) }" type="button" class="btn btn-danger btn-sm">Remove</button>

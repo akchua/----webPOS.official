@@ -27,7 +27,7 @@
     					<th>Name</th>
     					<th>Customer</th>
     					<th>Creator</th>
-    					<th>Total Amount</th>
+    					<th class="text-right">Total Amount</th>
     					<th data-bind="if: showPaid">Cashier</th>
     					<th>Status</th>
     				</tr>
@@ -47,7 +47,7 @@
     							<span data-bind="text: customerOrder.creator.lastName"></span><span>, </span><span data-bind="text: customerOrder.creator.firstName"></span>
     						</span>
     					</td>
-    					<td>Php <span data-bind="text: customerOrder.totalAmount"></span></td>
+    					<td class="text-right"><span data-bind="text: customerOrder.totalAmount"></span></td>
     					<td data-bind="if: $parent.showPaid">
     						<span data-bind="if: customerOrder.cashier">
     							<span data-bind="text: customerOrder.cashier.lastName"></span><span>, </span><span data-bind="text: customerOrder.cashier.firstName"></span>

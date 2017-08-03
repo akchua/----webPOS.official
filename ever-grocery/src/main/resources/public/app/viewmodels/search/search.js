@@ -54,7 +54,7 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'viewmodels/search
 		productService.getProduct(productId).done(function(data) {
 			More.show(data);
 		});
-	}
+	};
 	
     return Product;
 });

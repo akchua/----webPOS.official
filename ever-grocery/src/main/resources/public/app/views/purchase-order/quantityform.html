@@ -1,0 +1,19 @@
+<div id="divQuantityModal" class="modal-content">
+	<form>
+	    <div class="modal-header">
+	        <h2 align="center"><span data-bind="text: productName"></span></h2>
+	    </div>
+	    
+	    <div class="modal-body">
+	        <div class="form-inline">
+				<label for="inputQuantity" class="control-label"><span data-bind="text: productUnitType"></span> Quantity</label>
+				<input data-bind="value: quantity" type="text" class="form-control autofocus" id="inputQuantity" placeholder="">
+			</div>
+	    </div>
+	    
+	    <div class="modal-footer">
+	    	<button class="btn btn-primary" type="submit" data-bind="click: add">Add</button>
+	        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
+	    </div>
+    </form>
+</div>
