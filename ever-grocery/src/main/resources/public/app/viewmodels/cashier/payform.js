@@ -1,4 +1,5 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderservice'], function (dialog, app, ko, customerOrderService) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderservice'], 
+		function (dialog, app, ko, customerOrderService) {
 	var PayForm = function(customerOrder) {
 		this.customerOrder = customerOrder;
 		

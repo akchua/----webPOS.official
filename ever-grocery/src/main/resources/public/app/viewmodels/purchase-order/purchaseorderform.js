@@ -1,4 +1,4 @@
-define(['plugins/router', 'plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseOrderservice', 'modules/companyservice'], 
+define(['plugins/router', 'plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderservice', 'modules/companyservice'], 
 		function (router, dialog, app, ko, purchaseOrderService, companyService) {
     var PurchaseOrderForm = function(preTitle, purchaseOrder) {
         this.preTitle = preTitle;

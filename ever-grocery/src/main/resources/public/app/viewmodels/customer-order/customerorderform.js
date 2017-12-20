@@ -1,4 +1,4 @@
-define(['plugins/router', 'plugins/dialog', 'durandal/app', 'knockout', 'modules/customerOrderservice', 'modules/customerservice'], 
+define(['plugins/router', 'plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderservice', 'modules/customerservice'], 
 		function (router, dialog, app, ko, customerOrderService, customerService) {
     var CustomerOrderForm = function(preTitle, customerOrder) {
         this.preTitle = preTitle;

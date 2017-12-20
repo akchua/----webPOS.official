@@ -1,4 +1,5 @@
-define(['plugins/router', 'durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/customer-order/customerorderform', 'viewmodels/customer-order/customerorderpage'], function (router, app, ko, customerOrderService, CustomerOrderForm, CustomerOrderPage) {
+define(['plugins/router', 'durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/customer-order/customerorderform', 'viewmodels/customer-order/customerorderpage'], 
+		function (router, app, ko, customerOrderService, CustomerOrderForm, CustomerOrderPage) {
 	var CustomerOrder = function() {
 		this.customerOrderList = ko.observable();
 		

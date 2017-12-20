@@ -1,4 +1,4 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productService', 'modules/purchaseorderservice', 'viewmodels/purchase-order/quantityform'], 
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 'modules/purchaseorderservice', 'viewmodels/purchase-order/quantityform'], 
 		function (dialog, app, ko, productService, purchaseOrderService, QuantityForm) {
     var SearchDetails = function(product, purchaseOrder) {
     	this.product = product;

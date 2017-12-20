@@ -1,4 +1,5 @@
-define(['plugins/dialog','knockout', 'durandal/app', 'modules/productService'], function (dialog, ko, app, productService) {
+define(['plugins/dialog','knockout', 'durandal/app', 'modules/productservice'], 
+		function (dialog, ko, app, productService) {
 	var More = function(product) {
 		this.product = product;
 		

@@ -1,4 +1,5 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 'viewmodels/customer-order/searchdetails'], function (dialog, app, ko, productService, SearchDetails) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 'viewmodels/customer-order/searchdetails'], 
+		function (dialog, app, ko, productService, SearchDetails) {
 	var Search = function(customerOrder) {
 		this.customerOrder = customerOrder;
 		this.productList = ko.observable();

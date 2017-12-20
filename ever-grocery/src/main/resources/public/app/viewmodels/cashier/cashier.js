@@ -1,4 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customerorderservice', 'viewmodels/cashier/payform', 'viewmodels/report/saleview'], function (app, ko, securityService, customerOrderService, PayForm, SaleView) {
+define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customerorderservice', 'viewmodels/cashier/payform', 'viewmodels/report/saleview'], 
+		function (app, ko, securityService, customerOrderService, PayForm, SaleView) {
 	var Cashier = function() {
 		this.customerOrderList = ko.observable();
 		
