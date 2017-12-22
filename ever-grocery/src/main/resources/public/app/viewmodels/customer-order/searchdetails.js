@@ -14,7 +14,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
     	
     	self.productName(self.product.name);
     	
-    	productService.getProductDetailList(self.product.id).done(function (data) {
+    	productService.getProductDetailList(self.product.id, false).done(function (data) {
     		self.productDetailList(data);
     	});
     };

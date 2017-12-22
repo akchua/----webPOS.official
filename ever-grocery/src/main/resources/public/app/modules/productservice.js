@@ -55,9 +55,10 @@ define(['jquery'], function ($) {
     		});
     	},
     	
-    	getProductDetailList: function(productId) {
+    	getProductDetailList: function(productId, async) {
     		return $.ajax({
     			url: '/services/product/getdetails',
+    			async: async,
     			data: {
     				productId: productId
     			}
