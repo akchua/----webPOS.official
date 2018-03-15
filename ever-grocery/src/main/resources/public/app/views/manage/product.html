@@ -1,10 +1,10 @@
 <section>
 	<div class="row">
-		<div class="col-md-4 col-xs-4">
+		<div class="col-md-4 col-xs-6">
 			<button data-bind="click: create" type="button" class="btn btn-success">Add New Product</button>
 		</div>
 		<form class="form-inline" role="form">
-			<div class="input-group col-md-5 col-xs-5 pull-right">
+			<div class="input-group col-md-5 col-xs-12 pull-right">
 				<select data-bind="options: companyList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- All Company --', value: companyId, event: { change: search }" class="form-control" id="inputCompany"></select>
 				<span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 				<input data-bind="textInput: searchKey" size="40" type="text" class="form-control" placeholder="Search Product">
@@ -22,7 +22,7 @@
 	
     <div class="row">
     	<div class="col-md-12">
-    		<table class="table table-hover">
+    		<table class="table table-responsive table-hover">
     			<thead>
     				<tr>
     					<th>Name</th>
