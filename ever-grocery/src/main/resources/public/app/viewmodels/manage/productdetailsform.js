@@ -5,6 +5,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'viewmodels/manage/product
         this.productDetailList = productDetailList;
         
         this.hasProductDetail = productDetailList.length != 0;
+        this.enableSave = ko.observable(true);
         
         this.productDetailsFormModel = {
         	id: ko.observable(),
@@ -186,6 +187,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'viewmodels/manage/product
     
     ProductDetailsForm.prototype.save = function() {
     	var self = this;
+    	self.enableSave(false);
     	
     	if(self.productDetailsFormModel.secondInnerPiece.formModel.storageStockCount() > 0) {
     		self.productDetailsFormModel.innerPiece.formModel.storageStockCount(Number(self.productDetailsFormModel.innerPiece.formModel.storageStockCount()) + Math.floor(self.productDetailsFormModel.secondInnerPiece.formModel.storageStockCount() / self.productDetailsFormModel.secondInnerPiece.formModel.quantity()));
@@ -222,10 +224,11 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'viewmodels/manage/product
     			ko.toJSON(self.productDetailsFormModel.piece.formModel),
     			ko.toJSON(self.productDetailsFormModel.innerPiece.formModel),
     			ko.toJSON(self.productDetailsFormModel.secondInnerPiece.formModel)).done(function(result) {
-    				
+    			
+    			self.enableSave(true);
 				if(result.success) {
-	        		dialog.close(self);	
-	        	} 
+	        		dialog.close(self);
+	        	}
 	        	app.showMessage(result.message);
         });
     };
