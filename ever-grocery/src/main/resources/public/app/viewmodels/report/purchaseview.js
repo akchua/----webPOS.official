@@ -29,7 +29,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
     	self.purchaseOrderViewModel.formattedTotalAmount(self.purchaseOrder.formattedTotalAmount);
 		self.purchaseOrderViewModel.companyName(self.purchaseOrder.company.name);
 		self.purchaseOrderViewModel.receiptType(self.purchaseOrder.company.receiptType);
-		self.purchaseOrderViewModel.status(self.purchaseOrder.status);
+		self.purchaseOrderViewModel.status(self.purchaseOrder.status.displayName);
 
 		switch(self.purchaseOrderViewModel.receiptType()) {
 	    	case 'BEFORE_VAT_AND_DISCOUNT':
@@ -43,7 +43,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 	    		break;
 		}
 		
-		if(self.purchaseOrderViewModel.status() == 'LISTING') {
+		if(self.purchaseOrderViewModel.status() == 'Listing') {
 			self.isListing(true);
 		} else {
 			self.isListing(false);

@@ -26,7 +26,6 @@
     					<th>Company</th>
     					<th>Creator</th>
     					<th class="text-right">Total Amount</th>
-    					<th class="text-center">Status</th>
     				</tr>
     			</thead>
     		
@@ -44,7 +43,6 @@
     						</span>
     					</td>
     					<td class="text-right"><span data-bind="text: purchaseOrder.formattedTotalAmount"></span></td>
-    					<td data-bind="text: purchaseOrder.status" class="text-center"></td>
     					<td>
     						<div class="pull-right">
     							<a data-bind="click: function() { $parent.details(purchaseOrder.id) }" type="button" class="btn btn-info btn-sm">Details</a>

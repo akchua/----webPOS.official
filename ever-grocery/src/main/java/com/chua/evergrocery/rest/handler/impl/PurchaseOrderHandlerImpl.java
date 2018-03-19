@@ -1,5 +1,6 @@
 package com.chua.evergrocery.rest.handler.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import com.chua.evergrocery.database.service.UserService;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.PurchaseOrderHandler;
+import com.chua.evergrocery.utility.DateUtil;
 
 @Transactional
 @Component
@@ -72,6 +74,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			
 			purchaseOrder.setCreator(userService.find(UserContextHolder.getUser().getUserId()));
 			purchaseOrder.setStatus(Status.LISTING);
+			purchaseOrder.setDeliveredOn(purchaseOrderForm.getDeliveredOn());
+			purchaseOrder.setCheckedOn(DateUtil.getDefaultDate());
 			
 			result = new ResultBean();
 			result.setSuccess(purchaseOrderService.insert(purchaseOrder) != null);
@@ -305,6 +309,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 				
 				purchaseOrder.setManagerInCharge(userService.find(UserContextHolder.getUser().getUserId()));
 				purchaseOrder.setStatus(Status.CHECKED);
+				purchaseOrder.setCheckedOn(new Date());
 				
 				result.setSuccess(purchaseOrderService.update(purchaseOrder));
 				if(result.getSuccess()) {

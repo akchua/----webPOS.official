@@ -48,7 +48,7 @@
     						</span>
     					</td>
     					<td class="text-right"><span data-bind="text: customerOrder.formattedTotalAmount"></span></td>
-    					<td data-bind="text: customerOrder.status" class="text-center"></td>
+    					<td data-bind="text: customerOrder.status.displayName" class="text-center"></td>
     					<td>
     						<div class="pull-right">
     							<button data-bind="click: function() { $parent.view(customerOrder.id) }" type="button" class="btn btn-info btn-sm">View</button>

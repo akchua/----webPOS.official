@@ -44,7 +44,14 @@
     </div>
     
     <div class="modal-footer">
-    	<button class="btn btn-primary" data-bind="click: check, visible: isListing">Check</button>
+    	<button class="btn btn-primary" data-bind="click: check, enable: isListing">
+    		<!-- ko if: isListing -->
+    		<span>Check</span>
+    		<!-- /ko -->
+    		<!-- ko ifnot: isListing -->
+    		<span>Checked</span>
+    		<!-- /ko -->
+    	</button>
         <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
     </div>
 </div>

@@ -1,5 +1,8 @@
 package com.chua.evergrocery.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Status {
 
 	CANCELLED("Cancelled"),
@@ -12,13 +15,17 @@ public enum Status {
 	
 	CHECKED("Checked");
 	
-	private final String description;
+	private final String displayName;
 	
-	Status(final String description) {
-		this.description = description;
+	public String getName() {
+		return toString();
 	}
 	
-	public String getDescription() {
-		return description;
+	Status(final String displayName) {
+		this.displayName = displayName;
+	}
+	
+	public String getDisplayName() {
+		return displayName;
 	}
 }

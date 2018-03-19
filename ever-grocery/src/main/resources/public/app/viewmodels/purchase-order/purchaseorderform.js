@@ -6,7 +6,9 @@ define(['plugins/router', 'plugins/dialog', 'durandal/app', 'knockout', 'modules
         
         this.purchaseOrderFormModel = {
         	id: ko.observable(),
-        	companyId: ko.observable()
+        	
+        	companyId: ko.observable(),
+        	deliveredOn: ko.observable()
         }
         
         this.companyList = ko.observable();
