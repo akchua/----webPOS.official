@@ -1,5 +1,7 @@
 package com.chua.evergrocery.database.dao;
 
+import java.util.List;
+
 import org.hibernate.criterion.Order;
 
 import com.chua.evergrocery.database.entity.Product;
@@ -11,4 +13,6 @@ public interface ProductDAO extends DAO<Product, Long>, ProductPrototype {
 	Product findByName(String name);
 	
 	ObjectList<Product> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey, Long companyId, Order[] orders);
+	
+	List<Product> findAllByCompanyWithOrder(Long companyId, Order[] orders);
 }

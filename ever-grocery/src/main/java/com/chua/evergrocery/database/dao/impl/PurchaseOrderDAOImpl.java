@@ -1,7 +1,12 @@
 package com.chua.evergrocery.database.dao.impl;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Junction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +14,7 @@ import com.chua.evergrocery.database.dao.PurchaseOrderDAO;
 import com.chua.evergrocery.database.entity.PurchaseOrder;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.utility.DateUtil;
 
 @Repository
 public class PurchaseOrderDAOImpl
@@ -47,5 +53,20 @@ public class PurchaseOrderDAOImpl
 		conjunction.add(disjunction);
 		
 		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
+	}
+
+	@Override
+	public List<PurchaseOrder> findAllByCompanyAndDaysWithOrder(Long companyId, int days, Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("company.id", companyId));
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.DAY_OF_MONTH, -days);
+		
+		conjunction.add(Restrictions.between("deliveredOn", (cal.getTime().before(DateUtil.getPurchaseOrderCutoffDate()) ? DateUtil.getPurchaseOrderCutoffDate() : cal.getTime()), new Date()));
+		
+		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}
 }

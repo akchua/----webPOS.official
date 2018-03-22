@@ -1,5 +1,8 @@
 package com.chua.evergrocery.database.service.impl;
 
+import java.util.List;
+
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +31,10 @@ public class PurchaseOrderServiceImpl
 	public ObjectList<PurchaseOrder> findAllWithPagingAndStatus(int pageNumber, int resultsPerPage, Long companyId,
 			Status[] status) {
 		return dao.findAllWithPagingAndStatus(pageNumber, resultsPerPage, companyId, status);
+	}
+
+	@Override
+	public List<PurchaseOrder> findDeliveredWithinNinetyDaysByCompanyOrderByDeliveryDate(Long companyId) {
+		return dao.findAllByCompanyAndDaysWithOrder(companyId, 90, new Order[] { Order.desc("deliveredOn") });
 	}
 }

@@ -1,5 +1,6 @@
 package com.chua.evergrocery.database.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Order;
@@ -40,5 +41,10 @@ public class CustomerOrderDetailServiceImpl
 	@Override
 	public List<CustomerOrderDetail> findAllByCustomerOrderId(Long customerOrderId) {
 		return dao.findAllByCustomerOrderId(customerOrderId);
+	}
+
+	@Override
+	public List<CustomerOrderDetail> findAllByProductLimitByDate(Long productId, Date start) {
+		return dao.findAllByProductLimitByDate(productId, start);
 	}
 }

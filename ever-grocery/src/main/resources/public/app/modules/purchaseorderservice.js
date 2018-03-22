@@ -30,6 +30,16 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	generatePurchaseOrder: function(companyId) {
+    		return $.ajax({
+    			url: '/services/purchaseorder/generate',
+    			method: 'POST',
+    			data: {
+    				companyId: companyId
+    			}
+    		});
+    	},
+    	
     	removePurchaseOrder: function(purchaseOrderId) {
     		return $.ajax({
     			url: '/services/purchaseorder/remove',

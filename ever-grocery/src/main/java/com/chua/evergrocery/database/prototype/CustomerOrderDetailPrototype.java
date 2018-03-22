@@ -1,5 +1,6 @@
 package com.chua.evergrocery.database.prototype;
 
+import java.util.Date;
 import java.util.List;
 
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
@@ -12,4 +13,6 @@ public interface CustomerOrderDetailPrototype {
 	CustomerOrderDetail findByOrderAndDetailId(long customerOrderId, long productDetailId);
 	
 	List<CustomerOrderDetail> findAllByCustomerOrderId(Long customerOrderId);
+	
+	List<CustomerOrderDetail> findAllByProductLimitByDate(Long productId, Date from);
 }

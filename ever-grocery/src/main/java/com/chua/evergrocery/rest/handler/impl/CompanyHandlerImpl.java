@@ -18,6 +18,7 @@ import com.chua.evergrocery.database.service.CompanyService;
 import com.chua.evergrocery.enums.ReceiptType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CompanyHandler;
+import com.chua.evergrocery.utility.DateUtil;
 
 @Transactional
 @Component
@@ -43,6 +44,8 @@ public class CompanyHandlerImpl implements CompanyHandler {
 		if(!companyService.isExistsByName(companyForm.getName())) {
 			final Company company = new Company();
 			setCompany(company, companyForm);
+			company.setDeliveryRate(0.0f);
+			company.setLastPurchaseOrderDate(DateUtil.getDefaultDate());
 			
 			result = new ResultBean();
 			result.setSuccess(companyService.insert(company) != null);

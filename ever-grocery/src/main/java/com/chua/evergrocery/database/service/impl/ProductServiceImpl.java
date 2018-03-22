@@ -1,5 +1,7 @@
 package com.chua.evergrocery.database.service.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +36,10 @@ public class ProductServiceImpl
 	@Override
 	public Boolean isExistsByName(String name) {
 		return dao.findByName(StringUtils.trimToEmpty(name)) != null;
+	}
+
+	@Override
+	public List<Product> findAllByCompanyOrderByName(Long companyId) {
+		return dao.findAllByCompanyWithOrder(companyId, new Order[] { Order.asc("name") });
 	}
 }

@@ -1,0 +1,16 @@
+## Template for Generated Purchase Order
+## Has a maximum of 133 Column per line
+                                                       PURCHASE ORDER                                                    
+                                                   
+                P.O. For : ${t.CompanyName}
+            Sales Period : ${t.SalesPeriod}
+  Expected Delivery Date : ${t.ExpectedDeliveryDate}
+                    Date : ${t.Date}
+               
++--------------------------------------------------------------+-------+--------+--------+--------+------------+------------+--------+
+|                         Product Name                         |  Qty  |  Unit  | PrevSR | CurnSR |   PrevTB   |   CurnTB   |  NetBC |
++--------------------------------------------------------------+-------+--------+--------+--------+------------+------------+--------+
+#foreach( $formattedPurchaseItem in $t.FormattedPurchaseItems)
+$formattedPurchaseItem
+#end
++--------------------------------------------------------------+-------+--------+--------+--------+------------+------------+--------+

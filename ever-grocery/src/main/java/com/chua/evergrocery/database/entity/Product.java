@@ -54,6 +54,12 @@ public class Product extends BaseObject {
 	
 	private String displayName;
 	
+	private Float saleRate;
+	
+	private Float purchaseBudget;
+	
+	private Float totalBudget;
+	
 	@ManyToOne(targetEntity = Brand.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "brand_id")
 	@Where(clause = "valid = 1")
@@ -132,5 +138,40 @@ public class Product extends BaseObject {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	@Basic
+	@Column(name = "sale_rate")
+	public Float getSaleRate() {
+		return saleRate;
+	}
+	
+	public void setSaleRate(Float saleRate) {
+		this.saleRate = saleRate;
+	}
+
+	@Basic
+	@Column(name = "purchase_budget")
+	public Float getPurchaseBudget() {
+		return purchaseBudget;
+	}
+	
+	public void setPurchaseBudget(Float purchaseBudget) {
+		this.purchaseBudget = purchaseBudget;
+	}
+
+	@Basic
+	@Column(name = "total_budget")
+	public Float getTotalBudget() {
+		return totalBudget;
+	}
+	
+	@Transient
+	public Float getStockBudget() {
+		return totalBudget - purchaseBudget;
+	}
+
+	public void setTotalBudget(Float totalBudget) {
+		this.totalBudget = totalBudget;
 	}
 }

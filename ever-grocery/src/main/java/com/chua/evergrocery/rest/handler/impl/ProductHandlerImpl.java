@@ -84,6 +84,9 @@ public class ProductHandlerImpl implements ProductHandler {
 		if(!productService.isExistsByName(productForm.getName())) {
 			final Product product = new Product();
 			setProduct(product, productForm);
+			product.setSaleRate(0.0f);
+			product.setPurchaseBudget(0.0f);
+			product.setTotalBudget(0.0f);
 			
 			result = new ResultBean();
 			result.setSuccess(productService.insert(product) != null);

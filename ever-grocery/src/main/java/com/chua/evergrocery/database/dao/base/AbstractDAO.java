@@ -14,6 +14,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
+import org.hibernate.sql.JoinType;
 import org.hibernate.transform.ResultTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -580,7 +581,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	}
 
 	@Override
-	public int countAllByCriterion(String[] associationPaths, String[] aliasNames, int[] joinTypes,
+	public int countAllByCriterion(String[] associationPaths, String[] aliasNames, JoinType[] joinTypes,
 			Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException
 	{
@@ -635,9 +636,8 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	 * @throws IllegalArgumentException see message for details
 	 * @throws HibernateException see details for more info...
 	 */
-	@SuppressWarnings("deprecation")
 	protected static <Y> Criteria createCriteria(Session session, Class<Y> clazz,
-			String associationPaths[], String[] aliasNames, int joinTypes[],
+			String associationPaths[], String[] aliasNames, JoinType joinTypes[],
 			Criterion... criterions) throws HibernateException
 	{
 		if (associationPaths != null && joinTypes != null
@@ -688,7 +688,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public List<Object> findAllByCriterionProjection(String associationPaths[],
-			String aliasNames[], int joinTypes[], Projection projection,
+			String aliasNames[], JoinType joinTypes[], Projection projection,
 			Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterionProjection(Object.class, false, -1, -1, false,
@@ -698,7 +698,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public List<Object> findAllByCriterionProjection(String associationPaths[],
-			String[] aliasNames, int joinTypes[], Order orders[], Projection projection,
+			String[] aliasNames, JoinType joinTypes[], Order orders[], Projection projection,
 			Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterionProjection(Object.class, false, -1, -1, false,
@@ -707,7 +707,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public <Y> List<Y> findAllByCriterionProjection(Class<Y> nc, String associationPaths[],
-			String aliasNames[], int joinTypes[], Projection projection,
+			String aliasNames[], JoinType joinTypes[], Projection projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws HibernateException
 	{
@@ -717,7 +717,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public <Y> List<Y> findAllByCriterionProjection(Class<Y> nc, String associationPaths[],
-			String aliasNames[], int joinTypes[], Order orders[], Projection projection,
+			String aliasNames[], JoinType joinTypes[], Order orders[], Projection projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws HibernateException
 	{
@@ -727,7 +727,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc, int pageNumber,
-			int maxResults, String associationPaths[], String[] aliasNames, int joinTypes[],
+			int maxResults, String associationPaths[], String[] aliasNames, JoinType joinTypes[],
 			Order orders[], Projection projection, ResultTransformer resultTransformer,
 			Criterion... criterions) throws HibernateException
 	{
@@ -739,7 +739,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	@Override
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc, int pageNumber,
 			int maxResults, boolean doGetTotalPages, String associationPaths[],
-			String[] aliasNames, int joinTypes[], Order orders[], Projection projection,
+			String[] aliasNames, JoinType joinTypes[], Order orders[], Projection projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws HibernateException
 	{
@@ -751,7 +751,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	@Override
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc,
 			boolean hasPagination, int pageNumber, int maxResults, String associationPaths[],
-			String[] aliasNames, int joinTypes[], boolean hasOrder, Order orders[],
+			String[] aliasNames, JoinType joinTypes[], boolean hasOrder, Order orders[],
 			Projection projection, ResultTransformer resultTransformer, Criterion... criterions)
 			throws HibernateException
 	{
@@ -763,7 +763,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	@Override
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc,
 			boolean doGetTotalPages, String associationPaths[], String[] aliasNames,
-			int joinTypes[], Order orders[], Projection projection,
+			JoinType joinTypes[], Order orders[], Projection projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws HibernateException
 	{
@@ -776,7 +776,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	@SuppressWarnings("unchecked")
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc,
 			boolean hasPagination, int pageNumber, int maxResults, boolean doGetTotalPages,
-			String associationPaths[], String aliasNames[], int joinTypes[], boolean hasOrder,
+			String associationPaths[], String aliasNames[], JoinType joinTypes[], boolean hasOrder,
 			Order orders[], Projection projection, ResultTransformer resultTransformer,
 			Criterion... criterions) throws HibernateException
 	{
@@ -832,7 +832,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public List<T> findAllByCriterionList(int page, int maxResults,
-			String[] associatedPaths, String[] aliasNames, int[] joinTypes, Order[] orders,
+			String[] associatedPaths, String[] aliasNames, JoinType[] joinTypes, Order[] orders,
 			Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterion(this.clazz, false, true, page, maxResults, associatedPaths,
@@ -841,14 +841,14 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public List<T> findAllByCriterionList(String associationPaths[], String aliasNames[],
-			int joinTypes[], Order[] orders, Criterion... criterions) throws HibernateException
+			JoinType joinTypes[], Order[] orders, Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterion(this.clazz, false, false, -1, -1, associationPaths,
 				aliasNames, joinTypes, orders, criterions).getList();
 	}
 
 	@Override
-	public T findUniqueResult(String[] associationPaths, String[] aliasNames, int[] joinTypes,
+	public T findUniqueResult(String[] associationPaths, String[] aliasNames, JoinType[] joinTypes,
 			Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException
 	{
@@ -856,7 +856,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	}
 
 	@Override
-	public T findUniqueResult(String[] associationPaths, String[] aliasNames, int[] joinTypes,
+	public T findUniqueResult(String[] associationPaths, String[] aliasNames, JoinType[] joinTypes,
 			Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException
 	{
@@ -893,7 +893,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public <E> List<E> findAllByCriterionList(final Class<E> clazz,
-			String associationPaths[], String aliasNames[], int joinTypes[], Order[] orders,
+			String associationPaths[], String aliasNames[], JoinType joinTypes[], Order[] orders,
 			Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterion(clazz, false, false, -1, -1, associationPaths, aliasNames,
@@ -902,7 +902,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public ObjectList<T> findAllByCriterion(int page, int maxResults,
-			String[] associatedPaths, String[] aliasNames, int[] joinTypes, Order[] orders,
+			String[] associatedPaths, String[] aliasNames, JoinType[] joinTypes, Order[] orders,
 			Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterion(this.clazz, true, true, page, maxResults, associatedPaths,
@@ -911,7 +911,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public ObjectList<T> findAllByCriterion(boolean countTotal, int page, int maxResults,
-			String[] associatedPaths, String[] aliasNames, int[] joinTypes, Order[] orders,
+			String[] associatedPaths, String[] aliasNames, JoinType[] joinTypes, Order[] orders,
 			Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterion(this.clazz, countTotal, true, page, maxResults, associatedPaths,
@@ -920,7 +920,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public <E> ObjectList<E> findAllByCriterion(Class<E> clazz, String associationPaths[],
-			String aliasNames[], int joinTypes[], Order[] orders, Criterion... criterions)
+			String aliasNames[], JoinType joinTypes[], Order[] orders, Criterion... criterions)
 			throws HibernateException
 	{
 		return findAllByCriterion(clazz, true, false, -1, -1, associationPaths, aliasNames,
@@ -929,7 +929,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public ObjectList<T> findAllByCriterion(String associationPaths[], String aliasNames[],
-			int joinTypes[], Order[] orders, Criterion... criterions) throws HibernateException
+			JoinType joinTypes[], Order[] orders, Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterion(this.clazz, true, false, -1, -1, associationPaths,
 				aliasNames, joinTypes, orders, criterions);
@@ -937,7 +937,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public ObjectList<T> findAllByCriterion(boolean countTotal, String associationPaths[],
-			String aliasNames[], int joinTypes[], Order[] orders, Criterion... criterions)
+			String aliasNames[], JoinType joinTypes[], Order[] orders, Criterion... criterions)
 			throws HibernateException
 	{
 		return findAllByCriterion(this.clazz, countTotal, false, -1, -1, associationPaths,
@@ -947,7 +947,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	@Override
 	public <E> ObjectList<E> findAllByCriterion(final Class<E> clazz,
 			final boolean countTotal, final String[] associatedPaths,
-			final String[] aliasNames, final int[] joinTypes, final Order[] orders,
+			final String[] aliasNames, final JoinType[] joinTypes, final Order[] orders,
 			final Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterion(clazz, countTotal, false, -1, -1, associatedPaths,
@@ -959,7 +959,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	public <E> ObjectList<E> findAllByCriterion(final Class<E> clazz,
 			final boolean countTotal, final boolean hasPaging, final int page,
 			final int maxResults, final String[] associatedPaths, final String[] aliasNames,
-			final int[] joinTypes, final Order[] orders, final Criterion... criterions)
+			final JoinType[] joinTypes, final Order[] orders, final Criterion... criterions)
 			throws HibernateException
 	{
 		if (associatedPaths != null && joinTypes != null

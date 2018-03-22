@@ -1,11 +1,15 @@
 package com.chua.evergrocery.database.entity;
 
+import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
 import com.chua.evergrocery.enums.ReceiptType;
@@ -23,6 +27,10 @@ public class Company extends BaseObject {
 	private String phoneNumber;
 	
 	private ReceiptType receiptType;
+	
+	private Float deliveryRate;
+	
+	private Date lastPurchaseOrderDate;
 	
 	@Basic
 	@Column(name = "name")
@@ -72,5 +80,25 @@ public class Company extends BaseObject {
 
 	public void setReceiptType(ReceiptType receiptType) {
 		this.receiptType = receiptType;
+	}
+
+	@Basic
+	@Column(name = "delivery_rate")
+	public Float getDeliveryRate() {
+		return deliveryRate;
+	}
+
+	public void setDeliveryRate(Float deliveryRate) {
+		this.deliveryRate = deliveryRate;
+	}
+
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name = "last_purchase_order_date")
+	public Date getLastPurchaseOrderDate() {
+		return lastPurchaseOrderDate;
+	}
+
+	public void setLastPurchaseOrderDate(Date lastPurchaseOrderDate) {
+		this.lastPurchaseOrderDate = lastPurchaseOrderDate;
 	}
 }

@@ -6,6 +6,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
+import org.hibernate.sql.JoinType;
 import org.hibernate.transform.ResultTransformer;
 
 import com.chua.evergrocery.exceptions.DatabaseException;
@@ -41,7 +42,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public int countAllByCriterion(String associationPaths[], String aliasNames[],
-			int joinTypes[], Criterion... criterions)
+			JoinType joinTypes[], Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 	
 	/**
@@ -64,7 +65,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public List<T> findAllByCriterionList(int page, int maxResults, String[] associatedPaths,
-			String[] aliasNames, int[] joinTypes, Order[] orders, Criterion... criterions)
+			String[] aliasNames, JoinType[] joinTypes, Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	/**
@@ -85,7 +86,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public List<T> findAllByCriterionList(String associatedPaths[], String aliasNames[],
-			int joinTypes[], Order[] orders, Criterion... criterions)
+			JoinType joinTypes[], Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 	
 	/**
@@ -105,7 +106,7 @@ public interface DAOSupport<T>
 	 * @throws IllegalArgumentException
 	 */
 	public T findUniqueResult(String associationPaths[], String aliasNames[],
-			int joinTypes[], Criterion... criterions) 
+			JoinType joinTypes[], Criterion... criterions) 
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	
@@ -127,7 +128,7 @@ public interface DAOSupport<T>
 	 * @throws IllegalArgumentException
 	 */
 	public T findUniqueResult(String associationPaths[], String aliasNames[],
-			int joinTypes[], Order[] orders, Criterion... criterions)
+			JoinType joinTypes[], Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	/**
@@ -151,7 +152,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public <E> List<E> findAllByCriterionList(final Class<E> clazz, String associationPaths[],
-			String aliasNames[], int joinTypes[], Order[] orders, Criterion... criterions)
+			String aliasNames[], JoinType joinTypes[], Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	/**
@@ -174,7 +175,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public ObjectList<T> findAllByCriterion(int page, int maxResults, String[] associatedPaths,
-			String[] aliasNames, int[] joinTypes, Order[] orders, Criterion... criterions)
+			String[] aliasNames, JoinType[] joinTypes, Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	/**
@@ -198,7 +199,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public ObjectList<T> findAllByCriterion(boolean countTotal, int page, int maxResults, String[] associatedPaths,
-			String[] aliasNames, int[] joinTypes, Order[] orders, Criterion... criterions)
+			String[] aliasNames, JoinType[] joinTypes, Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	/**
@@ -219,7 +220,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public ObjectList<T> findAllByCriterion(String associationPaths[], String aliasNames[],
-			int joinTypes[], Order[] orders, Criterion... criterions)
+			JoinType joinTypes[], Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	/**
@@ -241,7 +242,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public ObjectList<T> findAllByCriterion(boolean countTotal, String associationPaths[],
-			String aliasNames[], int joinTypes[], Order[] orders, Criterion... criterions)
+			String aliasNames[], JoinType joinTypes[], Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	/**
@@ -266,7 +267,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public <E> ObjectList<E> findAllByCriterion(Class<E> clazz, String associationPaths[],
-			String aliasNames[], int joinTypes[], Order[] orders, Criterion... criterions)
+			String aliasNames[], JoinType joinTypes[], Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	/**
@@ -298,7 +299,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public <E> ObjectList<E> findAllByCriterion(final Class<E> clazz, final boolean countTotal,
-			final String[] associatedPaths, final String[] aliasNames, final int[] joinTypes,
+			final String[] associatedPaths, final String[] aliasNames, final JoinType[] joinTypes,
 			final Order[] orders, final Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
@@ -335,7 +336,7 @@ public interface DAOSupport<T>
 	 */
 	public <E> ObjectList<E> findAllByCriterion(Class<E> clazz, boolean countTotal,
 			boolean hasPaging, int page, int maxResults, String[] associatedPaths, String[] aliasNames,
-			int[] joinTypes, Order[] orders, Criterion... criterions)
+			JoinType[] joinTypes, Order[] orders, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 	
 	/**
@@ -384,7 +385,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public List<Object> findAllByCriterionProjection(String associationPaths[], String aliasNames[],
-			int joinTypes[], Projection projection, Criterion... criterions)
+			JoinType joinTypes[], Projection projection, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	/**
@@ -407,7 +408,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public List<Object> findAllByCriterionProjection(String[] associationPaths, String[] aliasNames,
-			int[] joinTypes, Order[] orders, Projection projection, Criterion... criterions)
+			JoinType[] joinTypes, Order[] orders, Projection projection, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
 	/**
@@ -437,7 +438,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public <Y> List<Y> findAllByCriterionProjection(Class<Y> nc, String associationPaths[],
-			String aliasNames[], int joinTypes[], Projection projection,
+			String aliasNames[], JoinType joinTypes[], Projection projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
@@ -469,7 +470,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public <Y> List<Y> findAllByCriterionProjection(Class<Y> nc, String associationPaths[],
-			String aliasNames[], int joinTypes[], Order orders[], Projection projection,
+			String aliasNames[], JoinType joinTypes[], Order orders[], Projection projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
@@ -501,7 +502,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc, int pageNumber,
-			int maxResults, String associationPaths[], String[] aliasNames, int joinTypes[],
+			int maxResults, String associationPaths[], String[] aliasNames, JoinType joinTypes[],
 			Order orders[], Projection projection, ResultTransformer resultTransformer,
 			Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
@@ -538,7 +539,7 @@ public interface DAOSupport<T>
 	 */
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc, boolean hasPagination,
 			int pageNumber, int maxResults, String associationPaths[], String[] aliasNames,
-			int joinTypes[], boolean hasOrder, Order orders[], Projection projection,
+			JoinType joinTypes[], boolean hasOrder, Order orders[], Projection projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
@@ -573,7 +574,7 @@ public interface DAOSupport<T>
 	 */
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc, int pageNumber,
 			int maxResults, boolean doGetTotalPages, String associationPaths[], String[] aliasNames,
-			int joinTypes[], Order orders[], Projection projection, ResultTransformer resultTransformer,
+			JoinType joinTypes[], Order orders[], Projection projection, ResultTransformer resultTransformer,
 			Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
@@ -611,7 +612,7 @@ public interface DAOSupport<T>
 	 */
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc, boolean hasPagination,
 			int pageNumber, int maxResults, boolean doGetTotalPages, String associationPaths[],
-			String[] aliasNames, int joinTypes[], boolean hasOrder, Order orders[],
+			String[] aliasNames, JoinType joinTypes[], boolean hasOrder, Order orders[],
 			Projection projection, ResultTransformer resultTransformer, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 
@@ -646,7 +647,7 @@ public interface DAOSupport<T>
 	 * @throws HibernateException
 	 */
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc, boolean doGetTotalPages,
-			String associationPaths[], String[] aliasNames, int joinTypes[], Order orders[],
+			String associationPaths[], String[] aliasNames, JoinType joinTypes[], Order orders[],
 			Projection projection, ResultTransformer resultTransformer, Criterion... criterions)
 			throws DatabaseException, HibernateException, IllegalArgumentException;
 

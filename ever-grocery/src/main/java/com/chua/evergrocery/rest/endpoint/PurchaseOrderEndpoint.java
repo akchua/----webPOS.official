@@ -52,6 +52,13 @@ public class PurchaseOrderEndpoint {
 	}
 	
 	@POST
+	@Path("/generate")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean generatePurchaseOrder(@FormParam("companyId") Long companyId) {
+		return purchaseOrderHandler.generatePurchaseOrder(companyId);
+	}
+	
+	@POST
 	@Path("/remove")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ResultBean removePurchaseOrder(@FormParam("purchaseOrderId") Long purchaseOrderId) {

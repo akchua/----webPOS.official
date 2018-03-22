@@ -14,6 +14,8 @@ public interface PurchaseOrderHandler {
 	
 	ResultBean createPurchaseOrder(PurchaseOrderFormBean purchaseOrderForm);
 	
+	ResultBean generatePurchaseOrder(Long companyId);
+	
 	ResultBean removePurchaseOrder(Long purchaseOrderId);
 	
 	void refreshPurchaseOrder(Long purchaseOrderId);
