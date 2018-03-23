@@ -175,7 +175,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					for(PurchaseOrderDetail poDetail : poDetails) {
 						System.out.println("Found : " + poDetail.getProductName() + " worth " + poDetail.getFormattedNetPrice());
 						final Long productId = poDetail.getProductDetail().getProduct().getId();
-						Float netPurchaseAmount = (lastPurchaseNetAmount.get(productId) == null) ? 0 : lastPurchaseNetAmount.get(productId);
+						Float netPurchaseAmount = (lastPurchaseNetAmount.get(productId) == null) ? 0.0f : lastPurchaseNetAmount.get(productId);
 						netPurchaseAmount += poDetail.getTotalPrice();
 						lastPurchaseNetAmount.put(productId, netPurchaseAmount);
 						System.out.println("Updating purchase net amount to : " + netPurchaseAmount);
@@ -194,7 +194,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					
 					
 					// Check if any last purchase net amount
-					final Float netPurchaseAmount = (lastPurchaseNetAmount.get(product.getId()) == null) ? 0 : lastPurchaseNetAmount.get(product.getId());
+					final Float netPurchaseAmount = (lastPurchaseNetAmount.get(product.getId()) == null) ? 0.0f : lastPurchaseNetAmount.get(product.getId());
 					
 					// Adjust total and purchase budget (only on over purchase)
 					if(netPurchaseAmount > product.getPurchaseBudget()) {
