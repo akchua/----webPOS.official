@@ -16,6 +16,6 @@ public class NumberFormatter {
 	public static String toPercent(Float value) {
 		NumberFormat percentFormat = NumberFormat.getPercentInstance();
 		percentFormat.setMinimumFractionDigits(2);
-		return percentFormat.format(value);
+		return percentFormat.format(value / 100);
 	}
 }

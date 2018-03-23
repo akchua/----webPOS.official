@@ -44,7 +44,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 		if(!companyService.isExistsByName(companyForm.getName())) {
 			final Company company = new Company();
 			setCompany(company, companyForm);
-			company.setDeliveryRate(0.0f);
+			company.setDeliveryRate(7.0f);
 			company.setLastPurchaseOrderDate(DateUtil.getDefaultDate());
 			
 			result = new ResultBean();

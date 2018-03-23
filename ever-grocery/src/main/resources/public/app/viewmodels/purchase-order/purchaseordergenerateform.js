@@ -31,7 +31,6 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
     		} else {
     			app.showMessage(result.message);
     		}
-        	
         	self.enableGenerateButton(true);
         });
     };

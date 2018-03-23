@@ -65,7 +65,7 @@ public class PurchaseOrderDAOImpl
 		cal.setTime(new Date());
 		cal.add(Calendar.DAY_OF_MONTH, -days);
 		
-		conjunction.add(Restrictions.between("deliveredOn", (cal.getTime().before(DateUtil.getPurchaseOrderCutoffDate()) ? DateUtil.getPurchaseOrderCutoffDate() : cal.getTime()), new Date()));
+		conjunction.add(Restrictions.between("deliveredOn", (cal.getTime().before(DateUtil.getOrderCutoffDate()) ? DateUtil.getOrderCutoffDate() : cal.getTime()), new Date()));
 		
 		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}

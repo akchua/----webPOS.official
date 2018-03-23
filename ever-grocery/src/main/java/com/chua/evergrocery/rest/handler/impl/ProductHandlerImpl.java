@@ -84,7 +84,7 @@ public class ProductHandlerImpl implements ProductHandler {
 		if(!productService.isExistsByName(productForm.getName())) {
 			final Product product = new Product();
 			setProduct(product, productForm);
-			product.setSaleRate(0.0f);
+			product.setSaleRate(70.0f);
 			product.setPurchaseBudget(0.0f);
 			product.setTotalBudget(0.0f);
 			
@@ -200,7 +200,11 @@ public class ProductHandlerImpl implements ProductHandler {
 		productDetail.setTitle(productDetailsForm.getTitle());
 		productDetail.setBarcode(productDetailsForm.getBarcode());
 		productDetail.setQuantity(productDetailsForm.getQuantity());
-		productDetail.setUnitType(productDetailsForm.getUnitType());
+		if(productDetail.getQuantity() != 0) {
+			productDetail.setUnitType(productDetailsForm.getUnitType() != null ? productDetailsForm.getUnitType() : UnitType.DEFAULT);
+		} else {
+			productDetail.setUnitType(null);
+		}
 		productDetail.setGrossPrice(productDetailsForm.getGrossPrice());
 		productDetail.setDiscount(productDetailsForm.getDiscount());
 		productDetail.setNetPrice(productDetailsForm.getNetPrice());

@@ -42,6 +42,10 @@ public class GeneratedPurchaseItemTemplate implements Template {
 		return StringHelper.center(productStatisticsBean.getUnit().toString(), 8);
 	}
 	
+	public String getSales() {
+		return " " + String.format("%10s", productStatisticsBean.getFormattedSales()) + " ";
+	}
+	
 	public String getPreviousSaleRate() {
 		return String.format("%8s", productStatisticsBean.getFormattedPreviousSaleRate());
 	}
@@ -59,7 +63,14 @@ public class GeneratedPurchaseItemTemplate implements Template {
 	}
 	
 	public String getNetBudgetChange() {
-		final String netBudgetChange = NumberFormatter.toPercent((productStatisticsBean.getCurrentTotalBudget() - productStatisticsBean.getPreviousTotalBudget()) / productStatisticsBean.getPreviousTotalBudget() * 100);
+		final String netBudgetChange;
+		
+		if(productStatisticsBean.getPreviousTotalBudget() != 0.0f) {
+			netBudgetChange = NumberFormatter.toPercent((productStatisticsBean.getCurrentTotalBudget() - productStatisticsBean.getPreviousTotalBudget()) / productStatisticsBean.getPreviousTotalBudget() * 100);
+		} else {
+			netBudgetChange = "0.0%";
+		}
+		
 		return String.format("%8s", netBudgetChange);
 	}
 }

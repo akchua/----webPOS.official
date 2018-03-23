@@ -19,6 +19,8 @@ public class ProductStatisticsBean {
 	
 	private UnitType unit;
 	
+	private Float sales;
+	
 	private Float currentPurchaseBudget;
 	
 	private Float previousSaleRate;
@@ -59,6 +61,18 @@ public class ProductStatisticsBean {
 
 	public void setUnit(UnitType unit) {
 		this.unit = unit;
+	}
+
+	public Float getSales() {
+		return sales;
+	}
+	
+	public String getFormattedSales() {
+		return CurrencyFormatter.pesoFormat(getSales());
+	}
+
+	public void setSales(Float sales) {
+		this.sales = sales;
 	}
 
 	public Float getCurrentPurchaseBudget() {

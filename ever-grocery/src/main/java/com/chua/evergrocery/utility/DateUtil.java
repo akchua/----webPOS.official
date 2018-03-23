@@ -26,7 +26,7 @@ public class DateUtil {
 		return getDefaultDate().getTime();
 	}
 	
-	public static Date getPurchaseOrderCutoffDate() {
+	public static Date getOrderCutoffDate() {
 		return new GregorianCalendar(2018, Calendar.MARCH, 20).getTime();
 	}
 	

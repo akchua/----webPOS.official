@@ -1,5 +1,6 @@
 ﻿requirejs.config({
-    paths: {
+	waitSeconds: 200,
+	paths: {
         'text': '../lib/require/text',
         'durandal':'../lib/durandal/js',
         'plugins' : '../lib/durandal/js/plugins',
@@ -7,6 +8,7 @@
         'knockout': '../lib/knockout/knockout-3.4.0',
         'bootstrap': '../lib/bootstrap/js/bootstrap',
         'jquery': '../lib/jquery/jquery-1.9.1',
+        'fileDownload': '../lib/jquery/jquery.fileDownload',
         'bootstrap-datetimepicker': '../lib/bootstrap/js/bootstrap-datetimepicker',
         'moment': '../lib/moment/moment',
         'fullcalendar' : '../lib/fullcalendar/js/fullcalendar.min'
@@ -15,6 +17,10 @@
         'bootstrap': {
             deps: ['jquery'],
             exports: 'jQuery'
+       },
+       	'fileDownload': {
+       		deps: ['jquery'],
+       		exports: 'jQuery'
        }
     }
 });

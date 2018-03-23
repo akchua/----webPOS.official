@@ -18,6 +18,8 @@ public enum UnitType {
 	
 	CASE ("cs"),
 	
+	DEFAULT("#"),
+	
 	DOZEN ("dz"),
 	
 	JAR ("jar"),

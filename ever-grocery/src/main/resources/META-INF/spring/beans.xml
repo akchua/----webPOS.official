@@ -11,5 +11,5 @@
 	
 	<context:property-placeholder location="classpath:config.properties" ignore-unresolvable="true" />
 	
-	<bean id="fileConstants" class="com.chua.distributions.constants.FileConstants" scope="singleton"></bean>
+	<bean id="fileConstants" class="com.chua.evergrocery.constants.FileConstants" scope="singleton"></bean>
 </beans>
