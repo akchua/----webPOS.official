@@ -21,6 +21,8 @@ public class ProductStatisticsBean {
 	
 	private Float sales;
 	
+	private Float profit;
+	
 	private Float currentPurchaseBudget;
 	
 	private Float previousSaleRate;
@@ -73,6 +75,18 @@ public class ProductStatisticsBean {
 
 	public void setSales(Float sales) {
 		this.sales = sales;
+	}
+
+	public Float getProfit() {
+		return profit;
+	}
+	
+	public String getFormattedProfit() {
+		return CurrencyFormatter.pesoFormat(getProfit());
+	}
+
+	public void setProfit(Float profit) {
+		this.profit = profit;
 	}
 
 	public Float getCurrentPurchaseBudget() {

@@ -77,7 +77,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	@Override
 	public ObjectList<PurchaseOrder> getPurchaseOrderList(Integer pageNumber, Long companyId, Boolean showChecked) {
 		if(showChecked) {
-			return purchaseOrderService.findAllWithPaging(pageNumber,  UserContextHolder.getItemsPerPage(), companyId);
+			return purchaseOrderService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), companyId);
 		} else {
 			return this.getActivePurchaseOrderList(pageNumber, companyId);
 		}
@@ -134,193 +134,200 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		final Company company = companyService.find(companyId);
 		
 		if(company != null) {
-			// Retrieve purchase orders delivered within ninety days from now
-			final List<PurchaseOrder> deliveredWithinNinety = purchaseOrderService.findDeliveredWithinNinetyDaysByCompanyOrderByDeliveryDate(company.getId());
-			System.out.println("# of deliveries within ninety days : " + deliveredWithinNinety.size());
-			
-			if(!deliveredWithinNinety.isEmpty()) {
-				// Computing for delivery rate
-				Float totalDeliveryTime = 0.0f;
-				int deliveryCount = 0;
-				for(int i = 1; i < deliveredWithinNinety.size(); i++) {
-					int deliveryTime = Days.daysBetween(new DateTime(deliveredWithinNinety.get(i).getDeliveredOn()), new DateTime(deliveredWithinNinety.get(i - 1).getDeliveredOn())).getDays();
-					totalDeliveryTime += deliveryTime;
-					if(deliveryTime > 0) deliveryCount++;
+			// Check if last purchase order date is more than 3 days ago
+			if(Days.daysBetween(new DateTime(company.getLastPurchaseOrderDate()), new DateTime()).getDays() > 3) {
+				// Retrieve purchase orders delivered within ninety days from now
+				final List<PurchaseOrder> deliveredWithinNinety = purchaseOrderService.findDeliveredWithinNinetyDaysByCompanyOrderByDeliveryDate(company.getId());
+				System.out.println("# of deliveries within ninety days : " + deliveredWithinNinety.size());
+				
+				if(!deliveredWithinNinety.isEmpty()) {
+					// Computing for delivery rate
+					Float totalDeliveryTime = 0.0f;
+					int deliveryCount = 0;
+					for(int i = 1; i < deliveredWithinNinety.size(); i++) {
+						int deliveryTime = Days.daysBetween(new DateTime(deliveredWithinNinety.get(i).getDeliveredOn()), new DateTime(deliveredWithinNinety.get(i - 1).getDeliveredOn())).getDays();
+						totalDeliveryTime += deliveryTime;
+						if(deliveryTime > 0) deliveryCount++;
+					}
+					final Float deliveryRate = deliveryCount > 0 ? totalDeliveryTime / deliveryCount : 7.0f;
+					System.out.println("Computed delivery rate : " + deliveryRate);
+					
+					// Determining last purchase order date
+					Calendar lastPODate = Calendar.getInstance();
+					lastPODate.setTime(company.getLastPurchaseOrderDate());
+					if(lastPODate.getTimeInMillis() == DateUtil.getDefaultDateInMillis()) {
+						lastPODate.setTime(deliveredWithinNinety.get(0).getDeliveredOn());
+					}
+					System.out.println("Last PO Date : " + lastPODate.getTime());
+					
+					// Separating deliveries after last purchase order
+					final List<PurchaseOrder> deliveriesAfterLastPO = new ArrayList<PurchaseOrder>();
+					for(PurchaseOrder po : deliveredWithinNinety) {
+						if(!po.getDeliveredOn().before(lastPODate.getTime())) {
+							deliveriesAfterLastPO.add(po);
+						}
+					}
+					System.out.println("# of deliveries after last PO : " + deliveriesAfterLastPO.size());
+					
+					// Mapping the net amount to the product id of all products included in "deliveriesAfterLastPO"
+					final Map<Long, Float> lastPurchaseNetAmount = new HashMap<Long, Float>();
+					for(PurchaseOrder po : deliveriesAfterLastPO) {
+						System.out.println("Processing PO #" + po.getId());
+						final List<PurchaseOrderDetail> poDetails = purchaseOrderDetailService.findAllByPurchaseOrderId(po.getId());
+						for(PurchaseOrderDetail poDetail : poDetails) {
+							System.out.println("Found : " + poDetail.getProductName() + " worth " + poDetail.getFormattedNetPrice());
+							final Long productId = poDetail.getProductDetail().getProduct().getId();
+							Float netPurchaseAmount = (lastPurchaseNetAmount.get(productId) == null) ? 0.0f : lastPurchaseNetAmount.get(productId);
+							netPurchaseAmount += poDetail.getTotalPrice();
+							lastPurchaseNetAmount.put(productId, netPurchaseAmount);
+							System.out.println("Updating purchase net amount to : " + netPurchaseAmount);
+						}
+					}
+					
+					// Retrieve all products of the company
+					final List<Product> products = productService.findAllByCompanyOrderByName(companyId);
+					
+					// Storage for printout data
+					final List<ProductStatisticsBean> productStats = new ArrayList<ProductStatisticsBean>();
+					
+					for(Product product : products) {
+						System.out.println("######## Processing product : " + product.getName() + " ########");
+						
+						// Check if any last purchase net amount
+						final Float netPurchaseAmount = (lastPurchaseNetAmount.get(product.getId()) == null) ? 0.0f : lastPurchaseNetAmount.get(product.getId());
+						
+						// Adjust total and purchase budget (only on over purchase)
+						if(netPurchaseAmount > product.getPurchaseBudget()) {
+							final Float previousStockBudget = product.getStockBudget();
+							System.out.println("Adjusting product purchase budget to : " + netPurchaseAmount);
+							product.setPurchaseBudget(netPurchaseAmount);
+							System.out.println("Adjusting product total budget to : " + (netPurchaseAmount + previousStockBudget));
+							product.setTotalBudget(netPurchaseAmount + previousStockBudget);
+						}
+						
+						// Storing available printout data
+						final ProductStatisticsBean productStat = new ProductStatisticsBean();
+						productStat.setProductId(product.getId());
+						productStat.setProductName(product.getName());
+						productStat.setPreviousSaleRate(product.getSaleRate());
+						productStat.setPreviousTotalBudget(product.getTotalBudget());
+						
+						// Compute for ACTUAL BUDGET (Adjusted Stock Budget + Net Purchase Amount)
+						final Float actualBudget = product.getStockBudget() + netPurchaseAmount;
+						System.out.println("Computed actual budget : " + actualBudget);
+						
+						// Retrieve all sales on or after last PO date
+						final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByProductLimitByDate(product.getId(), lastPODate.getTime());
+						Float netSalesAmount = 0.0f;
+						Float netProfitAmount = 0.0f;
+						for(CustomerOrderDetail coDetail : customerOrderDetails) {
+							netSalesAmount += coDetail.getTotalPrice() / (1 + (coDetail.getMargin() / 100));
+							netProfitAmount += coDetail.getTotalPrice() - netSalesAmount;
+						}
+						System.out.println("Total sales : " + netSalesAmount);
+						System.out.println("Total profit : " + netProfitAmount);
+						
+						// Compute for sale rate (net sales amount / actual budget * 100) [cap value between 0-100%]
+						Float tempRate = actualBudget.equals(0.0f) ? 0 : netSalesAmount / actualBudget * 100;
+						final Float saleRate = tempRate > 100.0f ? 100.0f : (tempRate < 0.0f ? 0.0f : tempRate);
+						System.out.println("Computed sale rate : " + saleRate);
+						
+						// Compute adjustment rate {actual value to be multiplied to budget for simplicity}
+						// 20/30 Maximum increase of 20% at 70-100% sales AND 30/70 Maximum decrease of 30% at 0-70% sales
+						Float tempAdjustmentRate = (saleRate - 70.0f) * (saleRate >= 70.0f ? (20.0f / 30.0f) : (30.0f / 70.0f)) / 100.0f;
+						if((saleRate >= 95.0f && product.getSaleRate() >= 95.0f) || (saleRate <= 30 && product.getSaleRate() <= 30)) {
+							tempAdjustmentRate *= 2.0f;
+						}
+						final Float adjustmentRate = 1.0f + tempAdjustmentRate;
+						System.out.println("Computed adjustment rate : " + adjustmentRate);
+						
+						// Compute new total budget (total budget * adjustment rate) [apply delivery rate ratio]
+						Float tempTotalBudget = actualBudget * adjustmentRate;
+						tempTotalBudget = saleRate >= 70 ? Math.max(tempTotalBudget, product.getTotalBudget()) : Math.min(tempTotalBudget, product.getTotalBudget());
+						product.setTotalBudget(tempTotalBudget / company.getDeliveryRate() * deliveryRate);
+						System.out.println("Computed new total budget : " + product.getTotalBudget());
+						
+						// Compute new purchase budget (total budget - (actual budget - sales))
+						product.setPurchaseBudget(product.getTotalBudget() - (actualBudget - netSalesAmount));
+						System.out.println("Computed new purchase budget : " + product.getPurchaseBudget());
+						
+						// Applying new sale rate to product
+						product.setSaleRate(saleRate);
+						
+						// Storing available printout data
+						productStat.setSales(netSalesAmount);
+						productStat.setProfit(netProfitAmount);
+						productStat.setCurrentPurchaseBudget(product.getPurchaseBudget());
+						productStat.setCurrentTotalBudget(product.getTotalBudget());
+						productStat.setCurrentSaleRate(product.getSaleRate());
+						
+						// Allocate budget
+						final ProductDetail wholeProductDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Whole");
+						final ProductDetail pieceProductDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Piece");
+						
+						final Float wholePurchasePrice = wholeProductDetail != null ? wholeProductDetail.getNetPrice() : -1.0f;
+						final Float piecePurchasePrice = pieceProductDetail != null ? pieceProductDetail.getNetPrice() : -1.0f;
+						
+						Integer quantity = 0;
+						UnitType unit;
+						
+						if(product.getPurchaseBudget() / wholePurchasePrice < 1.0f) {
+							quantity = Math.round(product.getPurchaseBudget() / piecePurchasePrice);
+							unit = pieceProductDetail.getUnitType();
+						} else if(product.getPurchaseBudget() / wholePurchasePrice > 100.0f) {
+							// if quantity is more than 100 wholes round to the nearest 10s
+							quantity = Math.round(product.getPurchaseBudget() / piecePurchasePrice / 10) * 10;
+							unit = wholeProductDetail.getUnitType();
+						} else if(product.getPurchaseBudget() / wholePurchasePrice > 50.0f) {
+							// if quantity is more than 50 wholes round to the nearest 5s
+							quantity = Math.round(product.getPurchaseBudget() / piecePurchasePrice / 5) * 5;
+							unit = wholeProductDetail.getUnitType();
+						} else {
+							quantity = Math.round(product.getPurchaseBudget() / wholePurchasePrice);
+							unit = wholeProductDetail.getUnitType();
+						}
+						
+						productStat.setQuantity(quantity);
+						productStat.setUnit(unit != null ? unit : UnitType.DEFAULT);
+						if(quantity > 0) {
+							productStats.add(productStat);
+						}
+						System.out.println("Allocated purchase : " + quantity + " " + unit);
+					}
+					
+					// Computing expected delivery date
+					Calendar expectedDeliveryDate = Calendar.getInstance();
+					expectedDeliveryDate.add(Calendar.DAY_OF_MONTH, Math.round(deliveryRate));
+					
+					// Applying changes to company
+					company.setDeliveryRate(deliveryRate);
+					company.setLastPurchaseOrderDate(generateStartTime);
+					
+					// Saving changes
+					productService.batchUpdate(products);
+					companyService.update(company);
+								
+					// Generate text file of generated purchase order
+					final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_" + DateFormatter.fileSafeFormat(new Date()) + ".txt";
+					final String filePath = fileConstants.getGeneratePurchasesHome() + fileName;
+					final String temp = new GeneratedPurchaseTemplate(
+							company.getName(),
+							lastPODate.getTime(),
+							generateStartTime,
+							expectedDeliveryDate.getTime(),
+							productStats)
+					.merge(velocityEngine);
+					TextWriter.write(
+							temp, filePath);
+					final Map<String, Object> extras = new HashMap<String, Object>();
+					extras.put("fileName", fileName);
+					result = new ResultBean(Boolean.TRUE, "Done");
+					result.setExtras(extras);
+				} else {
+					result = new ResultBean(Boolean.FALSE, Html.line("No purchase record within 90 days."));
 				}
-				final Float deliveryRate = deliveryCount > 0 ? totalDeliveryTime / deliveryCount : 7.0f;
-				System.out.println("Computed delivery rate : " + deliveryRate);
-				
-				// Determining last purchase order date
-				Calendar lastPODate = Calendar.getInstance();
-				lastPODate.setTime(company.getLastPurchaseOrderDate());
-				if(lastPODate.getTimeInMillis() == DateUtil.getDefaultDateInMillis()) {
-					lastPODate.setTime(deliveredWithinNinety.get(0).getDeliveredOn());
-				}
-				System.out.println("Last PO Date : " + lastPODate.getTime());
-				
-				// Separating deliveries after last purchase order
-				final List<PurchaseOrder> deliveriesAfterLastPO = new ArrayList<PurchaseOrder>();
-				for(PurchaseOrder po : deliveredWithinNinety) {
-					if(!po.getDeliveredOn().before(lastPODate.getTime())) {
-						deliveriesAfterLastPO.add(po);
-					}
-				}
-				System.out.println("# of deliveries after last PO : " + deliveriesAfterLastPO.size());
-				
-				// Mapping the net amount to the product id of all products included in "deliveriesAfterLastPO"
-				final Map<Long, Float> lastPurchaseNetAmount = new HashMap<Long, Float>();
-				for(PurchaseOrder po : deliveriesAfterLastPO) {
-					System.out.println("Processing PO #" + po.getId());
-					final List<PurchaseOrderDetail> poDetails = purchaseOrderDetailService.findAllByPurchaseOrderId(po.getId());
-					for(PurchaseOrderDetail poDetail : poDetails) {
-						System.out.println("Found : " + poDetail.getProductName() + " worth " + poDetail.getFormattedNetPrice());
-						final Long productId = poDetail.getProductDetail().getProduct().getId();
-						Float netPurchaseAmount = (lastPurchaseNetAmount.get(productId) == null) ? 0.0f : lastPurchaseNetAmount.get(productId);
-						netPurchaseAmount += poDetail.getTotalPrice();
-						lastPurchaseNetAmount.put(productId, netPurchaseAmount);
-						System.out.println("Updating purchase net amount to : " + netPurchaseAmount);
-					}
-				}
-				
-				// Retrieve all products of the company
-				final List<Product> products = productService.findAllByCompanyOrderByName(companyId);
-				
-				// Storage for printout data
-				final List<ProductStatisticsBean> productStats = new ArrayList<ProductStatisticsBean>();
-				
-				for(Product product : products) {
-					System.out.println("######## Processing product : " + product.getName() + " ########");
-					
-					
-					
-					// Check if any last purchase net amount
-					final Float netPurchaseAmount = (lastPurchaseNetAmount.get(product.getId()) == null) ? 0.0f : lastPurchaseNetAmount.get(product.getId());
-					
-					// Adjust total and purchase budget (only on over purchase)
-					if(netPurchaseAmount > product.getPurchaseBudget()) {
-						final Float previousStockBudget = product.getStockBudget();
-						System.out.println("Adjusting product purchase budget to : " + netPurchaseAmount);
-						product.setPurchaseBudget(netPurchaseAmount);
-						System.out.println("Adjusting product total budget to : " + (netPurchaseAmount + previousStockBudget));
-						product.setTotalBudget(netPurchaseAmount + previousStockBudget);
-					}
-					
-					// Storing available printout data
-					final ProductStatisticsBean productStat = new ProductStatisticsBean();
-					productStat.setProductId(product.getId());
-					productStat.setProductName(product.getName());
-					productStat.setPreviousSaleRate(product.getSaleRate());
-					productStat.setPreviousTotalBudget(product.getTotalBudget());
-					
-					// Compute for ACTUAL BUDGET (Adjusted Stock Budget + Net Purchase Amount)
-					final Float actualBudget = product.getStockBudget() + netPurchaseAmount;
-					System.out.println("Computed actual budget : " + actualBudget);
-					
-					// Retrieve all sales on or after last PO date
-					final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByProductLimitByDate(product.getId(), lastPODate.getTime());
-					Float netSalesAmount = 0.0f;
-					for(CustomerOrderDetail coDetail : customerOrderDetails) {
-						netSalesAmount += coDetail.getTotalPrice();
-					}
-					System.out.println("Total sales : " + netSalesAmount);
-					
-					// Compute for sale rate (net sales amount / actual budget * 100) [cap value between 0-100%]
-					Float tempRate = actualBudget.equals(0.0f) ? 0 : netSalesAmount / actualBudget * 100;
-					final Float saleRate = tempRate > 100.0f ? 100.0f : (tempRate < 0.0f ? 0.0f : tempRate);
-					System.out.println("Computed sale rate : " + saleRate);
-					
-					// Compute adjustment rate {actual value to be multiplied to budget for simplicity}
-					// 20/30 Maximum increase of 20% at 70-100% sales AND 30/70 Maximum decrease of 30% at 0-70% sales
-					Float tempAdjustmentRate = (saleRate - 70.0f) * (saleRate >= 70.0f ? (20.0f / 30.0f) : (30.0f / 70.0f)) / 100.0f;
-					if((saleRate >= 95.0f && product.getSaleRate() >= 95.0f) || (saleRate <= 30 && product.getSaleRate() <= 30)) {
-						tempAdjustmentRate *= 2.0f;
-					}
-					final Float adjustmentRate = 1.0f + tempAdjustmentRate;
-					System.out.println("Computed adjustment rate : " + adjustmentRate);
-					
-					// Compute new total budget (total budget * adjustment rate) [apply delivery rate ratio]
-					Float tempTotalBudget = actualBudget * adjustmentRate;
-					tempTotalBudget = saleRate >= 70 ? Math.max(tempTotalBudget, product.getTotalBudget()) : Math.min(tempTotalBudget, product.getTotalBudget());
-					product.setTotalBudget(tempTotalBudget / company.getDeliveryRate() * deliveryRate);
-					System.out.println("Computed new total budget : " + product.getTotalBudget());
-					
-					// Compute new purchase budget (total budget - (actual budget - sales))
-					product.setPurchaseBudget(product.getTotalBudget() - (actualBudget - netSalesAmount));
-					System.out.println("Computed new purchase budget : " + product.getPurchaseBudget());
-					
-					// Applying new sale rate to product
-					product.setSaleRate(saleRate);
-					
-					// Storing available printout data
-					productStat.setSales(netSalesAmount);
-					productStat.setCurrentPurchaseBudget(product.getPurchaseBudget());
-					productStat.setCurrentTotalBudget(product.getTotalBudget());
-					productStat.setCurrentSaleRate(product.getSaleRate());
-					
-					// Allocate budget
-					final ProductDetail wholeProductDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Whole");
-					final ProductDetail pieceProductDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Piece");
-					
-					final Float wholePurchasePrice = wholeProductDetail != null ? wholeProductDetail.getNetPrice() : -1.0f;
-					final Float piecePurchasePrice = pieceProductDetail != null ? pieceProductDetail.getNetPrice() : -1.0f;
-					
-					Integer quantity = 0;
-					UnitType unit;
-					
-					if(product.getPurchaseBudget() / wholePurchasePrice < 1.0f) {
-						quantity = Math.round(product.getPurchaseBudget() / piecePurchasePrice);
-						unit = pieceProductDetail.getUnitType();
-					} else if(product.getPurchaseBudget() / wholePurchasePrice > 100.0f) {
-						// if quantity is more than 100 wholes round to the nearest 10s
-						quantity = Math.round(product.getPurchaseBudget() / piecePurchasePrice / 10) * 10;
-						unit = wholeProductDetail.getUnitType();
-					} else if(product.getPurchaseBudget() / wholePurchasePrice > 50.0f) {
-						// if quantity is more than 50 wholes round to the nearest 5s
-						quantity = Math.round(product.getPurchaseBudget() / piecePurchasePrice / 5) * 5;
-						unit = wholeProductDetail.getUnitType();
-					} else {
-						quantity = Math.round(product.getPurchaseBudget() / wholePurchasePrice);
-						unit = wholeProductDetail.getUnitType();
-					}
-					
-					productStat.setQuantity(quantity);
-					productStat.setUnit(unit != null ? unit : UnitType.DEFAULT);
-					if(quantity > 0) {
-						productStats.add(productStat);
-					}
-					System.out.println("Allocated purchase : " + quantity + " " + unit);
-				}
-				
-				// Computing expected delivery date
-				Calendar expectedDeliveryDate = Calendar.getInstance();
-				expectedDeliveryDate.add(Calendar.DAY_OF_MONTH, Math.round(deliveryRate));
-				
-				// Applying changes to company
-				company.setDeliveryRate(deliveryRate);
-				company.setLastPurchaseOrderDate(generateStartTime);
-				
-				// Saving changes
-				productService.batchUpdate(products);
-				companyService.update(company);
-							
-				// Generate text file of generated purchase order
-				final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_" + DateFormatter.fileSafeFormat(new Date()) + ".txt";
-				final String filePath = fileConstants.getGeneratePurchasesHome() + fileName;
-				final String temp = new GeneratedPurchaseTemplate(
-						company.getName(),
-						lastPODate.getTime(),
-						generateStartTime,
-						expectedDeliveryDate.getTime(),
-						productStats)
-				.merge(velocityEngine);
-				TextWriter.write(
-						temp, filePath);
-				final Map<String, Object> extras = new HashMap<String, Object>();
-				extras.put("fileName", fileName);
-				result = new ResultBean(Boolean.TRUE, "Done");
-				result.setExtras(extras);
 			} else {
-				result = new ResultBean(Boolean.FALSE, Html.line("No purchase record within 90 days."));
+				result = new ResultBean(Boolean.FALSE, Html.line("Last purchase order was genearted on " + DateFormatter.longFormat(company.getLastPurchaseOrderDate()) + ". You can generate another after a minimum of 3 days have passed."));
 			}
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line("Please select a company."));

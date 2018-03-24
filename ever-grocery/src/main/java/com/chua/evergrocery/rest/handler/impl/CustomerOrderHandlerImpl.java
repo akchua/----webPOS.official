@@ -565,6 +565,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrderDetail.setUnitPrice(productDetail.getSellingPrice());
 		customerOrderDetail.setQuantity(0.0f);
 		customerOrderDetail.setTotalPrice(0.0f);
+		customerOrderDetail.setMargin(productDetail.getPercentProfit());
 	}
 	
 	private void setCustomerOrderDetailQuantity(CustomerOrderDetail customerOrderDetail, float quantity) {

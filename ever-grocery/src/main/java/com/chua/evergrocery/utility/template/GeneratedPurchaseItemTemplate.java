@@ -46,6 +46,10 @@ public class GeneratedPurchaseItemTemplate implements Template {
 		return " " + String.format("%10s", productStatisticsBean.getFormattedSales()) + " ";
 	}
 	
+	public String getProfit() {
+		return " " + String.format("%10s", productStatisticsBean.getFormattedProfit()) + " ";
+	}
+	
 	public String getPreviousSaleRate() {
 		return String.format("%8s", productStatisticsBean.getFormattedPreviousSaleRate());
 	}

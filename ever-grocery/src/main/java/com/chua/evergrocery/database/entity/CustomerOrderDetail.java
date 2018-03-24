@@ -42,6 +42,8 @@ public class CustomerOrderDetail extends BaseObject {
 	private Float quantity;
 	
 	private Float totalPrice;
+	
+	private Float margin;
 
 	@ManyToOne(targetEntity = CustomerOrder.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_order_id")
@@ -135,5 +137,15 @@ public class CustomerOrderDetail extends BaseObject {
 
 	public void setTotalPrice(Float totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	@Basic
+	@Column(name = "margin")
+	public Float getMargin() {
+		return margin;
+	}
+
+	public void setMargin(Float margin) {
+		this.margin = margin;
 	}
 }
