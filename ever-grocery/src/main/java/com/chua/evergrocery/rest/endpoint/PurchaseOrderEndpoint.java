@@ -54,8 +54,8 @@ public class PurchaseOrderEndpoint {
 	@POST
 	@Path("/generate")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean generatePurchaseOrder(@FormParam("companyId") Long companyId) {
-		return purchaseOrderHandler.generatePurchaseOrder(companyId);
+	public ResultBean generatePurchaseOrder(@FormParam("companyId") Long companyId, @FormParam("daysToBook") Float daysToBook) {
+		return purchaseOrderHandler.generatePurchaseOrder(companyId, daysToBook);
 	}
 	
 	@POST

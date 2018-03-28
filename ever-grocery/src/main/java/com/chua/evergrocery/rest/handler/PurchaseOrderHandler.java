@@ -14,7 +14,7 @@ public interface PurchaseOrderHandler {
 	
 	ResultBean createPurchaseOrder(PurchaseOrderFormBean purchaseOrderForm);
 	
-	ResultBean generatePurchaseOrder(Long companyId);
+	ResultBean generatePurchaseOrder(Long companyId, Float daysToBook);
 	
 	ResultBean removePurchaseOrder(Long purchaseOrderId);
 	

@@ -45,6 +45,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 			final Company company = new Company();
 			setCompany(company, companyForm);
 			company.setDeliveryRate(7.0f);
+			company.setDaysBooked(0.0f);
 			company.setLastPurchaseOrderDate(DateUtil.getDefaultDate());
 			
 			result = new ResultBean();

@@ -30,12 +30,13 @@ define(['jquery'], function ($) {
     		});
     	},
     	
-    	generatePurchaseOrder: function(companyId) {
+    	generatePurchaseOrder: function(companyId, daysToBook) {
     		return $.ajax({
     			url: '/services/purchaseorder/generate',
     			method: 'POST',
     			data: {
-    				companyId: companyId
+    				companyId: companyId,
+    				daysToBook: daysToBook
     			}
     		});
     	},

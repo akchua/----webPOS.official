@@ -4,7 +4,8 @@
                                                    
                 P.O. For : ${t.CompanyName}
             Sales Period : ${t.SalesPeriod}
-  Expected Delivery Date : ${t.ExpectedDeliveryDate}
+            Purchase for : ${t.PurchasePeriod}
+    Deliver On or Before : ${t.ExpectedDeliveryDate}
                     Date : ${t.Date}
 
 +--------------------------------------------------------------+-------+--------+------------+------------+--------+--------+------------+------------+--------+

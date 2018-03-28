@@ -2,6 +2,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 		function (dialog, app, ko, purchaseOrderService, companyService, fileService) {
     var PurchaseOrderGenerateForm = function() {
         this.companyId = ko.observable();
+        this.daysToBook = ko.observable(0);
         
         this.companyList = ko.observable();
         
@@ -24,7 +25,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
     	var self = this;
     	
     	self.enableGenerateButton(false);
-        purchaseOrderService.generatePurchaseOrder(self.companyId()).done(function(result) {
+        purchaseOrderService.generatePurchaseOrder(self.companyId(), self.daysToBook()).done(function(result) {
         	if(result.success) {
 				fileService.downloadGeneratedPurchaseByFileName(result.extras.fileName);
     			dialog.close(self);

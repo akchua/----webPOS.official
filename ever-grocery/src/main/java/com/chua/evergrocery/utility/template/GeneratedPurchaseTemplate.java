@@ -1,6 +1,7 @@
 package com.chua.evergrocery.utility.template;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,15 +28,20 @@ public class GeneratedPurchaseTemplate implements Template {
 	
 	private Date expectedDeliveryDate;
 	
+	private Float daysToBook;
+	
 	private List<ProductStatisticsBean> productStats;
 	
 	private List<String> formattedPurchaseItems;
 	
-	public GeneratedPurchaseTemplate(String companyName, Date salePeriodStart, Date salePeriodEnd, Date expectedDeliveryDate, List<ProductStatisticsBean> productStats) {
+	public GeneratedPurchaseTemplate(String companyName, Date salePeriodStart, Date salePeriodEnd, 
+			Date expectedDeliveryDate, Float daysToBook,
+			List<ProductStatisticsBean> productStats) {
 		this.companyName = companyName;
 		this.salePeriodStart = salePeriodStart;
 		this.salePeriodEnd = salePeriodEnd;
 		this.expectedDeliveryDate = expectedDeliveryDate;
+		this.daysToBook = daysToBook;
 		this.productStats = productStats;
 		this.formattedPurchaseItems = new ArrayList<String>();
 	}
@@ -60,12 +66,18 @@ public class GeneratedPurchaseTemplate implements Template {
 		return DateFormatter.prettyFormat(salePeriodStart) + " - " + DateFormatter.prettyFormat(salePeriodEnd);
 	}
 	
+	public String getPurchasePeriod() {
+		Calendar purchasePeriodEnd = Calendar.getInstance();
+		purchasePeriodEnd.add(Calendar.DAY_OF_MONTH, Math.round(daysToBook));
+		return DateFormatter.prettyFormat(new Date()) + " - " + DateFormatter.prettyFormat(purchasePeriodEnd.getTime());
+	}
+	
 	public String getExpectedDeliveryDate() {
 		return DateFormatter.prettyFormat(expectedDeliveryDate);
 	}
 	
 	public String getDate() {
-		return DateFormatter.prettyFormat(new Date());
+		return DateFormatter.longFormat(new Date());
 	}
 	
 	public List<String> getFormattedPurchaseItems() {

@@ -30,6 +30,8 @@ public class Company extends BaseObject {
 	
 	private Float deliveryRate;
 	
+	private Float daysBooked;
+	
 	private Date lastPurchaseOrderDate;
 	
 	@Basic
@@ -90,6 +92,16 @@ public class Company extends BaseObject {
 
 	public void setDeliveryRate(Float deliveryRate) {
 		this.deliveryRate = deliveryRate;
+	}
+
+	@Basic
+	@Column(name = "days_booked")
+	public Float getDaysBooked() {
+		return daysBooked;
+	}
+
+	public void setDaysBooked(Float daysBooked) {
+		this.daysBooked = daysBooked;
 	}
 
 	@Temporal(value = TemporalType.TIMESTAMP)

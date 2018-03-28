@@ -32,6 +32,7 @@ import com.chua.evergrocery.database.service.ProductService;
 import com.chua.evergrocery.database.service.PurchaseOrderDetailService;
 import com.chua.evergrocery.database.service.PurchaseOrderService;
 import com.chua.evergrocery.database.service.UserService;
+import com.chua.evergrocery.enums.Color;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.objects.ObjectList;
@@ -126,7 +127,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	}
 	
 	@Override
-	public ResultBean generatePurchaseOrder(Long companyId) {
+	public ResultBean generatePurchaseOrder(Long companyId, Float daysToBook) {
 		// Storing start time of this method
 		final Date generateStartTime = new Date();
 		
@@ -134,6 +135,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		final Company company = companyService.find(companyId);
 		
 		if(company != null) {
+		if(daysToBook >= 3) {
 			// Check if last purchase order date is more than 3 days ago
 			if(Days.daysBetween(new DateTime(company.getLastPurchaseOrderDate()), new DateTime()).getDays() > 3) {
 				// Retrieve purchase orders delivered within ninety days from now
@@ -241,14 +243,19 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						final Float adjustmentRate = 1.0f + tempAdjustmentRate;
 						System.out.println("Computed adjustment rate : " + adjustmentRate);
 						
-						// Compute new total budget (total budget * adjustment rate) [apply delivery rate ratio]
+						// Compute new total budget (total budget * adjustment rate)
 						Float tempTotalBudget = actualBudget * adjustmentRate;
 						tempTotalBudget = saleRate >= 70 ? Math.max(tempTotalBudget, product.getTotalBudget()) : Math.min(tempTotalBudget, product.getTotalBudget());
-						product.setTotalBudget(tempTotalBudget / company.getDeliveryRate() * deliveryRate);
+						// apply delivery rate ratio
+						if(!company.getDeliveryRate().equals(0.0f)) tempTotalBudget /= company.getDeliveryRate() * deliveryRate;
+						// adjust to number of days to book
+						if(!company.getDaysBooked().equals(0.0f)) tempTotalBudget /= company.getDaysBooked() * daysToBook;
+						product.setTotalBudget(tempTotalBudget);
 						System.out.println("Computed new total budget : " + product.getTotalBudget());
 						
 						// Compute new purchase budget (total budget - (actual budget - sales))
-						product.setPurchaseBudget(product.getTotalBudget() - (actualBudget - netSalesAmount));
+						final Float actualStock = actualBudget - netSalesAmount;
+						product.setPurchaseBudget(product.getTotalBudget() - (actualStock > 0.0f ? actualStock : 0.0f));
 						System.out.println("Computed new purchase budget : " + product.getPurchaseBudget());
 						
 						// Applying new sale rate to product
@@ -271,15 +278,15 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						Integer quantity = 0;
 						UnitType unit;
 						
-						if(product.getPurchaseBudget() / wholePurchasePrice < 1.0f) {
+						if(Math.abs(product.getPurchaseBudget() / wholePurchasePrice) < 1.0f) {
 							quantity = Math.round(product.getPurchaseBudget() / piecePurchasePrice);
 							unit = pieceProductDetail.getUnitType();
 						} else if(product.getPurchaseBudget() / wholePurchasePrice > 100.0f) {
 							// if quantity is more than 100 wholes round to the nearest 10s
 							quantity = Math.round(product.getPurchaseBudget() / piecePurchasePrice / 10) * 10;
 							unit = wholeProductDetail.getUnitType();
-						} else if(product.getPurchaseBudget() / wholePurchasePrice > 50.0f) {
-							// if quantity is more than 50 wholes round to the nearest 5s
+						} else if(product.getPurchaseBudget() / wholePurchasePrice > 30.0f) {
+							// if quantity is more than 30 wholes round to the nearest 5s
 							quantity = Math.round(product.getPurchaseBudget() / piecePurchasePrice / 5) * 5;
 							unit = wholeProductDetail.getUnitType();
 						} else {
@@ -289,18 +296,20 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						
 						productStat.setQuantity(quantity);
 						productStat.setUnit(unit != null ? unit : UnitType.DEFAULT);
-						if(quantity > 0) {
+						if(quantity != 0) {
 							productStats.add(productStat);
 						}
 						System.out.println("Allocated purchase : " + quantity + " " + unit);
 					}
 					
-					// Computing expected delivery date
+					// Computing expected delivery date (30% of previous days booked)
 					Calendar expectedDeliveryDate = Calendar.getInstance();
-					expectedDeliveryDate.add(Calendar.DAY_OF_MONTH, Math.round(deliveryRate));
+					int maxDaysToDeliver = company.getDaysBooked().equals(0.0f) ? 2 : (int) Math.floor(company.getDaysBooked() * 0.30f);
+					expectedDeliveryDate.add(Calendar.DAY_OF_MONTH, maxDaysToDeliver);
 					
 					// Applying changes to company
 					company.setDeliveryRate(deliveryRate);
+					company.setDaysBooked(daysToBook);
 					company.setLastPurchaseOrderDate(generateStartTime);
 					
 					// Saving changes
@@ -315,6 +324,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 							lastPODate.getTime(),
 							generateStartTime,
 							expectedDeliveryDate.getTime(),
+							daysToBook,
 							productStats)
 					.merge(velocityEngine);
 					TextWriter.write(
@@ -329,6 +339,9 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			} else {
 				result = new ResultBean(Boolean.FALSE, Html.line("Last purchase order was genearted on " + DateFormatter.longFormat(company.getLastPurchaseOrderDate()) + ". You can generate another after a minimum of 3 days have passed."));
 			}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line("You must book for at least " + Html.text(Color.BLUE, "3 days.")));
+		}
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line("Please select a company."));
 		}
