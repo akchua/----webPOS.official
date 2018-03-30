@@ -1,7 +1,6 @@
 package com.chua.evergrocery.database.prototype;
 
 import com.chua.evergrocery.database.entity.User;
-import com.chua.evergrocery.objects.ObjectList;
 
 public interface UserPrototype {
 
