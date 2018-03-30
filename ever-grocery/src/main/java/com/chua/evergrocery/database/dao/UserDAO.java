@@ -6,17 +6,13 @@ import org.hibernate.criterion.Order;
 
 import com.chua.evergrocery.database.entity.User;
 import com.chua.evergrocery.database.prototype.UserPrototype;
+import com.chua.evergrocery.objects.ObjectList;
 
 public interface UserDAO extends DAO<User, Long>, UserPrototype {
 
-	/**
-	 * Find all using the given orders.
-	 * 
-	 * @param orders the orders
-	 * 
-	 * @return the list of user
-	 */
-	List<User> findAllWithOrder(Order[] orders);
+	ObjectList<User> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey);
 	
-	User findByUsername(String username);
+	ObjectList<User> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey, Order[] orders);
+	
+	List<User> findAllWithOrder(Order[] orders);
 }

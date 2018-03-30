@@ -46,11 +46,29 @@ public class CustomerOrder extends BaseObject {
 	private Float totalItems;
 	
 	private Status status;
+	
+	@Transient
+	public String getOrderNumber() {
+		return String.valueOf(this.getId() % 1000);
+	}
 
 	@Basic
 	@Column(name = "name")
 	public String getName() {
 		return name;
+	}
+	
+	@Transient
+	public String getFormattedName() {
+		final String formattedName;
+		
+		if(customer != null) {
+			formattedName = customer.getFormattedName();
+		} else {
+			formattedName = name;
+		}
+		
+		return formattedName;
 	}
 
 	public void setName(String name) {

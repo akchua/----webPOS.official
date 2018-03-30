@@ -50,7 +50,6 @@
     					<td data-bind="text: customerOrder.status.displayName" class="text-center"></td>
     					<td>
     						<div class="pull-right">
-    							<button data-bind="click: function() { $parent.print(customerOrder.id, customerOrder.name) }" type="button" class="btn btn-primary btn-sm">Print</button>
     							<a data-bind="click: function() { $parent.details(customerOrder.id) }" type="button" class="btn btn-info btn-sm">Details</a>
     							<button data-bind="click: function() { $parent.edit(customerOrder.id) }" type="button" class="btn btn-warning btn-sm">Edit</button>
     							<button data-bind="click: function() { $parent.remove(customerOrder.id, customerOrder.name) }" type="button" class="btn btn-danger btn-sm">Cancel Order</button>

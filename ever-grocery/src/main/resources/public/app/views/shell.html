@@ -1,55 +1,70 @@
-<div class="container-fluid">
-    <nav class="navbar navbar-default" role="navigation"> <!-- style="background-color: #FFFAFA" -->
-    	<div class="container-fluid">
-	        <div class="navbar-header">
-	            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
-	                <span class="sr-only">Toggle Navigation</span>
-	                <span class="icon-bar"></span>
-	                <span class="icon-bar"></span>
-	                <span class="icon-bar"></span>
-	            </button>
-	            <a class="navbar-brand" href="#">
-	                <i class="fa fa-home"></i>
-	                <span>EVER</span>
-	            </a>
-	        </div>
-	
-			<div class="collapse navbar-collapse" id="navbarCollapse">
-				<div data-bind="foreach: router.navigationModel">
-					<ul class="nav navbar-nav">
-						<!-- ko if: $data.childRoutes === undefined && $data.parent === undefined -->
-							<li data-bind="css: { active: isActive }">
-			                    <a data-bind="attr: { href: hash }, html: title"></a>
-			                </li>
-						<!-- /ko -->
-						<!-- ko if: $data.childRoutes !== undefined -->
-							<li class="dropdown">
-			        			<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span data-bind="text: title"></span><b class="caret"></b></a>
-			        			<ul data-bind="foreach: childRoutes" role="menu" class="dropdown-menu">
-			        				<li data-bind="css: { active: isActive }">
-			        					<a data-bind="attr: { href: hash }, html: title"></a>
-			        				</li>
-			        			</ul>
-			        		</li>
-						<!-- /ko -->
-		           	</ul>
-				</div>
-				
-				<div class="nav navbar-nav navbar-right" style="padding-right:25px">
-					<div>
-						<a data-bind="click: userSettings" href="javascript:void(0)">
-							<i class="fam-user-suit"></i>
-							<span data-bind="text: user.fullName"></span>
-						</a> | 
-						<span data-bind="text: user.userType"></span> | 
-						<a data-bind="click: logout" href="javascript:void(0)">
-				        	<span>Logout</span>
-				        </a>
-					</div>				
-		        </div>
-	        </div>
-        </div>
-    </nav>
+<nav class="navbar navbar-default" role="navigation" style="padding: 0px; margin: 0px;">
+	<div class="container-fluid">
+     
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand active" href="#"><i class="fa fa-home"></i>Ever</a>
+		</div>
+         
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<div data-bind="foreach: router.navigationModel">
+				<ul class="nav navbar-nav">
+					<!-- ko if: $data.childRoutes === undefined && $data.parent === undefined -->
+					<li data-bind="css: { active: isActive }">
+						<a data-bind="attr: { href: hash }, html: title"></a>
+					</li>
+					<!-- /ko -->
+					<!-- ko if: $data.childRoutes !== undefined -->
+					<li class="dropdown">
+		       			<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span data-bind="text: title"></span><b class="caret"></b></a>
+		       			<ul data-bind="foreach: childRoutes" role="menu" class="dropdown-menu">
+		       				<li data-bind="css: { active: isActive }">
+		       					<a data-bind="attr: { href: hash }, html: title"></a>
+		       				</li>
+		       			</ul>
+		       		</li>
+        			<!-- /ko -->
+				</ul>
+			</div>
+        	
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<img data-bind="attr: { src : userDetails.imagePath }" class="img-circle text-center" width="28px" height="28px"> 
+						<span data-bind="text: userDetails.fullName"></span> <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+                       	
+						<li><a data-bind="click: profile" href="#"><i class="fa fa-user"></i><span> Profile</span></a></li>
+						<li><a data-bind="click: changePassword" href="#"><i class="fa fa-lock"></i><span> Change Password</span></a></li>
+						<li><a data-bind="click: changeSettings" href="#"><i class="fa fa-gear"></i><span> Advance Settings</span></a></li>
+						              	
+						<li class="divider"></li>
+						              	
+						<li><a data-bind="click: logout" href="javascript:void(0)"><i class="fa fa-sign-out"></i><span> Logout</span></a></li>
+					</ul>
+				</li>		
+			</ul>
+		</div>
+	</div>
+</nav>
 
-    <div class="container-fluid page-host" data-bind="router: { cacheViews: false }"></div>
+<br>
+<div class="main-container">
+	<div class="page-host" data-bind="router: { cacheViews: false }"></div>
+	
+	<br>
+	<br>
+	<div id="footer">
+		<div class="container">
+			<p class="text-muted pull-right">System Version <span data-bind="text: systemVersion"></span></p>
+		</div>
+	</div>
 </div>
+<br>

@@ -14,19 +14,30 @@ public class FileConstants {
 
 	private final String fileHome;
 	
+	private final String userImageHome;
+	
 	private final String generatePurchasesHome;
 	
 	private final String inventoryHome;
 	
+	private final String imageDefaultFileName;
+	
 	@Autowired
-	public FileConstants(@Value("${file.home}") String fileHome) {
+	public FileConstants(@Value("${file.home}") String fileHome,
+				@Value("${file.image.defaultFileName}") String imageDefaultFileName) {
 		this.fileHome = fileHome;
+		this.userImageHome = fileHome + "program_data/user_image/";
 		this.generatePurchasesHome = fileHome + "files/generate_purchase/";
 		this.inventoryHome = fileHome + "files/inventory/";
+		this.imageDefaultFileName = imageDefaultFileName;
 	}
 
 	public String getFileHome() {
 		return fileHome;
+	}
+	
+	public String getUserImageHome() {
+		return userImageHome;
 	}
 
 	public String getGeneratePurchasesHome() {
@@ -35,5 +46,9 @@ public class FileConstants {
 	
 	public String getInventoryHome() {
 		return inventoryHome;
+	}
+	
+	public String getImageDefaultFileName() {
+		return imageDefaultFileName;
 	}
 }

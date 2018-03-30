@@ -24,7 +24,7 @@ public class SettingsHandlerImpl implements SettingsHandler {
 	public ResultBean updateSettings(UserFormBean userForm) {
 		final ResultBean result;
 		
-		final User user = userService.find(UserContextHolder.getUser().getUserId());
+		final User user = userService.find(UserContextHolder.getUser().getId());
 		
 		if(user != null) {
 			user.setFirstName(userForm.getFirstName());
@@ -50,7 +50,7 @@ public class SettingsHandlerImpl implements SettingsHandler {
 	public ResultBean changePassword(PasswordBean passwordBean) {
 		final ResultBean result;
 		
-		final User user = userService.find(UserContextHolder.getUser().getUserId());
+		final User user = userService.find(UserContextHolder.getUser().getId());
 		
 		if(user != null) {
 			if(EncryptionUtil.getMd5(passwordBean.getCurrentPassword()).equals(user.getPassword())) {

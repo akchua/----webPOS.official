@@ -1,0 +1,33 @@
+<div class="modal-content modal-lg">
+  	<form>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+			<h3 align="center">Advanced Settings</h3>
+		</div>
+	  
+		<div class="modal-body">
+			<div class="row">
+				<div class="panel panel-warning">
+					<div class="panel-heading">
+						<h3 class="panel-title">Preferences</h3>
+					</div>
+					
+					<div class="panel-body">
+						<div class="control-group">
+							<label class="control-label" for="itemsPerPage">Items Shown Per Page</label>
+							<div class="controls">
+								<select data-bind="options: itemsPerPageList, optionsCaption: '-- Default (10) --', value: settingsFormModel.itemsPerPage" class="form-control select-lg autofocus" id="itemsPerPage"></select>
+								<p class="help-block">Select how many items you want to show on each page</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	  
+		<div class="modal-footer">
+			<button class="btn btn-primary" data-bind="click: save">Save</button>
+	        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
+		</div>
+	</form>
+</div>

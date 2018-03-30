@@ -1,52 +1,49 @@
-<section>
-	<div class="row">
-		<div class="col-md-4 col-xs-4">
-			<button data-bind="click: create" type="button" class="btn btn-success">Add New User</button>
-		</div>
-		<form role="search" class="form-inline">
-			<div class="input-group pull-right col-md-4 col-xs-4">
-	          	<input data-bind="textInput: searchKey" type="text" class="form-control" placeholder="Search">
-		        <span class="input-group-btn">
-		        	<button data-bind="click: search" type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-		        </span>
-	        </div>
-        </form>
+<div class="row">
+	<button data-bind="click: add" type="button" class="btn btn-success col-md-2 col-xs-3"><i class="fa fa-plus-circle"></i> Add User</button>
+	<form role="search" class="form-inline">
+        <div class="input-group pull-right col-md-4 col-xs-4">
+          	<input data-bind="textInput: searchKey" type="text" class="form-control" placeholder="Search">
+	        <span class="input-group-btn">
+	        	<button data-bind="click: search" type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+	        </span>
+        </div>
+   	</form>
+</div>
+<br/>
+<div class="row">
+	<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
+</div>
+<div class="row">
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th> </th>
+					<th class = "text-center">ID</th>
+					<th>Name</th>
+					<th>Email Address</th>
+					<th>User Type</th>
+				</tr>
+			</thead>
+			
+			<tbody data-bind="foreach: { data: userList, as: 'user' }">
+				<tr>
+					<td><img data-bind="attr: { src : user.imagePath }" class="img-circle text-center" width="28px" height="28px"></td>
+					<td data-bind="text: user.id" class = "text-center"></td>
+					<td data-bind="text: user.formattedName"></td>
+					<td data-bind="text: user.emailAddress"></td>
+					<td data-bind="text: user.userType.displayName"></td>
+					
+					<td>
+						<div class="btn-group pull-right">
+							<button data-bind="click: function() { $parent.view(user.id) } " type="button" class="btn btn-info btn-sm" title="View"><i class="fa fa-eye"></i></button>
+							<button data-bind="click: function() { $parent.resetPassword(user.id, user.lastName, user.firstName) }, enable: $parent.enableReset " type="button" class="btn btn-warning btn-sm" title="Reset Password"><i class="fa fa-refresh"></i></button>
+							<button data-bind="click: function() { $parent.edit(user.id) } " type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
+							<button data-bind="click: function() { $parent.remove(user.id, user.formattedName) }" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
-	<br />
-	
-	<div class="row">
-		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
-	</div>
-	
-    <div class="row">
-    	<div class="col-md-12">
-    		<table class="table table-responsive table-hover">
-    			<thead>
-    				<tr>
-    					<th>First Name</th>
-    					<th>Last Name</th>
-    					<th>Items per Page</th>
-    					<th>Username</th>
-    					<th>User Type</th>
-    				</tr>
-    			</thead>
-    		
-    			<tbody data-bind="foreach: { data: userList, as: 'user' }">
-    				<tr>
-    					<td data-bind="text: user.firstName"></td>
-    					<td data-bind="text: user.lastName"></td>
-    					<td data-bind="text: user.itemsPerPage"></td>
-    					<td data-bind="text: user.username"></td>
-    					<td data-bind="text: user.userType"></td>
-    					<td>
-    						<div class="pull-right">
-    							<button data-bind="click: function() { $parent.edit(user.id) }" type="button" class="btn btn-warning btn-sm">Edit</button>
-    							<button data-bind="click: function() { $parent.remove(user.id, user.username) }" type="button" class="btn btn-danger btn-sm">Remove</button>
-    						</div>
-    					</td>
-    				</tr>
-    			</tbody>
-    		</table>
-    	</div>
-    </div>
-</section>
+</div>

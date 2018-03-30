@@ -1,5 +1,8 @@
 package com.chua.evergrocery.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum UserType {
 
 	ADMINISTRATOR ("Administrator"),
@@ -16,13 +19,17 @@ public enum UserType {
 	
 	STAFF ("Staff");
 	
-	private final String description;
+	private final String displayName;
 	
-	UserType(final String description) {
-		this.description = description;
+	UserType(final String displayName) {
+		this.displayName = displayName;
 	}
 	
-	public String getDescription() {
-		return description;
+	public String getName() {
+		return toString();
+	}
+	
+	public String getDisplayName() {
+		return displayName;
 	}
 }

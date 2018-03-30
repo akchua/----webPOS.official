@@ -83,7 +83,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				customerOrder.setTotalAmount(0.0f);
 				customerOrder.setTotalItems(0.0f);
 				
-				customerOrder.setCreator(userService.find(UserContextHolder.getUser().getUserId()));
+				customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
 				customerOrder.setStatus(Status.LISTING);
 				
 				result = new ResultBean();
@@ -115,7 +115,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(customerOrder != null) {
 			final UserBean currentUser = UserContextHolder.getUser();
 			
-			if(customerOrder.getStatus() == Status.LISTING && customerOrder.getCreator().getId() == currentUser.getUserId()) {
+			if(customerOrder.getStatus() == Status.LISTING && customerOrder.getCreator().getId() == currentUser.getId()) {
 				if(!(StringUtils.trimToEmpty(customerOrder.getName()).equalsIgnoreCase(customerOrderForm.getName())) &&
 						customerOrderService.isExistsByNameAndStatus(customerOrderForm.getName(), new Status[] { Status.LISTING, Status.PRINTED })) {
 					result = new ResultBean(false, "Customer order \"" + customerOrderForm.getName() + "\" already exists!");
@@ -181,7 +181,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				if(customerOrder.getTotalAmount() <= cash) {
 					result = new ResultBean();
 					
-					customerOrder.setCashier(userService.find(UserContextHolder.getUser().getUserId()));
+					customerOrder.setCashier(userService.find(UserContextHolder.getUser().getId()));
 					customerOrder.setStatus(Status.PAID);
 					
 					result.setSuccess(customerOrderService.update(customerOrder));
@@ -259,12 +259,31 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	@Override
 	public ResultBean addItemByBarcode(String barcode, Long customerOrderId) {
 		final ResultBean result;
-		final ProductDetail productDetail = productDetailService.findByBarcode(barcode);
 		
-		if(barcode != null && barcode.length() > 4 && productDetail != null) {
-			result = this.addItemByProductDetailId(productDetail.getId(), customerOrderId, 1.0f);
+		if(barcode != null && barcode.length() > 4) {
+			final ProductDetail productDetail;
+			String[] temp = barcode.split("\\*");
+			if(temp.length == 2) {
+				productDetail = productDetailService.findByBarcode(temp[1]);
+			} else if(temp.length == 1) {
+				productDetail = productDetailService.findByBarcode(temp[0]);
+			} else {
+				productDetail = null;
+			}
+			
+			if(productDetail != null) {
+				if(temp.length == 2) {
+					result = this.addItemByProductDetailId(productDetail.getId(), customerOrderId, Float.parseFloat(temp[0]));
+				} else if(temp.length == 1) {
+					result = this.addItemByProductDetailId(productDetail.getId(), customerOrderId, 1.0f);
+				} else {
+					result = new ResultBean(false, "Invalid barcode.");
+				}
+			} else {
+				result = new ResultBean(false, "Barcode not found.");
+			}
 		} else {
-			result = new ResultBean(false, "Barcode not found.");
+			result = new ResultBean(false, "Invalid barcode.");
 		}
 		
 		return result;

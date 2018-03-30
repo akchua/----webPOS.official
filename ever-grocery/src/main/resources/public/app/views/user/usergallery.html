@@ -1,0 +1,39 @@
+<div class="modal-content modal-lg">
+  	<form>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+			<h3 align="center">Gallery</h3>
+		</div>
+	  
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-xs-offset-4 col-xs-3">
+					<img data-bind="attr: { src : userModel.imagePath }" class="img-rounded col-xs-12 text-center" width="100px" height="100px">
+				</div>
+			</div>
+			
+			<hr>
+		
+			<div class="row">
+				<!-- ko foreach: { data: userImageList, as: 'userImage' } -->
+				<div class="thumbnail col-xs-3">
+	        		<img data-bind="attr: { src: userImage.filePath }" class="img-rounded">
+		        	<p class="text-center">
+		        		<button data-bind="click: function() { $parent.setUserImageAsThumbnail(userImage.id) } " type="button" class="btn btn-success btn-xs col-xs-10" title="Set as Picture">Set as Picture</button>
+		        		<button data-bind="click: function() { $parent.removeUserImage(userImage.id) } " type="button" class="btn btn-danger btn-xs col-xs-2" title="Remove"><i class="fa fa-times"></i></button>
+		        	</p>
+		        </div>	
+		        <!-- /ko -->
+			</div>
+		</div>
+  
+		<div class="modal-footer">
+			<span class="pull-left">
+				<input data-bind="event: { change : function() { uploadUserImage($element.files[0]) } }" type="file" name="file" id="file" class="inputfile" />
+				<label for="file" class="text-center"><i class="fa fa-upload"></i> Add Image</label>
+			</span>
+			
+			<button class="btn btn-warning" type="submit" data-bind="click: cancel">Done</button>
+		</div>
+  	</form>
+</div>

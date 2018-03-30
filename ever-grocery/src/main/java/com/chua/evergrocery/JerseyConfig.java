@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.chua.evergrocery.rest.endpoint.BrandEndpoint;
 import com.chua.evergrocery.rest.endpoint.CategoryEndpoint;
 import com.chua.evergrocery.rest.endpoint.CompanyEndpoint;
+import com.chua.evergrocery.rest.endpoint.ConstantsEndpoint;
 import com.chua.evergrocery.rest.endpoint.CustomerEndpoint;
 import com.chua.evergrocery.rest.endpoint.CustomerOrderEndpoint;
 import com.chua.evergrocery.rest.endpoint.DistributorEndpoint;
@@ -43,5 +44,6 @@ public class JerseyConfig extends ResourceConfig {
 		register(PurchaseOrderEndpoint.class);
 		
 		register(FileEndpoint.class);
+		register(ConstantsEndpoint.class);
 	}
 }

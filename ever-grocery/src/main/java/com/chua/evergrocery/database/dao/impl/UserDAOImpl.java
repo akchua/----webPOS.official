@@ -13,26 +13,26 @@ import com.chua.evergrocery.database.dao.UserDAO;
 import com.chua.evergrocery.database.entity.User;
 import com.chua.evergrocery.objects.ObjectList;
 
+/**
+ * @author  Adrian Jasper K. Chua
+ * @version 1.0
+ * @since   Nov 30, 2017
+ */
 @Repository
-public class UserDAOImpl 
-		extends AbstractDAO<User, Long>
+public class UserDAOImpl
+		extends AbstractDAO<User, Long> 
 		implements UserDAO {
-
-	@Override
-	public User findByUsernameAndPassword(String username, String password) {
-		final Junction conjunction = Restrictions.conjunction();
-		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.eq("username", username));
-		conjunction.add(Restrictions.eq("password", password));
-		
-		return findUniqueResult(null, null, null, conjunction);
-	}
 	
 	@Override
 	public ObjectList<User> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey) {
+		return findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, null);
+	}
+	
+	@Override
+	public ObjectList<User> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey,
+			Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
-		
 		
 		if(StringUtils.isNotBlank(searchKey))
 		{
@@ -43,12 +43,17 @@ public class UserDAOImpl
 			}
 		}
 		
-		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
 	}
 
 	@Override
-	public List<User> findAllWithOrder(Order[] orders) {
-		return findAllByCriterionList(null, null, null, orders, Restrictions.eq("isValid", Boolean.TRUE));
+	public User findByUsernameAndPassword(String username, String password) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("username", username));
+		conjunction.add(Restrictions.eq("password", password));
+		
+		return findUniqueResult(null, null, null, conjunction);
 	}
 
 	@Override
@@ -60,4 +65,22 @@ public class UserDAOImpl
 		return findUniqueResult(null, null, null, conjunction);
 	}
 
+	@Override
+	public User findByUsernameOrEmail(String username, String emailAddress) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.disjunction()
+				.add(Restrictions.eq("username", username))
+				.add(Restrictions.eq("emailAddress", emailAddress)));
+		
+		return findUniqueResult(null, null, null, conjunction);
+	}
+
+	@Override
+	public List<User> findAllWithOrder(Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		
+		return findAllByCriterionList(null, null, null, orders, conjunction);
+	}
 }

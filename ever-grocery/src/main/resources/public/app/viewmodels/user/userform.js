@@ -1,21 +1,38 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/userservice'], function (dialog, app, ko, userService) {
-    var UserForm = function(preTitle, user) {
-        this.preTitle = preTitle;
-        this.user = user;
-        
-        this.itemsPerPageList = ko.observableArray([5, 10, 15, 20]);
-        
-        this.userTypeList = ko.observable();
-        
-        this.userFormModel = {
-        	id: ko.observable(),
-        	firstName: ko.observable(),
-        	lastName: ko.observable(),
-        	itemsPerPage: ko.observable(),
-        	username: ko.observable(),
-        	password: ko.observable(),
-        	userType: ko.observable()
-        };
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/userservice', 'modules/constantsservice'], 
+		function (dialog, app, ko, userService, constantsService) {
+    var UserForm = function(user, title) {
+    	this.user = user;
+    	this.title = title;
+    	
+    	this.userTypeList = ko.observable();
+    	
+    	this.userFormModel = {
+    		id: ko.observable(),
+    		
+    		firstName: ko.observable(),
+	    	lastName: ko.observable(),
+	    	contactNumber: ko.observable(),
+	    	
+	    	username: ko.observable(),
+	    	emailAddress: ko.observable(),
+	    	password: ko.observable(),
+	    	confirmPassword: ko.observable(),
+	    	itemsPerPage: ko.observable(),
+	    	userType: ko.observable()
+	    };
+    	
+    	this.errors = {
+			firstName: ko.observable(),
+	    	lastName: ko.observable(),
+	    	contactNumber: ko.observable(),
+	    	
+	    	username: ko.observable(),
+	    	emailAddress: ko.observable(),
+	    	password: ko.observable(),
+	    	confirmPassword: ko.observable(),
+	    	itemsPerPage: ko.observable(),
+	    	userType: ko.observable()
+    	};
     };
     
     UserForm.prototype.activate = function() {
@@ -24,18 +41,20 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/userservice'], fu
     	self.userFormModel.id(self.user.id);
     	self.userFormModel.firstName(self.user.firstName);
     	self.userFormModel.lastName(self.user.lastName);
-    	self.userFormModel.itemsPerPage(self.user.itemsPerPage);
+    	self.userFormModel.contactNumber(self.user.contactNumber);
     	self.userFormModel.username(self.user.username);
-    	self.userFormModel.userType(self.user.userType);
+    	self.userFormModel.emailAddress(self.user.emailAddress);
+    	self.userFormModel.itemsPerPage(self.user.itemsPerPage);
+    	if(self.user.userType) self.userFormModel.userType(self.user.userType.name);
     	
-    	userService.getUserTypeList().done(function(userTypeList) {
+    	constantsService.getUserTypeList().done(function(userTypeList) {
     		self.userTypeList(userTypeList);
-    		self.userFormModel.userType(self.user.userType);
+    		if(self.user.userType) self.userFormModel.userType(self.user.userType.name);
     	});
     };
- 
-    UserForm.show = function(preTitle, user) {
-        return dialog.show(new UserForm(preTitle, user));
+    
+    UserForm.show = function(user, title) {
+    	return dialog.show(new UserForm(user, title));
     };
     
     UserForm.prototype.save = function() {
@@ -43,9 +62,18 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/userservice'], fu
     	
         userService.saveUser(ko.toJSON(self.userFormModel)).done(function(result) {
         	if(result.success) {
-        		dialog.close(self);	
-        	} 
-        	app.showMessage(result.message);
+        		dialog.close(self);
+        	} else {
+        		self.errors.firstName(result.extras.errors.firstName);
+        		self.errors.lastName(result.extras.errors.lastName);
+        		self.errors.contactNumber(result.extras.errors.contactNumber);
+        		self.errors.emailAddress(result.extras.errors.emailAddress);
+        		self.errors.username(result.extras.errors.username);
+        		self.errors.password(result.extras.errors.password);
+        		self.errors.confirmPassword(result.extras.errors.confirmPassword);
+        		self.errors.userType(result.extras.errors.userType);
+        	}
+        	if(result.message) app.showMessage(result.message);
         });
     };
     

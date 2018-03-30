@@ -7,14 +7,7 @@ public interface UserPrototype {
 
 	User findByUsernameAndPassword(String username, String password);
 	
-	/**
-	 * Find all user with paging.
-	 * 
-	 * @param pageNumber the page number
-	 * @param resultsPerPage the results per page
-	 * @param searchKey the search key
-	 * 
-	 * @return the object list of user
-	 */
-	ObjectList<User> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey);
+	User findByUsername(String username);
+	
+	User findByUsernameOrEmail(String username, String emailAddress);
 }

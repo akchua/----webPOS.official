@@ -4,6 +4,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
 
@@ -35,6 +36,11 @@ public class Customer extends BaseObject {
 	@Column(name = "last_name")
 	public String getLastName() {
 		return lastName;
+	}
+	
+	@Transient
+	public String getFormattedName() {
+		return lastName + ", " + firstName;
 	}
 
 	public void setLastName(String lastName) {

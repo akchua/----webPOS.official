@@ -1,7 +1,7 @@
 <body>
 	<br/><br/><br/><br/><br/>
 	<div class="loginmodal-container">
-		<h1>EVER Login</h1><br>
+		<h1>Ever Login</h1><br>
 		
 		<div data-bind="text: errorMessage" style="color:red"></div>
 		
@@ -11,8 +11,8 @@
 			<input data-bind="click: login" type="submit" name="login" class="login loginmodal-submit" value="Login" />
 		</form>
 		
-	  	<!-- <div class="login-help">
-			<a href="#">Register</a> - <a href="#">Forgot Password</a>
-	  	</div> -->
+	  	<div class="login-help">
+			<!-- <a href="#">Register</a> -  --><a data-bind="click: forgotPassword" class="pull-right">Forgot Password</a>
+	  	</div>
 	</div>
 </body>

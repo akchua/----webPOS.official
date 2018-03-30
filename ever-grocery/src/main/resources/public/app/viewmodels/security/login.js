@@ -1,4 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/securityservice'], function (app, ko, securityService) {
+define(['durandal/app', 'knockout', 'modules/securityservice', 'viewmodels/forgotpassword'], 
+		function (app, ko, securityService, ForgotPasswordForm) {
 	var Login = function() {
 		this.username = ko.observable();
 		
@@ -23,6 +24,12 @@ define(['durandal/app', 'knockout', 'modules/securityservice'], function (app, k
 				self.errorMessage('Invalid Username / Password!');
 			}
 		});
+	};
+	
+	Login.prototype.forgotPassword = function() {
+		var self = this;
+		
+		ForgotPasswordForm.show();
 	};
 	
     return Login;

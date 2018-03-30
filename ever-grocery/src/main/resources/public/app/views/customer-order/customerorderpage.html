@@ -1,30 +1,27 @@
-<pre>
-Order ID: <span data-bind="text: customerOrderPageModel.customerOrderId" class="text-danger"></span>			Order Name: <span data-bind="text: customerOrderPageModel.customerOrderName" class="text-danger"></span>			Status:	<span data-bind="text: customerOrderPageModel.status" class="text-danger"></span></pre>
-
 <div class="row">
-	<div class="col-md-offset-3 col-md-6">
-		<h1 class="text-center">Total Amount: <span class="label label-success">Php <span data-bind="text: customerOrderPageModel.formattedTotalAmount" ></span></span></h1>
-	</div>
+	<h3>
+		<span class="col-xs-3">Order <span class="text-md-red-elite">#<span data-bind="text: customerOrderPageModel.customerOrderNumber"></span></span></span>
+		<span class="col-xs-6 text-center">TOTAL: <span class="text-lg-green-neuton">&#8369; <span data-bind="text: customerOrderPageModel.formattedTotalAmount" ></span></span></span>
+		<span class="col-xs-3 text-right">Customer: <span class="text-md-black-elite"><span data-bind="text: customerOrderPageModel.customerName"></span></span></span>
+	</h3>
 </div>
 <br>
 
 <div class="row">
-	<form class="form-inline" role="form">
-		<div class="col-xs-6">
-			<div class="col-md-offset-2 col-md-2 col-xs-4">
-				<button data-bind="click: search" type="button" class="btn btn-info"><span> </span><span class="glyphicon glyphicon-search"></span> Search </button>
-			</div>
-			<div class="input-group col-md-6 col-xs-6">
+	<div class="col-md-4 col-xs-6">
+		<form role="search" class="form-inline">
+			<button data-bind="click: search" class="btn btn-info col-xs-4" type="button"><span> </span><span class="glyphicon glyphicon-search"></span> Search </button>
+			<div class="input-group col-xs-8">
 				<input data-bind="value: barcodeKey, hasFocus: barcodeFocus" type="text" class="form-control" placeholder="Input Barcode Here.......">
 				<span class="input-group-btn">
 					<button data-bind="click: addItemByBarcode" type="submit" class="btn btn-default"><i class="fa fa-barcode"></i></button>
 				</span>
 			</div>
-		</div>
-		<div class="col-xs-6">
-			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12 col-xs-12"></div>
-		</div>
-	</form>
+	   	</form>
+	</div>
+	<div class="col-md-offset-2 col-xs-6">
+		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12 col-xs-12"></div>
+	</div>
 </div>
 
 <div class="row">

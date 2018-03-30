@@ -45,21 +45,6 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/customerorderserv
 		});
 	};
 	
-	CustomerOrder.prototype.print = function(customerOrderId, customerOrderName) {
-		var self = this;
-		
-		app.showMessage('Are you sure you want to print Customer Order "' + customerOrderName + '"?',
-				'Confirm Print',
-				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
-		.then(function(confirm) {
-			if(confirm) {
-				customerOrderService.printCustomerOrderList(customerOrderId).done(function(result) {
-					self.refreshCustomerOrderList();
-					app.showMessage(result.message);
-				});
-			}
-		})
-	};
 	
 	CustomerOrder.prototype.edit = function(customerOrderId) {
 		var self = this;

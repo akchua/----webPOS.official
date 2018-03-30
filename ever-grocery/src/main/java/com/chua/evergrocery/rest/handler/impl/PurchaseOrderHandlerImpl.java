@@ -105,7 +105,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			purchaseOrder.setTotalAmount(0.0f);
 			purchaseOrder.setTotalItems(0);
 			
-			purchaseOrder.setCreator(userService.find(UserContextHolder.getUser().getUserId()));
+			purchaseOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
 			purchaseOrder.setStatus(Status.LISTING);
 			purchaseOrder.setDeliveredOn(purchaseOrderForm.getDeliveredOn());
 			purchaseOrder.setCheckedOn(DateUtil.getDefaultDate());
@@ -630,7 +630,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			if(purchaseOrder.getStatus() != Status.CHECKED && purchaseOrder.getStatus() != Status.CANCELLED) {
 				result = new ResultBean();
 				
-				purchaseOrder.setManagerInCharge(userService.find(UserContextHolder.getUser().getUserId()));
+				purchaseOrder.setManagerInCharge(userService.find(UserContextHolder.getUser().getId()));
 				purchaseOrder.setStatus(Status.CHECKED);
 				purchaseOrder.setCheckedOn(new Date());
 				

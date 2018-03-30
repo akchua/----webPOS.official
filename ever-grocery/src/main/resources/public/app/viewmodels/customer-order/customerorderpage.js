@@ -1,4 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/customerorderservice', 'modules/customerservice', 'viewmodels/customer-order/search'], function (app, ko, soundUtil, customerOrderService, customerService, Search) {
+define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'modules/customerorderservice', 'modules/customerservice', 'viewmodels/customer-order/search'], 
+		function (router, app, ko, soundUtil, customerOrderService, customerService, Search) {
     var CustomerOrderPage = function() {
     	this.customerOrderDetailList = ko.observable();
     	
@@ -12,9 +13,9 @@ define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/customerord
 		
 		this.customerOrderPageModel = {
 			customerOrderId: ko.observable(),
+			customerOrderNumber: ko.observable(),
 			formattedTotalAmount: ko.observable(),
-			customerOrderName: ko.observable(),
-			status: ko.observable()
+			customerName: ko.observable()
 		};
     };
     
@@ -47,10 +48,10 @@ define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/customerord
     CustomerOrderPage.prototype.refreshCustomerOrderDetailList = function() {
     	var self = this;
     	
-    	customerOrderService.getCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(data) { 
-    		self.customerOrderPageModel.formattedTotalAmount(data.formattedTotalAmount);
-    		self.customerOrderPageModel.customerOrderName(data.name);
-    		self.customerOrderPageModel.status(data.status);
+    	customerOrderService.getCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(customerOrder) { 
+    		self.customerOrderPageModel.customerOrderNumber(customerOrder.orderNumber);
+    		self.customerOrderPageModel.formattedTotalAmount(customerOrder.formattedTotalAmount);
+    		self.customerOrderPageModel.customerName(customerOrder.formattedName);
     	});
     	
     	customerOrderService.getCustomerOrderDetailList(self.currentPage(), self.customerOrderPageModel.customerOrderId(), true).done(function(data) { 
@@ -82,15 +83,23 @@ define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/customerord
     CustomerOrderPage.prototype.addItemByBarcode = function() {
     	var self = this;
     	
-    	customerOrderService.addItemByBarcode(self.barcodeKey(), self.customerOrderPageModel.customerOrderId()).done(function(result) {	
-    		if(result.success) {
-    			self.currentPage(1);
-    			self.refreshCustomerOrderDetailList();
-    		} else {
-    			soundUtil.beep();
-    			app.showMessage(result.message);
-    		}
-    	});
+    	if(self.barcodeKey() === 'end') {
+    		self.print();
+    	} else if(self.barcodeKey() === 's') {
+    		self.search();
+    	} else {
+    		customerOrderService.addItemByBarcode(self.barcodeKey(), self.customerOrderPageModel.customerOrderId()).done(function(result) {	
+        		if(result.success) {
+        			self.currentPage(1);
+        			self.refreshCustomerOrderDetailList();
+        		} else {
+        			soundUtil.beep();
+        			app.showMessage(result.message).done(function() {
+        				self.barcodeFocus(true);
+        			});
+        		}
+        	});
+    	}
     	
     	self.barcodeKey("");
     };
@@ -108,6 +117,31 @@ define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/customerord
     		}
     	});
     };
+    
+    CustomerOrderPage.prototype.print = function() {
+		var self = this;
+		
+		app.showMessage('<p>Confirm complete order for <span class="text-primary">' + self.customerOrderPageModel.customerName() + '</span>?<br>' +
+						'Make sure to label all packages with <span class="text-danger">#' + self.customerOrderPageModel.customerOrderNumber() + '</span>.<br><br>' +
+						'By clicking confirm, you will be forwarding the order to the cashier.</p>',
+				'Complete Order',
+				[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+				customerOrderService.printCustomerOrderList(customerOrderId).done(function(result) {
+					if(result.success) {
+						router.navigate('#customerorder');
+					} else {
+						app.showMessage(result.message).done(function() {
+							self.barcodeFocus(true);
+						});
+					}
+				});
+			} else {
+				self.barcodeFocus(true);
+			}
+		})
+	};
     
     return CustomerOrderPage;
 });

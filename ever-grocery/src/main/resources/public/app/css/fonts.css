@@ -1,0 +1,17 @@
+.text-lg-green-neuton {
+	font-size: 200%;
+	font-family: neuton;
+	color: green;
+}
+
+.text-md-red-elite {
+	font-size: 150%;
+	font-family: special elite;
+	color: red;
+}
+
+.text-md-black-elite {
+	font-size: 150%;
+	font-family: special elite;
+	color: black;
+}

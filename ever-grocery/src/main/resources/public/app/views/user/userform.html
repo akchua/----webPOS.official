@@ -1,35 +1,111 @@
-<div id="divUserModal" class="modal-content">
-    <div class="modal-header">
-    	<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
-        <h3 align="center"><span data-bind="text: preTitle"></span> User</h3>
-    </div>
-    
-    <div class="modal-body">
-        <div class="form-inline">
-			<input data-bind="value: userFormModel.firstName" type="text" class="form-control autofocus" id="inputFirstName" placeholder="First Name">
-			<input data-bind="value: userFormModel.lastName" type="text" class="form-control" id="inputLastName" placeholder="Last Name">
+<div class="modal-content">
+  	<form>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+			<h3 data-bind="text: title" align="center"></h3>
 		</div>
-		<br/>
-		<div class="form-group">
-			<label for="inputUsername" class="control-label">Username</label>
-			<input data-bind="value: userFormModel.username" type="text" class="form-control" id="inputUserName" placeholder="Username">
+	  
+		<div class="modal-body">
+			<div class="row">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Personal Information</h3>
+					</div>
+					
+					<div class="panel-body">
+						<div class="control-group">
+							<label class="control-label" for="firstName">First Name</label>
+							<div class="controls">
+								<input data-bind="textInput: userFormModel.firstName" type="text" id="firstName" name="firstName" placeholder="" class="form-control input-lg autofocus">
+								<p data-bind="text: errors.firstName" class="text-danger"></p>
+							</div>
+							<label class="control-label" for="lastName">Last Name</label>
+							<div class="controls">
+								<input data-bind="textInput: userFormModel.lastName" type="text" id="lastName" name="lastName" placeholder="" class="form-control input-lg">
+								<p data-bind="text: errors.lastName" class="text-danger"></p>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="contactNumber">Contact Number</label>
+							<div class="controls">
+								<input data-bind="textInput: userFormModel.contactNumber" type="text" id="contactNumber" name="contactNumber" placeholder="" class="form-control input-lg">
+								<p>
+									<span data-bind="text: errors.contactNumber" class="text-danger"></span>
+									<span class="help-block">Mobile[09xx-xxx-xxxx] / Landline[(xx)xxx-xx-xx]</span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<h3 class="panel-title">Account Information</h3>
+					</div>
+					
+					<div class="panel-body">
+						<div data-bind="ifnot: userFormModel.id" class="control-group">
+							<label class="control-label" for="userType">Select User Type</label>
+							<div class="controls">
+								<select data-bind="options: userTypeList, optionsValue: 'name', optionsText: 'displayName', optionsCaption: '-- Select User Type --', value: userFormModel.userType" class="form-control select-lg" id="userType"></select>
+								<p data-bind="text: errors.userType" class="text-danger"></p>
+							</div>
+						</div>
+					
+						<div class="control-group">
+							<label class="control-label" for="username">Username</label>
+							<div class="controls">
+								<input data-bind="textInput: userFormModel.username" type="text" id="username" name="username" placeholder="" class="form-control input-lg">
+								<p>
+									<span data-bind="text: errors.username" class="text-danger"></span>
+									<span class="help-block">Username can contain any letters or numbers, at least 3 to 30 characters</span>
+								</p>
+							</div>
+						</div>
+		
+						<div class="control-group">
+							<label class="control-label" for="email">E-mail</label>
+							<div class="controls">
+								<input data-bind="textInput: userFormModel.emailAddress" type="email" id="email" name="email" placeholder="" class="form-control input-lg">
+								<p>
+									<span data-bind="text: errors.emailAddress" class="text-danger"></span>
+									<span class="help-block">Your E-mail address (make sure you can access your email)</span>
+								</p>
+							</div>
+						</div>
+					
+						<div data-bind="ifnot: userFormModel.id" class="control-group">
+							<label class="control-label" for="password">Password</label>
+							<div class="controls">
+								<input data-bind="textInput: userFormModel.password" type="password" id="password" name="password" placeholder="" class="form-control input-lg">
+								<p>
+									<span data-bind="text: errors.password" class="text-danger"></span>
+									<span class="help-block">Password should be at least 6 to 20 characters</span>
+								</p>
+							</div>
+						</div>
+		
+						<div data-bind="ifnot: userFormModel.id" class="control-group">
+							<label class="control-label" for="password_confirm">Confirm Password</label>
+							<div class="controls">
+								<input data-bind="textInput: userFormModel.confirmPassword" type="password" id="password_confirm" name="password_confirm" placeholder="" class="form-control input-lg">
+								<p>
+									<span data-bind="text: errors.confirmPassword" class="text-danger"></span>
+									<span class="help-block"> Please confirm password</span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div data-bind="if: preTitle == 'Create'" class="form-group">
-			<label for="inputPassword" class="control-label">Password</label>
-			<input data-bind="value: userFormModel.password" type="password" class="form-control" id="inputPassword" placeholder="Password">
+  
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="submit" data-bind="click: save">Save</button>
+	        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
 		</div>
-		<div class="form-group">
-			<label for="inputItemsPerPage" class="control-label">Items per Page</label>
-			<select data-bind="options: itemsPerPageList, optionsCaption: '-- Select Items per Page --', value: userFormModel.itemsPerPage" class="form-control" id="inputItemsPerPage"></select>
-		</div>
-		<div class="form-group">
-			<label for="inputUserType">User Type</label>
-			<select data-bind="options: userTypeList, optionsCaption: '-- Select User Type --', value: userFormModel.userType" class="form-control" id="inputUserType"></select>
-		</div>
-    </div>
-    
-    <div class="modal-footer">
-    	<button class="btn btn-primary" data-bind="click: save">Save</button>
-        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
-    </div>
+  	</form>
 </div>

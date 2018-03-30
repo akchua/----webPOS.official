@@ -52,7 +52,7 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'viewmodels/
     		self.purchaseOrderPageModel.formattedTotalAmount(data.formattedTotalAmount);
     		self.purchaseOrderPageModel.companyName(data.company.name);
     		self.purchaseOrderPageModel.receiptType(data.company.receiptType);
-    		self.purchaseOrderPageModel.status(data.status);
+    		self.purchaseOrderPageModel.status(data.status.displayName);
     		
     		switch(self.purchaseOrderPageModel.receiptType()) {
 		    	case 'BEFORE_VAT_AND_DISCOUNT':
