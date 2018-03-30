@@ -1,6 +1,6 @@
 ﻿define(['plugins/router', 'durandal/app', 'modules/securityservice', 'modules/userservice', 'viewmodels/usersettings'], function (router, app, securityService, userService, UserSettings) {
 	var homeroute = [
-	    { route: ['', 'home'], moduleId: 'viewmodels/home', title: 'Home', nav: true }
+	    { route: ['', 'home'], moduleId: 'viewmodels/home', title: 'Home', nav: false }
 	];
 	
 	var userroute = [
