@@ -1,6 +1,7 @@
 package com.chua.evergrocery.provider;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         
         final User user = userService.findByUsernameAndPassword(username, EncryptionUtil.getMd5(password));
         if(user != null) {
+        	user.setLastSuccessfulLogin(new Date());
+        	userService.insert(user);
+        	
         	final List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority(user.getUserType().name()));
         	return new UsernamePasswordAuthenticationToken(new UserBean(username, password, grantedAuths, user), password, grantedAuths);
