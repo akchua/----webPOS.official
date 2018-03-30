@@ -315,7 +315,7 @@ public class UserHandlerImpl implements UserHandler {
 			user.setPassword(EncryptionUtil.getMd5(randomPassword));
 			result.setSuccess(userService.update(user) &&
 					emailUtil.send(user.getEmailAddress()
-					, "Prime Pad Reset Password"
+					, "Ever Reset Password"
 					, "Hi, " + user.getFirstName() + " " + user.getLastName()
 						+ "\n\n\nUsername - " + user.getUsername()
 						+ "\nPasswrod - " + randomPassword
