@@ -87,10 +87,10 @@ define(['durandal/app', 'knockout', 'modules/userservice', 'viewmodels/user/user
     	});
     };
     
-    User.prototype.remove = function(userId, lastName, firstName) {
+    User.prototype.remove = function(userId, formattedName) {
     	var self = this;
     	
-    	app.showMessage('<p>Are you sure you want to remove User <span class="text-primary">' + firstName + ' ' + lastName + '</span>?</p>',
+    	app.showMessage('<p>Are you sure you want to remove User <span class="text-primary">' + formattedName + '</span>?</p>',
 				'<p class="text-danger">Confirm Remove</p>',
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {
