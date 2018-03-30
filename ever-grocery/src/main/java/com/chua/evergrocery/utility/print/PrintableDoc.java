@@ -178,7 +178,8 @@ public class PrintableDoc
       }
   }
 
-  private AttributedString makeAttributedString(String fontName, int fontSize, String text, boolean bold, boolean italic) {
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+private AttributedString makeAttributedString(String fontName, int fontSize, String text, boolean bold, boolean italic) {
       AttributedString str = new AttributedString(text);      
       //now apply attributes for each block
       int start = 0;
@@ -188,7 +189,8 @@ public class PrintableDoc
       return str;
   }
 
-  private Map getFontAttributes(String fontname, int size, boolean bold, boolean italic) {
+  @SuppressWarnings("rawtypes")
+private Map getFontAttributes(String fontname, int size, boolean bold, boolean italic) {
       //if CODE, override font name
       //set attributes
       Map<TextAttribute, Object> map = new Hashtable<TextAttribute, Object>();

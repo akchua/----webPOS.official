@@ -10,7 +10,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.beans.InventoryBean;
-import com.chua.evergrocery.beans.ProductStatisticsBean;
 import com.chua.evergrocery.utility.format.DateFormatter;
 
 public class InventoryTemplate implements Template {
