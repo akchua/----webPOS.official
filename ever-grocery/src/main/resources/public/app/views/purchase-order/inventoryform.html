@@ -1,0 +1,23 @@
+<div id="divPurchaseOrderGenerateFormModal" class="modal-content">
+	<form>
+	    <div class="modal-header">
+	    	<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+	        <h3 align="center">Inventory</h3>
+	    </div>
+	    
+	    <div class="modal-body">
+	    	<div class="row">
+				<div class="control-group">
+					<label for="inputCompany">Company</label>
+					<select data-bind="options: companyList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- Select Company --', value: companyId" class="form-control" id="inputCompany"></select>
+					<span class="help-block">Inventory of which company</span>
+				</div>
+			</div>
+    	</div>
+	    
+	    <div class="modal-footer">
+	    	<button data-bind="click: generate" type="submit" class="btn btn-primary">Generate</button>
+	        <button data-bind="click: cancel" class="btn btn-warning">Cancel</button>
+	    </div>
+    </form>
+</div>

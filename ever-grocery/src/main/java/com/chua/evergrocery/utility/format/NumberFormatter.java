@@ -1,5 +1,6 @@
 package com.chua.evergrocery.utility.format;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
@@ -17,5 +18,11 @@ public class NumberFormatter {
 		NumberFormat percentFormat = NumberFormat.getPercentInstance();
 		percentFormat.setMinimumFractionDigits(2);
 		return percentFormat.format(value / 100);
+	}
+	
+	public static String decimalFormat(Float value, int decimalPlaces) {
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(decimalPlaces);
+		return df.format(value);
 	}
 }

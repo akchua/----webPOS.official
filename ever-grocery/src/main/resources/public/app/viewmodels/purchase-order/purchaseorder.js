@@ -1,5 +1,5 @@
-define(['plugins/router', 'durandal/app', 'knockout', 'modules/purchaseorderservice', 'modules/companyservice', 'viewmodels/purchase-order/purchaseorderform', 'viewmodels/purchase-order/purchaseordergenerateform', 'viewmodels/purchase-order/purchaseorderpage'], 
-		function (router, app, ko, purchaseOrderService, companyService, PurchaseOrderForm, PurchaseOrderGenerateForm, PurchaseOrderPage) {
+define(['plugins/router', 'durandal/app', 'knockout', 'modules/purchaseorderservice', 'modules/companyservice', 'viewmodels/purchase-order/purchaseorderform', 'viewmodels/purchase-order/purchaseordergenerateform', 'viewmodels/purchase-order/inventoryform', 'viewmodels/purchase-order/purchaseorderpage'], 
+		function (router, app, ko, purchaseOrderService, companyService, PurchaseOrderForm, PurchaseOrderGenerateForm, InventoryForm, PurchaseOrderPage) {
 	var PurchaseOrder = function() {
 		this.purchaseOrderList = ko.observable();
 		this.companyList = ko.observable();
@@ -46,6 +46,10 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 	
 	PurchaseOrder.prototype.generate = function() {
 		PurchaseOrderGenerateForm.show()
+	};
+	
+	PurchaseOrder.prototype.inventory = function() {
+		InventoryForm.show()
 	};
 	
 	PurchaseOrder.prototype.remove = function(purchaseOrderId) {

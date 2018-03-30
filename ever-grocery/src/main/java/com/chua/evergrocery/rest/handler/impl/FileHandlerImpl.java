@@ -23,4 +23,9 @@ public class FileHandlerImpl implements FileHandler {
 	public File findGeneratedPurchaseByFileName(String fileName) {
 		return new File(fileConstants.getGeneratePurchasesHome() + fileName);
 	}
+
+	@Override
+	public File findInventoryByFileName(String fileName) {
+		return new File(fileConstants.getInventoryHome() + fileName);
+	}
 }

@@ -1,0 +1,14 @@
+## Template for Generated Purchase Order
+## Has a maximum of 98 Column per line
+                                            INVENTORY                                             
+                                                   
+   Company : ${t.CompanyName}
+     As of : ${t.Date}
+
++--------------------------------------------------------------+----------------+----------------+
+|                         Product Name                         |     Whole      |     Piece      |
++--------------------------------------------------------------+----------------+----------------+
+#foreach( $formattedInventoryItem in $t.FormattedInventoryItems)
+$formattedInventoryItem
+#end
++--------------------------------------------------------------+----------------+----------------+

@@ -10,4 +10,6 @@ import java.io.File;
 public interface FileHandler {
 
 	File findGeneratedPurchaseByFileName(String fileName);
+	
+	File findInventoryByFileName(String fileName);
 }

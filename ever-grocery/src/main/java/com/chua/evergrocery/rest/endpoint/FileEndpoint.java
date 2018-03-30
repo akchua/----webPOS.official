@@ -37,4 +37,17 @@ public class FileEndpoint {
 				.build();
 		else return null;
 	}
+	
+	@GET
+	@Path("/inventory/{fileName}")
+	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
+	public Response getInventoryByFileName(@PathParam("fileName") String fileName) throws IOException {
+		System.out.println("File name : " + fileName);
+		File inventory = fileHandler.findInventoryByFileName(fileName);
+		if(inventory.exists())
+			return Response.ok(inventory, MediaType.APPLICATION_OCTET_STREAM)
+				.header("Content-Disposition", "attachment; filename=\"" + inventory.getName() + "\"" )
+				.build();
+		else return null;
+	}
 }

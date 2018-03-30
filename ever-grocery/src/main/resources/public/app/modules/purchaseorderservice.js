@@ -41,6 +41,16 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	generateInventory: function(companyId) {
+    		return $.ajax({
+    			url: '/services/purchaseorder/inventory',
+    			method: 'POST',
+    			data: {
+    				companyId: companyId
+    			}
+    		});
+    	},
+    	
     	removePurchaseOrder: function(purchaseOrderId) {
     		return $.ajax({
     			url: '/services/purchaseorder/remove',

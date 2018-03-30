@@ -16,10 +16,13 @@ public class FileConstants {
 	
 	private final String generatePurchasesHome;
 	
+	private final String inventoryHome;
+	
 	@Autowired
 	public FileConstants(@Value("${file.home}") String fileHome) {
 		this.fileHome = fileHome;
 		this.generatePurchasesHome = fileHome + "files/generate_purchase/";
+		this.inventoryHome = fileHome + "files/inventory/";
 	}
 
 	public String getFileHome() {
@@ -28,5 +31,9 @@ public class FileConstants {
 
 	public String getGeneratePurchasesHome() {
 		return generatePurchasesHome;
+	}
+	
+	public String getInventoryHome() {
+		return inventoryHome;
 	}
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.UserContextHolder;
+import com.chua.evergrocery.beans.InventoryBean;
 import com.chua.evergrocery.beans.ProductStatisticsBean;
 import com.chua.evergrocery.beans.PurchaseOrderFormBean;
 import com.chua.evergrocery.beans.ResultBean;
@@ -43,6 +44,7 @@ import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.TextWriter;
 import com.chua.evergrocery.utility.format.DateFormatter;
 import com.chua.evergrocery.utility.template.GeneratedPurchaseTemplate;
+import com.chua.evergrocery.utility.template.InventoryTemplate;
 
 @Transactional
 @Component
@@ -341,6 +343,73 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			}
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line("You must book for at least " + Html.text(Color.BLUE, "3 days.")));
+		}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line("Please select a company."));
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public ResultBean generateInventory(Long companyId) {
+		final ResultBean result;
+		final Company company = companyService.find(companyId);
+		// Determining last purchase order date
+		if(company != null) {
+			Calendar lastPODate = Calendar.getInstance();
+			lastPODate.setTime(company.getLastPurchaseOrderDate());
+		if(lastPODate.getTimeInMillis() != DateUtil.getDefaultDateInMillis()) {
+			// Retrieve all products of the company
+			final List<Product> products = productService.findAllByCompanyOrderByName(companyId);
+			
+			// Storage for printout data
+			final List<InventoryBean> inventories = new ArrayList<InventoryBean>();
+			
+			for(Product product : products) {
+				// Retrieve all sales on or after last PO date
+				final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByProductLimitByDate(product.getId(), lastPODate.getTime());
+				Float netSalesAmount = 0.0f;
+				for(CustomerOrderDetail coDetail : customerOrderDetails) {
+					netSalesAmount += coDetail.getTotalPrice() / (1 + (coDetail.getMargin() / 100));
+				}
+				
+				final Float stockBudget = product.getStockBudget() - netSalesAmount;
+				
+				// Storing all printout data
+				final InventoryBean inventory = new InventoryBean();
+				inventory.setProductId(product.getId());
+				inventory.setProductName(product.getName());
+				inventory.setProductDisplayName(product.getDisplayName());
+				
+				final ProductDetail wholeProductDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Whole");
+				final ProductDetail pieceProductDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Piece");
+				
+				final Float wholePurchasePrice = wholeProductDetail != null ? wholeProductDetail.getNetPrice() : -1.0f;
+				final Float piecePurchasePrice = pieceProductDetail != null ? pieceProductDetail.getNetPrice() : -1.0f;
+				
+				inventory.setWholeQuantity((int) Math.floor(stockBudget / wholePurchasePrice));
+				inventory.setPieceQuantity((stockBudget % wholePurchasePrice) / piecePurchasePrice);
+				
+				inventory.setWholeUnit((wholeProductDetail.getUnitType() != null) ? wholeProductDetail.getUnitType() : UnitType.DEFAULT);
+				inventory.setPieceUnit((pieceProductDetail.getUnitType() != null) ? pieceProductDetail.getUnitType() : UnitType.DEFAULT);
+			}
+			
+			// Generate text file of inventory
+			final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_" + DateFormatter.fileSafeFormat(new Date()) + ".txt";
+			final String filePath = fileConstants.getInventoryHome() + fileName;
+			final String temp = new InventoryTemplate(
+					company.getName(),
+					inventories)
+			.merge(velocityEngine);
+			TextWriter.write(
+					temp, filePath);
+			final Map<String, Object> extras = new HashMap<String, Object>();
+			extras.put("fileName", fileName);
+			result = new ResultBean(Boolean.TRUE, "Done");
+			result.setExtras(extras);
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line("Inventory data is only available after the first purchase order has been generated."));
 		}
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line("Please select a company."));

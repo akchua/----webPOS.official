@@ -59,6 +59,13 @@ public class PurchaseOrderEndpoint {
 	}
 	
 	@POST
+	@Path("/inventory")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean generateInventory(@FormParam("companyId") Long companyId) {
+		return purchaseOrderHandler.generateInventory(companyId);
+	}
+	
+	@POST
 	@Path("/remove")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ResultBean removePurchaseOrder(@FormParam("purchaseOrderId") Long purchaseOrderId) {
