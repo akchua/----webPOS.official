@@ -120,7 +120,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 		company.setAddress(companyForm.getAddress());
 		company.setAgent(companyForm.getAgent());
 		company.setPhoneNumber(companyForm.getPhoneNumber());
-		company.setReceiptType(companyForm.getReceiptType());
+		company.setReceiptType(companyForm.getReceiptType() != null ? companyForm.getReceiptType() : ReceiptType.AFTER_VAT_AND_DISCOUNT);
 	}
 	
 	@Override
