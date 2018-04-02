@@ -1,5 +1,8 @@
 package com.chua.evergrocery.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ReceiptType {
 
 	BEFORE_VAT_AND_DISCOUNT ("Before VAT and Discount"),
@@ -10,13 +13,17 @@ public enum ReceiptType {
 	
 	AFTER_VAT_AND_DISCOUNT ("After VAT and Discount");
 	
-	private final String description;
+	private final String displayName;
 	
-	ReceiptType(final String description) {
-		this.description = description;
+	public String getName() {
+		return toString();
 	}
 	
-	public String getDescription() {
-		return description;
+	ReceiptType(final String displayName) {
+		this.displayName = displayName;
+	}
+	
+	public String getDisplayName() {
+		return displayName;
 	}
 }

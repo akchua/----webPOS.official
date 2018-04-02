@@ -37,7 +37,7 @@
     					<td data-bind="text: company.address"></td>
     					<td data-bind="text: company.agent"></td>
     					<td data-bind="text: company.phoneNumber"></td>
-    					<td data-bind="text: company.receiptType"></td>
+    					<td data-bind="text: company.receiptType.displayName"></td>
     					<td>
     						<div class="pull-right">
     							<button data-bind="click: function() { $parent.edit(company.id) }" type="button" class="btn btn-warning btn-sm">Edit</button>

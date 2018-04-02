@@ -51,7 +51,7 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'viewmodels/
     	purchaseOrderService.getPurchaseOrder(self.purchaseOrderPageModel.purchaseOrderId()).done(function(data) { 
     		self.purchaseOrderPageModel.formattedTotalAmount(data.formattedTotalAmount);
     		self.purchaseOrderPageModel.companyName(data.company.name);
-    		self.purchaseOrderPageModel.receiptType(data.company.receiptType);
+    		self.purchaseOrderPageModel.receiptType(data.company.receiptType.displayName);
     		self.purchaseOrderPageModel.status(data.status.displayName);
     		
     		switch(self.purchaseOrderPageModel.receiptType()) {

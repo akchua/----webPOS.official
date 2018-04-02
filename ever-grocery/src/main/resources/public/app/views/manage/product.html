@@ -49,14 +49,14 @@
     					</td>
     					<td>
     						<span data-bind="if: product.company">
-    							<span data-bind="text: product.company.receiptType"></span>
+    							<span data-bind="text: product.company.receiptType.displayName"></span>
     						</span>
     					</td>
     					<td>
     						<div class="pull-right">
     							<button data-bind="click: function() { $parent.details(product.id) }" type="button" class="btn btn-info btn-sm">Details</button>
-    							<button data-bind="click: function() { $parent.edit(product.id) }" type="button" class="btn btn-warning btn-sm">Edit</button>
-    							<button data-bind="click: function() { $parent.remove(product.id, product.name) }" type="button" class="btn btn-danger btn-sm">Remove</button>
+    							<button data-bind="click: function() { $parent.edit(product.id) }" type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
+    							<button data-bind="click: function() { $parent.remove(product.id, product.name) }" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
     						</div>
     					</td>
     				</tr>
