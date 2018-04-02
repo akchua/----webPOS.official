@@ -21,3 +21,9 @@
 	font-family: times new roman;
 	color: black;
 }
+
+.text-sm-default {
+	font-size: 100%;
+	font-family: sans serif;
+	color: black;
+}
