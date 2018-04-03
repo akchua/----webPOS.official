@@ -55,13 +55,13 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'viewmodels/
     		self.purchaseOrderPageModel.status(data.status.displayName);
     		
     		switch(self.purchaseOrderPageModel.receiptType()) {
-		    	case 'BEFORE_VAT_AND_DISCOUNT':
+		    	case 'Before VAT and Discount':
 		    		self.beforeVatAndDiscount(true);
 		    		break;
-		    	case 'BEFORE_VAT_AFTER_DISCOUNT':
+		    	case 'Before VAT, After Discount':
 		    		self.beforeVatAfterDiscount(true);
 		    		break;
-		    	case 'AFTER_VAT_BEFORE_DISCOUNT':
+		    	case 'After VAT, Before Discount':
 		    		self.afterVatBeforeDiscount(true);
 		    		break;
     		}

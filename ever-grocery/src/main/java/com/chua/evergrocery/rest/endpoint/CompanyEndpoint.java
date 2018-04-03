@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.chua.evergrocery.beans.CompanyFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.database.entity.Company;
+import com.chua.evergrocery.enums.ReceiptType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CompanyHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,7 +74,7 @@ public class CompanyEndpoint {
 	@GET
 	@Path("/listreceipttype")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<String> getReceiptTypeList() {
+	public List<ReceiptType> getReceiptTypeList() {
 		return companyHandler.getReceiptTypeList();
 	}
 }

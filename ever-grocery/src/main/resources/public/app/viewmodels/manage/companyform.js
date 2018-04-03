@@ -23,11 +23,11 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/companyservice'],
     	self.companyFormModel.address(self.company.address);
     	self.companyFormModel.agent(self.company.agent);
     	self.companyFormModel.phoneNumber(self.company.phoneNumber);
-    	self.companyFormModel.receiptType(self.company.receiptType);
+    	if(self.company.receiptType) self.companyFormModel.receiptType(self.company.receiptType.name);
     	
     	companyService.getReceiptTypeList().done(function(receiptTypeList) {
     		self.receiptTypeList(receiptTypeList);
-    		self.companyFormModel.receiptType(self.company.receiptType);
+    		if(self.company.receiptType) self.companyFormModel.receiptType(self.company.receiptType.name);
     	});
     };
  

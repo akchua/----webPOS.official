@@ -3,6 +3,7 @@ package com.chua.evergrocery.rest.handler.impl;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 
@@ -124,7 +125,8 @@ public class CompanyHandlerImpl implements CompanyHandler {
 	}
 	
 	@Override
-	public List<String> getReceiptTypeList() {
-		return Arrays.asList(ReceiptType.values()).stream().map(ReceiptType::name).collect(Collectors.toList());
+	public List<ReceiptType> getReceiptTypeList() {
+		return Stream.of(ReceiptType.values())
+					.collect(Collectors.toList());
 	}
 }
