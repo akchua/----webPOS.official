@@ -2,6 +2,7 @@ package com.chua.evergrocery.rest.handler.impl;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.UserType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
+import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.print.OrderItem;
 import com.chua.evergrocery.utility.print.OrderList;
 import com.chua.evergrocery.utility.print.OrderReceipt;
@@ -80,6 +82,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			if(!customerOrderService.isExistsByNameAndStatus(customerOrderForm.getName(), new Status[] { Status.LISTING, Status.PRINTED })) {
 				final CustomerOrder customerOrder = new CustomerOrder();
 				setCustomerOrder(customerOrder, customerOrderForm);
+				customerOrder.setPaidOn(DateUtil.getDefaultDate());
 				customerOrder.setTotalAmount(0.0f);
 				customerOrder.setTotalItems(0.0f);
 				
@@ -183,6 +186,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					
 					customerOrder.setCashier(userService.find(UserContextHolder.getUser().getId()));
 					customerOrder.setStatus(Status.PAID);
+					customerOrder.setPaidOn(new Date());
 					
 					result.setSuccess(customerOrderService.update(customerOrder));
 					if(result.getSuccess()) {

@@ -225,8 +225,9 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						Float netSalesAmount = 0.0f;
 						Float netProfitAmount = 0.0f;
 						for(CustomerOrderDetail coDetail : customerOrderDetails) {
-							netSalesAmount += coDetail.getTotalPrice() / (1 + (coDetail.getMargin() / 100));
-							netProfitAmount += coDetail.getTotalPrice() - netSalesAmount;
+							Float salesAmount = coDetail.getTotalPrice() / (1 + (coDetail.getMargin() / 100));
+							netSalesAmount += salesAmount;
+							netProfitAmount += coDetail.getTotalPrice() - salesAmount;
 						}
 						System.out.println("Total sales : " + netSalesAmount);
 						System.out.println("Total profit : " + netProfitAmount);
@@ -249,9 +250,9 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						Float tempTotalBudget = actualBudget * adjustmentRate;
 						tempTotalBudget = saleRate >= 70 ? Math.max(tempTotalBudget, product.getTotalBudget()) : Math.min(tempTotalBudget, product.getTotalBudget());
 						// apply delivery rate ratio
-						if(!company.getDeliveryRate().equals(0.0f)) tempTotalBudget /= company.getDeliveryRate() * deliveryRate;
+						if(!company.getDeliveryRate().equals(0.0f)) tempTotalBudget = (tempTotalBudget / company.getDeliveryRate()) * deliveryRate;
 						// adjust to number of days to book
-						if(!company.getDaysBooked().equals(0.0f)) tempTotalBudget /= company.getDaysBooked() * daysToBook;
+						if(!company.getDaysBooked().equals(0.0f)) tempTotalBudget = (tempTotalBudget / company.getDaysBooked()) * daysToBook;
 						product.setTotalBudget(tempTotalBudget);
 						System.out.println("Computed new total budget : " + product.getTotalBudget());
 						

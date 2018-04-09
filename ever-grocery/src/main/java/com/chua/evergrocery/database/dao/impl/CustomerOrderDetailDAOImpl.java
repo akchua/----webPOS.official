@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.chua.evergrocery.database.dao.CustomerOrderDetailDAO;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
+import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.utility.DateUtil;
 
@@ -56,7 +57,8 @@ public class CustomerOrderDetailDAOImpl
 		
 		conjunction.add(Restrictions.eq("prod.product.id", productId));
 		conjunction.add(Restrictions.eq("custOrder.isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.ge("createdOn", new DateTime(start.before(DateUtil.getOrderCutoffDate()) ? DateUtil.getOrderCutoffDate() : start)));
+		conjunction.add(Restrictions.ge("custOrder.paidOn", new DateTime(start.before(DateUtil.getOrderCutoffDate()) ? DateUtil.getOrderCutoffDate() : start)));
+		conjunction.add(Restrictions.eq("custOrder.status", Status.PAID));
 		
 		return findAllByCriterionList(associatedPaths, aliasNames, joinTypes, null, conjunction);
 	}

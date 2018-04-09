@@ -1,5 +1,8 @@
 package com.chua.evergrocery.database.entity;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.NotFound;
@@ -19,7 +24,9 @@ import com.chua.evergrocery.database.entity.base.BaseObject;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.serializer.json.CustomerSerializer;
 import com.chua.evergrocery.serializer.json.UserSerializer;
+import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
+import com.chua.evergrocery.utility.format.DateFormatter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity(name = "CustomerOrder")
@@ -46,6 +53,8 @@ public class CustomerOrder extends BaseObject {
 	private Float totalItems;
 	
 	private Status status;
+	
+	private Date paidOn;
 	
 	@Transient
 	public String getOrderNumber() {
@@ -144,5 +153,29 @@ public class CustomerOrder extends BaseObject {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name = "paid_on")
+	public Date getPaidOn() {
+		return paidOn;
+	}
+	
+	@Transient
+	public String getFormattedPaidOn() {
+		final String formattedPaidOn;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(paidOn);
+		
+		if(cal.getTimeInMillis() == DateUtil.getDefaultDateInMillis()) {
+			formattedPaidOn = "n/a";
+		} else {
+			formattedPaidOn = DateFormatter.shortFormat(paidOn);
+		}
+		return formattedPaidOn;
+	}
+
+	public void setPaidOn(Date paidOn) {
+		this.paidOn = paidOn;
 	}
 }
