@@ -128,7 +128,7 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
 				[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
 		.then(function(confirm) {
 			if(confirm) {
-				customerOrderService.printCustomerOrderList(customerOrderId).done(function(result) {
+				customerOrderService.printCustomerOrderList(self.customerOrderPageModel.customerOrderId()).done(function(result) {
 					if(result.success) {
 						router.navigate('#customerorder');
 					} else {

@@ -164,6 +164,12 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					}
 					System.out.println("Last PO Date : " + lastPODate.getTime());
 					
+					// Determining last booked days
+					if(company.getDaysBooked().equals(0.0f)) {
+						company.setDaysBooked(Days.daysBetween(new DateTime(lastPODate.getTime()), new DateTime()).getDays() / 1.0f);
+					}
+					System.out.println("Last Booked Days : " + company.getDaysBooked());
+					
 					// Separating deliveries after last purchase order
 					final List<PurchaseOrder> deliveriesAfterLastPO = new ArrayList<PurchaseOrder>();
 					for(PurchaseOrder po : deliveredWithinNinety) {
@@ -281,7 +287,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						Integer quantity = 0;
 						UnitType unit;
 						
-						if(Math.abs(product.getPurchaseBudget() / wholePurchasePrice) < 1.0f) {
+						if(Math.abs(product.getPurchaseBudget() / wholePurchasePrice) < 2.0f) {
 							quantity = Math.round(product.getPurchaseBudget() / piecePurchasePrice);
 							unit = pieceProductDetail.getUnitType();
 						} else if(product.getPurchaseBudget() / wholePurchasePrice > 100.0f) {

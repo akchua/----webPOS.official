@@ -17,3 +17,7 @@
 $formattedPurchaseItem
 #end
 +--------------------------------------------------------------+-------+--------+------------+------------+--------+--------+------------+------------+--------+
+
+             Total Sales : ${t.FormattedTotalSales}
+            Total Profit : ${t.FormattedTotalProfit}
+            Total Budget : ${t.FormattedTotalBudget}

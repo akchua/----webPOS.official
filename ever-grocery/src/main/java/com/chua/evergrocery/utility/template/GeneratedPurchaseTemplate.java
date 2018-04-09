@@ -6,11 +6,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.beans.ProductStatisticsBean;
+import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.chua.evergrocery.utility.format.DateFormatter;
 
 /**
@@ -82,5 +84,35 @@ public class GeneratedPurchaseTemplate implements Template {
 	
 	public List<String> getFormattedPurchaseItems() {
 		return this.formattedPurchaseItems;
+	}
+	
+	public String getFormattedTotalSales() {
+		Float totalSales = 0.0f;
+		
+		for(ProductStatisticsBean prodStat : productStats) {
+			totalSales += prodStat.getSales();
+		}
+		
+		return String.format("%15s", CurrencyFormatter.pesoFormat(totalSales));
+	}
+	
+	public String getFormattedTotalProfit() {
+		Float totalProfit = 0.0f;
+		
+		for(ProductStatisticsBean prodStat : productStats) {
+			totalProfit += prodStat.getProfit();
+		}
+		
+		return String.format("%15s", CurrencyFormatter.pesoFormat(totalProfit));
+	}
+	
+	public String getFormattedTotalBudget() {
+		Float totalBudget = 0.0f;
+		
+		for(ProductStatisticsBean prodStat : productStats) {
+			totalBudget += prodStat.getCurrentPurchaseBudget();
+		}
+		
+		return String.format("%15s", CurrencyFormatter.pesoFormat(totalBudget));
 	}
 }

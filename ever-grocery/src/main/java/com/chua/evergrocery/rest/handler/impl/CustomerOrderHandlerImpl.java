@@ -476,7 +476,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
-		if(customerOrder != null) {
+		/*if(customerOrder != null) {
 			final UserBean currentUser = UserContextHolder.getUser();
 			
 			if(customerOrder.getStatus() == Status.LISTING || currentUser.getUserType() == UserType.ADMINISTRATOR ||
@@ -502,7 +502,10 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			}
 		} else {
 			result = new ResultBean(false, "Customer order not found.");
-		}
+		}*/
+		customerOrder.setStatus(Status.PRINTED);
+		customerOrderService.update(customerOrder);
+		result = new ResultBean(Boolean.TRUE, "print service temporarily stopped.");
 		
 		return result;
 	}
