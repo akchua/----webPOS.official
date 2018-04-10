@@ -45,11 +45,12 @@ public class StringHelper {
 		String[] tokens = s.split("\\.");
 		String convertedString = "";
 		for(int i = 0; i < tokens.length - 1; i++) {
-			convertedString += tokens[i].replaceAll("\\W+", "_");
+			convertedString += tokens[i].replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
 		}
 		if(tokens.length > 1) {
 			convertedString += "." + tokens[tokens.length - 1];
 		}
+		
 		return convertedString;
 	}
 	
