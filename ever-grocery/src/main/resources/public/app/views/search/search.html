@@ -1,7 +1,7 @@
 <section>
 	<form role="search" class="form-inline">
-		<div class="input-group col-md-4 col-xs-4">
-			<input data-bind="textInput: searchKey" type="text" class="form-control" placeholder="Search">
+		<div class="input-group col-md-4 col-xs-12">
+			<input data-bind="textInput: searchKey, hasFocus: searchFocus" type="text" class="form-control" placeholder="Search">
 			<span class="input-group-btn">
 				<button data-bind="click: search" type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
 			</span>
@@ -9,7 +9,7 @@
 	</form>
 	
 	<div class="row">
-		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
+		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-xs-12"></div>
 	</div>
 	
 	<div class="row">
