@@ -173,7 +173,10 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					// Separating deliveries after last purchase order
 					final List<PurchaseOrder> deliveriesAfterLastPO = new ArrayList<PurchaseOrder>();
 					for(PurchaseOrder po : deliveredWithinNinety) {
-						if(!po.getDeliveredOn().before(lastPODate.getTime())) {
+						Calendar deliveredOn = Calendar.getInstance();
+						deliveredOn.setTime(po.getDeliveredOn());
+						if(deliveredOn.get(Calendar.YEAR) >= lastPODate.get(Calendar.YEAR) &&
+								deliveredOn.get(Calendar.DAY_OF_YEAR) >= lastPODate.get(Calendar.DAY_OF_YEAR)) {
 							deliveriesAfterLastPO.add(po);
 						}
 					}
