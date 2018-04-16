@@ -247,8 +247,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						System.out.println("Computed sale rate : " + saleRate);
 						
 						// Compute adjustment rate {actual value to be multiplied to budget for simplicity}
-						// 20/30 Maximum increase of 20% at 70-100% sales AND 30/70 Maximum decrease of 30% at 0-70% sales
-						Float tempAdjustmentRate = (saleRate - 70.0f) * (saleRate >= 70.0f ? (20.0f / 30.0f) : (30.0f / 70.0f)) / 100.0f;
+						// 20/30 Maximum increase of 25% at 70-100% sales AND 30/70 Maximum decrease of 30% at 0-70% sales
+						Float tempAdjustmentRate = (saleRate - 70.0f) * (saleRate >= 70.0f ? (25.0f / 30.0f) : (30.0f / 70.0f)) / 100.0f;
 						if((saleRate >= 95.0f && product.getSaleRate() >= 95.0f) || (saleRate <= 30 && product.getSaleRate() <= 30)) {
 							tempAdjustmentRate *= 2.0f;
 						}
