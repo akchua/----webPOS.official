@@ -1,8 +1,13 @@
 define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 'modules/purchaseorderservice', 'viewmodels/purchase-order/quantityform'], 
 		function (dialog, app, ko, productService, purchaseOrderService, QuantityForm) {
-    var SearchDetails = function(product, purchaseOrder) {
+    var SearchDetails = function(product, purchaseOrder, receiptType) {
     	this.product = product;
     	this.purchaseOrder = purchaseOrder;
+    	this.receiptType = receiptType;
+    	
+    	this.beforeVatAndDiscount = ko.observable(false);
+    	this.beforeVatAfterDiscount = ko.observable(false);
+    	this.afterVatBeforeDiscount = ko.observable(false);
     	
     	this.productName = ko.observable();
     	
@@ -17,10 +22,22 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
     	productService.getProductDetailList(self.product.id, false).done(function (data) {
     		self.productDetailList(data);
     	});
+    	
+    	switch(self.receiptType) {
+	    	case 'Before VAT and Discount':
+	    		self.beforeVatAndDiscount(true);
+	    		break;
+	    	case 'Before VAT, After Discount':
+	    		self.beforeVatAfterDiscount(true);
+	    		break;
+	    	case 'After VAT, Before Discount':
+	    		self.afterVatBeforeDiscount(true);
+	    		break;
+		}
     };
     
-    SearchDetails.show = function(product, purchaseOrder) {
-    	return dialog.show(new SearchDetails(product, purchaseOrder));
+    SearchDetails.show = function(product, purchaseOrder, receiptType) {
+    	return dialog.show(new SearchDetails(product, purchaseOrder, receiptType));
     };
     
     SearchDetails.prototype.add = function(productDetailId, productUnitType) {

@@ -1,7 +1,8 @@
 define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 'viewmodels/purchase-order/searchdetails'], function (dialog, app, ko, productService, SearchDetails) {
-	var Search = function(purchaseOrder) {
+	var Search = function(purchaseOrder, receiptType) {
 		this.purchaseOrder = purchaseOrder;
 		this.productList = ko.observable();
+		this.receiptType = receiptType;
 		
 		this.companyId = ko.observable();
 		
@@ -33,8 +34,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
 		self.refreshProductList();
 	};
 	
-	Search.show = function(purchaseOrder) {
-		return dialog.show(new Search(purchaseOrder));
+	Search.show = function(purchaseOrder, receiptType) {
+		return dialog.show(new Search(purchaseOrder, receiptType));
 	};
 	
 	Search.prototype.refreshProductList = function() {
@@ -57,7 +58,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
 		var self = this;
 
 		productService.getProduct(productId).done(function (data) {
-			SearchDetails.show(data, self.purchaseOrder).then(function() {
+			SearchDetails.show(data, self.purchaseOrder, self.receiptType).then(function() {
 				self.searchKey('');
 				self.searchFocus(true);
 			});

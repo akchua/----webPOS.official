@@ -39,7 +39,7 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'viewmodels/
     	var self = this;
     	
     	purchaseOrderService.getPurchaseOrder(self.purchaseOrderPageModel.purchaseOrderId()).done(function(data) { 
-    		Search.show(data).done(function() {
+    		Search.show(data, self.purchaseOrderPageModel.receiptType()).done(function() {
         		self.refreshPurchaseOrderDetailList();
         	});
     	});

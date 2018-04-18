@@ -105,7 +105,7 @@ public class PurchaseOrderDetail extends BaseObject {
 	
 	@Transient
 	public String getFormattedBeforeVatAfterDiscountPrice() {
-		return CurrencyFormatter.pesoFormat((getTotalPrice() * 100 / 1.12) / 100);
+		return CurrencyFormatter.pesoFormat((getGrossPrice() * 100 / 1.12) / 100);
 	}
 
 	public void setGrossPrice(Float grossPrice) {

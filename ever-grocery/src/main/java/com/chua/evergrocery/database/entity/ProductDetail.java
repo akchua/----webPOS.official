@@ -90,6 +90,21 @@ public class ProductDetail extends BaseObject {
 		return grossPrice;
 	}
 	
+	@Transient
+	public String getFormattedGrossPrice() {
+		return CurrencyFormatter.pesoFormat(getGrossPrice());
+	}
+	
+	@Transient
+	public String getFormattedBeforeVatAndDiscountPrice() {
+		return CurrencyFormatter.pesoFormat((getGrossPrice() * 100 / 1.12) / 100);
+	}
+	
+	@Transient
+	public String getFormattedBeforeVatAfterDiscountPrice() {
+		return CurrencyFormatter.pesoFormat((getGrossPrice() * 100 / 1.12) / 100);
+	}
+	
 	public void setGrossPrice(Float grossPrice) {
 		this.grossPrice = grossPrice;
 	}
