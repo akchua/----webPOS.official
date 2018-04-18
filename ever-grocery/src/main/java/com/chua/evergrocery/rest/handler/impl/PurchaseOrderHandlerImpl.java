@@ -403,6 +403,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 				
 				inventory.setWholeUnit((wholeProductDetail.getUnitType() != null) ? wholeProductDetail.getUnitType() : UnitType.DEFAULT);
 				inventory.setPieceUnit((pieceProductDetail.getUnitType() != null) ? pieceProductDetail.getUnitType() : UnitType.DEFAULT);
+				
+				inventories.add(inventory);
 			}
 			
 			// Generate text file of inventory
