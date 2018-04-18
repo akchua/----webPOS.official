@@ -8,5 +8,5 @@ import com.chua.evergrocery.database.prototype.PurchaseOrderPrototype;
 public interface PurchaseOrderService
 	extends Service<PurchaseOrder, Long>, PurchaseOrderPrototype {
 
-	List<PurchaseOrder> findDeliveredWithinNinetyDaysByCompanyOrderByDeliveryDate(Long companyId);
+	List<PurchaseOrder> findDeliveredAfterCutoffByCompanyOrderByDeliveryDate(Long companyId);
 }

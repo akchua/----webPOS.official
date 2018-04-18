@@ -141,26 +141,26 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			// Check if last purchase order date is more than 3 days ago
 			if(Days.daysBetween(new DateTime(company.getLastPurchaseOrderDate()), new DateTime()).getDays() > 3) {
 				// Retrieve purchase orders delivered within ninety days from now
-				final List<PurchaseOrder> deliveredWithinNinety = purchaseOrderService.findDeliveredWithinNinetyDaysByCompanyOrderByDeliveryDate(company.getId());
-				System.out.println("# of deliveries within ninety days : " + deliveredWithinNinety.size());
+				final List<PurchaseOrder> deliveredAfterCutoff = purchaseOrderService.findDeliveredAfterCutoffByCompanyOrderByDeliveryDate(company.getId());
+				System.out.println("# of deliveries after " + DateFormatter.prettyFormat(DateUtil.getOrderCutoffDate()) + " : " + deliveredAfterCutoff.size());
 				
-				if(!deliveredWithinNinety.isEmpty()) {
-					// Computing for delivery rate
+				if(!deliveredAfterCutoff.isEmpty()) {
+					/*// Computing for delivery rate
 					Float totalDeliveryTime = 0.0f;
 					int deliveryCount = 0;
-					for(int i = 1; i < deliveredWithinNinety.size(); i++) {
-						int deliveryTime = Days.daysBetween(new DateTime(deliveredWithinNinety.get(i).getDeliveredOn()), new DateTime(deliveredWithinNinety.get(i - 1).getDeliveredOn())).getDays();
+					for(int i = 1; i < deliveredAfterCutoff.size(); i++) {
+						int deliveryTime = Days.daysBetween(new DateTime(deliveredAfterCutoff.get(i).getDeliveredOn()), new DateTime(deliveredAfterCutoff.get(i - 1).getDeliveredOn())).getDays();
 						totalDeliveryTime += deliveryTime;
 						if(deliveryTime > 0) deliveryCount++;
 					}
 					final Float deliveryRate = deliveryCount > 0 ? totalDeliveryTime / deliveryCount : 7.0f;
-					System.out.println("Computed delivery rate : " + deliveryRate);
+					System.out.println("Computed delivery rate : " + deliveryRate);*/
 					
 					// Determining last purchase order date
 					Calendar lastPODate = Calendar.getInstance();
 					lastPODate.setTime(company.getLastPurchaseOrderDate());
 					if(lastPODate.getTimeInMillis() == DateUtil.getDefaultDateInMillis()) {
-						lastPODate.setTime(deliveredWithinNinety.get(0).getDeliveredOn());
+						lastPODate.setTime(deliveredAfterCutoff.get(0).getDeliveredOn());
 					}
 					System.out.println("Last PO Date : " + lastPODate.getTime());
 					
@@ -172,7 +172,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					
 					// Separating deliveries after last purchase order
 					final List<PurchaseOrder> deliveriesAfterLastPO = new ArrayList<PurchaseOrder>();
-					for(PurchaseOrder po : deliveredWithinNinety) {
+					for(PurchaseOrder po : deliveredAfterCutoff) {
 						Calendar deliveredOn = Calendar.getInstance();
 						deliveredOn.setTime(po.getDeliveredOn());
 						if(deliveredOn.get(Calendar.YEAR) >= lastPODate.get(Calendar.YEAR) &&
@@ -258,8 +258,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						// Compute new total budget (total budget * adjustment rate)
 						Float tempTotalBudget = actualBudget * adjustmentRate;
 						tempTotalBudget = saleRate >= 70 ? Math.max(tempTotalBudget, product.getTotalBudget()) : Math.min(tempTotalBudget, product.getTotalBudget());
-						// apply delivery rate ratio
-						if(!company.getDeliveryRate().equals(0.0f)) tempTotalBudget = (tempTotalBudget / company.getDeliveryRate()) * deliveryRate;
+						/*// apply delivery rate ratio
+						if(!company.getDeliveryRate().equals(0.0f)) tempTotalBudget = (tempTotalBudget / company.getDeliveryRate()) * deliveryRate;*/
 						// adjust to number of days to book
 						if(!company.getDaysBooked().equals(0.0f)) tempTotalBudget = (tempTotalBudget / company.getDaysBooked()) * daysToBook;
 						product.setTotalBudget(tempTotalBudget);
@@ -320,7 +320,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					expectedDeliveryDate.add(Calendar.DAY_OF_MONTH, maxDaysToDeliver);
 					
 					// Applying changes to company
-					company.setDeliveryRate(deliveryRate);
+					/*company.setDeliveryRate(deliveryRate);*/
 					company.setDaysBooked(daysToBook);
 					company.setLastPurchaseOrderDate(generateStartTime);
 					
@@ -370,6 +370,36 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			Calendar lastPODate = Calendar.getInstance();
 			lastPODate.setTime(company.getLastPurchaseOrderDate());
 		if(lastPODate.getTimeInMillis() != DateUtil.getDefaultDateInMillis()) {
+			final List<PurchaseOrder> deliveredAfterCutoff = purchaseOrderService.findDeliveredAfterCutoffByCompanyOrderByDeliveryDate(company.getId());
+			System.out.println("# of deliveries after " + DateFormatter.prettyFormat(DateUtil.getOrderCutoffDate()) + " : " + deliveredAfterCutoff.size());
+			
+			// Separating deliveries after last purchase order
+			final List<PurchaseOrder> deliveriesAfterLastPO = new ArrayList<PurchaseOrder>();
+			for(PurchaseOrder po : deliveredAfterCutoff) {
+				Calendar deliveredOn = Calendar.getInstance();
+				deliveredOn.setTime(po.getDeliveredOn());
+				if(deliveredOn.get(Calendar.YEAR) >= lastPODate.get(Calendar.YEAR) &&
+						deliveredOn.get(Calendar.DAY_OF_YEAR) >= lastPODate.get(Calendar.DAY_OF_YEAR)) {
+					deliveriesAfterLastPO.add(po);
+				}
+			}
+			System.out.println("# of deliveries after last PO : " + deliveriesAfterLastPO.size());
+			
+			// Mapping the net amount to the product id of all products included in "deliveriesAfterLastPO"
+			final Map<Long, Float> lastPurchaseNetAmount = new HashMap<Long, Float>();
+			for(PurchaseOrder po : deliveriesAfterLastPO) {
+				System.out.println("Processing PO #" + po.getId());
+				final List<PurchaseOrderDetail> poDetails = purchaseOrderDetailService.findAllByPurchaseOrderId(po.getId());
+				for(PurchaseOrderDetail poDetail : poDetails) {
+					System.out.println("Found : " + poDetail.getProductName() + " worth " + poDetail.getFormattedNetPrice());
+					final Long productId = poDetail.getProductDetail().getProduct().getId();
+					Float netPurchaseAmount = (lastPurchaseNetAmount.get(productId) == null) ? 0.0f : lastPurchaseNetAmount.get(productId);
+					netPurchaseAmount += poDetail.getTotalPrice();
+					lastPurchaseNetAmount.put(productId, netPurchaseAmount);
+					System.out.println("Updating purchase net amount to : " + netPurchaseAmount);
+				}
+			}
+			
 			// Retrieve all products of the company
 			final List<Product> products = productService.findAllByCompanyOrderByName(companyId);
 			
@@ -377,6 +407,11 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			final List<InventoryBean> inventories = new ArrayList<InventoryBean>();
 			
 			for(Product product : products) {
+				System.out.println("######## Processing product : " + product.getName() + " ########");
+				
+				// Check if any last purchase net amount
+				final Float netPurchaseAmount = (lastPurchaseNetAmount.get(product.getId()) == null) ? 0.0f : lastPurchaseNetAmount.get(product.getId());
+				
 				// Retrieve all sales on or after last PO date
 				final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByProductLimitByDate(product.getId(), lastPODate.getTime());
 				Float netSalesAmount = 0.0f;
@@ -384,7 +419,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					netSalesAmount += coDetail.getTotalPrice() / (1 + (coDetail.getMargin() / 100));
 				}
 				
-				final Float stockBudget = product.getStockBudget() - netSalesAmount;
+				final Float stockBudget = product.getStockBudget() + netPurchaseAmount - netSalesAmount;
+				System.out.println("Calculated stock budget : " + product.getStockBudget());
 				
 				// Storing all printout data
 				final InventoryBean inventory = new InventoryBean();

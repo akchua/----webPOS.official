@@ -56,16 +56,12 @@ public class PurchaseOrderDAOImpl
 	}
 
 	@Override
-	public List<PurchaseOrder> findAllByCompanyAndDaysWithOrder(Long companyId, int days, Order[] orders) {
+	public List<PurchaseOrder> findAllByCompanyAndDaysWithOrder(Long companyId, Date cutOff, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.eq("company.id", companyId));
 		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
-		cal.add(Calendar.DAY_OF_MONTH, -days);
-		
-		conjunction.add(Restrictions.between("deliveredOn", (cal.getTime().before(DateUtil.getOrderCutoffDate()) ? DateUtil.getOrderCutoffDate() : cal.getTime()), new Date()));
+		conjunction.add(Restrictions.between("deliveredOn", cutOff, new Date()));
 		
 		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}

@@ -11,6 +11,7 @@ import com.chua.evergrocery.database.entity.PurchaseOrder;
 import com.chua.evergrocery.database.service.PurchaseOrderService;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.utility.DateUtil;
 
 @Service
 public class PurchaseOrderServiceImpl
@@ -34,7 +35,7 @@ public class PurchaseOrderServiceImpl
 	}
 
 	@Override
-	public List<PurchaseOrder> findDeliveredWithinNinetyDaysByCompanyOrderByDeliveryDate(Long companyId) {
-		return dao.findAllByCompanyAndDaysWithOrder(companyId, 90, new Order[] { Order.desc("deliveredOn") });
+	public List<PurchaseOrder> findDeliveredAfterCutoffByCompanyOrderByDeliveryDate(Long companyId) {
+		return dao.findAllByCompanyAndDaysWithOrder(companyId, DateUtil.getOrderCutoffDate(), new Order[] { Order.desc("deliveredOn") });
 	}
 }
