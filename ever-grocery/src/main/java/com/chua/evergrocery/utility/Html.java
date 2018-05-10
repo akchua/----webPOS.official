@@ -15,6 +15,10 @@ public class Html {
 		return line(Color.DEFAULT, content);
 	}
 	
+	public static String rightLine(String content) {
+		return "<p class=\"text-right\">" + content + "</p>";
+	}
+	
 	public static String line(Color color, String content) {
 		String s = "";
 		
@@ -47,6 +51,10 @@ public class Html {
 	
 	public static String text(String content) {
 		return text(Color.DEFAULT, content);
+	}
+	
+	public static String boldText(String content) {
+		return "<strong>" + content + "</strong>";
 	}
 	
 	public static String text(Color color, String content) {

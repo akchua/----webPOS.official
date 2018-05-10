@@ -1,6 +1,5 @@
 package com.chua.evergrocery.rest.handler.impl;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,7 +8,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +16,6 @@ import com.chua.evergrocery.UserContextHolder;
 import com.chua.evergrocery.beans.CustomerOrderFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.UserBean;
-import com.chua.evergrocery.database.entity.Customer;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.ProductDetail;
@@ -34,10 +31,9 @@ import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
 import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.Html;
+import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.chua.evergrocery.utility.print.OrderItem;
 import com.chua.evergrocery.utility.print.OrderList;
-import com.chua.evergrocery.utility.print.OrderReceipt;
-import com.chua.evergrocery.utility.print.OrderReceiptConfig;
 
 @Transactional
 @Component
@@ -177,7 +173,6 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	@Override
 	public ResultBean payCustomerOrder(Long customerOrderId, Float cash) {
 		final ResultBean result;
-		final DecimalFormat df = new DecimalFormat("#.##");
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
@@ -192,15 +187,20 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					result.setSuccess(customerOrderService.update(customerOrder));
 					if(result.getSuccess()) {
 						//#############################################################################################		remove from stock!!!
-						result.setMessage("CHANGE: Php " + df.format(cash - customerOrder.getTotalAmount()));
+						result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(cash - customerOrder.getTotalAmount())) +
+								Html.newLine + Html.newLine + Html.text("Vat Sales : " + CurrencyFormatter.pesoFormat(customerOrder.getTotalAmount() / 1.12f)) +
+								Html.newLine + Html.text("Add Vat (12%) : " + CurrencyFormatter.pesoFormat(customerOrder.getTotalAmount() - (customerOrder.getTotalAmount() / 1.12f))) +
+								Html.newLine + Html.text("Amount Due    : " + CurrencyFormatter.pesoFormat(customerOrder.getTotalAmount()))));
 					} else {
 						result.setMessage("Failed to pay Customer order \"" + customerOrder.getName() + "\".");
 					}
 				} else {
 					result = new ResultBean(false, "Insufficient cash.");
 				}
-			} else {
-				result = new ResultBean(false, "Customer order already paid or not yet printed.");
+			} else if(customerOrder.getStatus() == Status.PAID) {
+				result = new ResultBean(false, "Customer order already paid.");
+			} else if(customerOrder.getStatus() == Status.LISTING) {
+				result = new ResultBean(Boolean.FALSE, "Customer Order not yet completed.");
 			}
 		} else {
 			result = new ResultBean(false, "Customer order not found.");
@@ -563,7 +563,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	private void printReceipt(CustomerOrder customerOrder, Float cash) {
 		
-		final String customerName;
+		/*final String customerName;
 		final Customer customer = customerOrder.getCustomer();
 		
 		if(customer != null) {
@@ -587,7 +587,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			orderReceipt.print(velocityEngine);
 		} catch (Exception e) { 
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	private void setCustomerOrderDetail(CustomerOrderDetail customerOrderDetail, CustomerOrder customerOrder, ProductDetail productDetail) {

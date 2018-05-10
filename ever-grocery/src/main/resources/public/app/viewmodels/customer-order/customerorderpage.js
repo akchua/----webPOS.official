@@ -83,7 +83,7 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     CustomerOrderPage.prototype.addItemByBarcode = function() {
     	var self = this;
     	
-    	if(self.barcodeKey() === 'end') {
+    	if(self.barcodeKey() === 'e') {
     		self.print();
     	} else if(self.barcodeKey() === 's') {
     		self.search();

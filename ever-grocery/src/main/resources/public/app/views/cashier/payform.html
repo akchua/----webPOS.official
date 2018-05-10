@@ -1,20 +1,30 @@
-<div id="divPayModal" class="modal-content">
-	<form>
-	    <div class="modal-header">
-	    	<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
-	        <h2 align="center">Total: Php<span data-bind="text: formattedTotalAmount"></span></h2>
+<div id="divPayModal" class="modal-content modal-sm">
+    <div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+        <h2 align="center">Total: Php<span data-bind="text: formattedTotalAmount"></span></h2>
+    </div>
+    
+    <div class="modal-body">
+    	<div class="row">
+	    	<button data-bind="click: payThousand" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedThousand"></span></button>
+	    	<button data-bind="click: payFiveHundred" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedFiveHundred"></span></button>
+	    	<button data-bind="click: payHundred" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedHundred"></span></button>
+	    	<button data-bind="click: payExact" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedExact"></span></button>
 	    </div>
-	    
-	    <div class="modal-body">
-	        <div class="form-inline">
-				<label for="inputCash" class="control-label">CASH</label>
-				<input data-bind="value: cash" type="text" class="form-control autofocus" id="inputCash" placeholder="Cash Php ...">
-			</div>
-	    </div>
-	    
-	    <div class="modal-footer">
-	    	<button class="btn btn-primary" type="submit" data-bind="click: pay">Pay</button>
-	        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
-	    </div>
-    </form>
+	    <br>
+	    <div class="row">
+	        <form class="form-inline">
+		        <div class="input-group col-xs-12 text-center">
+					<input data-bind="value: cash" type="text" class="form-control autofocus" id="inputCash" placeholder="Cash Php ...">
+					<span class="input-group-btn">
+			        	<button class="btn btn-primary" type="submit" data-bind="click: payAmount"><i class="fa fa-money"></i></button>
+			        </span>
+				</div>
+			</form>
+		</div>
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
+    </div>
 </div>
