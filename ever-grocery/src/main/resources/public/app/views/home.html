@@ -1,5 +1,5 @@
 <section>
-	<div class="col-md-8 col-xs-12">
+	<div class="col-md-12 col-xs-12">
 		<div class="row">
 			<div class="col-md-6 col-xs-12"><h4><strong>Recent Price Changes</strong></h4></div>
 			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-6 col-xs-12 pull-right"></div>
@@ -24,7 +24,12 @@
 	    					<td data-bind="text: salePriceHistory.unitType.displayName"></td>
 	    					<td data-bind="text: salePriceHistory.formattedOldPrice" class="text-right"></td>
 	    					<!-- ko if: salePriceHistory.increase -->
+	    						<!-- ko if: salePriceHistory.new -->
+	    						<td><span class="text-info pull-right"><span data-bind="text: salePriceHistory.formattedNewPrice"></span> <i class="fa fa-star"></i></span></td>
+	    						<!-- /ko -->
+	    						<!-- ko ifnot: salePriceHistory.new -->
 	    						<td><span class="text-danger pull-right"><span data-bind="text: salePriceHistory.formattedNewPrice"></span> <i class="fa fa-arrow-up"></i></span></td>
+	    						<!-- /ko -->
 	    					<!-- /ko -->
 	    					<!-- ko ifnot: salePriceHistory.increase -->
 	    						<td><span class="text-success pull-right"><span data-bind="text: salePriceHistory.formattedNewPrice"></span> <i class="fa fa-arrow-down"></i></span></td>

@@ -125,6 +125,11 @@ public class PriceHistory extends BaseObject {
 	public Boolean isIncrease() {
 		return newPrice > oldPrice;
 	}
+	
+	@Transient
+	public Boolean isNew() {
+		return oldPrice.equals(0.0f);
+	}
 
 	public void setNewPrice(Float newPrice) {
 		this.newPrice = newPrice;
