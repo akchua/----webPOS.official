@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Repository;
 
 import com.chua.evergrocery.database.dao.ProductDetailDAO;
@@ -28,8 +29,13 @@ public class ProductDetailDAOImpl
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.eq("barcode", barcode));
+		conjunction.add(Restrictions.eq("prod.isValid", Boolean.TRUE));
 		
-		return findUniqueResult(null, null, null, conjunction);
+		String[] associatedPaths = { "product" };
+		String[] aliasNames = { "prod" };
+		JoinType[] joinTypes = { JoinType.INNER_JOIN };
+		
+		return findUniqueResult(associatedPaths, aliasNames, joinTypes, conjunction);
 	}
 
 	@Override
