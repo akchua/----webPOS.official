@@ -33,6 +33,7 @@ import com.chua.evergrocery.enums.UserType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
 import com.chua.evergrocery.utility.DateUtil;
+import com.chua.evergrocery.utility.Html;
 import com.chua.evergrocery.utility.print.OrderItem;
 import com.chua.evergrocery.utility.print.OrderList;
 import com.chua.evergrocery.utility.print.OrderReceipt;
@@ -320,27 +321,31 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	private ResultBean addItem(ProductDetail productDetail, CustomerOrder customerOrder, Float quantity) {
 		final ResultBean result;
 		
-		final CustomerOrderDetail customerOrderDetail = customerOrderDetailService.findByOrderAndDetailId(customerOrder.getId(), productDetail.getId());
-		
-		if(customerOrderDetail == null) {
-			result = new ResultBean();
+		if(!quantity.equals(0.0f)) {
+			final CustomerOrderDetail customerOrderDetail = customerOrderDetailService.findByOrderAndDetailId(customerOrder.getId(), productDetail.getId());
 			
-			final CustomerOrderDetail newCustomerOrderDetail = new CustomerOrderDetail();
-			setCustomerOrderDetail(newCustomerOrderDetail, customerOrder, productDetail);
-			
-			result.setSuccess(customerOrderDetailService.insert(newCustomerOrderDetail) != null &&
-					this.changeCustomerOrderDetailQuantity(newCustomerOrderDetail, quantity).getSuccess());
-			
-			if(result.getSuccess()) {
-				//result message used instead as boolean to check if item is new
-				final String isNew = "NEW";
+			if(customerOrderDetail == null) {
+				result = new ResultBean();
 				
-				result.setMessage(isNew);
+				final CustomerOrderDetail newCustomerOrderDetail = new CustomerOrderDetail();
+				setCustomerOrderDetail(newCustomerOrderDetail, customerOrder, productDetail);
+				
+				result.setSuccess(customerOrderDetailService.insert(newCustomerOrderDetail) != null &&
+						this.changeCustomerOrderDetailQuantity(newCustomerOrderDetail, quantity).getSuccess());
+				
+				if(result.getSuccess()) {
+					//result message used instead as boolean to check if item is new
+					final String isNew = "NEW";
+					
+					result.setMessage(isNew);
+				} else {
+					result.setMessage("Failed to add item.");
+				}
 			} else {
-				result.setMessage("Failed to add item.");
+				result = this.changeCustomerOrderDetailQuantity(customerOrderDetail, customerOrderDetail.getQuantity() + quantity);
 			}
 		} else {
-			result = this.changeCustomerOrderDetailQuantity(customerOrderDetail, customerOrderDetail.getQuantity() + quantity);
+			result = new ResultBean(Boolean.FALSE, Html.line("Tried to add 0 quantity."));
 		}
 		
 		return result;
@@ -407,45 +412,48 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		
 		if(quantity == null) quantity = 0.0f;
 		
-		quantity -= (quantity % 0.5f);
+		// sets minimum possible quantity (1 or 0.5) (0.5 is not allowed for odd quantity)
+		final ProductDetail upperProductDetail;
+		final ProductDetail lowerProductDetail;
+		switch(productDetail.getTitle()) {
+		case "Whole":
+			upperProductDetail = null;
+			lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Piece");
+			break;
+		case "Piece":
+			upperProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Whole");
+			lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Inner Piece");
+			break;
+		case "Inner Piece":
+			upperProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Piece");
+			lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "2nd Inner Piece");
+			break;
+		case "2nd Inner Piece":
+			upperProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Inner Piece");
+			lowerProductDetail = null;
+			break;
+		default:
+			upperProductDetail = null;
+			lowerProductDetail = null;
+		}
 		
-		if(productDetail != null && quantity >= productDetail.getQuantity() / 2.0f) {
-			final ProductDetail newProductDetail;
-			switch(productDetail.getTitle()) {
-			case "Piece":
-				newProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Whole");
-				if(newProductDetail != null) {
-					this.addItem(newProductDetail, customerOrderDetail.getCustomerOrder(), quantity / productDetail.getQuantity());
-					result = quantity % (productDetail.getQuantity() / 2.0f);
-				} else {
-					result = quantity;
-				}
-				break;
-			case "Inner Piece":
-				newProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Piece");
-				if(newProductDetail != null) {
-					this.addItem(newProductDetail, customerOrderDetail.getCustomerOrder(), quantity / productDetail.getQuantity());
-					result = quantity % (productDetail.getQuantity() / 2.0f);
-				} else {
-					result = quantity;
-				}
-				break;
-			case "2nd Inner Piece":
-				newProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Inner Piece");
-				if(newProductDetail != null) {
-					this.addItem(newProductDetail, customerOrderDetail.getCustomerOrder(), quantity / productDetail.getQuantity());
-					result = quantity % (productDetail.getQuantity() / 2.0f);
-				} else {
-					result = quantity;
-				}
-				break;
-			default:
-				result = quantity;
-			}
+		final float minQuantity;
+		if(lowerProductDetail != null && !lowerProductDetail.getQuantity().equals(0) && lowerProductDetail.getQuantity() % 2 == 0) {
+			minQuantity = 0.5f;
+		} else {
+			minQuantity = 1.0f;
+		}
+		
+		// trim off values not divisible by minimum quantity
+		quantity -= (quantity % minQuantity);
+		
+		if(upperProductDetail != null) {
+			this.addItem(upperProductDetail, customerOrderDetail.getCustomerOrder(), quantity / productDetail.getQuantity());
+			result = quantity % (productDetail.getQuantity() * (productDetail.getQuantity() % 2 == 0 ? 0.5f : 1.0f));
 		} else {
 			result = quantity;
 		}
-		
+			
 		return result;
 	}
 	

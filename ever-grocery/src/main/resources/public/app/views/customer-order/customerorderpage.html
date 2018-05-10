@@ -46,7 +46,7 @@
    					<td data-bind="text: orderDetail.formattedTotalPrice" class = "text-right"></td>
    					<td>
    						<div class="pull-right">
-   							<button data-bind="click: function() { $parent.remove(orderDetail.id, orderDetail.quantity, orderDetail.productName, orderDetail.unitType) }" type="button" class="btn btn-danger btn-sm">Remove</button>
+   							<button data-bind="click: function() { $parent.remove(orderDetail.id, orderDetail.quantity, orderDetail.productName, orderDetail.unitType.displayName) }" type="button" class="btn btn-danger btn-sm">Remove</button>
    						</div>
    					</td>
    				</tr>
