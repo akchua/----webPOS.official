@@ -240,6 +240,7 @@ public class ProductHandlerImpl implements ProductHandler {
 		if(productDetailsForm.getTitle().equals("Whole") || productDetailsForm.getTitle().equals("Piece")) {
 			if(productDetail.getSellingPrice() == null || !productDetail.getSellingPrice().equals(productDetailsForm.getSellingPrice())) {
 				final PriceHistory priceHistory = new PriceHistory();
+				priceHistory.setProduct(product);
 				priceHistory.setTitle(productDetailsForm.getTitle());
 				priceHistory.setUnitType(productDetailsForm.getUnitType());
 				priceHistory.setPriceHistoryType(PriceHistoryType.SALE);
@@ -252,6 +253,7 @@ public class ProductHandlerImpl implements ProductHandler {
 		if(productDetailsForm.getTitle().equals("Whole") || productDetailsForm.getTitle().equals("Piece")) {
 			if(productDetail.getNetPrice() == null || !productDetail.getNetPrice().equals(productDetailsForm.getNetPrice())) {
 				final PriceHistory priceHistory = new PriceHistory();
+				priceHistory.setProduct(product);
 				priceHistory.setTitle(productDetailsForm.getTitle());
 				priceHistory.setUnitType(productDetailsForm.getUnitType());
 				priceHistory.setPriceHistoryType(PriceHistoryType.NET_PURCHASE);
