@@ -98,7 +98,12 @@ public class PriceHistory extends BaseObject {
 	
 	@Transient
 	public String getFormattedOldPrice() {
-		return CurrencyFormatter.pesoFormat(oldPrice);
+		if(oldPrice.equals(0.0f)) {
+			return "NEW";
+		} else {
+			return CurrencyFormatter.pesoFormat(oldPrice);
+		}
+		
 	}
 
 	public void setOldPrice(Float oldPrice) {

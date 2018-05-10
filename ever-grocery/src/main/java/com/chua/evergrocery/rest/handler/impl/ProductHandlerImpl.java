@@ -238,26 +238,26 @@ public class ProductHandlerImpl implements ProductHandler {
 		// RECORD PRICE CHANGES IN PRICE HISTORY
 		// for selling price
 		if(productDetailsForm.getTitle().equals("Whole") || productDetailsForm.getTitle().equals("Piece")) {
-			if(productDetail.getSellingPrice() == null || !productDetail.getSellingPrice().equals(productDetailsForm.getSellingPrice())) {
+			if(!productDetailsForm.getSellingPrice().equals(0.0f) && (productDetail.getSellingPrice() == null || !productDetail.getSellingPrice().equals(productDetailsForm.getSellingPrice()))) {
 				final PriceHistory priceHistory = new PriceHistory();
 				priceHistory.setProduct(product);
 				priceHistory.setTitle(productDetailsForm.getTitle());
 				priceHistory.setUnitType(productDetailsForm.getUnitType());
 				priceHistory.setPriceHistoryType(PriceHistoryType.SALE);
-				priceHistory.setOldPrice(productDetail.getSellingPrice());
+				priceHistory.setOldPrice(productDetail.getSellingPrice() != null ? productDetail.getSellingPrice() : 0.0f);
 				priceHistory.setNewPrice(productDetailsForm.getSellingPrice());
 				priceHistoryService.insert(priceHistory);
 			}
 		}
 		// for net purchase price
 		if(productDetailsForm.getTitle().equals("Whole") || productDetailsForm.getTitle().equals("Piece")) {
-			if(productDetail.getNetPrice() == null || !productDetail.getNetPrice().equals(productDetailsForm.getNetPrice())) {
+			if(!productDetailsForm.getNetPrice().equals(0.0f) && (productDetail.getNetPrice() == null || !productDetail.getNetPrice().equals(productDetailsForm.getNetPrice()))) {
 				final PriceHistory priceHistory = new PriceHistory();
 				priceHistory.setProduct(product);
 				priceHistory.setTitle(productDetailsForm.getTitle());
 				priceHistory.setUnitType(productDetailsForm.getUnitType());
 				priceHistory.setPriceHistoryType(PriceHistoryType.NET_PURCHASE);
-				priceHistory.setOldPrice(productDetail.getNetPrice());
+				priceHistory.setOldPrice(productDetail.getNetPrice() != null ? productDetail.getNetPrice() : 0.0f);
 				priceHistory.setNewPrice(productDetailsForm.getNetPrice());
 				priceHistoryService.insert(priceHistory);
 			}
