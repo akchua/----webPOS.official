@@ -64,7 +64,7 @@ define(['knockout', 'modules/productservice'], function (ko, productService) {
     	self.formModel.title(self.productDetails.title);
     	self.formModel.barcode(self.productDetails.barcode);
     	self.formModel.quantity(self.productDetails.quantity);
-    	self.formModel.unitType(self.productDetails.unitType);
+    	if(self.productDetails.unitType) self.formModel.unitType(self.productDetails.unitType.name);
     	self.formModel.grossPrice(self.productDetails.grossPrice);
     	self.formModel.discount(self.productDetails.discount);
     	self.formModel.netPrice(self.productDetails.netPrice);
@@ -76,7 +76,7 @@ define(['knockout', 'modules/productservice'], function (ko, productService) {
     	
     	productService.getUnitTypeList().done(function(unitTypeList) {
     		self.unitTypeList(unitTypeList);
-    		self.formModel.unitType(self.productDetails.unitType);
+    		if(self.productDetails.unitType) self.formModel.unitType(self.productDetails.unitType.name);
     	});
     	
     	// Set to the passed observable to control enable

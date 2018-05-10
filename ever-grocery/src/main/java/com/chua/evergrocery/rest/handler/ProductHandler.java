@@ -5,13 +5,17 @@ import java.util.List;
 import com.chua.evergrocery.beans.ProductDetailsFormBean;
 import com.chua.evergrocery.beans.ProductFormBean;
 import com.chua.evergrocery.beans.ResultBean;
+import com.chua.evergrocery.database.entity.PriceHistory;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.entity.ProductDetail;
+import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.objects.ObjectList;
 
 public interface ProductHandler {
 
 	ObjectList<Product> getProductList(Integer pageNumber, String searchKey, Long companyId);
+	
+	ObjectList<PriceHistory> getSalePriceHistoryList(Integer pageNumber);
 	
 	Product getProduct(Long productId);
 	
@@ -25,5 +29,5 @@ public interface ProductHandler {
 	
 	ResultBean saveProductDetails(Long productId, List<ProductDetailsFormBean> productDetailsFormList);
 	
-	List<String> getUnitTypeList();
+	List<UnitType> getUnitTypeList();
 }

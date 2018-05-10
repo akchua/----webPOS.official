@@ -18,7 +18,7 @@
 	    	<br>
 	    	<dl data-bind="foreach: { data: productDetailList, as: 'productDetail' }" class="dl-horizontal">
 	    		<!-- ko if: productDetail.quantity != 0 -->
-				<dt><span data-bind="text: productDetail.quantity"></span> <span data-bind="text: productDetail.unitType" class="text-info"></span> @</dt>
+				<dt><span data-bind="text: productDetail.quantity"></span> <span data-bind="text: productDetail.unitType.displayName" class="text-info"></span> @</dt>
 				<dd>Php <span data-bind="text: productDetail.sellingPrice"></span></dd>
 				<!-- /ko -->
 	    	</dl>

@@ -17,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.chua.evergrocery.beans.ProductDetailsFormBean;
 import com.chua.evergrocery.beans.ProductFormBean;
 import com.chua.evergrocery.beans.ResultBean;
+import com.chua.evergrocery.database.entity.PriceHistory;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.entity.ProductDetail;
+import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.ProductHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +37,13 @@ public class ProductEndpoint {
 	public ObjectList<Product> getProductList(@QueryParam("pageNumber") Integer pageNumber, 
 			@QueryParam("searchKey") String searchKey, @QueryParam("companyId") Long companyId) {
 		return productHandler.getProductList(pageNumber, searchKey, companyId);
+	}
+	
+	@GET
+	@Path("/salepricehistory")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<PriceHistory> getSalePriceHistoryList(@QueryParam("pageNumber") Integer pageNumber) {
+		return productHandler.getSalePriceHistoryList(pageNumber);
 	}
 	
 	@GET
@@ -96,7 +105,7 @@ public class ProductEndpoint {
 	@GET
 	@Path("/listunittype")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<String> getUnitTypeList() {
+	public List<UnitType> getUnitTypeList() {
 		return productHandler.getUnitTypeList();
 	}
 }

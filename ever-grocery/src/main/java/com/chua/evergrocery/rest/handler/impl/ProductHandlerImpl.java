@@ -1,11 +1,11 @@
 package com.chua.evergrocery.rest.handler.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 
@@ -17,14 +17,17 @@ import com.chua.evergrocery.UserContextHolder;
 import com.chua.evergrocery.beans.ProductDetailsFormBean;
 import com.chua.evergrocery.beans.ProductFormBean;
 import com.chua.evergrocery.beans.ResultBean;
+import com.chua.evergrocery.database.entity.PriceHistory;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.entity.ProductDetail;
 import com.chua.evergrocery.database.service.BrandService;
 import com.chua.evergrocery.database.service.CategoryService;
 import com.chua.evergrocery.database.service.CompanyService;
 import com.chua.evergrocery.database.service.DistributorService;
+import com.chua.evergrocery.database.service.PriceHistoryService;
 import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.ProductService;
+import com.chua.evergrocery.enums.PriceHistoryType;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.ProductHandler;
@@ -50,6 +53,9 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	@Autowired
 	private ProductDetailService productDetailService;
+	
+	@Autowired
+	private PriceHistoryService priceHistoryService;
 
 	@Override
 	public ObjectList<Product> getProductList(Integer pageNumber, String searchKey, Long companyId) {
@@ -65,6 +71,11 @@ public class ProductHandlerImpl implements ProductHandler {
 		} else {
 			return productService.findAllWithPagingOrderByName(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, companyId);
 		}
+	}
+	
+	@Override
+	public ObjectList<PriceHistory> getSalePriceHistoryList(Integer pageNumber) {
+		return priceHistoryService.findAllSaleTypeWithin30DaysOrderByCreatedOn(pageNumber, UserContextHolder.getItemsPerPage());
 	}
 	
 	@Override
@@ -219,8 +230,35 @@ public class ProductHandlerImpl implements ProductHandler {
 		final Boolean success;
 		
 		ProductDetail productDetail = productDetailService.find(productDetailsForm.getId());
+		
 		if(productDetail == null) {
 			productDetail = new ProductDetail();
+		}
+		
+		// RECORD PRICE CHANGES IN PRICE HISTORY
+		// for selling price
+		if(productDetailsForm.getTitle().equals("Whole") || productDetailsForm.getTitle().equals("Piece")) {
+			if(productDetail.getSellingPrice() == null || !productDetail.getSellingPrice().equals(productDetailsForm.getSellingPrice())) {
+				final PriceHistory priceHistory = new PriceHistory();
+				priceHistory.setTitle(productDetailsForm.getTitle());
+				priceHistory.setUnitType(productDetailsForm.getUnitType());
+				priceHistory.setPriceHistoryType(PriceHistoryType.SALE);
+				priceHistory.setOldPrice(productDetail.getSellingPrice());
+				priceHistory.setNewPrice(productDetailsForm.getSellingPrice());
+				priceHistoryService.insert(priceHistory);
+			}
+		}
+		// for net purchase price
+		if(productDetailsForm.getTitle().equals("Whole") || productDetailsForm.getTitle().equals("Piece")) {
+			if(productDetail.getNetPrice() == null || !productDetail.getNetPrice().equals(productDetailsForm.getNetPrice())) {
+				final PriceHistory priceHistory = new PriceHistory();
+				priceHistory.setTitle(productDetailsForm.getTitle());
+				priceHistory.setUnitType(productDetailsForm.getUnitType());
+				priceHistory.setPriceHistoryType(PriceHistoryType.NET_PURCHASE);
+				priceHistory.setOldPrice(productDetail.getNetPrice());
+				priceHistory.setNewPrice(productDetailsForm.getNetPrice());
+				priceHistoryService.insert(priceHistory);
+			}
 		}
 		
 		setProductDetail(productDetail, productDetailsForm);
@@ -236,7 +274,8 @@ public class ProductHandlerImpl implements ProductHandler {
 	}
 	
 	@Override
-	public List<String> getUnitTypeList() {
-		return Arrays.asList(UnitType.values()).stream().map(UnitType::name).collect(Collectors.toList());
+	public List<UnitType> getUnitTypeList() {
+		return Stream.of(UnitType.values())
+				.collect(Collectors.toList());
 	}
 }

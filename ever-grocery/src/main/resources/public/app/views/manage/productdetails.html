@@ -11,7 +11,7 @@
 	</div>
 	<div class="form-group">
 		<label for="inputUnit">Unit</label>
-		<select data-bind="value: formModel.unitType, options: unitTypeList, optionsCaption: '-- Select Unit --', enable: enableUnitType()" class="form-control" id="inputUnit"></select>
+		<select data-bind="options: unitTypeList, optionsValue: 'name', optionsText: 'displayName', optionsCaption: '-- Select Unit --', value: formModel.unitType, enable: enableUnitType()" class="form-control" id="inputUnit"></select>
 	</div>
 	<div class="form-group">
 		<label for="inputGrossPrice" class="control-label">Gross Price</label>

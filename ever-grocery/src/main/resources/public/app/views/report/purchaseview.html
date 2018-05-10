@@ -29,7 +29,7 @@
 	    			<tbody data-bind="foreach: { data: purchaseOrderDetailList, as: 'orderDetail' }">
 	    				<tr>
 	    					<td data-bind="text: orderDetail.quantity" class = "text-center"></td>
-	    					<td data-bind="text: orderDetail.unitType"></td>
+	    					<td data-bind="text: orderDetail.unitType.displayName"></td>
 	    					<td data-bind="text: orderDetail.productName"></td>
 	    					<td data-bind="text: orderDetail.formattedBeforeVatAndDiscountPrice, visible: $parent.beforeVatAndDiscount" class = "text-center"></td>
 	    					<td data-bind="text: orderDetail.formattedBeforeVatAfterDiscountPrice, visible: $parent.beforeVatAfterDiscount" class = "text-center"></td>

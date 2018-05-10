@@ -1,57 +1,71 @@
 package com.chua.evergrocery.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum UnitType {
 	
-	BAG ("bg"),
+	BAG ("Bag", "bg"),
 	
-	BAR ("bar"),
+	BAR ("Bar", "bar"),
 	
-	BOTTLE ("btl"),
+	BOTTLE ("Bottle", "btl"),
 	
-	BOX ("bx"),
+	BOX ("Box", "box"),
 	
-	BUCKET ("bkt"),
+	BUCKET ("Bucket", "bct"),
 	
-	BUNDLE ("bd"),
+	BUNDLE ("Bundle", "bd"),
 	
-	CAN ("cn"),
+	CAN ("Can", "can"),
 	
-	CASE ("cs"),
+	CASE ("Case", "cs"),
 	
-	DEFAULT("#"),
+	DEFAULT("Default", "#"),
 	
-	DOZEN ("dz"),
+	DOZEN ("Dozen", "dz"),
 	
-	JAR ("jar"),
+	JAR ("Jar", "jar"),
 	
-	PACK ("pk"),
+	PACK ("Pack", "pk"),
 	
-	PAIR ("pr"),
+	PAIR ("Pair", "par"),
 	
-	PIECE ("pc"),
+	PIECE ("Piece", "pc"),
 	
-	POUCH ("pch"),
+	POUCH ("Pouch", "pch"),
 	
-	REAM ("rm"),
+	REAM ("Ream", "rm"),
 	
-	SACK ("sk"),
+	SACK ("Sack", "sck"),
 	
-	SET ("st"),
+	SET ("Set", "set"),
 	
-	TAB ("tb"),
+	TAB ("Tab", "tab"),
 	
-	TIE ("tie"),
+	TIE ("Tie", "tie"),
 	
-	TIN ("tin"),
+	TIN ("Tin", "tin"),
 	
-	X6 ("6s"),
+	X6 ("6s", "6s"),
 	
-	X8 ("8s");
+	X8 ("8s", "8s");
+	
+	private final String displayName;
 	
 	private final String shorthand;
 	
-	UnitType(final String shorthand) {
+	UnitType(final String displayName, final String shorthand) {
+		this.displayName = displayName;
 		this.shorthand = shorthand;
+	}
+	
+	public String getName() {
+		return toString();
+	}
+	
+	public String getDisplayName() {
+		return displayName;
 	}
 	
 	public String getShorthand() {

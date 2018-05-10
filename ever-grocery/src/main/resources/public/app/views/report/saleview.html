@@ -26,7 +26,7 @@
 	    			<tbody data-bind="foreach: { data: customerOrderDetailList, as: 'orderDetail' }">
 	    				<tr>
 	    					<td data-bind="text: orderDetail.quantity" class = "text-center"></td>
-	    					<td data-bind="text: orderDetail.unitType"></td>
+	    					<td data-bind="text: orderDetail.unitType.displayName"></td>
 	    					<td data-bind="text: orderDetail.productName"></td>
 	    					<td data-bind="text: orderDetail.formattedUnitPrice" class = "text-right"></td>
 	    					<td data-bind="text: orderDetail.formattedTotalPrice" class = "text-right"></td>

@@ -11,10 +11,13 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+
+import com.chua.evergrocery.utility.format.DateFormatter;
 
 /**
  * @version 1.0, Jan 18, 2016
@@ -56,6 +59,11 @@ public class BaseUpdatable extends BaseEntity
 		}
 		return copyUpdatedOn;
 	}
+	
+	@Transient
+	public String getFormattedUpdatedOn() {
+		return DateFormatter.prettyFormat(updatedOn);
+	}
 
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@Column(name = "created_on", nullable = false)
@@ -67,6 +75,11 @@ public class BaseUpdatable extends BaseEntity
 			createdOn = new DateTime();
 		}
 		return createdOn;
+	}
+	
+	@Transient
+	public String getFormattedCreatedOn() {
+		return DateFormatter.prettyFormat(createdOn);
 	}
 
 	@Override

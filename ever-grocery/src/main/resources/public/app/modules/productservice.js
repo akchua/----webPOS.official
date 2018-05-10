@@ -12,6 +12,16 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getSalePriceHistoryList: function(pageNumber, async) {
+    		return $.ajax({
+    			url: '/services/product/salepricehistory',
+    			async: async,
+    			data: {
+    				pageNumber: pageNumber - 1
+    			}
+    		});
+    	},
+    	
     	getProduct: function(productId) {
     		return $.ajax({
     			url: '/services/product/get',
