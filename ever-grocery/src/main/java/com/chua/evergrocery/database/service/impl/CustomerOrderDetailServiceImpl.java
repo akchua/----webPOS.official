@@ -37,10 +37,15 @@ public class CustomerOrderDetailServiceImpl
 	public CustomerOrderDetail findByOrderAndDetailId(long customerOrderId, long productDetailId) {
 		return dao.findByOrderAndDetailId(customerOrderId, productDetailId);
 	}
-
+	
 	@Override
 	public List<CustomerOrderDetail> findAllByCustomerOrderId(Long customerOrderId) {
 		return dao.findAllByCustomerOrderId(customerOrderId);
+	}
+
+	@Override
+	public List<CustomerOrderDetail> findAllByCustomerOrderIdOrderByProductName(Long customerOrderId) {
+		return dao.findAllByCustomerOrderIdWithOrder(customerOrderId, new Order[] { Order.asc("productDisplayName") });
 	}
 
 	@Override

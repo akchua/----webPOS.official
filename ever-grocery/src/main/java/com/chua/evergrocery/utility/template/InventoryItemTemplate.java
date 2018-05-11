@@ -7,10 +7,11 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.beans.InventoryBean;
+import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.format.NumberFormatter;
 
-public class InventoryItemTemplate implements Template {
+public class InventoryItemTemplate extends AbstractTemplate {
 
 	private InventoryBean inventoryItem;
 	
@@ -19,10 +20,10 @@ public class InventoryItemTemplate implements Template {
 	}
 	
 	@Override
-	public String merge(VelocityEngine velocityEngine) {
+	public String merge(VelocityEngine velocityEngine, DocType docType) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("t", this);
-		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "template/inventoryItem.vm", "UTF-8", model);
+		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, docType.getFolderName() + "/inventoryItem.vm", "UTF-8", model);
 	}
 
 	public String getProductName() {

@@ -10,9 +10,10 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.beans.InventoryBean;
+import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.format.DateFormatter;
 
-public class InventoryTemplate implements Template {
+public class InventoryTemplate extends AbstractTemplate {
 	
 	private String companyName;
 	
@@ -27,7 +28,7 @@ public class InventoryTemplate implements Template {
 	}
 	
 	@Override
-	public String merge(VelocityEngine velocityEngine) {
+	public String merge(VelocityEngine velocityEngine, DocType docType) {
 		for(InventoryBean inventory : inventories) {
 			final InventoryItemTemplate inventoryItemTemplate = new InventoryItemTemplate(inventory);
 			formattedInventoryItems.add(inventoryItemTemplate.merge(velocityEngine));
@@ -35,7 +36,7 @@ public class InventoryTemplate implements Template {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("t", this);
-		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "template/inventory.vm", "UTF-8", model);
+		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, docType.getFolderName() + "/inventory.vm", "UTF-8", model);
 	}
 	
 	public String getCompanyName() {

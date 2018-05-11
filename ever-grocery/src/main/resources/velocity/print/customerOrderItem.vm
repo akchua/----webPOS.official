@@ -1,0 +1,7 @@
+## Template for Customer Order Item
+## Has a maximum of 36 columns in a line
+${t.FormattedQuantity}${t.FormattedName}${t.FormattedTotalPrice}#if(${t.Overflow})
+#foreach( $overflow in $t.OverflowList)
+
+$overflow#end
+#end

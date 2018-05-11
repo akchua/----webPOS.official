@@ -63,7 +63,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 				customerOrderService.payCustomerOrder(self.customerOrder.id, cash).done(function(result) {
 					if(result.success) {
 		        		dialog.close(self);
-		        		customerOrderService.printReceipt(self.customerOrder.id, self.cash());
+		        		customerOrderService.printReceipt(self.customerOrder.id, cash);
 		        	} 
 		        	app.showMessage(result.message);
 				});

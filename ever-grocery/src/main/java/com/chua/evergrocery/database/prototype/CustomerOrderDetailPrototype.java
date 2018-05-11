@@ -12,7 +12,7 @@ public interface CustomerOrderDetailPrototype {
 	
 	CustomerOrderDetail findByOrderAndDetailId(long customerOrderId, long productDetailId);
 	
-	List<CustomerOrderDetail> findAllByCustomerOrderId(Long customerOrderId);
-	
 	List<CustomerOrderDetail> findAllByProductLimitByDate(Long productId, Date from);
+	
+	List<CustomerOrderDetail> findAllByCustomerOrderId(Long customerOrderId);
 }

@@ -7,7 +7,6 @@ import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
 import com.chua.evergrocery.database.dao.CustomerOrderDetailDAO;
@@ -39,11 +38,16 @@ public class CustomerOrderDetailDAOImpl
 	
 	@Override
 	public List<CustomerOrderDetail> findAllByCustomerOrderId(Long customerOrderId) {
+		return findAllByCustomerOrderIdWithOrder(customerOrderId, null);
+	}
+	
+	@Override
+	public List<CustomerOrderDetail> findAllByCustomerOrderIdWithOrder(Long customerOrderId, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.eq("customerOrder.id", customerOrderId));
 		
-		return findAllByCriterionList(null, null, null, null, conjunction);
+		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}
 	
 	@Override

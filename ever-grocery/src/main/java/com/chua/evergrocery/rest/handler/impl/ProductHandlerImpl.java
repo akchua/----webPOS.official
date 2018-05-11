@@ -276,6 +276,39 @@ public class ProductHandlerImpl implements ProductHandler {
 	}
 	
 	@Override
+	public Integer getContent(Long productDetailId) {
+		final Integer content;
+		final ProductDetail productDetail = productDetailService.find(productDetailId);
+		
+		if(productDetail != null) {
+			final ProductDetail lowerProductDetail;
+			switch(productDetail.getTitle()) {
+			case "Whole":
+				lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Piece");
+				break;
+			case "Piece":
+				lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Inner Piece");
+				break;
+			case "Inner Piece":
+				lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "2nd Inner Piece");
+				break;
+			default:
+				lowerProductDetail = null;
+			}
+			
+			if(lowerProductDetail != null) {
+				content = lowerProductDetail.getQuantity();
+			} else {
+				content = 0;
+			}
+		} else {
+			content = 0;
+		}
+		
+		return content;
+	}
+	
+	@Override
 	public List<UnitType> getUnitTypeList() {
 		return Stream.of(UnitType.values())
 				.collect(Collectors.toList());

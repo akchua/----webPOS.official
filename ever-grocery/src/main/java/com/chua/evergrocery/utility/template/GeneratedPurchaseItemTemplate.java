@@ -7,6 +7,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.beans.ProductStatisticsBean;
+import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.format.NumberFormatter;
 
@@ -15,7 +16,7 @@ import com.chua.evergrocery.utility.format.NumberFormatter;
  * @version 1.0
  * @since   Mar 22, 2018
  */
-public class GeneratedPurchaseItemTemplate implements Template {
+public class GeneratedPurchaseItemTemplate extends AbstractTemplate {
 
 	private ProductStatisticsBean productStatisticsBean;
 
@@ -24,10 +25,10 @@ public class GeneratedPurchaseItemTemplate implements Template {
 	}
 	
 	@Override
-	public String merge(VelocityEngine velocityEngine) {
+	public String merge(VelocityEngine velocityEngine, DocType docType) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("t", this);
-		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "template/generatedPurchaseItem.vm", "UTF-8", model);
+		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, docType.getFolderName() + "/generatedPurchaseItem.vm", "UTF-8", model);
 	}
 	
 	public String getProductName() {

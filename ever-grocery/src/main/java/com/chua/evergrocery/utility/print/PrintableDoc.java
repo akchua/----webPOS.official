@@ -31,6 +31,8 @@ public class PrintableDoc
 	
 	private static final String CHANGE = "Change";
 	
+	private static final String ORDER = "Order #";
+	
 	public final static double DEFAULT_MARGIN = 0.5 * 40.0; //points
 	
 	public final static double DEFAULT_PAGE_WIDTH = 8.5 * 40.0; //points
@@ -58,14 +60,12 @@ public class PrintableDoc
 	
 	private final String text;
 	
-	private String labNumber;
-	
 	/**
 	 * Create a new printable doc with the given text to display.
 	 * 
 	 * @param text the text
 	 */
-	public PrintableDoc(String text, String labNumber)
+	public PrintableDoc(String text)
 	{
 		this.margin = DEFAULT_MARGIN;
 		this.pageWidth = DEFAULT_PAGE_WIDTH;
@@ -79,7 +79,6 @@ public class PrintableDoc
 		}
 		this.fontName = DEFAULT_FONT_NAME;
 		this.text = text;
-		this.labNumber = labNumber;
 	}    		
 	
 	/**
@@ -131,7 +130,7 @@ public class PrintableDoc
           	{
           		buildTextLayouts(frc, fontName, FONT_SIZE_15, split + " ", true, false);
           	}
-          	else if(split.contains(TOTAL_AMOUNT) || split.contains(CHANGE))
+          	else if(split.contains(TOTAL_AMOUNT) || split.contains(CHANGE) || split.contains(ORDER))
           	{
           		buildTextLayouts(frc, fontName, FONT_SIZE_13, split + " ", true, false);
           	}
@@ -228,10 +227,5 @@ private Map getFontAttributes(String fontname, int size, boolean bold, boolean i
   public String getText()
   {
   	return text;
-  }
-  
-  public String getLabNumber()
-  {
-	  return labNumber;
   }
 }

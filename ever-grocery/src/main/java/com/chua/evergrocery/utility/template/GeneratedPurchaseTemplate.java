@@ -6,12 +6,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.beans.ProductStatisticsBean;
+import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.chua.evergrocery.utility.format.DateFormatter;
 
@@ -20,7 +20,7 @@ import com.chua.evergrocery.utility.format.DateFormatter;
  * @version 1.0
  * @since   Mar 22, 2018
  */
-public class GeneratedPurchaseTemplate implements Template {
+public class GeneratedPurchaseTemplate extends AbstractTemplate {
 
 	private String companyName;
 	
@@ -49,7 +49,7 @@ public class GeneratedPurchaseTemplate implements Template {
 	}
 	
 	@Override
-	public String merge(VelocityEngine velocityEngine) {
+	public String merge(VelocityEngine velocityEngine, DocType docType) {
 		for(ProductStatisticsBean prodStat : productStats) {
 			final GeneratedPurchaseItemTemplate genPurchaseItemTemplate = new GeneratedPurchaseItemTemplate(prodStat);
 			formattedPurchaseItems.add(genPurchaseItemTemplate.merge(velocityEngine));
@@ -57,7 +57,7 @@ public class GeneratedPurchaseTemplate implements Template {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("t", this);
-		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "template/generatedPurchase.vm", "UTF-8", model);
+		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, docType.getFolderName() + "/generatedPurchase.vm", "UTF-8", model);
 	}
 	
 	public String getCompanyName() {

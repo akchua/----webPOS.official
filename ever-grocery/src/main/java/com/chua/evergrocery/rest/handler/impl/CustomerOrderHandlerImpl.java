@@ -1,6 +1,5 @@
 package com.chua.evergrocery.rest.handler.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,21 +18,23 @@ import com.chua.evergrocery.beans.UserBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.ProductDetail;
-import com.chua.evergrocery.database.entity.User;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
 import com.chua.evergrocery.database.service.CustomerOrderService;
 import com.chua.evergrocery.database.service.CustomerService;
 import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.UserService;
+import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.UserType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
+import com.chua.evergrocery.rest.handler.ProductHandler;
 import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.Html;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
-import com.chua.evergrocery.utility.print.OrderItem;
-import com.chua.evergrocery.utility.print.OrderList;
+import com.chua.evergrocery.utility.print.Printer;
+import com.chua.evergrocery.utility.template.CustomerOrderListTemplate;
+import com.chua.evergrocery.utility.template.CustomerOrderReceiptTemplate;
 
 @Transactional
 @Component
@@ -53,6 +54,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Autowired
 	private ProductDetailService productDetailService;
+	
+	@Autowired
+	private ProductHandler productHandler;
 	
 	@Autowired
 	private VelocityEngine velocityEngine;
@@ -199,7 +203,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				}
 			} else if(customerOrder.getStatus() == Status.PAID) {
 				result = new ResultBean(false, "Customer order already paid.");
-			} else if(customerOrder.getStatus() == Status.LISTING) {
+			} else {
 				result = new ResultBean(Boolean.FALSE, "Customer Order not yet completed.");
 			}
 		} else {
@@ -484,7 +488,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
-		/*if(customerOrder != null) {
+		if(customerOrder != null) {
 			final UserBean currentUser = UserContextHolder.getUser();
 			
 			if(customerOrder.getStatus() == Status.LISTING || currentUser.getUserType() == UserType.ADMINISTRATOR ||
@@ -510,44 +514,22 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			}
 		} else {
 			result = new ResultBean(false, "Customer order not found.");
-		}*/
+		}
+		
 		customerOrder.setStatus(Status.PRINTED);
 		customerOrderService.update(customerOrder);
-		result = new ResultBean(Boolean.TRUE, "print service temporarily stopped.");
 		
 		return result;
 	}
 	
 	private void printOrderList(CustomerOrder customerOrder) {
-		final String creatorName;
-		final User creator = customerOrder.getCreator();
+		final List<CustomerOrderDetail> customerOrderItems = customerOrderDetailService.findAllByCustomerOrderIdOrderByProductName(customerOrder.getId());
+		final CustomerOrderListTemplate customerOrderList = new CustomerOrderListTemplate(customerOrder, customerOrderItems, productHandler);
 		
-		if(creator != null) {
-			creatorName = creator.getUsername();
-		} else {
-			creatorName = "";
-		}
-		
-		final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrder.getId());
-		final List<OrderItem> orderItems = new ArrayList<OrderItem>();
-		
-		for(CustomerOrderDetail orderDetail: customerOrderDetails) {
-			final String displayName;
-			
-			if(orderDetail.getProductDisplayName() != null && orderDetail.getProductDisplayName().trim() != "") {
-				displayName = orderDetail.getProductDisplayName();
-			} else {
-				displayName = orderDetail.getProductName();
-			}
-			
-			orderItems.add(new OrderItem(displayName, orderDetail.getUnitType().getShorthand(), orderDetail.getTotalPrice(), orderDetail.getQuantity()));
-		}
-		
-		final OrderList orderList = new OrderList(creatorName, customerOrder.getId() + "", orderItems);
-		
+		Printer printer = new Printer();
 		try {
-			orderList.print(velocityEngine);
-		} catch (Exception e) { 
+			printer.print(customerOrderList.merge(velocityEngine, DocType.PRINT), "Print Order List : " + customerOrder.getOrderNumber());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -557,37 +539,20 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
+			System.out.println("CASHHHH : " + cash);
 			this.printReceipt(customerOrder, cash);
 		}
 	}
 	
 	private void printReceipt(CustomerOrder customerOrder, Float cash) {
+		final CustomerOrderReceiptTemplate customerOrderReceipt = new CustomerOrderReceiptTemplate(customerOrder, "Ever Bazar", cash);
 		
-		/*final String customerName;
-		final Customer customer = customerOrder.getCustomer();
-		
-		if(customer != null) {
-			customerName = customer.getFirstName() + " " + customer.getLastName();
-		} else {
-			customerName = "";
-		}
-		
-		final String cashierName;
-		final User cashier = customerOrder.getCashier();
-		
-		if(cashier != null) {
-			cashierName = cashier.getFirstName() + " " + cashier.getLastName();
-		} else {
-			cashierName = "";
-		}
-		
-		final OrderReceipt orderReceipt = new OrderReceipt(new DateTime(), cashierName, customerOrder.getId() + "", customerName,
-				customerOrder.getTotalAmount(), new OrderReceiptConfig("Ever Grocery"), "", cash);
+		Printer printer = new Printer();
 		try {
-			orderReceipt.print(velocityEngine);
-		} catch (Exception e) { 
+			printer.print(customerOrderReceipt.merge(velocityEngine, DocType.PRINT), "Print Receipt : " + customerOrder.getOrderNumber());
+		} catch (Exception e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	private void setCustomerOrderDetail(CustomerOrderDetail customerOrderDetail, CustomerOrder customerOrder, ProductDetail productDetail) {

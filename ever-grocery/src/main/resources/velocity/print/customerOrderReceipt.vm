@@ -1,0 +1,15 @@
+## Template for Customer Order Receipt
+## Has a maximum of 36 columns in a line
+${t.FormattedHeader} 
+${t.Date}
+
+Order #${t.OrderNumber}
+Customer : ${t.FormattedCustomer}
+====================================
+
+     Total Amount ${t.FormattedTotalAmount}
+                  Cash ${t.FormattedCash}
+           Change ${t.FormattedChange}
+  
+====================================
+Cashier : ${t.FormattedCashier}

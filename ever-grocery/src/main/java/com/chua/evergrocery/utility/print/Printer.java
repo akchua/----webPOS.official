@@ -189,9 +189,9 @@ public class Printer
 		return new SimpleDoc(printByte, printDocFlavor, null);
 	}	
 	
-	public void print(String text, String labNumber, String jobName) throws Exception
+	public void print(String text, String jobName) throws Exception
 	{
-		PrintableDoc doc = new PrintableDoc(text, labNumber);
+		PrintableDoc doc = new PrintableDoc(text);
 		PrinterJob pj = PrinterJob.getPrinterJob();
 		
 		try {
