@@ -1,6 +1,5 @@
 package com.chua.evergrocery.database.dao.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -14,14 +13,12 @@ import com.chua.evergrocery.database.dao.PurchaseOrderDAO;
 import com.chua.evergrocery.database.entity.PurchaseOrder;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.objects.ObjectList;
-import com.chua.evergrocery.utility.DateUtil;
 
 @Repository
 public class PurchaseOrderDAOImpl
 	extends AbstractDAO<PurchaseOrder, Long>
 	implements PurchaseOrderDAO 
 {
-
 	@Override
 	public ObjectList<PurchaseOrder> findAllWithPaging(int pageNumber, int resultsPerPage, Long companyId) {
 		final Junction conjunction = Restrictions.conjunction();
