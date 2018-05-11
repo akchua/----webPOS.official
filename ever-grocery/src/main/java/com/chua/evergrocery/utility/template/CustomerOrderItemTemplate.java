@@ -49,7 +49,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 		
 		NumberFormat nf = new DecimalFormat("##.##");
 		
-		formattedName += customerOrderItem.getProductDisplayName() != null ? customerOrderItem.getProductDisplayName() : customerOrderItem.getProductName();
+		formattedName += customerOrderItem.getProductDisplayName();
 		if(customerOrderItem.getQuantity() > 1) {
 			formattedName += " @" + nf.format(customerOrderItem.getUnitPrice());
 		}
