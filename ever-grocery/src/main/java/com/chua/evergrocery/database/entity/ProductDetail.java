@@ -140,6 +140,11 @@ public class ProductDetail extends BaseObject {
 		return percentProfit;
 	}
 	
+	@Transient
+	public Float getActualPercentProfit() {
+		return (sellingPrice - netPrice) / netPrice;
+	}
+	
 	public void setPercentProfit(Float percentProfit) {
 		this.percentProfit = percentProfit;
 	}

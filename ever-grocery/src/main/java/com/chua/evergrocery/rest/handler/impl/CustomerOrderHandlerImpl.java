@@ -539,7 +539,6 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			System.out.println("CASHHHH : " + cash);
 			this.printReceipt(customerOrder, cash);
 		}
 	}
@@ -564,7 +563,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrderDetail.setUnitPrice(productDetail.getSellingPrice());
 		customerOrderDetail.setQuantity(0.0f);
 		customerOrderDetail.setTotalPrice(0.0f);
-		customerOrderDetail.setMargin(productDetail.getPercentProfit());
+		customerOrderDetail.setMargin(productDetail.getActualPercentProfit());
 	}
 	
 	private void setCustomerOrderDetailQuantity(CustomerOrderDetail customerOrderDetail, float quantity) {

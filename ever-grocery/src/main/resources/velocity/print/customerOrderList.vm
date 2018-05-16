@@ -2,9 +2,9 @@
 ## Has a maximum of 36 columns in a line
 Order #${t.OrderNumber}
 Customer : ${t.FormattedCustomer}
-====================================
+------------------------------------
 Qty Item(s)                   Amount
-====================================
+------------------------------------
 #if(${t.WholeItemExists}
 #foreach( $formattedWholeItem in $t.FormattedWholeItems)
 $formattedWholeItem
@@ -20,6 +20,6 @@ $formattedCounterItem
 #foreach( $formattedOtherItem in $t.FormattedOtherItems)
 $formattedOtherItem
 #end
-====================================
+------------------------------------
 Items  : ${t.TotalItems}
 Server : ${t.FormattedServer}

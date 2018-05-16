@@ -5,11 +5,11 @@ ${t.Date}
 
 Order #${t.OrderNumber}
 Customer : ${t.FormattedCustomer}
-====================================
+------------------------------------
 
      Total Amount ${t.FormattedTotalAmount}
                   Cash ${t.FormattedCash}
            Change ${t.FormattedChange}
   
-====================================
+------------------------------------
 Cashier : ${t.FormattedCashier}
