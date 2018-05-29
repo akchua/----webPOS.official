@@ -26,6 +26,8 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 	
 	private List<String> overflowList;
 	
+	private final Integer ITEM_NAME_MAX_LENGTH = 33;
+	
 	public CustomerOrderItemTemplate(CustomerOrderDetail customerOrderItem, Integer content) {
 		this.customerOrderItem = customerOrderItem;
 		this.content = content;
@@ -57,14 +59,14 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 			formattedName += " |" + content;
 		}
 		
-		int index = 25;
+		int index = ITEM_NAME_MAX_LENGTH;
 		while (index < formattedName.length()) {
-			overflowList.add("    " + formattedName.substring(index, Math.min(index + 25, formattedName.length())));
-		    index += 25;
+			overflowList.add("    " + formattedName.substring(index, Math.min(index + ITEM_NAME_MAX_LENGTH, formattedName.length())));
+		    index += ITEM_NAME_MAX_LENGTH;
 		}
-		formattedName = formattedName.substring(0, Math.min(25, formattedName.length()));
+		formattedName = formattedName.substring(0, Math.min(ITEM_NAME_MAX_LENGTH, formattedName.length()));
 		
-		return String.format("%-25s", formattedName);
+		return String.format("%-" + ITEM_NAME_MAX_LENGTH + "s", formattedName);
 	}
 	
 	public String getFormattedTotalPrice() {

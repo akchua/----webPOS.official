@@ -40,11 +40,11 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedHeader() {
-		return StringHelper.center(header, 25);
+		return StringHelper.center(header, 30);
 	}
 	
 	public String getDate() {
-		return StringHelper.center(DateFormatter.longFormat(new Date()), 36);
+		return StringHelper.center(DateFormatter.longFormat(new Date()), 44);
 	}
 	
 	public String getOrderNumber() {

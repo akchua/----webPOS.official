@@ -41,11 +41,11 @@ public class PrintableDoc
 	
 	public static final String DEFAULT_FONT_NAME = "Lucida Console";
 	
-	public static final int FONT_SIZE_11 = 11 ;
+	public static final int FONT_SIZE_9 = 9;
+	
+	public static final int FONT_SIZE_11 = 11;
 	
 	public static final int FONT_SIZE_13 = 13;
-	
-	public static final int FONT_SIZE_15 = 15;
 	
 	/** This is the hard coded and measured lines per page on a Lucida Console Font 11  */
 	public static final int LINES_PER_PAGE = 76;
@@ -128,15 +128,15 @@ public class PrintableDoc
           	String split = splitArray[c];
           	if(c == 0)
           	{
-          		buildTextLayouts(frc, fontName, FONT_SIZE_15, split + " ", true, false);
+          		buildTextLayouts(frc, fontName, FONT_SIZE_13, split + " ", true, false);
           	}
           	else if(split.contains(TOTAL_AMOUNT) || split.contains(CHANGE) || split.contains(ORDER))
           	{
-          		buildTextLayouts(frc, fontName, FONT_SIZE_13, split + " ", true, false);
+          		buildTextLayouts(frc, fontName, FONT_SIZE_11, split + " ", false, false);
           	}
           	else
           	{
-          		buildTextLayouts(frc, fontName, FONT_SIZE_11, split + " ", false, false);
+          		buildTextLayouts(frc, fontName, FONT_SIZE_9, split + " ", false, false);
           	}
           }          
       //}
