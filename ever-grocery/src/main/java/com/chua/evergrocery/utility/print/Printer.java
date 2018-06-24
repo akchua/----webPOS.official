@@ -211,6 +211,10 @@ public class Printer
 		pj.setJobName(jobName);
 		try {        	
 		    pj.print();
+		    /*if(kickDrawer)
+		    {
+		    	kickDrawer();
+		    }*/
 		} catch (PrinterException ex) {
 		    throw new RuntimeException("Unable to print \"" + jobName + "\" because " + ex.getMessage());
 		}
@@ -233,5 +237,10 @@ public class Printer
 			addCutPaper[printByte.length + c] = PrintConstants.CUTTER_CODE[c];
 		}
 		return addCutPaper;
+	}
+	
+	public void kickDrawer() throws Exception
+	{
+		/*print(PrintConstant.KICK_DRAWER_CODE, Boolean.FALSE);*/
 	}
 }
