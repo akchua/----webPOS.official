@@ -36,6 +36,8 @@ public class CustomerOrder extends BaseObject {
 	private static final long serialVersionUID = -2196136906086142891L;
 
 	public static final String TABLE_NAME = "customer_order";
+
+	private Long serialInvoiceNumber;
 	
 	private String name;
 	
@@ -59,6 +61,16 @@ public class CustomerOrder extends BaseObject {
 	@Transient
 	public String getOrderNumber() {
 		return String.valueOf(this.getId() % 1000);
+	}
+
+	@Basic
+	@Column(name = "SIN")
+	public Long getSerialInvoiceNumber() {
+		return serialInvoiceNumber;
+	}
+
+	public void setSerialInvoiceNumber(Long serialInvoiceNumber) {
+		this.serialInvoiceNumber = serialInvoiceNumber;
 	}
 
 	@Basic

@@ -22,9 +22,11 @@ import com.chua.evergrocery.database.service.CustomerOrderDetailService;
 import com.chua.evergrocery.database.service.CustomerOrderService;
 import com.chua.evergrocery.database.service.CustomerService;
 import com.chua.evergrocery.database.service.ProductDetailService;
+import com.chua.evergrocery.database.service.SystemVariableService;
 import com.chua.evergrocery.database.service.UserService;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.enums.Status;
+import com.chua.evergrocery.enums.SystemVariableTag;
 import com.chua.evergrocery.enums.UserType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
@@ -54,6 +56,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Autowired
 	private ProductDetailService productDetailService;
+	
+	@Autowired
+	private SystemVariableService systemVariableService;
 	
 	@Autowired
 	private ProductHandler productHandler;
@@ -182,13 +187,16 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(customerOrder != null) {
 			if(customerOrder.getStatus() == Status.PRINTED) {
 				if(customerOrder.getTotalAmount() <= cash) {
+					Long SIN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag()));
+					
 					result = new ResultBean();
 					
 					customerOrder.setCashier(userService.find(UserContextHolder.getUser().getId()));
 					customerOrder.setStatus(Status.PAID);
 					customerOrder.setPaidOn(new Date());
+					customerOrder.setSerialInvoiceNumber(SIN);
 					
-					result.setSuccess(customerOrderService.update(customerOrder));
+					result.setSuccess(customerOrderService.update(customerOrder) && systemVariableService.updateByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag(), String.valueOf(SIN + 1)));
 					if(result.getSuccess()) {
 						//#############################################################################################		remove from stock!!!
 						result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(cash - customerOrder.getTotalAmount())) +

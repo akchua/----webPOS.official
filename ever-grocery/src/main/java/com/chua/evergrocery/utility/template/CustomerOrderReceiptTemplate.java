@@ -47,6 +47,10 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 		return StringHelper.center(DateFormatter.longFormat(new Date()), 44);
 	}
 	
+	public String getFormattedSIN() {
+		return StringHelper.center("SIN:" + customerOrder.getSerialInvoiceNumber(), 44);
+	}
+	
 	public String getOrderNumber() {
 		return customerOrder.getOrderNumber();
 	}

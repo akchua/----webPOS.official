@@ -1,6 +1,7 @@
 ## Template for Customer Order Receipt
 ## Has a maximum of 44 columns in a line
-${t.FormattedHeader} 
+${t.FormattedHeader}
+${t.FormattedSIN}
 ${t.Date}
 
 Order #${t.OrderNumber}

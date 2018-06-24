@@ -46,6 +46,8 @@
 
 		<property name="annotatedClasses">
 			<list>
+				<value>com.chua.evergrocery.database.entity.SystemVariable</value>
+			
 				<value>com.chua.evergrocery.database.entity.Brand</value>
 				<value>com.chua.evergrocery.database.entity.Category</value>
 				<value>com.chua.evergrocery.database.entity.Company</value>

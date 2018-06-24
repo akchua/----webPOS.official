@@ -1,0 +1,1 @@
+package com.chua.evergrocery.database.prototype;import com.chua.evergrocery.database.entity.SystemVariable;/** * @author  Adrian Jasper K. Chua * @version 1.0 * @since   24 June 2018 */public interface SystemVariablePrototype extends Prototype<SystemVariable, Long> {}
