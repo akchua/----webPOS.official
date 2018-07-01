@@ -43,6 +43,8 @@ public class User extends BaseObject {
 	private UserType userType;
 	
 	private Date lastSuccessfulLogin;
+
+	private Date lastAudit;
 	
 	@Basic
 	@Column(name = "image")
@@ -73,6 +75,11 @@ public class User extends BaseObject {
 	@Transient
 	public String getFormattedName() {
 		return lastName + ", " + firstName;
+	}
+	
+	@Transient
+	public String getShortName() {
+		return Character.toUpperCase(firstName.charAt(0)) + "." + lastName;
 	}
 
 	public void setLastName(String lastName) {
@@ -151,5 +158,15 @@ public class User extends BaseObject {
 
 	public void setLastSuccessfulLogin(Date lastSuccessfulLogin) {
 		this.lastSuccessfulLogin = lastSuccessfulLogin;
+	}
+
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name = "last_audit")
+	public Date getLastAudit() {
+		return lastAudit;
+	}
+
+	public void setLastAudit(Date lastAudit) {
+		this.lastAudit = lastAudit;
 	}
 }

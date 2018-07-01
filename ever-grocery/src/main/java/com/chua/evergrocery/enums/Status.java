@@ -8,12 +8,16 @@ public enum Status {
 	CANCELLED("Cancelled"),
 	
 	LISTING("Listing"),
+
+	REQUESTING("Requesting"),
 	
 	PRINTED("Printed"),
 	
 	PAID("Paid"),
 	
-	CHECKED("Checked");
+	CHECKED("Checked"),
+	
+	TRANSFERRED("Transferred");
 	
 	private final String displayName;
 	

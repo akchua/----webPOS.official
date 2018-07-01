@@ -10,6 +10,7 @@
 	    		<table class="table table-responsive table-hover">
 	    			<thead>
 	    				<tr>
+	    					<th>Update By</th>
 	    					<th>Product</th>
 	    					<th>Unit</th>
 	    					<th class="text-right">Old Price</th>
@@ -20,6 +21,7 @@
 	    		
 	    			<tbody data-bind="foreach: { data: salePriceHistoryList, as: 'salePriceHistory' }">
 	    				<tr>
+	    					<td data-bind="text: salePriceHistory.updatedBy.shortName"></td>
 	    					<td data-bind="text: salePriceHistory.product.name"></td>
 	    					<td data-bind="text: salePriceHistory.unitType.displayName"></td>
 	    					<td data-bind="text: salePriceHistory.formattedOldPrice" class="text-right"></td>

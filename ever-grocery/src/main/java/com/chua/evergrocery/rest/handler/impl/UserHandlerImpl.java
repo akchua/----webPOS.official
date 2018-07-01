@@ -31,6 +31,7 @@ import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.UserHandler;
 import com.chua.evergrocery.rest.validator.PasswordFormValidator;
 import com.chua.evergrocery.rest.validator.UserFormValidator;
+import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.EmailUtil;
 import com.chua.evergrocery.utility.EncryptionUtil;
 import com.chua.evergrocery.utility.Html;
@@ -98,6 +99,8 @@ public class UserHandlerImpl implements UserHandler {
 				
 				user.setImage(fileConstants.getImageDefaultFileName());
 				user.setPassword(EncryptionUtil.getMd5(userForm.getPassword()));
+				user.setLastSuccessfulLogin(DateUtil.getDefaultDate());
+				user.setLastAudit(DateUtil.getDefaultDate());
 				setUser(user, userForm);
 				setSettings(user, userForm);
 				

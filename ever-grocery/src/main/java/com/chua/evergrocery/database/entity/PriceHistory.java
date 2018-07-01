@@ -19,6 +19,7 @@ import com.chua.evergrocery.database.entity.base.BaseObject;
 import com.chua.evergrocery.enums.PriceHistoryType;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.serializer.json.ProductSerializer;
+import com.chua.evergrocery.serializer.json.UserSerializer;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -48,6 +49,9 @@ public class PriceHistory extends BaseObject {
 	
 	private Float newPrice;
 
+	@JsonSerialize(using = UserSerializer.class)
+	private User updatedBy;
+	
 	@ManyToOne(targetEntity = Product.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id")
 	@Where(clause = "valid = 1")
@@ -133,5 +137,17 @@ public class PriceHistory extends BaseObject {
 
 	public void setNewPrice(Float newPrice) {
 		this.newPrice = newPrice;
+	}
+
+	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "updated_by_id")
+	@Where(clause = "valid = 1")
+	@NotFound(action = NotFoundAction.IGNORE)
+	public User getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(User updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 }

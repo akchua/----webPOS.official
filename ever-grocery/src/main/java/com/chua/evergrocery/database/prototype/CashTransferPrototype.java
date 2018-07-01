@@ -1,0 +1,1 @@
+package com.chua.evergrocery.database.prototype;import com.chua.evergrocery.database.entity.CashTransfer;/** * @author  Adrian Jasper K. Chua * @version 1.0 * @since   30 June 2018 */public interface CashTransferPrototype extends Prototype<CashTransfer, Long> {}

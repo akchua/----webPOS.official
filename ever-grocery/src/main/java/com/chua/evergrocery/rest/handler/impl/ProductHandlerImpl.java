@@ -246,6 +246,7 @@ public class ProductHandlerImpl implements ProductHandler {
 				priceHistory.setPriceHistoryType(PriceHistoryType.SALE);
 				priceHistory.setOldPrice(productDetail.getSellingPrice() != null ? productDetail.getSellingPrice() : 0.0f);
 				priceHistory.setNewPrice(productDetailsForm.getSellingPrice());
+				priceHistory.setUpdatedBy(UserContextHolder.getUser().getUserEntity());
 				priceHistoryService.insert(priceHistory);
 			}
 		}
