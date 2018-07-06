@@ -1,0 +1,42 @@
+<div class="modal-content">
+  	<form>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+			<h3 align="center">Request Cash Transfer</h3>
+		</div>
+	  
+		<div class="modal-body">
+			<div class="row">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Transfer Details</h3>
+					</div>
+					
+					<div class="panel-body">
+						<label class="control-label" for="cashTo">Transfer Cash To:</label>
+						<div class="controls">
+							<select data-bind="options: managerList, optionsValue: 'id', optionsText: 'formattedName', optionsCaption: '-- Select User --', value: cashTransferFormModel.cashToId" class="form-control select-lg" id="cashTo"></select>
+							<p data-bind="text: errors.cashToId" class="text-danger"></p>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="amount">Amount</label>
+							<div class="controls">
+								<input data-bind="textInput: cashTransferFormModel.amount" type="number" id="amount" name="amount" placeholder="" class="form-control input-lg">
+								<p>
+									<span data-bind="text: errors.amount" class="text-danger"></span>
+									<span class="help-block">Amount to transfer</span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+  
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="submit" data-bind="click: request">Request</button>
+	        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
+		</div>
+  	</form>
+</div>

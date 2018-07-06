@@ -1,0 +1,45 @@
+<div class="row">
+	<div class="col-md-4 col-xs-6">
+		<button data-bind="click: auditUser" type="button" class="btn btn-success">Audit User</button>
+	</div>
+	<form role="search" class="form-inline">
+		<div class="input-group pull-right col-md-5 col-xs-12">
+			<select data-bind="options: userList, optionsValue: 'id', optionsText: 'formattedName', optionsCaption: '-- All Users --', value: userId, event: { change: refreshCashTransferList }" class="form-control" id="inputUser"></select>
+			<span class="input-group-addon" style="width:5px; padding-left:0px; padding-right:0px; border:none;"></span>
+			<select data-bind="options: statusList, optionsValue: 'name', optionsText: 'displayName', optionsCaption: '-- All Status --', value: status, event: { change: refreshCashTransferList }" class="form-control" id="inputStatus"></select>
+		</div>
+	</form>
+</div>
+<br />
+
+<div class="row">
+	<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
+</div>
+
+<div class="row">
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Cash From</th>
+					<th>Cash To</th>
+					<th class="text-right">Amount</th>
+					<th>Transferred On</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			
+			<tbody data-bind="foreach: { data: cashTransferList, as: 'cashTransfer' }">
+				<tr>
+					<td data-bind="text: cashTransfer.cashFrom.formattedName"></td>
+					<td data-bind="text: cashTransfer.cashTo.formattedName"></td>
+					<td data-bind="text: cashTransfer.formattedAmount" class="text-right"></td>
+					<td data-bind="text: cashTransfer.formattedTransferredOn"></td>
+					<td data-bind="text: cashTransfer.status.displayName"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+</div>

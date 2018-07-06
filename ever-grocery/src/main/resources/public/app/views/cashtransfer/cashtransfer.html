@@ -1,0 +1,44 @@
+<div class="row">
+	<button data-bind="click: request" type="button" class="btn btn-success col-md-3 col-xs-4"><i class="fa fa-plus-circle"></i> Request Cash Transfer</button>
+</div>
+<br/>
+<div class="row">
+	<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
+</div>
+<div class="row">
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Cash From</th>
+					<th>Cash To</th>
+					<th class="text-right">Amount</th>
+					<th>Transferred On</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			
+			<tbody data-bind="foreach: { data: myCashTransfers, as: 'cashTransfer' }">
+				<tr>
+					<td data-bind="text: cashTransfer.cashFrom.formattedName"></td>
+					<td data-bind="text: cashTransfer.cashTo.formattedName"></td>
+					<td data-bind="text: cashTransfer.formattedAmount" class="text-right"></td>
+					<td data-bind="text: cashTransfer.formattedTransferredOn"></td>
+					<td data-bind="text: cashTransfer.status.displayName"></td>
+					
+					<td>
+						<div class="btn-group pull-right">
+							<!-- ko if: cashTransfer.transferToMe -->
+							<button data-bind="click: function() { $parent.accept(cashTransfer.id) } " type="button" class="btn btn-success btn-sm" title="Accept"><i class="fa fa-check"></i></button>
+							<button data-bind="click: function() { $parent.decline(cashTransfer.id, cashTransfer.cashFrom.formattedName, cashTransfer.formattedAmount) } " type="button" class="btn btn-danger btn-sm" title="Decline"><i class="fa fa-ban"></i></button>
+							<!-- /ko -->
+							<!-- ko ifnot: cashTransfer.transferToMe -->
+							<button data-bind="click: function() { $parent.cancel(cashTransfer.id, cashTransfer.cashTo.formattedName, cashTransfer.formattedAmount) } " type="button" class="btn btn-danger btn-sm" title="Cancel"><i class="fa fa-close"></i></button>
+							<!-- /ko -->
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

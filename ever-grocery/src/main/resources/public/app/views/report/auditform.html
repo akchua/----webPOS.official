@@ -1,0 +1,63 @@
+<div id="divPayModal" class="modal-content modal-md">
+    <div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+        <h2 align="center">Audit</h2>
+    </div>
+    
+    <div class="modal-body">
+    	<div class="row">
+	    	<label class="control-label" for="user">Select User</label>
+			<div class="controls">
+				<select data-bind="options: lesserUserList, optionsValue: 'id', optionsText: 'formattedName', optionsCaption: '-- Select User --', value: userId, event: { change: auditUser }" class="form-control select-lg" id="user"></select>
+			</div>
+			<label class="checkbox">
+				<input data-bind="checked: fullAudit, event: { change: auditUser }" type="checkbox" name="fullAuditCheckbox">Full Audit
+			</label>
+		</div>
+		
+		<hr>
+	    
+	    <div class="row">
+			<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Audit Result</th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<tr>
+							<td>Withheld Cash</td>
+							<td data-bind="text: auditResult.formattedWithheldCash"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Audit Start Date</td>
+							<td data-bind="text: auditResult.formattedLastAudit"></td>
+						</tr>
+						<tr>
+							<td>Total Cash Transfer Out</td>
+							<td data-bind="text: auditResult.formattedCashTransferOut"></td>
+						</tr>
+						<tr>
+							<td>Total Cash Transfer Received</td>
+							<td data-bind="text: auditResult.formattedCashTransferReceived"></td>
+						</tr>
+						<tr>
+							<td>Total Sales</td>
+							<td data-bind="text: auditResult.formattedSales"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
+    </div>
+</div>
