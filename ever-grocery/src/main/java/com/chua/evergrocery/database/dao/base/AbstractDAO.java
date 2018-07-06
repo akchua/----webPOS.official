@@ -1018,8 +1018,8 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 		criteria.setProjection(Projections.rowCount());
 
 		Long totalCount = (Long) criteria.uniqueResult();
-
-		int total = totalCount.intValue();
+		
+		int total = totalCount != null ? totalCount.intValue() : 0;
 
 		criteria.setProjection(null);
 		criteria.setResultTransformer(Criteria.ROOT_ENTITY);

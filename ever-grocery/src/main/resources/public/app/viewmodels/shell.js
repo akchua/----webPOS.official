@@ -11,6 +11,7 @@
 	var reportroute = [
 		{ route: 'report', moduleRootId: 'viewmodels/report', title: 'Reports', nav: true, hash: '#report',
 			childRoutes: [
+				{ route: 'cashflow', moduleId: 'cashflow', title: 'Cash Flow', nav: true, hash: 'cashflow'},
 				{ route: 'sale', moduleId: 'sale', title: 'Sales', nav: true, hash: 'sale'},
 	      		{ route: 'purchase', moduleId: 'purchase', title: 'Purchases', nav: true, hash: 'purchase'}
 			]
@@ -43,6 +44,10 @@
 	var purchaseorderroute = [
 	    { route: 'purchaseorder', moduleId: 'viewmodels/purchase-order/purchaseorder', title: 'Purchase Order', nav: true, hash: '#purchaseorder'},
 	    { route: 'purchaseorderpage/:id', moduleId: 'viewmodels/purchase-order/purchaseorderpage', title: 'Purchase Order Page', nav: false, hash: '#purchaseorderpage' }
+	];
+	
+	var cashtransferroute = [
+		{ route: 'cashtransfer', moduleId: 'viewmodels/cashtransfer/cashtransfer', title: 'Cash Transfer', nav: true, hash: '#cashtransfer'},
 	];
 	
 	var searchroute = [
@@ -103,6 +108,7 @@
 	        		break;
 	    	}
 	    	
+    		self.routes = self.routes.concat(cashtransferroute);
     		self.routes = self.routes.concat(searchroute);
 		}
     		

@@ -10,6 +10,12 @@ define(['jquery'], function ($) {
     		return $.ajax({
     			url: '/services/constants/usertype'
     		});
+    	},
+    	
+    	getCashTransferStatusList: function() {
+    		return $.ajax({
+    			url: '/services/constants/cashtransferstatus'
+    		});
     	}
     };
 });

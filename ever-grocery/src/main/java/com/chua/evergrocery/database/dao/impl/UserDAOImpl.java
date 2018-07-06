@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.chua.evergrocery.database.dao.UserDAO;
 import com.chua.evergrocery.database.entity.User;
+import com.chua.evergrocery.enums.UserType;
 import com.chua.evergrocery.objects.ObjectList;
 
 /**
@@ -78,8 +79,21 @@ public class UserDAOImpl
 
 	@Override
 	public List<User> findAllWithOrder(Order[] orders) {
+		return findAllByUserTypeWithOrder(null, orders);
+	}
+
+	@Override
+	public List<User> findAllByUserTypeWithOrder(UserType[] userTypes, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		
+		Junction disjunction = Restrictions.disjunction();
+		if(userTypes != null) {
+			for(UserType userType : userTypes) {
+				disjunction.add(Restrictions.eq("userType", userType));
+			}
+		}
+		conjunction.add(disjunction);
 		
 		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +102,8 @@ public class UserHandlerImpl implements UserHandler {
 				user.setPassword(EncryptionUtil.getMd5(userForm.getPassword()));
 				user.setLastSuccessfulLogin(DateUtil.getDefaultDate());
 				user.setLastAudit(DateUtil.getDefaultDate());
+				user.setWithheldCash(0.0f);
+				user.setLastFullAudit(DateUtil.getDefaultDate());
 				setUser(user, userForm);
 				setSettings(user, userForm);
 				
@@ -379,8 +382,26 @@ public class UserHandlerImpl implements UserHandler {
 	}
 	
 	@Override
-	public List<User> getUserList() {
-		return userService.findAllOrderByLastName();
+	public List<User> getUserListOrderByName() {
+		return userService.findAllOrderByName();
+	}
+	
+	@Override
+	public List<User> getLesserUserListOrderByName() {
+		final List<User> lesserUsers = new ArrayList<User>();
+		List<User> users = userService.findAllOrderByName();
+		Long currentUserId = UserContextHolder.getUser().getId();
+		for(User user : users) {
+			if(currentUserId <= user.getUserType().getAuthority()) {
+				lesserUsers.add(user);
+			}
+		}
+		return lesserUsers;
+	}
+	
+	@Override
+	public List<User> getManagerList() {
+		return userService.findAllManagerOrderByName();
 	}
 	
 	@Override

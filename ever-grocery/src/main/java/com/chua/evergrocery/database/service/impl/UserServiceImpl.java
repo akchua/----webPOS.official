@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.chua.evergrocery.database.dao.UserDAO;
 import com.chua.evergrocery.database.entity.User;
 import com.chua.evergrocery.database.service.UserService;
+import com.chua.evergrocery.enums.UserType;
 import com.chua.evergrocery.objects.ObjectList;
 
 /**
@@ -52,7 +53,12 @@ public class UserServiceImpl
 	}
 
 	@Override
-	public List<User> findAllOrderByLastName() {
-		return dao.findAllWithOrder(new Order[] { Order.asc("lastName") });
+	public List<User> findAllOrderByName() {
+		return dao.findAllWithOrder(new Order[] { Order.asc("lastName"), Order.asc("firstName")});
+	}
+
+	@Override
+	public List<User> findAllManagerOrderByName() {
+		return dao.findAllByUserTypeWithOrder(new UserType[] { UserType.MANAGER, UserType.ADMINISTRATOR }, new Order[] { Order.asc("lastName"), Order.asc("firstName") });
 	}
 }

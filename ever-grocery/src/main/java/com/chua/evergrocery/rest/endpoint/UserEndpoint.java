@@ -150,4 +150,25 @@ public class UserEndpoint {
 		final SettingsFormBean settingsForm = new ObjectMapper().readValue(settingsFormData, SettingsFormBean.class);
 		return userHandler.changeSettings(settingsForm);
 	}
+	
+	@GET
+	@Path("/userlist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> getUserListOrderByName() {
+		return userHandler.getUserListOrderByName();
+	}
+	
+	@GET
+	@Path("/lesseruserlist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> getLesserUserListOrderByName() {
+		return userHandler.getLesserUserListOrderByName();
+	}
+	
+	@GET
+	@Path("/managerlist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> getManagerList() {
+		return userHandler.getManagerList();
+	}
 }

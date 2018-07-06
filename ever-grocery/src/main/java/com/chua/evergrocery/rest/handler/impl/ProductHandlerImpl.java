@@ -226,6 +226,16 @@ public class ProductHandlerImpl implements ProductHandler {
 		productDetail.setStoreStockCount(productDetailsForm.getStoreStockCount());
 	}
 	
+	private void setPriceHistory(PriceHistory priceHistory, Product product, ProductDetail productDetail, ProductDetailsFormBean productDetailsForm, PriceHistoryType priceHistoryType) {
+		priceHistory.setProduct(product);
+		priceHistory.setTitle(productDetailsForm.getTitle());
+		priceHistory.setUnitType(productDetailsForm.getUnitType());
+		priceHistory.setPriceHistoryType(priceHistoryType);
+		priceHistory.setOldPrice(productDetail.getSellingPrice() != null ? productDetail.getSellingPrice() : 0.0f);
+		priceHistory.setNewPrice(productDetailsForm.getSellingPrice());
+		priceHistory.setUpdatedBy(UserContextHolder.getUser().getUserEntity());
+	}
+	
 	private Boolean upsertProductDetails(Product product, ProductDetailsFormBean productDetailsForm) {
 		final Boolean success;
 		
@@ -240,13 +250,7 @@ public class ProductHandlerImpl implements ProductHandler {
 		if(productDetailsForm.getTitle().equals("Whole") || productDetailsForm.getTitle().equals("Piece")) {
 			if(!productDetailsForm.getSellingPrice().equals(0.0f) && (productDetail.getSellingPrice() == null || !productDetail.getSellingPrice().equals(productDetailsForm.getSellingPrice()))) {
 				final PriceHistory priceHistory = new PriceHistory();
-				priceHistory.setProduct(product);
-				priceHistory.setTitle(productDetailsForm.getTitle());
-				priceHistory.setUnitType(productDetailsForm.getUnitType());
-				priceHistory.setPriceHistoryType(PriceHistoryType.SALE);
-				priceHistory.setOldPrice(productDetail.getSellingPrice() != null ? productDetail.getSellingPrice() : 0.0f);
-				priceHistory.setNewPrice(productDetailsForm.getSellingPrice());
-				priceHistory.setUpdatedBy(UserContextHolder.getUser().getUserEntity());
+				setPriceHistory(priceHistory, product, productDetail, productDetailsForm, PriceHistoryType.SALE);
 				priceHistoryService.insert(priceHistory);
 			}
 		}
@@ -254,12 +258,7 @@ public class ProductHandlerImpl implements ProductHandler {
 		if(productDetailsForm.getTitle().equals("Whole") || productDetailsForm.getTitle().equals("Piece")) {
 			if(!productDetailsForm.getNetPrice().equals(0.0f) && (productDetail.getNetPrice() == null || !productDetail.getNetPrice().equals(productDetailsForm.getNetPrice()))) {
 				final PriceHistory priceHistory = new PriceHistory();
-				priceHistory.setProduct(product);
-				priceHistory.setTitle(productDetailsForm.getTitle());
-				priceHistory.setUnitType(productDetailsForm.getUnitType());
-				priceHistory.setPriceHistoryType(PriceHistoryType.NET_PURCHASE);
-				priceHistory.setOldPrice(productDetail.getNetPrice() != null ? productDetail.getNetPrice() : 0.0f);
-				priceHistory.setNewPrice(productDetailsForm.getNetPrice());
+				setPriceHistory(priceHistory, product, productDetail, productDetailsForm, PriceHistoryType.NET_PURCHASE);
 				priceHistoryService.insert(priceHistory);
 			}
 		}

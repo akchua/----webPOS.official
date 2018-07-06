@@ -2,6 +2,7 @@ package com.chua.evergrocery.rest.handler;
 
 import java.util.List;
 
+import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.UserType;
 
 /**
@@ -14,4 +15,6 @@ public interface ConstantsHandler {
 	String getVersion();
 	
 	List<UserType> getUserTypeList();
+	
+	List<Status> getCashTransferStatusList();
 }

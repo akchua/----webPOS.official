@@ -7,6 +7,8 @@ public enum Status {
 
 	CANCELLED("Cancelled"),
 	
+	DECLINED("Declined"),
+	
 	LISTING("Listing"),
 
 	REQUESTING("Requesting"),

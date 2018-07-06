@@ -46,6 +46,10 @@ public class User extends BaseObject {
 
 	private Date lastAudit;
 	
+	private Float withheldCash;
+	
+	private Date lastFullAudit;
+	
 	@Basic
 	@Column(name = "image")
 	public String getImage() {
@@ -168,5 +172,25 @@ public class User extends BaseObject {
 
 	public void setLastAudit(Date lastAudit) {
 		this.lastAudit = lastAudit;
+	}
+
+	@Basic
+	@Column(name = "withheld_cash")
+	public Float getWithheldCash() {
+		return withheldCash;
+	}
+
+	public void setWithheldCash(Float withheldCash) {
+		this.withheldCash = withheldCash;
+	}
+
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name = "last_full_audit")
+	public Date getLastFullAudit() {
+		return lastFullAudit;
+	}
+
+	public void setLastFullAudit(Date lastFullAudit) {
+		this.lastFullAudit = lastFullAudit;
 	}
 }

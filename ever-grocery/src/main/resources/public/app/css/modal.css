@@ -2,3 +2,8 @@
 	font-size: 100%;
 	font-family: verdana;
 }
+
+.modal-md {
+  width: 600px;
+  margin: auto;
+}

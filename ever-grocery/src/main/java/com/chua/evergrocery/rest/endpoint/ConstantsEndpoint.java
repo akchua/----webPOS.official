@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.UserType;
 import com.chua.evergrocery.rest.handler.ConstantsHandler;
 
@@ -35,5 +36,12 @@ public class ConstantsEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<UserType> getUserTypeList() {
 		return constantsHandler.getUserTypeList();
+	}
+	
+	@GET
+	@Path("/cashtransferstatus")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Status> getCashTransferStatusList() {
+		return constantsHandler.getCashTransferStatusList();
 	}
 }

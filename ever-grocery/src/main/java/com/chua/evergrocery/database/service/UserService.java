@@ -18,5 +18,7 @@ public interface UserService
 	
 	ObjectList<User> findAllOrderByNameAndUserType(int pageNumber, int resultsPerPage, String searchKey);
 	
-	List<User> findAllOrderByLastName();
+	List<User> findAllOrderByName();
+	
+	List<User> findAllManagerOrderByName();
 }

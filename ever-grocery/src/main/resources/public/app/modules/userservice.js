@@ -137,6 +137,24 @@ define(['jquery'], function ($) {
     		return $.ajax({
     			url: '/services/user/listusertype'
     		});
+    	},
+    	
+    	getUserListOrderByName: function() {
+    		return $.ajax({
+    			url: '/services/user/userlist'
+    		});
+    	},
+    	
+    	getLesserUserListOrderByName: function() {
+    		return $.ajax({
+    			url: '/services/user/lesseruserlist'
+    		});
+    	},
+    	
+    	getManagerList: function() {
+    		return $.ajax({
+    			url: '/services/user/managerlist'
+    		});
     	}
 	};
 });

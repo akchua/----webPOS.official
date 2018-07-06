@@ -1,5 +1,8 @@
 package com.chua.evergrocery.database.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +31,10 @@ public class CustomerOrderServiceImpl
 	@Override
 	public Boolean isExistsByNameAndStatus(String name, Status[] status) {
 	return dao.findByNameAndStatus(StringUtils.trimToEmpty(name), status) != null;
+	}
+
+	@Override
+	public List<CustomerOrder> findAllPaidByCashierAndDate(Long cashierId, Date dateFrom) {
+		return dao.findAllByCashierStatusAndDatePaid(cashierId, new Status[] { Status.PAID }, dateFrom);
 	}
 }

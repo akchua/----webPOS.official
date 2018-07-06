@@ -1,5 +1,8 @@
 package com.chua.evergrocery.database.dao.impl;
 
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Junction;
@@ -65,5 +68,27 @@ public class CustomerOrderDAOImpl
 		conjunction.add(disjunction);
 		
 		return findUniqueResult(null, null, null, conjunction);
+	}
+
+	@Override
+	public List<CustomerOrder> findAllByCashierStatusAndDatePaid(Long cashierId, Status[] status, Date dateFrom) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		
+		if(cashierId != null) {
+			conjunction.add(Restrictions.eq("cashier.id", cashierId));
+		}
+		
+		if(status != null) {
+			Junction disjunction = Restrictions.disjunction();
+			for(Status stats : status) {
+				disjunction.add(Restrictions.eq("status", stats));
+			}
+			conjunction.add(disjunction);
+		}
+		
+		conjunction.add(Restrictions.ge("paidOn", dateFrom));
+		
+		return findAllByCriterionList(null, null, null, null, conjunction);
 	}
 }

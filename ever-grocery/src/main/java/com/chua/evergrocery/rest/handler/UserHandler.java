@@ -45,7 +45,11 @@ public interface UserHandler {
 	
 	ResultBean changeSettings(SettingsFormBean settingsForm);
 	
-	List<User> getUserList();
+	List<User> getUserListOrderByName();
+	
+	List<User> getLesserUserListOrderByName();
+	
+	List<User> getManagerList();
 	
 	List<String> getUserTypeList();
 }
