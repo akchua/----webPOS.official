@@ -392,7 +392,13 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		
 		quantity = resolveCustomerOrderDetailUnitType(customerOrderDetail, quantity);
 		
-		if(quantity > 0) {
+		if(quantity > 0 || (quantity < 0 && UserContextHolder.getUser().getUserType().getAuthority() <= 2)) {
+			
+			// Limit maximum quantity to 999
+			if(quantity > 999) {
+				quantity = 999.0f;
+			}
+			
 			result = new ResultBean();
 			final CustomerOrder customerOrder = customerOrderDetail.getCustomerOrder();
 			

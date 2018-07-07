@@ -643,6 +643,11 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		final ResultBean result;
 		
 		if(quantity != null && quantity != 0) {
+			// Limit maximum quantity to 999
+			if(quantity > 999) {
+				quantity = 999;
+			}
+			
 			result = new ResultBean();
 			
 			final PurchaseOrder purchaseOrder = purchaseOrderDetail.getPurchaseOrder();
