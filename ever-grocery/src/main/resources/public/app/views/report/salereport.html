@@ -1,0 +1,48 @@
+<div class="modal-content modal-md">
+  	<form>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+			<h3 align="center">Sales Report Query</h3>
+		</div>
+
+		<div class="modal-body">
+			<div class="row">	
+				<div class="control-group col-xs-12">
+					<label class="control-label col-xs-12">Included Dates:</label>
+					<div class="controls col-xs-6">
+						<input data-bind="value: salesReportQuery.from" type="date" class="form-control" />
+						<p class="text-center">Start</p>
+					</div>
+					<div class="controls col-xs-6">
+						<input data-bind="value: salesReportQuery.to" type="date" class="form-control" />
+						<p class="text-center">End</p>
+					</div>
+				</div>
+			</div>
+			
+			<br>
+			
+			<div class="row">
+				<div class="col-xs-2">
+					<label for="receive">Receive Via:</label>
+				</div>
+				
+				<div class="col-xs-4">
+					<label class="checkbox">
+						<input data-bind="checked: salesReportQuery.sendMail" type="checkbox" name="receiveViaMail">Mail
+					</label>
+				</div>
+				<div class="col-xs-4">
+					<label class="checkbox">
+						<input data-bind="checked: downloadFile" type="checkbox" name="receiveViaFileDownload">File Download
+					</label>
+				</div>
+			</div>
+		</div>
+  
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="submit" data-bind="click: generateReport, enable: enableGenerateButton">Generate</button>
+	        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
+		</div>
+  	</form>
+</div>

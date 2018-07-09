@@ -2,6 +2,7 @@ package com.chua.evergrocery.rest.handler;
 
 import com.chua.evergrocery.beans.CustomerOrderFormBean;
 import com.chua.evergrocery.beans.ResultBean;
+import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.objects.ObjectList;
@@ -33,6 +34,8 @@ public interface CustomerOrderHandler {
 	ResultBean payCustomerOrder(Long customerOrderId, Float cash);
 	
 	ResultBean printCustomerOrderList(Long customerOrderId);
+
+	ResultBean generateReport(SalesReportQueryBean salesReportQuery);
 	
 	void printReceipt(Long customerOrderId, Float cash);
 }

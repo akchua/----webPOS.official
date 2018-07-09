@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chua.evergrocery.UserContextHolder;
 import com.chua.evergrocery.beans.CustomerOrderFormBean;
 import com.chua.evergrocery.beans.ResultBean;
+import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.beans.UserBean;
+import com.chua.evergrocery.constants.FileConstants;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.ProductDetail;
@@ -27,11 +29,13 @@ import com.chua.evergrocery.database.service.UserService;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.SystemVariableTag;
-import com.chua.evergrocery.enums.UserType;
+import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
 import com.chua.evergrocery.rest.handler.ProductHandler;
+import com.chua.evergrocery.rest.handler.SalesReportHandler;
 import com.chua.evergrocery.utility.DateUtil;
+import com.chua.evergrocery.utility.EmailUtil;
 import com.chua.evergrocery.utility.Html;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.chua.evergrocery.utility.print.Printer;
@@ -64,6 +68,15 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	private ProductHandler productHandler;
 	
 	@Autowired
+	private SalesReportHandler salesReportHandler;
+	
+	@Autowired
+	private FileConstants fileConstants;
+	
+	@Autowired
+	private EmailUtil emailUtil;
+	
+	@Autowired
 	private VelocityEngine velocityEngine;
 
 	@Override
@@ -89,7 +102,10 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				final CustomerOrder customerOrder = new CustomerOrder();
 				setCustomerOrder(customerOrder, customerOrderForm);
 				customerOrder.setPaidOn(DateUtil.getDefaultDate());
-				customerOrder.setTotalAmount(0.0f);
+				customerOrder.setSerialInvoiceNumber(0l);
+				customerOrder.setVatSales(0.0f);
+				customerOrder.setVatExSales(0.0f);
+				customerOrder.setZeroRatedSales(0.0f);
 				customerOrder.setTotalItems(0.0f);
 				
 				customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
@@ -124,7 +140,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(customerOrder != null) {
 			final UserBean currentUser = UserContextHolder.getUser();
 			
-			if(customerOrder.getStatus() == Status.LISTING && customerOrder.getCreator().getId() == currentUser.getId()) {
+			if(customerOrder.getStatus().equals(Status.LISTING) && customerOrder.getCreator().getId() == currentUser.getId()) {
 				if(!(StringUtils.trimToEmpty(customerOrder.getName()).equalsIgnoreCase(customerOrderForm.getName())) &&
 						customerOrderService.isExistsByNameAndStatus(customerOrderForm.getName(), new Status[] { Status.LISTING, Status.PRINTED })) {
 					result = new ResultBean(false, "Customer order \"" + customerOrderForm.getName() + "\" already exists!");
@@ -157,8 +173,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(customerOrder != null) {
 			final UserBean currentUser = UserContextHolder.getUser();
 			
-			if(customerOrder.getStatus() != Status.PAID && (currentUser.getUserType() == UserType.ADMINISTRATOR ||
-					currentUser.getUserType() == UserType.MANAGER || currentUser.getUserType() == UserType.ASSISTANT_MANAGER)) {
+			if(!customerOrder.getStatus().equals(Status.PAID) && currentUser.getUserType().getAuthority() <= 3) {
 				result = new ResultBean();
 				
 				customerOrder.setStatus(Status.CANCELLED);
@@ -185,7 +200,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			if(customerOrder.getStatus() == Status.PRINTED) {
+			if(customerOrder.getStatus().equals(Status.PRINTED)) {
 				if(customerOrder.getTotalAmount() <= cash) {
 					Long SIN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag()));
 					
@@ -209,7 +224,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				} else {
 					result = new ResultBean(false, "Insufficient cash.");
 				}
-			} else if(customerOrder.getStatus() == Status.PAID) {
+			} else if(customerOrder.getStatus().equals(Status.PAID)) {
 				result = new ResultBean(false, "Customer order already paid.");
 			} else {
 				result = new ResultBean(Boolean.FALSE, "Customer Order not yet completed.");
@@ -239,7 +254,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(customerOrderDetail != null) {
 			final CustomerOrder customerOrder = customerOrderDetail.getCustomerOrder();
 			if(customerOrder != null) {
-				if(customerOrder.getStatus() == Status.LISTING) {
+				if(customerOrder.getStatus().equals(Status.LISTING)) {
 					result = this.removeCustomerOrderDetail(customerOrderDetail);
 				} else {
 					result = new ResultBean(false, "Customer order cannot be edited right now.");
@@ -260,7 +275,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderDetail.getCustomerOrder();
 		result = new ResultBean();
 		
-		customerOrder.setTotalAmount(customerOrder.getTotalAmount() - customerOrderDetail.getTotalPrice());
+		addAmountToOrder(-customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), customerOrder);
 		customerOrder.setTotalItems(customerOrder.getTotalItems() - customerOrderDetail.getQuantity());
 		result.setSuccess(customerOrderDetailService.erase(customerOrderDetail));
 		if(result.getSuccess()) {
@@ -314,7 +329,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			if(customerOrder.getStatus() == Status.LISTING) {
+			if(customerOrder.getStatus().equals(Status.LISTING)) {
 				if(productDetail != null) {
 					result = this.addItem(productDetail, customerOrder, quantity);
 				} else {
@@ -372,7 +387,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(customerOrderDetail != null) {
 			final CustomerOrder customerOrder = customerOrderDetail.getCustomerOrder();
 			if(customerOrder != null) {
-				if(customerOrder.getStatus() == Status.LISTING) {
+				if(customerOrder.getStatus().equals(Status.LISTING)) {
 					result = this.changeCustomerOrderDetailQuantity(customerOrderDetail, quantity);
 				} else {
 					result =  new ResultBean(false, "Customer order cannot be edited right now.");
@@ -402,14 +417,14 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			result = new ResultBean();
 			final CustomerOrder customerOrder = customerOrderDetail.getCustomerOrder();
 			
-			customerOrder.setTotalAmount(customerOrder.getTotalAmount() - customerOrderDetail.getTotalPrice());
+			addAmountToOrder(-customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), customerOrder);
 			customerOrder.setTotalItems(customerOrder.getTotalItems() - customerOrderDetail.getQuantity());
 			
 			setCustomerOrderDetailQuantity(customerOrderDetail, quantity);
 			result.setSuccess(customerOrderDetailService.update(customerOrderDetail));
 			
 			if(result.getSuccess()) {
-				customerOrder.setTotalAmount(customerOrder.getTotalAmount() + customerOrderDetail.getTotalPrice());
+				addAmountToOrder(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), customerOrder);
 				customerOrder.setTotalItems(customerOrder.getTotalItems() + customerOrderDetail.getQuantity());
 				customerOrderService.update(customerOrder);
 				
@@ -481,17 +496,31 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	private void refreshCustomerOrder(CustomerOrder customerOrder) {
-		float totalAmount = 0;
+		float vatSales = 0;
+		float vatExSales = 0;
+		float zeroRatedSales = 0;
 		float totalItems = 0;
 		
 		List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrder.getId());
 		
 		for(CustomerOrderDetail customerOrderDetail : customerOrderDetails) {
-			totalAmount += customerOrderDetail.getTotalPrice();
+			switch(customerOrderDetail.getTaxType()) {
+			case VAT:
+				vatSales += customerOrderDetail.getTotalPrice();
+				break;
+			case VAT_EXEMPT:
+				vatExSales += customerOrderDetail.getTotalPrice();
+				break;
+			case ZERO_RATED:
+				zeroRatedSales += customerOrderDetail.getTotalPrice();
+				break;
+			}
 			totalItems += customerOrderDetail.getQuantity();
 		}
 		
-		customerOrder.setTotalAmount(totalAmount);
+		customerOrder.setVatSales(vatSales);
+		customerOrder.setVatExSales(vatExSales);
+		customerOrder.setZeroRatedSales(zeroRatedSales);
 		customerOrder.setTotalItems(totalItems);
 		customerOrderService.update(customerOrder);
 	}
@@ -505,11 +534,10 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(customerOrder != null) {
 			final UserBean currentUser = UserContextHolder.getUser();
 			
-			if(customerOrder.getStatus() == Status.LISTING || currentUser.getUserType() == UserType.ADMINISTRATOR ||
-					currentUser.getUserType() == UserType.MANAGER || currentUser.getUserType() == UserType.ASSISTANT_MANAGER) {
+			if(customerOrder.getStatus().equals(Status.LISTING) || currentUser.getUserType().getAuthority() <= 3) {
 				result = new ResultBean();
 				
-				if(customerOrder.getStatus() == Status.LISTING) {
+				if(customerOrder.getStatus().equals(Status.LISTING)) {
 					customerOrder.setStatus(Status.PRINTED);
 					result.setSuccess(customerOrderService.update(customerOrder));
 				} else {
@@ -530,9 +558,20 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			result = new ResultBean(false, "Customer order not found.");
 		}
 		
-		customerOrder.setStatus(Status.PRINTED);
-		customerOrderService.update(customerOrder);
-		
+		return result;
+	}
+	
+	@Override
+	public ResultBean generateReport(SalesReportQueryBean salesReportQuery) {
+		final ResultBean result = salesReportHandler.generateReport(salesReportQuery);
+		if (result.getSuccess() && salesReportQuery.getSendMail()) {
+			emailUtil.send(UserContextHolder.getUser().getEmailAddress(), 
+					"Sales Report",
+					"Sales Report for " + salesReportQuery.getFrom() + " - " + salesReportQuery.getTo() + ".",
+					new String[] { fileConstants.getSalesHome() + (String) result.getExtras().get("fileName") });
+		}
+		System.out.println(result != null);
+		System.out.println(result != null ? result.getSuccess() : "OUT");
 		return result;
 	}
 	
@@ -558,7 +597,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	private void printReceipt(CustomerOrder customerOrder, Float cash) {
-		final CustomerOrderReceiptTemplate customerOrderReceipt = new CustomerOrderReceiptTemplate(customerOrder, "Ever Bazar", cash);
+		final CustomerOrderReceiptTemplate customerOrderReceipt = new CustomerOrderReceiptTemplate(customerOrder, cash);
 		
 		Printer printer = new Printer();
 		try {
@@ -578,10 +617,25 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrderDetail.setQuantity(0.0f);
 		customerOrderDetail.setTotalPrice(0.0f);
 		customerOrderDetail.setMargin(productDetail.getActualPercentProfit());
+		customerOrderDetail.setTaxType(productDetail.getProduct().getTaxType());
 	}
 	
 	private void setCustomerOrderDetailQuantity(CustomerOrderDetail customerOrderDetail, float quantity) {
 		customerOrderDetail.setQuantity(quantity);
 		customerOrderDetail.setTotalPrice(quantity * customerOrderDetail.getUnitPrice());
+	}
+	
+	private void addAmountToOrder(Float amount, TaxType taxType, CustomerOrder customerOrder) {
+		switch(taxType) {
+		case VAT:
+			customerOrder.setVatSales(customerOrder.getVatSales() + amount);
+			break;
+		case VAT_EXEMPT:
+			customerOrder.setVatExSales(customerOrder.getVatExSales() + amount);
+			break;
+		case ZERO_RATED:
+			customerOrder.setZeroRatedSales(customerOrder.getZeroRatedSales() + amount);
+			break;
+		}
 	}
 }

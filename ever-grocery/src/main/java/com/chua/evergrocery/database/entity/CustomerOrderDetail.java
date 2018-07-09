@@ -16,6 +16,7 @@ import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Where;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
+import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
 
@@ -44,6 +45,8 @@ public class CustomerOrderDetail extends BaseObject {
 	private Float totalPrice;
 	
 	private Float margin;
+	
+	private TaxType taxType;
 
 	@ManyToOne(targetEntity = CustomerOrder.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_order_id")
@@ -132,7 +135,7 @@ public class CustomerOrderDetail extends BaseObject {
 	
 	@Transient
 	public String getFormattedTotalPrice() {
-		return CurrencyFormatter.pesoFormat(getTotalPrice());
+		return CurrencyFormatter.pesoFormat(getTotalPrice()) + taxType.getSymbol();
 	}
 
 	public void setTotalPrice(Float totalPrice) {
@@ -147,5 +150,15 @@ public class CustomerOrderDetail extends BaseObject {
 
 	public void setMargin(Float margin) {
 		this.margin = margin;
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tax_type")
+	public TaxType getTaxType() {
+		return taxType;
+	}
+
+	public void setTaxType(TaxType taxType) {
+		this.taxType = taxType;
 	}
 }

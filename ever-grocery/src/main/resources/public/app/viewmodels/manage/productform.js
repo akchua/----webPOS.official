@@ -1,5 +1,5 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 'modules/brandservice', 'modules/categoryservice', 'modules/companyservice', 'modules/distributorservice', 'viewmodels/manage/productdetailsform'], 
-		function (dialog, app, ko, productService, brandService, categoryService, companyService, distributorService, ProductDetailsForm) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 'modules/brandservice', 'modules/categoryservice', 'modules/companyservice', 'modules/distributorservice', 'modules/constantsservice', 'viewmodels/manage/productdetailsform'], 
+		function (dialog, app, ko, productService, brandService, categoryService, companyService, distributorService, constantsService, ProductDetailsForm) {
     var ProductForm = function(preTitle, product) {
         this.preTitle = preTitle;
         this.product = product;
@@ -11,13 +11,16 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
         	brandId: ko.observable(),
         	categoryId: ko.observable(),
         	companyId: ko.observable(),
-        	distributorId: ko.observable()
+        	distributorId: ko.observable(),
+        	
+        	taxType: ko.observable()
         };
         
         this.brandList = ko.observable();
         this.categoryList = ko.observable();
         this.companyList = ko.observable();
         this.distributorList = ko.observable();
+        this.taxTypeList = ko.observable();
     };
  
     ProductForm.prototype.activate = function() {
@@ -46,6 +49,18 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
     		self.distributorList(distributorList);
     		self.productFormModel.distributorId(self.product.distributor.id);
     	});
+    	
+    	constantsService.getTaxTypeList().done(function(taxTypeList) {
+    		self.taxTypeList(taxTypeList);
+    	});
+    	
+    	if(self.product && self.product.taxType) {
+    		self.productFormModel.taxType(self.product.taxType.name);
+    	} else {
+    		constantsService.getDefaultTaxType().done(function(defaultTaxType) {
+        		self.productFormModel.taxType(defaultTaxType.name);
+        	});
+    	}
     };
     
     ProductForm.show = function(preTitle, product) {

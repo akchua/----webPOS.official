@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,6 +23,7 @@ import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Where;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
+import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.serializer.json.BrandSerializer;
 import com.chua.evergrocery.serializer.json.CategorySerializer;
 import com.chua.evergrocery.serializer.json.CompanySerializer;
@@ -53,6 +56,8 @@ public class Product extends BaseObject {
 	private String name;
 	
 	private String displayName;
+	
+	private TaxType taxType;
 	
 	private Float saleRate;
 	
@@ -138,6 +143,16 @@ public class Product extends BaseObject {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tax_type", length = 50)
+	public TaxType getTaxType() {
+		return taxType;
+	}
+
+	public void setTaxType(TaxType taxType) {
+		this.taxType = taxType;
 	}
 
 	@Basic

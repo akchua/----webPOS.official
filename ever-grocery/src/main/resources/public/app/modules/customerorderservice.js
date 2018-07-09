@@ -136,6 +136,16 @@ define(['jquery'], function ($) {
     				cash: cash
     			}
     		});
+    	},
+    	
+    	generateReport: function(salesReportQueryData) {
+    		return $.ajax({
+    			url: '/services/customerorder/generatereport',
+    			method: 'POST',
+    			data: {
+    				salesReportQueryData: salesReportQueryData
+    			}
+    		});
     	}
     };
 });

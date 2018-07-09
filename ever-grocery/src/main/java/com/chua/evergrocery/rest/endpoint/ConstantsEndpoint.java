@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.chua.evergrocery.enums.Status;
+import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UserType;
 import com.chua.evergrocery.rest.handler.ConstantsHandler;
 
@@ -32,10 +33,24 @@ public class ConstantsEndpoint {
 	}
 	
 	@GET
+	@Path("/taxtype")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public TaxType getDefaultTaxType() {
+		return constantsHandler.getDefaultTaxType();
+	}
+	
+	@GET
 	@Path("/usertype")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<UserType> getUserTypeList() {
 		return constantsHandler.getUserTypeList();
+	}
+	
+	@GET
+	@Path("/taxtypelist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<TaxType> getTaxTypeList() {
+		return constantsHandler.getTaxTypeList();
 	}
 	
 	@GET

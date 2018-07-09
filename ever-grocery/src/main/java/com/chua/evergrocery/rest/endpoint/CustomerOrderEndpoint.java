@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.chua.evergrocery.beans.CustomerOrderFormBean;
 import com.chua.evergrocery.beans.ResultBean;
+import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.objects.ObjectList;
@@ -129,5 +130,12 @@ public class CustomerOrderEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public void printReceipt(@FormParam("customerOrderId") Long customerOrderId, @FormParam("cash") Float cash) {
 		customerOrderHandler.printReceipt(customerOrderId, cash);
+	}
+	
+	@POST
+	@Path("/generatereport")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean generateReport(@FormParam("salesReportQueryData") String salesReportQueryData) throws IOException {
+		return customerOrderHandler.generateReport(new ObjectMapper().readValue(salesReportQueryData, SalesReportQueryBean.class));
 	}
 }

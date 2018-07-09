@@ -26,7 +26,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 	
 	private List<String> overflowList;
 	
-	private final Integer ITEM_NAME_MAX_LENGTH = 33;
+	private final Integer ITEM_NAME_MAX_LENGTH = 30;
 	
 	public CustomerOrderItemTemplate(CustomerOrderDetail customerOrderItem, Integer content) {
 		this.customerOrderItem = customerOrderItem;
@@ -70,8 +70,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedTotalPrice() {
-		NumberFormat nf = new DecimalFormat("##,###.##");
-		return String.format("%7s", nf.format(customerOrderItem.getTotalPrice()));
+		return String.format("%10s", customerOrderItem.getFormattedTotalPrice());
 	}
 	
 	public Boolean isOverflow() {

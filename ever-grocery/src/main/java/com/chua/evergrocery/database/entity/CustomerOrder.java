@@ -1,5 +1,6 @@
 package com.chua.evergrocery.database.entity;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -50,7 +51,11 @@ public class CustomerOrder extends BaseObject {
 	@JsonSerialize(using = UserSerializer.class)
 	private User cashier;
 	
-	private Float totalAmount;
+	private Float vatSales;
+	
+	private Float vatExSales;
+	
+	private Float zeroRatedSales;
 	
 	private Float totalItems;
 	
@@ -67,6 +72,12 @@ public class CustomerOrder extends BaseObject {
 	@Column(name = "SIN")
 	public Long getSerialInvoiceNumber() {
 		return serialInvoiceNumber;
+	}
+	
+	@Transient
+	public String getFormattedSIN() {
+		DecimalFormat SIN_FORMAT = new DecimalFormat("00000000");
+		return SIN_FORMAT.format(serialInvoiceNumber);
 	}
 
 	public void setSerialInvoiceNumber(Long serialInvoiceNumber) {
@@ -133,18 +144,58 @@ public class CustomerOrder extends BaseObject {
 	}
 
 	@Basic
-	@Column(name = "total_amount")
+	@Column(name = "vat_sales")
+	public Float getVatSales() {
+		return vatSales;
+	}
+	
+	@Transient
+	public String getFormattedVatSales() {
+		return CurrencyFormatter.pesoFormat(vatSales);
+	}
+
+	public void setVatSales(Float vatSales) {
+		this.vatSales = vatSales;
+	}
+
+	@Basic
+	@Column(name = "vat_ex_sales")
+	public Float getVatExSales() {
+		return vatExSales;
+	}
+	
+	@Transient
+	public String getFormattedVatExSales() {
+		return CurrencyFormatter.pesoFormat(vatExSales);
+	}
+
+	public void setVatExSales(Float vatExSales) {
+		this.vatExSales = vatExSales;
+	}
+
+	@Basic
+	@Column(name = "zero_rated_sales")
+	public Float getZeroRatedSales() {
+		return zeroRatedSales;
+	}
+	
+	@Transient
+	public String getFormattedZeroRatedSales() {
+		return CurrencyFormatter.pesoFormat(zeroRatedSales);
+	}
+
+	public void setZeroRatedSales(Float zeroRatedSales) {
+		this.zeroRatedSales = zeroRatedSales;
+	}
+
+	@Transient
 	public Float getTotalAmount() {
-		return totalAmount;
+		return vatSales + vatExSales + zeroRatedSales;
 	}
 	
 	@Transient
 	public String getFormattedTotalAmount() {
 		return CurrencyFormatter.pesoFormat(getTotalAmount());
-	}
-
-	public void setTotalAmount(Float totalAmount) {
-		this.totalAmount = totalAmount;
 	}
 
 	@Basic

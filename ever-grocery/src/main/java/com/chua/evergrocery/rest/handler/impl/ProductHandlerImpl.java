@@ -28,6 +28,7 @@ import com.chua.evergrocery.database.service.PriceHistoryService;
 import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.ProductService;
 import com.chua.evergrocery.enums.PriceHistoryType;
+import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.ProductHandler;
@@ -205,6 +206,7 @@ public class ProductHandlerImpl implements ProductHandler {
 		product.setCategory(categoryService.find(productForm.getCategoryId()));
 		product.setCompany(companyService.find(productForm.getCompanyId()));
 		product.setDistributor(distributorService.find(productForm.getDistributorId()));
+		product.setTaxType(productForm.getTaxType() != null ? productForm.getTaxType() : TaxType.VAT);
 	}
 	
 	private void setProductDetail(ProductDetail productDetail, ProductDetailsFormBean productDetailsForm) {

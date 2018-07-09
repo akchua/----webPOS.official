@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.chua</groupId>
   <artifactId>ever-grocery</artifactId>
-  <version>1.6.1</version>
+  <version>1.6.3</version>
   <packaging>jar</packaging>
   
   <properties>
@@ -132,6 +132,12 @@
 	    <groupId>org.apache.velocity</groupId>
 	    <artifactId>velocity</artifactId>
 	    <version>1.7</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>com.itextpdf</groupId>
+	    <artifactId>itextpdf</artifactId>
+	    <version>5.5.10</version>
 	</dependency>
   </dependencies>
   

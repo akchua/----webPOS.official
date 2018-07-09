@@ -1,5 +1,7 @@
 package com.chua.evergrocery.beans;
 
+import com.chua.evergrocery.enums.TaxType;
+
 public class ProductFormBean extends FormBean {
 
 	private String name;
@@ -9,6 +11,8 @@ public class ProductFormBean extends FormBean {
 	private Long categoryId;
 	private Long companyId;
 	private Long distributorId;
+	
+	private TaxType taxType;
 	
 	public String getName() {
 		return name;
@@ -56,5 +60,13 @@ public class ProductFormBean extends FormBean {
 	
 	public void setDistributorId(Long distributorId) {
 		this.distributorId = distributorId;
+	}
+
+	public TaxType getTaxType() {
+		return taxType;
+	}
+
+	public void setTaxType(TaxType taxType) {
+		this.taxType = taxType;
 	}
 }

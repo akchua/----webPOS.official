@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.chua.evergrocery.constants.SystemConstants;
 import com.chua.evergrocery.enums.Status;
+import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UserType;
 import com.chua.evergrocery.rest.handler.ConstantsHandler;
 
@@ -28,12 +29,22 @@ public class ConstantsHandlerImpl implements ConstantsHandler {
 	public String getVersion() {
 		return systemConstants.getVersion();
 	}
+	
+	@Override
+	public TaxType getDefaultTaxType() {
+		return TaxType.VAT;
+	}
 
 	@Override
 	public List<UserType> getUserTypeList() {
 		return Stream.of(UserType.values()).collect(Collectors.toList());
 	}
 
+	@Override
+	public List<TaxType> getTaxTypeList() {
+		return Stream.of(TaxType.values()).collect(Collectors.toList());
+	}
+	
 	@Override
 	public List<Status> getCashTransferStatusList() {
 		final List<Status> cashTransferStatusList = new ArrayList<Status>();

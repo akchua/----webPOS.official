@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
@@ -71,7 +72,7 @@ public class CustomerOrderDAOImpl
 	}
 
 	@Override
-	public List<CustomerOrder> findAllByCashierStatusAndDatePaid(Long cashierId, Status[] status, Date dateFrom) {
+	public List<CustomerOrder> findAllByCashierStatusAndDatePaidWithOrder(Long cashierId, Status[] status, Date dateFrom, Date dateTo, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		
@@ -87,8 +88,8 @@ public class CustomerOrderDAOImpl
 			conjunction.add(disjunction);
 		}
 		
-		conjunction.add(Restrictions.ge("paidOn", dateFrom));
+		conjunction.add(Restrictions.between("paidOn", dateFrom, dateTo));
 		
-		return findAllByCriterionList(null, null, null, null, conjunction);
+		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}
 }

@@ -472,7 +472,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		
 		final PurchaseOrder purchaseOrder = purchaseOrderService.find(purchaseOrderId);
 		if(purchaseOrder != null) {
-			if(purchaseOrder.getStatus() == Status.LISTING) {
+			if(purchaseOrder.getStatus().equals(Status.LISTING)) {
 				result = new ResultBean();
 				
 				purchaseOrder.setStatus(Status.CANCELLED);
@@ -531,7 +531,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		final PurchaseOrder purchaseOrder = purchaseOrderService.find(purchaseOrderId);
 		
 		if(purchaseOrder != null) {
-			if(purchaseOrder.getStatus() == Status.LISTING) {
+			if(purchaseOrder.getStatus().equals(Status.LISTING)) {
 				if(productDetail != null) {
 					result = this.addItem(productDetail, purchaseOrder, quantity);
 				} else {
@@ -581,7 +581,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		if(purchaseOrderDetail != null) {
 			final PurchaseOrder purchaseOrder = purchaseOrderDetail.getPurchaseOrder();
 			if(purchaseOrder != null) {
-				if(purchaseOrder.getStatus() == Status.LISTING) {
+				if(purchaseOrder.getStatus().equals(Status.LISTING)) {
 					result = this.removePurchaseOrderDetail(purchaseOrderDetail);
 				} else {
 					result = new ResultBean(false, "Purchase order cannot be edited right now.");
@@ -624,7 +624,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		if(purchaseOrderDetail != null) {
 			final PurchaseOrder purchaseOrder = purchaseOrderDetail.getPurchaseOrder();
 			if(purchaseOrder != null) {
-				if(purchaseOrder.getStatus() == Status.LISTING) {
+				if(purchaseOrder.getStatus().equals(Status.LISTING)) {
 					result = this.changePurchaseOrderDetailQuantity(purchaseOrderDetail, quantity);
 				} else {
 					result =  new ResultBean(false, "Purchase order cannot be edited right now.");

@@ -22,13 +22,10 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 
 	private CustomerOrder customerOrder;
 	
-	private String header;
-	
 	private Float cash;
 	
-	public CustomerOrderReceiptTemplate(CustomerOrder customerOrder, String header, Float cash) {
+	public CustomerOrderReceiptTemplate(CustomerOrder customerOrder, Float cash) {
 		this.customerOrder = customerOrder;
-		this.header = header;
 		this.cash = cash;
 	}
 	
@@ -39,16 +36,12 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, docType.getFolderName() + "/customerOrderReceipt.vm", "UTF-8", model);
 	}
 	
-	public String getFormattedHeader() {
-		return StringHelper.center(header, 30);
-	}
-	
 	public String getDate() {
 		return StringHelper.center(DateFormatter.longFormat(new Date()), 44);
 	}
 	
 	public String getFormattedSIN() {
-		return StringHelper.center("SIN:" + customerOrder.getSerialInvoiceNumber(), 44);
+		return customerOrder.getFormattedSIN();
 	}
 	
 	public String getOrderNumber() {
@@ -57,6 +50,23 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	
 	public String getFormattedCustomer() {
 		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getFormattedName() : customerOrder.getName();
+	}
+	
+	public String getFormattedVatable() {
+		return String.format("%12s", CurrencyFormatter.pesoFormat(customerOrder.getVatSales() / 1.12f));
+	}
+	
+	public String getFormattedVatExSales() {
+		return String.format("%12s", customerOrder.getFormattedVatExSales());
+	}
+	
+	public String getFormattedZeroRatedSales() {
+		return String.format("%12s", customerOrder.getFormattedZeroRatedSales());
+	}
+	
+	public String getFormattedVat() {
+		Float vat = customerOrder.getVatSales() - (customerOrder.getVatSales() / 1.12f);
+		return String.format("%12s", CurrencyFormatter.pesoFormat(vat));
 	}
 	
 	public String getFormattedTotalAmount() {

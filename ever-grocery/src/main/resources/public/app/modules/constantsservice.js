@@ -6,9 +6,21 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getDefaultTaxType: function() {
+    		return $.ajax({
+    			url: '/services/constants/taxtype'
+    		});
+    	},
+    	
     	getUserTypeList: function() {
     		return $.ajax({
     			url: '/services/constants/usertype'
+    		});
+    	},
+    	
+    	getTaxTypeList: function() {
+    		return $.ajax({
+    			url: '/services/constants/taxtypelist'
     		});
     	},
     	

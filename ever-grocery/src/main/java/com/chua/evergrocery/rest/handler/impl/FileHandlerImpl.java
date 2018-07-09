@@ -28,4 +28,9 @@ public class FileHandlerImpl implements FileHandler {
 	public File findInventoryByFileName(String fileName) {
 		return new File(fileConstants.getInventoryHome() + fileName);
 	}
+	
+	@Override
+	public File findSalesReportByFileName(String fileName) {
+		return new File(fileConstants.getSalesHome() + fileName);
+	}
 }

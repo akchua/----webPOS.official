@@ -50,4 +50,16 @@ public class FileEndpoint {
 				.build();
 		else return null;
 	}
+	
+	@GET
+	@Path("/salesreport/{fileName}")
+	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
+	public Response getSalesReportByFileName(@PathParam("fileName") String fileName) throws IOException {
+		File salesReport = fileHandler.findSalesReportByFileName(fileName);
+		if(salesReport.exists())
+			return Response.ok(salesReport, MediaType.APPLICATION_OCTET_STREAM)
+				.header("Content-Disposition", "attachment; filename=\"" + salesReport.getName() + "\"" )
+				.build();
+		else return null;
+	}
 }

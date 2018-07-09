@@ -193,7 +193,7 @@ public class CashTransferHandlerImpl implements CashTransferHandler {
 					user.setLastAudit(new Date());
 					
 					final List<CashTransfer> cashTransfers = cashTransferService.findAllTransferredByUserAndDate(user.getId(), lastAudit);
-					final List<CustomerOrder> customerOrders = customerOrderService.findAllPaidByCashierAndDate(user.getId(), lastAudit);
+					final List<CustomerOrder> customerOrders = customerOrderService.findAllPaidByCashierAndDateFromToNow(user.getId(), lastAudit);
 					
 					Float cashTransferOut = 0.0f;
 					Float cashTransferReceived = 0.0f;

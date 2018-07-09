@@ -35,7 +35,7 @@
     		
     			<tbody data-bind="foreach: { data: customerOrderList, as: 'customerOrder' }">
     				<tr>
-    					<td data-bind="text: customerOrder.id"></td>
+    					<td data-bind="text: customerOrder.orderNumber"></td>
     					<td data-bind="text: customerOrder.name"></td>
     					<td>
     						<span data-bind="if: customerOrder.customer">
