@@ -1,4 +1,4 @@
-<div id="divProductModal" class="modal-content modal-md">
+<div id="divProductModal" class="modal-content modal-smd">
 	<form>
 	    <div class="modal-header">
 	    	<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
@@ -31,13 +31,22 @@
 				<select data-bind="options: distributorList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- Select Distributor --', value: productFormModel.distributorId" class="form-control" id="inputDistributor"></select>
 			</div>
 			
+			<hr/>
+			
 			<div class="form-group">
-				<div class="col-xs-4">
-					<label for="taxType">Tax Type:</label>
-				</div>
-				<div data-bind="foreach: { data: taxTypeList, as: 'taxType' }" class="col-xs-8">
+				<h4 class="text-center">Tax Type</h4>
+				<div data-bind="foreach: { data: taxTypeList, as: 'taxType' }">
 					<div class="radio-inline"><input data-bind="value: taxType.name, checked: $parent.productFormModel.taxType" name="taxType" type="radio"><label data-bind="text: taxType.displayName"></label></div>
 				</div>
+			</div>
+			
+			<hr/>
+			
+			<div class="form-group">
+				<h4 class="text-center">Senior Discount</h4>
+				<label class="allowSeniorDiscountCheckbox">
+					<input data-bind="checked: productFormModel.allowSeniorDiscount" type="checkbox" name="allowSeniorDiscountCheckbox">Allow Senior Discount
+				</label>
 			</div>
 	    </div>
 	    

@@ -24,6 +24,12 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getDiscountTypeList: function() {
+    		return $.ajax({
+    			url: '/services/constants/discounttypelist'
+    		});
+    	},
+    	
     	getCashTransferStatusList: function() {
     		return $.ajax({
     			url: '/services/constants/cashtransferstatus'

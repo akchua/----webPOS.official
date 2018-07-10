@@ -16,6 +16,7 @@ import com.chua.evergrocery.beans.DailySalesBean;
 import com.chua.evergrocery.beans.DailySalesBreakdownBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
+import com.chua.evergrocery.constants.BusinessConstants;
 import com.chua.evergrocery.constants.FileConstants;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.service.CustomerOrderService;
@@ -42,6 +43,9 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 	
 	@Autowired
 	private FileConstants fileConstants;
+	
+	@Autowired
+	private BusinessConstants businessConstants;
 	
 	@Autowired
 	private VelocityEngine velocityEngine;
@@ -119,7 +123,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 								new SalesReportTemplate(
 										salesReportQuery,
 										dailySalesList).merge(velocityEngine),
-								"Ever Grocery",
+								businessConstants.getBusinessShortName(),
 								filePath,
 								true)
 						);

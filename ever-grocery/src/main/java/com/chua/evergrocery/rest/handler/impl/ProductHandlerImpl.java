@@ -207,6 +207,7 @@ public class ProductHandlerImpl implements ProductHandler {
 		product.setCompany(companyService.find(productForm.getCompanyId()));
 		product.setDistributor(distributorService.find(productForm.getDistributorId()));
 		product.setTaxType(productForm.getTaxType() != null ? productForm.getTaxType() : TaxType.VAT);
+		product.setAllowSeniorDiscount(productForm.getAllowSeniorDiscount() != null ? productForm.getAllowSeniorDiscount() : false);
 	}
 	
 	private void setProductDetail(ProductDetail productDetail, ProductDetailsFormBean productDetailsForm) {

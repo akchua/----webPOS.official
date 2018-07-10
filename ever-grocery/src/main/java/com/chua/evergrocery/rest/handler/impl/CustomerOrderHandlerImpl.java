@@ -26,6 +26,8 @@ import com.chua.evergrocery.database.service.CustomerService;
 import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.SystemVariableService;
 import com.chua.evergrocery.database.service.UserService;
+import com.chua.evergrocery.enums.Color;
+import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.SystemVariableTag;
@@ -37,6 +39,7 @@ import com.chua.evergrocery.rest.handler.SalesReportHandler;
 import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.EmailUtil;
 import com.chua.evergrocery.utility.Html;
+import com.chua.evergrocery.utility.TaxUtil;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.chua.evergrocery.utility.print.Printer;
 import com.chua.evergrocery.utility.template.CustomerOrderListTemplate;
@@ -106,6 +109,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				customerOrder.setVatSales(0.0f);
 				customerOrder.setVatExSales(0.0f);
 				customerOrder.setZeroRatedSales(0.0f);
+				customerOrder.setDiscountType(DiscountType.NO_DISCOUNT);
 				customerOrder.setTotalItems(0.0f);
 				
 				customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
@@ -189,6 +193,53 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			}
 		} else {
 			result = new ResultBean(false, "Customer order not found.");
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public ResultBean applyDiscount(Long customerOrderId, DiscountType discountType, Float grossAmountLimit) {
+		final ResultBean result;
+		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
+		
+		if(customerOrder != null) {
+			if(customerOrder.getTotalDiscountAmount().equals(0.0f)) {
+				if(discountType.equals(DiscountType.SENIOR_DISCOUNT)) {
+					// Apply hard cap to gross amount
+					grossAmountLimit = Math.min(grossAmountLimit, discountType.getGrossHardCap());
+					
+					final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrderId);
+					
+					for(CustomerOrderDetail customerOrderDetail : customerOrderDetails) {
+						if(customerOrderDetail.getTotalPrice() <= grossAmountLimit) {
+							grossAmountLimit -= customerOrderDetail.getTotalPrice();
+							customerOrderDetail.setTotalPrice(TaxUtil.convertTaxType(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), TaxType.ZERO_RATED));
+							customerOrderDetail.setTaxType(TaxType.ZERO_RATED);
+						}
+					}
+					
+					customerOrderDetailService.batchUpdate(customerOrderDetails);
+					customerOrder.setDiscountType(discountType);
+					
+					result = new ResultBean();
+					
+					result.setSuccess(customerOrderService.update(customerOrder));
+					if(result.getSuccess()) {
+						result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " applied " + discountType.getDisplayName() + " to Customer Order #" + customerOrder.getOrderNumber() + "."));
+					} else {
+						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+					}
+				} else {
+					result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed!") + " please select a discount type."));
+				}
+				
+				refreshCustomerOrder(customerOrder);
+			} else {
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed!") + "Customer Order already discounted."));
+			}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed!") + "Customer Order no longer exists. Please reload the page."));
 		}
 		
 		return result;

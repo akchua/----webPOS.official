@@ -22,6 +22,7 @@ import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Where;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
+import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.serializer.json.CustomerSerializer;
 import com.chua.evergrocery.serializer.json.UserSerializer;
@@ -56,6 +57,8 @@ public class CustomerOrder extends BaseObject {
 	private Float vatExSales;
 	
 	private Float zeroRatedSales;
+	
+	private DiscountType discountType;
 	
 	private Float totalItems;
 	
@@ -188,9 +191,39 @@ public class CustomerOrder extends BaseObject {
 		this.zeroRatedSales = zeroRatedSales;
 	}
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "discount_type", length = 50)
+	public DiscountType getDiscountType() {
+		return discountType;
+	}
+
+	public void setDiscountType(DiscountType discountType) {
+		this.discountType = discountType;
+	}
+
+	@Transient
+	public Float getGrossAmount() {
+		return vatSales + vatExSales + zeroRatedSales;
+	}
+	
+	@Transient
+	public String getFormattedGrossAmount() {
+		return CurrencyFormatter.pesoFormat(getGrossAmount());
+	}
+	
+	@Transient
+	public Float getTotalDiscountAmount() {
+		return zeroRatedSales * (discountType.getPercentZeroRatedDiscount() / 100);
+	}
+	
+	@Transient
+	public String getFormattedTotalDiscountAmount() {
+		return CurrencyFormatter.pesoFormat(getTotalDiscountAmount());
+	}
+
 	@Transient
 	public Float getTotalAmount() {
-		return vatSales + vatExSales + zeroRatedSales;
+		return getGrossAmount() - getTotalDiscountAmount();
 	}
 	
 	@Transient

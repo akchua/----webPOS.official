@@ -8,6 +8,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.database.entity.CustomerOrder;
+import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
@@ -67,6 +68,22 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	public String getFormattedVat() {
 		Float vat = customerOrder.getVatSales() - (customerOrder.getVatSales() / 1.12f);
 		return String.format("%12s", CurrencyFormatter.pesoFormat(vat));
+	}
+	
+	public Boolean isDiscounted() {
+		return !customerOrder.getDiscountType().equals(DiscountType.NO_DISCOUNT);
+	}
+	
+	public String getFormattedGrossAmount() {
+		return String.format("%12s", customerOrder.getFormattedGrossAmount());
+	}
+	
+	public String getFormattedDiscountLabel() {
+		return String.format("%-3s", customerOrder.getDiscountType().getShortHand()) + String.format("%2s", customerOrder.getDiscountType().getTotalPercentDiscount() + "%");
+	}
+	
+	public String getFormattedTotalDiscountAmount() {
+		return String.format("%12s", customerOrder.getFormattedTotalDiscountAmount());
 	}
 	
 	public String getFormattedTotalAmount() {

@@ -59,6 +59,8 @@ public class Product extends BaseObject {
 	
 	private TaxType taxType;
 	
+	private Boolean allowSeniorDiscount;
+	
 	private Float saleRate;
 	
 	private Float purchaseBudget;
@@ -153,6 +155,16 @@ public class Product extends BaseObject {
 
 	public void setTaxType(TaxType taxType) {
 		this.taxType = taxType;
+	}
+
+	@Basic
+	@Column(name = "allow_senior_discount")
+	public Boolean getAllowSeniorDiscount() {
+		return allowSeniorDiscount;
+	}
+
+	public void setAllowSeniorDiscount(Boolean allowSeniorDiscount) {
+		this.allowSeniorDiscount = allowSeniorDiscount;
 	}
 
 	@Basic

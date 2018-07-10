@@ -17,6 +17,7 @@ import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
+import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,6 +66,15 @@ public class CustomerOrderEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ResultBean removeCustomerOrder(@FormParam("customerOrderId") Long customerOrderId) {
 		return customerOrderHandler.removeCustomerOrder(customerOrderId);
+	}
+	
+	@POST
+	@Path("/applydiscount")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean applyDiscount(@FormParam("customerOrderId") Long customerOrderId, 
+				@FormParam("discountType") DiscountType discountType,
+				@FormParam("grossAmountLimit") Float grossAmountLimit) {
+		return customerOrderHandler.applyDiscount(customerOrderId, discountType, grossAmountLimit);
 	}
 	
 	@POST

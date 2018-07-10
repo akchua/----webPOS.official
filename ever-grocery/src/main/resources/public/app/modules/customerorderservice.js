@@ -41,6 +41,18 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	applyDiscount: function(customerOrderId, discountType, grossAmountLimit) {
+    		return $.ajax({
+    			url: '/services/customerorder/applydiscount',
+    			method: 'POST',
+    			data: {
+    				customerOrderId: customerOrderId,
+    				discountType: discountType,
+    				grossAmountLimit: grossAmountLimit
+    			}
+    		});
+    	},
+    	
     	payCustomerOrder: function(customerOrderId, cash) {
     		return $.ajax({
     			url: '/services/customerorder/paycustomerorder',

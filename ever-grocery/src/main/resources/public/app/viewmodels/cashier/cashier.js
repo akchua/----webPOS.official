@@ -55,10 +55,8 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 		var self = this;
 		
 		customerOrderService.refreshCustomerOrder(customerOrderId).done(function() {
-			customerOrderService.getCustomerOrder(customerOrderId).done(function(data) {
-				PayForm.show(data).then(function() {
-					self.refreshCustomerOrderList();
-				});
+			PayForm.show(customerOrderId).then(function() {
+				self.refreshCustomerOrderList();
 			});
 		});
 	};

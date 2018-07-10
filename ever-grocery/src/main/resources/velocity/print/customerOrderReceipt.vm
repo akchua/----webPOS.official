@@ -11,6 +11,10 @@ ${t.Date}
 Order #${t.OrderNumber}
 Customer : ${t.FormattedCustomer}
 --------------------------------------------
+#if($Discounted)
+                   Sub Total ${t.FormattedGrossAmount}
+            Discount(${t.FormattedDiscountLabel}) ${t.FormattedTotalDiscount}
+#end
 
            Total Amount ${t.FormattedTotalAmount}
                         Cash ${t.FormattedCash}
@@ -29,7 +33,7 @@ This serves as an OFFICIAL RECEIPT
 Acc No: 
 Date Issued: 
 Valid Until: 
-This Receipt shall be Valid for FIVE(5) 
+This Receipt shall be Valid for FIVE(5)
 years from the date of the permit to use
 Cust. Name : ___________________________
 Address    : ___________________________

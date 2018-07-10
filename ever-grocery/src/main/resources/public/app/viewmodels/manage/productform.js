@@ -13,7 +13,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
         	companyId: ko.observable(),
         	distributorId: ko.observable(),
         	
-        	taxType: ko.observable()
+        	taxType: ko.observable(),
+        	allowSeniorDiscount: ko.observable(false)
         };
         
         this.brandList = ko.observable();
@@ -29,6 +30,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
     	self.productFormModel.id(self.product.id);
     	self.productFormModel.name(self.product.name);
     	self.productFormModel.displayName(self.product.displayName);
+    	self.productFormModel.allowSeniorDiscount(self.product.allowSeniorDiscount);
     	
     	brandService.getBrandListByName().done(function(brandList) {
     		self.brandList(brandList);

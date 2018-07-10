@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chua.evergrocery.constants.SystemConstants;
+import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UserType;
@@ -43,6 +44,13 @@ public class ConstantsHandlerImpl implements ConstantsHandler {
 	@Override
 	public List<TaxType> getTaxTypeList() {
 		return Stream.of(TaxType.values()).collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<DiscountType> getDiscountTypeList() {
+		return Stream.of(DiscountType.values())
+					.filter(discountType -> !discountType.equals(DiscountType.NO_DISCOUNT))
+					.collect(Collectors.toList());
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
+import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.objects.ObjectList;
 
 public interface CustomerOrderHandler {
@@ -18,6 +19,8 @@ public interface CustomerOrderHandler {
 	ResultBean updateCustomerOrder(CustomerOrderFormBean customerOrderForm);
 	
 	ResultBean removeCustomerOrder(Long customerOrderId);
+	
+	ResultBean applyDiscount(Long customerOrderId, DiscountType discountType, Float grossAmountLimit);
 	
 	ObjectList<CustomerOrderDetail> getCustomerOrderDetailList(Integer pageNumber, Long customerOrderId);
 	

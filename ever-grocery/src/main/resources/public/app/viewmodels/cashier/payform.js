@@ -1,7 +1,12 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderservice', 'modules/utility'], 
-		function (dialog, app, ko, customerOrderService, utility) {
-	var PayForm = function(customerOrder) {
-		this.customerOrder = customerOrder;
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderservice', 'modules/utility', 'viewmodels/cashier/discountform'], 
+		function (dialog, app, ko, customerOrderService, utility, DiscountForm) {
+	var PayForm = function(customerOrderId) {
+		this.customerOrderId = customerOrderId;
+		
+		this.customerOrder = {
+			totalAmount: ko.observable(),
+			formattedTotalAmount: ko.observable()
+		}
 		
 		this.thousand = ko.observable();
 		this.formattedThousand = ko.observable();
@@ -19,19 +24,19 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 	PayForm.prototype.activate = function() {
 		var self = this;
 		
-		self.thousand(utility.ceilToThousand(self.customerOrder.totalAmount));
+		self.thousand(utility.ceilToThousand(self.customerOrder.totalAmount()));
 		self.formattedThousand(self.thousand().toLocaleString(
 				undefined,
 				{ minimumFractionDigits: 2 }
 			)
 		);
-		self.fiveHundred(utility.ceilToFiveHundred(self.customerOrder.totalAmount));
+		self.fiveHundred(utility.ceilToFiveHundred(self.customerOrder.totalAmount()));
 		self.formattedFiveHundred(self.fiveHundred().toLocaleString(
 				undefined,
 				{ minimumFractionDigits: 2 }
 			)
 		);
-		self.hundred(utility.ceilToHundred(self.customerOrder.totalAmount));
+		self.hundred(utility.ceilToHundred(self.customerOrder.totalAmount()));
 		self.formattedHundred(self.hundred().toLocaleString(
 				undefined,
 				{ minimumFractionDigits: 2 }
@@ -45,11 +50,21 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 			)
 		);
 		
-		self.formattedTotalAmount(self.customerOrder.formattedTotalAmount);
+		self.formattedTotalAmount(self.customerOrder.formattedTotalAmount());
+		self.refreshCustomerOrder();
 	};
 	
-	PayForm.show = function(customerOrder) {
-		return dialog.show(new PayForm(customerOrder));
+	PayForm.show = function(customerOrderId) {
+		return dialog.show(new PayForm(customerOrderId));
+	};
+	
+	PayForm.prototype.refreshCustomerOrder = function() {
+		var self = this;
+		
+		customerOrderService.getCustomerOrder(self.customerOrderId).done(function(customerOrder) {
+			self.customerOrder.totalAmount(customerOrder.totalAmount);
+			self.customerOrder.formattedTotalAmount(customerOrder.formattedTotalAmount);
+		});
 	};
 	
 	PayForm.prototype.pay = function(cash, formattedCash) {
@@ -60,15 +75,25 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {
 			if(confirm) {
-				customerOrderService.payCustomerOrder(self.customerOrder.id, cash).done(function(result) {
+				customerOrderService.payCustomerOrder(self.customerOrderId, cash).done(function(result) {
 					if(result.success) {
 		        		dialog.close(self);
-		        		customerOrderService.printReceipt(self.customerOrder.id, cash);
+		        		customerOrderService.printReceipt(self.customerOrderId, cash);
 		        	} 
 		        	app.showMessage(result.message);
 				});
 			}
 		})
+	};
+	
+	PayForm.prototype.discount = function() {
+		var self = this;
+		
+		customerOrderService.getCustomerOrder(self.customerOrderId).done(function(customerOrder) {
+			DiscountForm.show(customerOrder).then(function() {
+				self.refreshCustomerOrder();
+			});
+		});
 	};
 	
 	PayForm.prototype.payAmount = function() {

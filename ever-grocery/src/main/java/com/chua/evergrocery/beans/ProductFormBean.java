@@ -14,6 +14,8 @@ public class ProductFormBean extends FormBean {
 	
 	private TaxType taxType;
 	
+	private Boolean allowSeniorDiscount;
+	
 	public String getName() {
 		return name;
 	}
@@ -68,5 +70,13 @@ public class ProductFormBean extends FormBean {
 
 	public void setTaxType(TaxType taxType) {
 		this.taxType = taxType;
+	}
+
+	public Boolean getAllowSeniorDiscount() {
+		return allowSeniorDiscount;
+	}
+
+	public void setAllowSeniorDiscount(Boolean allowSeniorDiscount) {
+		this.allowSeniorDiscount = allowSeniorDiscount;
 	}
 }

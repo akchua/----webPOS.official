@@ -1,0 +1,30 @@
+<div id="divPayModal" class="modal-content modal-sm">
+    <div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+        <h2 align="center">Customer Order#<span data-bind="text: customerOrderNumber"></span></h2>
+    </div>
+    
+    <div class="modal-body">
+	    <div class="row">
+	    	<div class="control-group">
+				<label class="control-label" for="discountType">Select Discount Type</label>
+				<div class="controls">
+					<select data-bind="options: discountTypeList, optionsValue: 'name', optionsText: 'displayName', optionsCaption: '-- Select Discount Type --', value: discountType" class="form-control select-lg" id="discountType"></select>
+				</div>
+			</div>
+	    
+	        <div class="control-group">
+				<label class="control-label" for="grossAmountLimit">Gross Amount Limit</label>
+				<div class="controls">
+					<input data-bind="textInput: grossAmountLimit" type="text" id="grossAmountLimit" name="grossAmountLimit" placeholder="" class="form-control input-lg">
+					<p><span class="help-block">Maximum discountable gross amount</span></p>
+				</div>
+			</div>
+		</div>
+    </div>
+    
+    <div class="modal-footer">
+    	<button class="btn btn-success pull-left" data-bind="click: apply">Apply</button>
+        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
+    </div>
+</div>
