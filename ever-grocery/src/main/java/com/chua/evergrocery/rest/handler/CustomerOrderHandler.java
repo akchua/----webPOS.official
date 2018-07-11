@@ -14,6 +14,8 @@ public interface CustomerOrderHandler {
 	
 	CustomerOrder getCustomerOrder(Long customerOrderId);
 	
+	CustomerOrder getCustomerOrderBySIN(Long serialInvoiceNumber);
+	
 	ResultBean createCustomerOrder(CustomerOrderFormBean customerOrderForm);
 	
 	ResultBean updateCustomerOrder(CustomerOrderFormBean customerOrderForm);

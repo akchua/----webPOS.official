@@ -45,6 +45,13 @@ public class CustomerOrderEndpoint {
 		return customerOrderHandler.getCustomerOrder(customerOrderId);
 	}
 	
+	@GET
+	@Path("/getbysin")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public CustomerOrder getCustomerOrderBySIN(@QueryParam("serialInvoiceNumber") Long serialInvoiceNumber) {
+		return customerOrderHandler.getCustomerOrderBySIN(serialInvoiceNumber);
+	}
+	
 	@POST
 	@Path("/save")
 	@Produces({ MediaType.APPLICATION_JSON })

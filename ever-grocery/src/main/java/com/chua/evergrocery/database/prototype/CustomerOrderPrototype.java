@@ -17,4 +17,6 @@ public interface CustomerOrderPrototype {
 	 * @return the object list of customerOrder
 	 */
 	ObjectList<CustomerOrder> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey, Status[] status, Integer daysAgo);
+	
+	CustomerOrder findBySerialInvoiceNumber(Long serialInvoiceNumber);
 }

@@ -53,7 +53,7 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'modules/com
 		var self = this;
 		
 		purchaseOrderService.getPurchaseOrder(purchaseOrderId).done(function(purchaseOrder) {
-			if(purchaseOrder.isValid) {
+			if(purchaseOrder) {
 				PurchaseView.show(purchaseOrder).done(function() {
 					self.refreshPurchaseOrderList();
 				});

@@ -44,4 +44,9 @@ public class CustomerOrderServiceImpl
 	public List<CustomerOrder> findAllBySalesReportQueryBean(SalesReportQueryBean salesReportQuery) {
 		return dao.findAllByCashierStatusAndDatePaidWithOrder(null, new Status[] { Status.PAID }, salesReportQuery.getFrom(), salesReportQuery.getTo(), new Order[] { Order.asc("paidOn") });
 	}
+
+	@Override
+	public CustomerOrder findBySerialInvoiceNumber(Long serialInvoiceNumber) {
+		return dao.findBySerialInvoiceNumber(serialInvoiceNumber);
+	}
 }

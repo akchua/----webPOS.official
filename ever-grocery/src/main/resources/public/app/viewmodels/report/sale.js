@@ -5,6 +5,8 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/
 		
 		this.showRecent = ko.observable(true);
 		
+		this.quickId = ko.observable();
+		
 		this.itemsPerPage = ko.observable(app.user.itemsPerPage);
 		this.totalItems = ko.observable();
 		this.currentPage = ko.observable(1);
@@ -39,6 +41,21 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/
 				self.totalItems(data.total);
 			});
 		}
+	};
+	
+	CustomerOrder.prototype.quickView = function() {
+		var self = this;
+		
+		customerOrderService.getCustomerOrderBySIN(self.quickId()).done(function(customerOrder) {
+			if(customerOrder) {
+				SaleView.show(customerOrder).done(function() {
+					self.refreshCustomerOrderList();
+				});
+			} else {
+				app.showMessage('Serial Invoice Number ' + self.quickId() + ' does not exist.');
+			}
+		});
+		self.quickId('');
 	};
 	
 	CustomerOrder.prototype.generateReport = function() {

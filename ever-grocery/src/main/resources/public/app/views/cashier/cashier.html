@@ -57,7 +57,9 @@
     					<td>
     						<div class="pull-right">
     							<button data-bind="click: function() { $parent.view(customerOrder.id) }" type="button" class="btn btn-info btn-sm">View</button>
+    							<!-- ko ifnot: customerOrder.status.name === 'PAID' -->
     							<button data-bind="click: function() { $parent.pay(customerOrder.id) }" type="button" class="btn btn-success btn-sm">Pay</button>
+    							<!-- /ko -->
     						</div>
     					</td>
     				</tr>

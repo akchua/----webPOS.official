@@ -92,4 +92,13 @@ public class CustomerOrderDAOImpl
 		
 		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}
+
+	@Override
+	public CustomerOrder findBySerialInvoiceNumber(Long serialInvoiceNumber) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("serialInvoiceNumber", serialInvoiceNumber));
+		
+		return findUniqueResult(null, null, null, conjunction);
+	}
 }

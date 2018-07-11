@@ -92,7 +92,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 
 	@Override
 	public PurchaseOrder getPurchaseOrder(Long purchaseOrderId) {
-		return purchaseOrderService.find(purchaseOrderId);
+		return (purchaseOrderId != null && purchaseOrderId > 0l) ? purchaseOrderService.find(purchaseOrderId) : null;
 	}
 
 	@Override

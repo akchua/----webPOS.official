@@ -97,6 +97,11 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
+	public CustomerOrder getCustomerOrderBySIN(Long serialInvoiceNumber) {
+		return (serialInvoiceNumber != null && serialInvoiceNumber > 0l) ? customerOrderService.findBySerialInvoiceNumber(serialInvoiceNumber) : null;
+	}
+	
+	@Override
 	public ResultBean createCustomerOrder(CustomerOrderFormBean customerOrderForm) {
 		final ResultBean result;
 		

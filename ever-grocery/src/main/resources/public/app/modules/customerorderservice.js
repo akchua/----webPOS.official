@@ -21,6 +21,15 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getCustomerOrderBySIN: function(serialInvoiceNumber) {
+    		return $.ajax({
+    			url: '/services/customerorder/getbysin',
+    			data: {
+    				serialInvoiceNumber: serialInvoiceNumber
+    			}
+    		});
+    	},
+    	
     	saveCustomerOrder: function(customerOrderFormData) {
     		return $.ajax({
     			url: '/services/customerorder/save',
