@@ -30,7 +30,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 	DiscountForm.prototype.apply = function() {
 		var self = this;
 		
-		app.showMessage('Applying Discount : <strong>' + self.discountType() + '</strong>' + 'to order#' + self.customerOrderNumber,
+		app.showMessage('Applying Discount : <strong>' + self.discountType() + '</strong>' + ' to order#' + self.customerOrderNumber,
 				'Confirm',
 				[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
 		.then(function(confirm) {

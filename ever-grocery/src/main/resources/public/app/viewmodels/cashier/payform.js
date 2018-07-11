@@ -3,11 +3,6 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 	var PayForm = function(customerOrderId) {
 		this.customerOrderId = customerOrderId;
 		
-		this.customerOrder = {
-			totalAmount: ko.observable(),
-			formattedTotalAmount: ko.observable()
-		}
-		
 		this.thousand = ko.observable();
 		this.formattedThousand = ko.observable();
 		this.fiveHundred = ko.observable();
@@ -24,33 +19,6 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 	PayForm.prototype.activate = function() {
 		var self = this;
 		
-		self.thousand(utility.ceilToThousand(self.customerOrder.totalAmount()));
-		self.formattedThousand(self.thousand().toLocaleString(
-				undefined,
-				{ minimumFractionDigits: 2 }
-			)
-		);
-		self.fiveHundred(utility.ceilToFiveHundred(self.customerOrder.totalAmount()));
-		self.formattedFiveHundred(self.fiveHundred().toLocaleString(
-				undefined,
-				{ minimumFractionDigits: 2 }
-			)
-		);
-		self.hundred(utility.ceilToHundred(self.customerOrder.totalAmount()));
-		self.formattedHundred(self.hundred().toLocaleString(
-				undefined,
-				{ minimumFractionDigits: 2 }
-			)
-		);
-		
-		self.exact(self.customerOrder.totalAmount);
-		self.formattedExact(self.exact().toLocaleString(
-				undefined,
-				{ minimumFractionDigits: 2 }
-			)
-		);
-		
-		self.formattedTotalAmount(self.customerOrder.formattedTotalAmount());
 		self.refreshCustomerOrder();
 	};
 	
@@ -62,8 +30,33 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		var self = this;
 		
 		customerOrderService.getCustomerOrder(self.customerOrderId).done(function(customerOrder) {
-			self.customerOrder.totalAmount(customerOrder.totalAmount);
-			self.customerOrder.formattedTotalAmount(customerOrder.formattedTotalAmount);
+			self.thousand(utility.ceilToThousand(customerOrder.totalAmount));
+			self.formattedThousand(self.thousand().toLocaleString(
+					undefined,
+					{ minimumFractionDigits: 2 }
+				)
+			);
+			self.fiveHundred(utility.ceilToFiveHundred(customerOrder.totalAmount));
+			self.formattedFiveHundred(self.fiveHundred().toLocaleString(
+					undefined,
+					{ minimumFractionDigits: 2 }
+				)
+			);
+			self.hundred(utility.ceilToHundred(customerOrder.totalAmount));
+			self.formattedHundred(self.hundred().toLocaleString(
+					undefined,
+					{ minimumFractionDigits: 2 }
+				)
+			);
+			
+			self.exact(customerOrder.totalAmount);
+			self.formattedExact(self.exact().toLocaleString(
+					undefined,
+					{ minimumFractionDigits: 2 }
+				)
+			);
+		
+			self.formattedTotalAmount(customerOrder.formattedTotalAmount);
 		});
 	};
 	

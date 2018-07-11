@@ -212,7 +212,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrderId);
 					
 					for(CustomerOrderDetail customerOrderDetail : customerOrderDetails) {
-						if(customerOrderDetail.getTotalPrice() <= grossAmountLimit) {
+						if(customerOrderDetail.getProductDetail().getProduct().getAllowSeniorDiscount() && customerOrderDetail.getTotalPrice() <= grossAmountLimit) {
 							grossAmountLimit -= customerOrderDetail.getTotalPrice();
 							customerOrderDetail.setTotalPrice(TaxUtil.convertTaxType(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), TaxType.ZERO_RATED));
 							customerOrderDetail.setTaxType(TaxType.ZERO_RATED);

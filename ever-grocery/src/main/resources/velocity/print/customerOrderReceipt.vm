@@ -11,9 +11,9 @@ ${t.Date}
 Order #${t.OrderNumber}
 Customer : ${t.FormattedCustomer}
 --------------------------------------------
-#if($Discounted)
+#if($t.Discounted)
                    Sub Total ${t.FormattedGrossAmount}
-            Discount(${t.FormattedDiscountLabel}) ${t.FormattedTotalDiscount}
+           Discount(${t.FormattedDiscountLabel}) ${t.FormattedTotalDiscountAmount}
 #end
 
            Total Amount ${t.FormattedTotalAmount}
