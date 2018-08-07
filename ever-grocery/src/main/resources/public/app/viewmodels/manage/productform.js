@@ -1,5 +1,5 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 'modules/brandservice', 'modules/categoryservice', 'modules/companyservice', 'modules/distributorservice', 'modules/constantsservice', 'viewmodels/manage/productdetailsform'], 
-		function (dialog, app, ko, productService, brandService, categoryService, companyService, distributorService, constantsService, ProductDetailsForm) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 'modules/brandservice', 'modules/categoryservice', 'modules/companyservice', 'modules/constantsservice', 'viewmodels/manage/productdetailsform'], 
+		function (dialog, app, ko, productService, brandService, categoryService, companyService, constantsService, ProductDetailsForm) {
     var ProductForm = function(preTitle, product) {
         this.preTitle = preTitle;
         this.product = product;
@@ -8,19 +8,24 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
         	id: ko.observable(),
         	name: ko.observable(),
         	displayName: ko.observable(),
-        	brandId: ko.observable(),
+        	/*brandId: ko.observable(),*/
         	categoryId: ko.observable(),
         	companyId: ko.observable(),
-        	distributorId: ko.observable(),
         	
         	taxType: ko.observable(),
         	allowSeniorDiscount: ko.observable(false)
         };
         
+        this.errors = {
+    		name: ko.observable(),
+        	displayName: ko.observable(),
+        	category: ko.observable(),
+        	company: ko.observable()
+    	};
+        
         this.brandList = ko.observable();
         this.categoryList = ko.observable();
         this.companyList = ko.observable();
-        this.distributorList = ko.observable();
         this.taxTypeList = ko.observable();
     };
  
@@ -47,10 +52,6 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
     		self.productFormModel.companyId(self.product.company.id);
     	});
     	
-    	distributorService.getDistributorListByName().done(function(distributorList) {
-    		self.distributorList(distributorList);
-    		self.productFormModel.distributorId(self.product.distributor.id);
-    	});
     	
     	constantsService.getTaxTypeList().done(function(taxTypeList) {
     		self.taxTypeList(taxTypeList);
@@ -82,8 +83,13 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
         			});
         		});
         	} else {
-        		app.showMessage(result.message);
+        		self.errors.name(result.extras.errors.name);
+        		self.errors.displayName(result.extras.errors.displayName);
+        		self.errors.category(result.extras.errors.category);
+        		self.errors.company(result.extras.errors.company);
         	}
+        	
+        	if(result.message) app.showMessage(result.message);
         });
     };
     

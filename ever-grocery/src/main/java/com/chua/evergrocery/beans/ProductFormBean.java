@@ -5,12 +5,14 @@ import com.chua.evergrocery.enums.TaxType;
 public class ProductFormBean extends FormBean {
 
 	private String name;
+	
 	private String displayName;
 	
-	private Long brandId;
+	/*private Long brandId;*/
+	
 	private Long categoryId;
+	
 	private Long companyId;
-	private Long distributorId;
 	
 	private TaxType taxType;
 	
@@ -32,13 +34,13 @@ public class ProductFormBean extends FormBean {
 		this.displayName = displayName;
 	}
 	
-	public Long getBrandId() {
+	/*public Long getBrandId() {
 		return brandId;
 	}
 	
 	public void setBrandId(Long brandId) {
 		this.brandId = brandId;
-	}
+	}*/
 	
 	public Long getCategoryId() {
 		return categoryId;
@@ -56,14 +58,6 @@ public class ProductFormBean extends FormBean {
 		this.companyId = companyId;
 	}
 	
-	public Long getDistributorId() {
-		return distributorId;
-	}
-	
-	public void setDistributorId(Long distributorId) {
-		this.distributorId = distributorId;
-	}
-
 	public TaxType getTaxType() {
 		return taxType;
 	}

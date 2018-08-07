@@ -11,6 +11,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
+import com.chua.evergrocery.database.entity.ProductDetail;
 import com.chua.evergrocery.enums.DocType;
 
 /**
@@ -24,13 +25,22 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 	
 	private Integer content;
 	
+	private String contentUnit;
+	
 	private List<String> overflowList;
 	
 	private final Integer ITEM_NAME_MAX_LENGTH = 30;
 	
-	public CustomerOrderItemTemplate(CustomerOrderDetail customerOrderItem, Integer content) {
+	public CustomerOrderItemTemplate(CustomerOrderDetail customerOrderItem, ProductDetail lowerProductDetail) {
 		this.customerOrderItem = customerOrderItem;
-		this.content = content;
+		if(lowerProductDetail != null) {
+			this.content = lowerProductDetail.getQuantity();
+			this.contentUnit = lowerProductDetail.getUnitType().getShorthand();
+		} else {
+			this.content = 0;
+			this.contentUnit = "";
+		}
+		
 		this.overflowList = new ArrayList<String>();
 	}
 	
@@ -56,7 +66,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 			formattedName += " @" + nf.format(customerOrderItem.getUnitPrice());
 		}
 		if(!content.equals(0)) {
-			formattedName += " |" + content;
+			formattedName += " (" + content + contentUnit + ")";
 		}
 		
 		int index = ITEM_NAME_MAX_LENGTH;

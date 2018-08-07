@@ -15,6 +15,7 @@ import com.chua.evergrocery.beans.CompanyFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.database.entity.Company;
 import com.chua.evergrocery.database.service.CompanyService;
+import com.chua.evergrocery.database.service.DistributorService;
 import com.chua.evergrocery.enums.ReceiptType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CompanyHandler;
@@ -26,6 +27,9 @@ public class CompanyHandlerImpl implements CompanyHandler {
 
 	@Autowired
 	private CompanyService companyService;
+	
+	@Autowired
+	private DistributorService distributorService;
 
 	@Override
 	public ObjectList<Company> getCompanyObjectList(Integer pageNumber, String searchKey) {
@@ -121,6 +125,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 		company.setAgent(companyForm.getAgent());
 		company.setPhoneNumber(companyForm.getPhoneNumber());
 		company.setReceiptType(companyForm.getReceiptType() != null ? companyForm.getReceiptType() : ReceiptType.AFTER_VAT_AND_DISCOUNT);
+		company.setDistributor(distributorService.find(companyForm.getDistributorId()));
 	}
 	
 	@Override

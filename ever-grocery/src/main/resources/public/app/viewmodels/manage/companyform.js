@@ -1,9 +1,11 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/companyservice'], function (dialog, app, ko, companyService) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/companyservice', 'modules/distributorservice'], 
+		function (dialog, app, ko, companyService, distributorService) {
     var CompanyForm = function(preTitle, company) {
         this.preTitle = preTitle;
         this.company = company;
         
         this.receiptTypeList = ko.observable();
+        this.distributorList = ko.observable();
         
         this.companyFormModel = {
         	id: ko.observable(),
@@ -11,7 +13,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/companyservice'],
         	address: ko.observable(),
         	agent: ko.observable(),
         	phoneNumber: ko.observable(),
-        	receiptType: ko.observable()
+        	receiptType: ko.observable(),
+        	distributorId: ko.observable()
         };
     };
     
@@ -28,6 +31,11 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/companyservice'],
     	companyService.getReceiptTypeList().done(function(receiptTypeList) {
     		self.receiptTypeList(receiptTypeList);
     		if(self.company.receiptType) self.companyFormModel.receiptType(self.company.receiptType.name);
+    	});
+    	
+    	distributorService.getDistributorListByName().done(function(distributorList) {
+    		self.distributorList(distributorList);
+    		self.companyFormModel.distributorId(self.company.distributor.id);
     	});
     };
  

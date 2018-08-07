@@ -27,7 +27,6 @@ import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.serializer.json.BrandSerializer;
 import com.chua.evergrocery.serializer.json.CategorySerializer;
 import com.chua.evergrocery.serializer.json.CompanySerializer;
-import com.chua.evergrocery.serializer.json.DistributorSerializer;
 import com.chua.evergrocery.serializer.json.ProductDetailSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -46,9 +45,6 @@ public class Product extends BaseObject {
 	
 	@JsonSerialize(using = CompanySerializer.class)
 	private Company company;
-	
-	@JsonSerialize(using = DistributorSerializer.class)
-	private Distributor distributor;
 	
 	@JsonSerialize(using = ProductDetailSerializer.class)
 	private List<ProductDetail> productDetails;
@@ -101,18 +97,6 @@ public class Product extends BaseObject {
 	
 	public void setCompany(Company company) {
 		this.company = company;
-	}
-	
-	@ManyToOne(targetEntity = Distributor.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "distributor_id")
-	@Where(clause = "valid = 1")
-	@NotFound(action = NotFoundAction.IGNORE)
-	public Distributor getDistributor() {
-		return distributor;
-	}
-	
-	public void setDistributor(Distributor distributor) {
-		this.distributor = distributor;
 	}
 	
 	@Transient

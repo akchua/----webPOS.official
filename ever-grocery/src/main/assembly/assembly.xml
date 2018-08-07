@@ -22,14 +22,5 @@
         <include>*.properties</include>
       </includes>
     </fileSet>
-  
-    <fileSet>
-      <directory>/src/main/assembly/sh</directory>
-      <outputDirectory>sh</outputDirectory>
-      <includes>
-        <include>*.sh</include>
-      </includes>
-      <fileMode>755</fileMode>
-    </fileSet>    
   </fileSets>  
 </assembly>

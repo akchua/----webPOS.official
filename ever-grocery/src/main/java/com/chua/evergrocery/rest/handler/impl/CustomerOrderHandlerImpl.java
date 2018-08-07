@@ -502,29 +502,8 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(quantity == null) quantity = 0.0f;
 		
 		// sets minimum possible quantity (1 or 0.5) (0.5 is not allowed for odd quantity)
-		final ProductDetail upperProductDetail;
-		final ProductDetail lowerProductDetail;
-		switch(productDetail.getTitle()) {
-		case "Whole":
-			upperProductDetail = null;
-			lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Piece");
-			break;
-		case "Piece":
-			upperProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Whole");
-			lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Inner Piece");
-			break;
-		case "Inner Piece":
-			upperProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Piece");
-			lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "2nd Inner Piece");
-			break;
-		case "2nd Inner Piece":
-			upperProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Inner Piece");
-			lowerProductDetail = null;
-			break;
-		default:
-			upperProductDetail = null;
-			lowerProductDetail = null;
-		}
+		final ProductDetail upperProductDetail = productHandler.getUpperProductDetail(productDetail.getId());
+		final ProductDetail lowerProductDetail = productHandler.getLowerProductDetail(productDetail.getId());
 		
 		final float minQuantity;
 		if(lowerProductDetail != null && !lowerProductDetail.getQuantity().equals(0) && lowerProductDetail.getQuantity() % 2 == 0) {

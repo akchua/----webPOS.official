@@ -20,10 +20,8 @@ import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.database.entity.PriceHistory;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.entity.ProductDetail;
-import com.chua.evergrocery.database.service.BrandService;
 import com.chua.evergrocery.database.service.CategoryService;
 import com.chua.evergrocery.database.service.CompanyService;
-import com.chua.evergrocery.database.service.DistributorService;
 import com.chua.evergrocery.database.service.PriceHistoryService;
 import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.ProductService;
@@ -32,22 +30,20 @@ import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.ProductHandler;
+import com.chua.evergrocery.rest.validator.ProductFormValidator;
 
 @Transactional
 @Component
 public class ProductHandlerImpl implements ProductHandler {
 
-	@Autowired
-	private BrandService brandService;
+	/*@Autowired
+	private BrandService brandService;*/
 	
 	@Autowired
 	private CategoryService categoryService;
 	
 	@Autowired
 	private CompanyService companyService;
-	
-	@Autowired
-	private DistributorService distributorService;
 	
 	@Autowired
 	private ProductService productService;
@@ -57,6 +53,9 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	@Autowired
 	private PriceHistoryService priceHistoryService;
+	
+	@Autowired
+	private ProductFormValidator productFormValidator;
 
 	@Override
 	public ObjectList<Product> getProductList(Integer pageNumber, String searchKey, Long companyId) {
@@ -92,27 +91,33 @@ public class ProductHandlerImpl implements ProductHandler {
 	@Override
 	public ResultBean createProduct(ProductFormBean productForm) {
 		final ResultBean result;
-		
-		if(!productService.isExistsByName(productForm.getName())) {
-			final Product product = new Product();
-			setProduct(product, productForm);
-			product.setSaleRate(70.0f);
-			product.setPurchaseBudget(0.0f);
-			product.setTotalBudget(0.0f);
-			
-			result = new ResultBean();
-			result.setSuccess(productService.insert(product) != null);
-			if(result.getSuccess()) {
-				Map<String, Object> extras = new HashMap<String, Object>();
-				extras.put("productId", product.getId());
-				result.setExtras(extras);
+		final Map<String, String> errors = productFormValidator.validate(productForm);
+
+		if(errors.isEmpty()) {
+			if(!productService.isExistsByName(productForm.getName())) {
+				final Product product = new Product();
+				setProduct(product, productForm);
+				product.setSaleRate(70.0f);
+				product.setPurchaseBudget(0.0f);
+				product.setTotalBudget(0.0f);
 				
-				result.setMessage("Product successfully created.");
+				result = new ResultBean();
+				result.setSuccess(productService.insert(product) != null);
+				if(result.getSuccess()) {
+					Map<String, Object> extras = new HashMap<String, Object>();
+					extras.put("productId", product.getId());
+					result.setExtras(extras);
+					
+					result.setMessage("Product successfully created.");
+				} else {
+					result.setMessage("Failed to create product.");
+				}
 			} else {
-				result.setMessage("Failed to create product.");
+				result = new ResultBean(false, "Product \"" + productForm.getName() + "\" already exists!");
 			}
 		} else {
-			result = new ResultBean(false, "Product \"" + productForm.getName() + "\" already exists!");
+			result = new ResultBean(Boolean.FALSE, "");
+			result.addToExtras("errors", errors);
 		}
 		
 		return result;
@@ -124,10 +129,13 @@ public class ProductHandlerImpl implements ProductHandler {
 		
 		final Product product = productService.find(productForm.getId());
 		if(product != null) {
+			final Map<String, String> errors = productFormValidator.validate(productForm);
 			if(!(StringUtils.trimToEmpty(product.getName()).equalsIgnoreCase(productForm.getName())) &&
 					productService.isExistsByName(productForm.getName())) {
-				result = new ResultBean(false, "Product \"" + productForm.getName() + "\" already exists!");
-			} else {
+				errors.put("name", productForm.getName() + " already exists!");
+			}
+				
+			if(errors.isEmpty()) {
 				setProduct(product, productForm);
 				
 				result = new ResultBean();
@@ -137,6 +145,9 @@ public class ProductHandlerImpl implements ProductHandler {
 				} else {
 					result.setMessage("Failed to update product.");
 				}
+			} else {
+				result = new ResultBean(Boolean.FALSE, "");
+				result.addToExtras("errors", errors);
 			}
 		} else {
 			result = new ResultBean(false, "Product not found.");
@@ -202,10 +213,9 @@ public class ProductHandlerImpl implements ProductHandler {
 	private void setProduct(Product product, ProductFormBean productForm) {
 		product.setName(productForm.getName());
 		product.setDisplayName(productForm.getDisplayName());
-		product.setBrand(brandService.find(productForm.getBrandId()));
+		/*product.setBrand(brandService.find(productForm.getBrandId()));*/
 		product.setCategory(categoryService.find(productForm.getCategoryId()));
 		product.setCompany(companyService.find(productForm.getCompanyId()));
-		product.setDistributor(distributorService.find(productForm.getDistributorId()));
 		product.setTaxType(productForm.getTaxType() != null ? productForm.getTaxType() : TaxType.VAT);
 		product.setAllowSeniorDiscount(productForm.getAllowSeniorDiscount() != null ? productForm.getAllowSeniorDiscount() : false);
 	}
@@ -279,36 +289,47 @@ public class ProductHandlerImpl implements ProductHandler {
 	}
 	
 	@Override
-	public Integer getContent(Long productDetailId) {
-		final Integer content;
+	public ProductDetail getLowerProductDetail(Long productDetailId) {
+		return getProductDetailEx(productDetailId, false);
+	}
+	
+	@Override
+	public ProductDetail getUpperProductDetail(Long productDetailId) {
+		return getProductDetailEx(productDetailId, true);
+	}
+	
+	/**
+	 * Used to get either upper or lower product detail
+	 * @param productDetailId
+	 * @param Upper true if getting upper product detail, false otherwise
+	 * @return
+	 */
+	private ProductDetail getProductDetailEx(Long productDetailId, Boolean Upper) {
 		final ProductDetail productDetail = productDetailService.find(productDetailId);
+		final ProductDetail productDetailEx;
 		
 		if(productDetail != null) {
-			final ProductDetail lowerProductDetail;
 			switch(productDetail.getTitle()) {
 			case "Whole":
-				lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Piece");
+				productDetailEx = Upper ? null : productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Piece");
 				break;
 			case "Piece":
-				lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Inner Piece");
+				productDetailEx = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), Upper ? "Whole" : "Inner Piece");
 				break;
 			case "Inner Piece":
-				lowerProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "2nd Inner Piece");
+				productDetailEx = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), Upper ? "Piece" : "2nd Inner Piece");
+				break;
+			case "2nd Inner Piece":
+				productDetailEx = Upper ? productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Inner Piece") : null;
 				break;
 			default:
-				lowerProductDetail = null;
-			}
-			
-			if(lowerProductDetail != null) {
-				content = lowerProductDetail.getQuantity();
-			} else {
-				content = 0;
+				productDetailEx = null;
 			}
 		} else {
-			content = 0;
+			productDetailEx = null;
 		}
 		
-		return content;
+		return productDetailEx;
 	}
 	
 	@Override
