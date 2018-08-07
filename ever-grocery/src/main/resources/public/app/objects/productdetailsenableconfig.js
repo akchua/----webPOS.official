@@ -1,5 +1,5 @@
 define(['knockout'], function (ko) {
-    var ProductDetailsEnableConfig = function(enableBarcode, enableQuantity, enableUnitType, enableGrossPrice, enableDiscount, enableNetPrice, enablePercentProfit, enableSellingPrice, enableNetProfit, enableStorageStockCount, enableStoreStockCount) {
+    var ProductDetailsEnableConfig = function(enableBarcode, enableQuantity, enableUnitType, enableGrossPrice, enableDiscount, enableNetPrice, enablePercentProfit, enableSellingPrice, enableNetProfit) {
         this.enableBarcode = ko.observable(enableBarcode);
     	
     	this.enableQuantity = ko.observable(enableQuantity);
@@ -18,9 +18,9 @@ define(['knockout'], function (ko) {
         
         this.enableNetProfit = ko.observable(enableNetProfit);
         
-        this.enableStorageStockCount = ko.observable(enableStorageStockCount);
+        /*this.enableStorageStockCount = ko.observable(enableStorageStockCount);
         
-        this.enableStoreStockCount = ko.observable(enableStoreStockCount);
+        this.enableStoreStockCount = ko.observable(enableStoreStockCount);*/
     };
     
     /*ProductDetailsEnableConfig.prototype.update = function(enableQuantity, enableGrossPrice, enableDiscount, enableNetPrice, enablePercentProfit, enableSellingPrice, enableNetProfit) {

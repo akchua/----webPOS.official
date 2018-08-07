@@ -235,8 +235,8 @@ public class ProductHandlerImpl implements ProductHandler {
 		productDetail.setPercentProfit(productDetailsForm.getPercentProfit());
 		productDetail.setSellingPrice(productDetailsForm.getSellingPrice());
 		productDetail.setNetProfit(productDetailsForm.getNetProfit());
-		productDetail.setStorageStockCount(productDetailsForm.getStorageStockCount());
-		productDetail.setStoreStockCount(productDetailsForm.getStoreStockCount());
+		productDetail.setContent(productDetailsForm.getContent());
+		productDetail.setContentUnit(productDetailsForm.getContentUnit());
 	}
 	
 	private void setPriceHistory(PriceHistory priceHistory, Product product, ProductDetail productDetail, ProductDetailsFormBean productDetailsForm, PriceHistoryType priceHistoryType) {
@@ -289,47 +289,32 @@ public class ProductHandlerImpl implements ProductHandler {
 	}
 	
 	@Override
-	public ProductDetail getLowerProductDetail(Long productDetailId) {
-		return getProductDetailEx(productDetailId, false);
-	}
-	
-	@Override
 	public ProductDetail getUpperProductDetail(Long productDetailId) {
-		return getProductDetailEx(productDetailId, true);
-	}
-	
-	/**
-	 * Used to get either upper or lower product detail
-	 * @param productDetailId
-	 * @param Upper true if getting upper product detail, false otherwise
-	 * @return
-	 */
-	private ProductDetail getProductDetailEx(Long productDetailId, Boolean Upper) {
 		final ProductDetail productDetail = productDetailService.find(productDetailId);
-		final ProductDetail productDetailEx;
+		final ProductDetail upperProductDetail;
 		
 		if(productDetail != null) {
 			switch(productDetail.getTitle()) {
 			case "Whole":
-				productDetailEx = Upper ? null : productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Piece");
+				upperProductDetail = null;
 				break;
 			case "Piece":
-				productDetailEx = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), Upper ? "Whole" : "Inner Piece");
+				upperProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Whole");
 				break;
 			case "Inner Piece":
-				productDetailEx = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), Upper ? "Piece" : "2nd Inner Piece");
+				upperProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Piece");
 				break;
 			case "2nd Inner Piece":
-				productDetailEx = Upper ? productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Inner Piece") : null;
+				upperProductDetail = productDetailService.findByProductIdAndTitle(productDetail.getProduct().getId(), "Inner Piece");
 				break;
 			default:
-				productDetailEx = null;
+				upperProductDetail = null;
 			}
 		} else {
-			productDetailEx = null;
+			upperProductDetail = null;
 		}
 		
-		return productDetailEx;
+		return upperProductDetail;
 	}
 	
 	@Override

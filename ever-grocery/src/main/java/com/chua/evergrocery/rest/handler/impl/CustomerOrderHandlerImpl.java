@@ -503,10 +503,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		
 		// sets minimum possible quantity (1 or 0.5) (0.5 is not allowed for odd quantity)
 		final ProductDetail upperProductDetail = productHandler.getUpperProductDetail(productDetail.getId());
-		final ProductDetail lowerProductDetail = productHandler.getLowerProductDetail(productDetail.getId());
 		
 		final float minQuantity;
-		if(lowerProductDetail != null && !lowerProductDetail.getQuantity().equals(0) && lowerProductDetail.getQuantity() % 2 == 0) {
+		if(productDetail.getContent() != null && !productDetail.getContent().equals(0) && productDetail.getContent() % 2 == 0) {
 			minQuantity = 0.5f;
 		} else {
 			minQuantity = 1.0f;

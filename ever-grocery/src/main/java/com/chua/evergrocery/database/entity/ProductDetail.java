@@ -29,18 +29,28 @@ public class ProductDetail extends BaseObject {
 	private Product product;
 	
 	private String title;
+	
 	private String barcode;
+	
 	private Integer quantity;
+	
 	private Float grossPrice;
+	
 	private Float discount;
+	
 	private Float netPrice;
+	
 	private Float percentProfit;
+	
 	private Float sellingPrice;
+	
 	private Float netProfit;
-	private Integer storageStockCount;
-	private Integer storeStockCount;
 	
 	private UnitType unitType;
+	
+	private Integer content;
+	
+	private UnitType contentUnit;
 	
 	@ManyToOne(targetEntity = Product.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id")
@@ -174,26 +184,6 @@ public class ProductDetail extends BaseObject {
 		this.netProfit = netProfit;
 	}
 	
-	@Basic
-	@Column(name = "storage_stock_count")
-	public Integer getStorageStockCount() {
-		return storageStockCount;
-	}
-	
-	public void setStorageStockCount(Integer storageStockCount) {
-		this.storageStockCount = storageStockCount;
-	}
-	
-	@Basic
-	@Column(name = "store_stock_count")
-	public Integer getStoreStockCount() {
-		return storeStockCount;
-	}
-	
-	public void setStoreStockCount(Integer storeStockCount) {
-		this.storeStockCount = storeStockCount;
-	}
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "unit_type", length = 50)
 	public UnitType getUnitType() {
@@ -202,5 +192,39 @@ public class ProductDetail extends BaseObject {
 
 	public void setUnitType(UnitType unitType) {
 		this.unitType = unitType;
+	}
+
+	@Basic
+	@Column(name = "content")
+	public Integer getContent() {
+		return content;
+	}
+	
+	@Transient
+	public String getFormattedContent() {
+		return (content != null && content != 0)
+				? content + " " + (contentUnit != null ? contentUnit.getDisplayName() : "") 
+				: "-";
+	}
+	
+	@Transient
+	public String getFormattedShorthandContent() {
+		return (content != null && content != 0)
+					? content + (contentUnit != null ? contentUnit.getShorthand() : "") 
+					: "-";
+	}
+	
+	public void setContent(Integer content) {
+		this.content = content;
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "content_unit", length = 50)
+	public UnitType getContentUnit() {
+		return contentUnit;
+	}
+
+	public void setContentUnit(UnitType contentUnit) {
+		this.contentUnit = contentUnit;
 	}
 }

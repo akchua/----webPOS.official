@@ -67,17 +67,17 @@ public class CustomerOrderListTemplate extends AbstractTemplate {
 	@Override
 	public String merge(VelocityEngine velocityEngine, DocType docType) {
 		for(CustomerOrderDetail wholeItem : wholeItems) {
-			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(wholeItem, wholeItem.getQuantity() % 1.0f == 0.5f || wholeItem.getProductDetail().getTitle().equals("Whole") ? productHandler.getLowerProductDetail(wholeItem.getProductDetail().getId()) : null);
+			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(wholeItem);
 			formattedWholeItems.add(customerOrderItemTemplate.merge(velocityEngine, docType));
 		}
 		
 		for(CustomerOrderDetail counterItem : counterItems) {
-			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(counterItem, counterItem.getQuantity() % 1.0f == 0.5f || counterItem.getProductDetail().getTitle().equals("Whole") ? productHandler.getLowerProductDetail(counterItem.getProductDetail().getId()) : null);
+			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(counterItem);
 			formattedCounterItems.add(customerOrderItemTemplate.merge(velocityEngine, docType));
 		}
 		
 		for(CustomerOrderDetail otherItem : otherItems) {
-			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(otherItem,  otherItem.getQuantity() % 1.0f == 0.5f || otherItem.getProductDetail().getTitle().equals("Whole") ? productHandler.getLowerProductDetail(otherItem.getProductDetail().getId()) : null);
+			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(otherItem);
 			formattedOtherItems.add(customerOrderItemTemplate.merge(velocityEngine, docType));
 		}
 		

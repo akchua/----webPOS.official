@@ -11,8 +11,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
-import com.chua.evergrocery.database.entity.ProductDetail;
 import com.chua.evergrocery.enums.DocType;
+import com.chua.evergrocery.enums.UnitType;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -23,23 +23,15 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 
 	private CustomerOrderDetail customerOrderItem;
 	
-	private Integer content;
-	
-	private String contentUnit;
+	private String formattedContent;
 	
 	private List<String> overflowList;
 	
 	private final Integer ITEM_NAME_MAX_LENGTH = 30;
 	
-	public CustomerOrderItemTemplate(CustomerOrderDetail customerOrderItem, ProductDetail lowerProductDetail) {
+	public CustomerOrderItemTemplate(CustomerOrderDetail customerOrderItem) {
 		this.customerOrderItem = customerOrderItem;
-		if(lowerProductDetail != null) {
-			this.content = lowerProductDetail.getQuantity();
-			this.contentUnit = lowerProductDetail.getUnitType().getShorthand();
-		} else {
-			this.content = 0;
-			this.contentUnit = "";
-		}
+		this.formattedContent = customerOrderItem.getProductDetail().getFormattedContent();
 		
 		this.overflowList = new ArrayList<String>();
 	}
@@ -65,8 +57,12 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 		if(customerOrderItem.getQuantity() > 1) {
 			formattedName += " @" + nf.format(customerOrderItem.getUnitPrice());
 		}
-		if(!content.equals(0)) {
-			formattedName += " (" + content + contentUnit + ")";
+		if((customerOrderItem.getQuantity() % 1.0f == 0.5f
+				|| customerOrderItem.getUnitType().equals(UnitType.CASE)
+				|| customerOrderItem.getUnitType().equals(UnitType.BUNDLE)
+				|| customerOrderItem.getUnitType().equals(UnitType.SACK))
+				&& !formattedContent.equals("-")) {
+			formattedName += " (" + formattedContent + ")";
 		}
 		
 		int index = ITEM_NAME_MAX_LENGTH;

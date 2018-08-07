@@ -24,9 +24,9 @@ public class ProductDetailsFormBean extends FormBean {
 	
 	private Float netProfit;
 	
-	private Integer storageStockCount;
+	private Integer content;
 	
-	private Integer storeStockCount;
+	private UnitType contentUnit;
 
 	public String getTitle() {
 		return title;
@@ -108,19 +108,19 @@ public class ProductDetailsFormBean extends FormBean {
 		this.netProfit = netProfit;
 	}
 
-	public Integer getStorageStockCount() {
-		return storageStockCount;
+	public Integer getContent() {
+		return content;
 	}
 
-	public void setStorageStockCount(Integer storageStockCount) {
-		this.storageStockCount = storageStockCount;
+	public UnitType getContentUnit() {
+		return contentUnit;
 	}
 
-	public Integer getStoreStockCount() {
-		return storeStockCount;
+	public void setContent(Integer content) {
+		this.content = content;
 	}
 
-	public void setStoreStockCount(Integer storeStockCount) {
-		this.storeStockCount = storeStockCount;
+	public void setContentUnit(UnitType contentUnit) {
+		this.contentUnit = contentUnit;
 	}
 }

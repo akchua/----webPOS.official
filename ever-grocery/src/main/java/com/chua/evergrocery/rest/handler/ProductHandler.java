@@ -29,8 +29,6 @@ public interface ProductHandler {
 	
 	ResultBean saveProductDetails(Long productId, List<ProductDetailsFormBean> productDetailsFormList);
 	
-	ProductDetail getLowerProductDetail(Long productDetailId);
-	
 	ProductDetail getUpperProductDetail(Long productDetailId);
 	
 	List<UnitType> getUnitTypeList();

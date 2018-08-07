@@ -29,9 +29,9 @@ define(['knockout', 'modules/productservice'], function (ko, productService) {
     		
     		netProfit: ko.observable(),
     		
-    		storageStockCount: ko.observable(),
+    		content: ko.observable(),
     		
-    		storeStockCount: ko.observable()
+    		contentUnit: ko.observable()
     	};
     	
     	this.enableBarcode = null;
@@ -51,10 +51,6 @@ define(['knockout', 'modules/productservice'], function (ko, productService) {
         this.enableSellingPrice = null;
         
         this.enableNetProfit = null;
-        
-        this.enableStorageStockCount = null;
-        
-        this.enableStoreStockCount = null;
     };
     
     ProductDetails.prototype.activate = function() {
@@ -71,12 +67,13 @@ define(['knockout', 'modules/productservice'], function (ko, productService) {
     	self.formModel.percentProfit(self.productDetails.percentProfit);
     	self.formModel.sellingPrice(self.productDetails.sellingPrice);
     	self.formModel.netProfit(self.productDetails.netProfit);
-    	self.formModel.storageStockCount(self.productDetails.storageStockCount);
-    	self.formModel.storeStockCount(self.productDetails.storeStockCount);
+    	self.formModel.content(self.productDetails.content);
+    	if(self.productDetails.contentUnit) self.formModel.contentUnit(self.productDetails.contentUnit.name)
     	
     	productService.getUnitTypeList().done(function(unitTypeList) {
     		self.unitTypeList(unitTypeList);
     		if(self.productDetails.unitType) self.formModel.unitType(self.productDetails.unitType.name);
+    		if(self.productDetails.contentUnit) self.formModel.contentUnit(self.productDetails.contentUnit.name);
     	});
     	
     	// Set to the passed observable to control enable
@@ -89,8 +86,6 @@ define(['knockout', 'modules/productservice'], function (ko, productService) {
     	self.enablePercentProfit = self.enableConfig.enablePercentProfit;
     	self.enableSellingPrice = self.enableConfig.enableSellingPrice;
     	self.enableNetProfit = self.enableConfig.enableNetProfit;
-    	self.enableStorageStockCount = self.enableConfig.enableStorageStockCount;
-    	self.enableStoreStockCount = self.enableConfig.enableStoreStockCount;
     };
  
     return ProductDetails;

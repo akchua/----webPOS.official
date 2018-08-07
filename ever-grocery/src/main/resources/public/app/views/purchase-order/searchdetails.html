@@ -10,7 +10,7 @@
     			<thead>
     				<tr>
     					<th>Unit</th>
-    					<th class = "text-center">By</th>
+    					<th class = "text-center">Contains</th>
     					<th data-bind="visible: beforeVatAndDiscount" class="text-right">No VAT Price</th>
     					<th data-bind="visible: beforeVatAfterDiscount" class="text-right">No VAT w/ Disc Price</th>
     					<th data-bind="visible: afterVatBeforeDiscount" class="text-right">Gross Price</th>
@@ -21,7 +21,7 @@
     			<tbody data-bind="foreach: { data: productDetailList, as: 'productDetail' }">
     				<tr data-bind="if: productDetail.quantity != 0">
     					<th data-bind="text: productDetail.unitType.displayName"></th>
-    					<td data-bind="text: productDetail.quantity" class = "text-center"></td>
+    					<td data-bind="text: productDetail.formattedContent" class = "text-center"></td>
     					<td data-bind="text: productDetail.formattedBeforeVatAndDiscountPrice, visible: $parent.beforeVatAndDiscount" class = "text-right"></td>
     					<td data-bind="text: productDetail.formattedBeforeVatAfterDiscountPrice, visible: $parent.beforeVatAfterDiscount" class = "text-right"></td>
     					<td data-bind="text: productDetail.formattedGrossPrice, visible: $parent.afterVatBeforeDiscount" class = "text-right"></td>

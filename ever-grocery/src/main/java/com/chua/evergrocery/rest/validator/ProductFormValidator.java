@@ -23,7 +23,7 @@ public class ProductFormValidator extends AbstractFormValidator<ProductFormBean>
 		
 		temp = validateString(productForm.getName(), 3, 100);
 		if(!temp.isEmpty()) errors.put("name", temp);
-		temp = validateStringNull(productForm.getDisplayName(), 3, 40);
+		temp = validateStringNull(productForm.getDisplayName(), 3, 25);
 		if(!temp.isEmpty()) errors.put("displayName", temp);
 		temp = notNull(productForm.getCategoryId());
 		if(!temp.isEmpty()) errors.put("category", temp);
