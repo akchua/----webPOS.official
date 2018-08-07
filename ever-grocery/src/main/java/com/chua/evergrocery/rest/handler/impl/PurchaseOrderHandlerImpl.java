@@ -329,7 +329,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					companyService.update(company);
 								
 					// Generate text file of generated purchase order
-					final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + ".purchase_order." + DateFormatter.fileSafeShortFormat(new Date()) + ".txt";
+					final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_purchase.order_" + DateFormatter.fileSafeShortFormat(new Date()) + ".txt";
 					final String filePath = fileConstants.getGeneratePurchasesHome() + fileName;
 					final String temp = new GeneratedPurchaseTemplate(
 							company.getName(),
@@ -444,7 +444,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			}
 			
 			// Generate text file of inventory
-			final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + ".inventory." + DateFormatter.fileSafeShortFormat(new Date()) + ".txt";
+			final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_inventory_" + DateFormatter.fileSafeShortFormat(new Date()) + ".txt";
 			final String filePath = fileConstants.getInventoryHome() + fileName;
 			final String temp = new InventoryTemplate(
 					company.getName(),
