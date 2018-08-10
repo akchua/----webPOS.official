@@ -87,9 +87,9 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
         		self.errors.displayName(result.extras.errors.displayName);
         		self.errors.category(result.extras.errors.category);
         		self.errors.company(result.extras.errors.company);
+        		
+        		if(result.message) app.showMessage(result.message);
         	}
-        	
-        	if(result.message) app.showMessage(result.message);
         });
     };
     
