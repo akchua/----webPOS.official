@@ -34,7 +34,7 @@ public abstract class AbstractFormValidator<T extends FormBean>
 	}
 	
 	protected String validateStringNull(String s, int min, int max) {
-		if(s == null) return "";
+		if(s == null || s.isEmpty()) return "";
 		String ret = "";
 		if(min <= -1 && max <= -1) return s;
 		
