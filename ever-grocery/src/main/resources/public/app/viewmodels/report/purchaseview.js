@@ -28,7 +28,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
     	self.purchaseOrderViewModel.purchaseOrderId(self.purchaseOrder.id);
     	self.purchaseOrderViewModel.formattedTotalAmount(self.purchaseOrder.formattedTotalAmount);
 		self.purchaseOrderViewModel.companyName(self.purchaseOrder.company.name);
-		self.purchaseOrderViewModel.receiptType(self.purchaseOrder.company.receiptType);
+		self.purchaseOrderViewModel.receiptType(self.purchaseOrder.company.receiptType.name);
 		self.purchaseOrderViewModel.status(self.purchaseOrder.status.displayName);
 
 		switch(self.purchaseOrderViewModel.receiptType()) {
