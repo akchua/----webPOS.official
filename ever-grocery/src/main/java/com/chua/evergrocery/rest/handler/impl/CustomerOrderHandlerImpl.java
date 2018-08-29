@@ -647,6 +647,8 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrderDetail.setProductName(productDetail.getProduct().getName());
 		customerOrderDetail.setProductDisplayName(productDetail.getProduct().getDisplayName() != null ? productDetail.getProduct().getDisplayName() : productDetail.getProduct().getName());
 		customerOrderDetail.setUnitType(productDetail.getUnitType());
+		customerOrderDetail.setContent(productDetail.getContent());
+		customerOrderDetail.setContentUnit(productDetail.getContentUnit());
 		customerOrderDetail.setUnitPrice(productDetail.getSellingPrice());
 		customerOrderDetail.setQuantity(0.0f);
 		customerOrderDetail.setTotalPrice(0.0f);

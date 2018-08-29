@@ -38,6 +38,10 @@ public class CustomerOrderDetail extends BaseObject {
 	
 	private UnitType unitType;
 	
+	private Integer content;
+	
+	private UnitType contentUnit;
+	
 	private Float unitPrice;
 	
 	private Float quantity;
@@ -77,6 +81,12 @@ public class CustomerOrderDetail extends BaseObject {
 	public String getProductName() {
 		return productName;
 	}
+	
+	@Transient
+	public String getFormattedItemName() {
+		final String formattedContent = getFormattedContent();
+		return productName + (!formattedContent.equals("-") ? " (" + formattedContent + ")" : "");
+	}
 
 	public void setProductName(String productName) {
 		this.productName = productName;
@@ -100,6 +110,33 @@ public class CustomerOrderDetail extends BaseObject {
 
 	public void setUnitType(UnitType unitType) {
 		this.unitType = unitType;
+	}
+
+	@Basic
+	@Column(name = "content")
+	public Integer getContent() {
+		return content;
+	}
+	
+	@Transient
+	public String getFormattedContent() {
+		return (content != null && content != 0)
+				? content + " " + (contentUnit != null ? contentUnit.getDisplayName() : "") 
+				: "-";
+	}
+
+	public void setContent(Integer content) {
+		this.content = content;
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "content_unit", length = 50)
+	public UnitType getContentUnit() {
+		return contentUnit;
+	}
+
+	public void setContentUnit(UnitType contentUnit) {
+		this.contentUnit = contentUnit;
 	}
 
 	@Basic
