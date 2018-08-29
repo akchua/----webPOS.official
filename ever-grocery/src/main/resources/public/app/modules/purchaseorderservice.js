@@ -94,6 +94,17 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	addItemByBarcode: function(barcode, purchaseOrderId) {
+    		return $.ajax({
+    			url: '/services/purchaseorder/additembybarcode',
+    			method: 'POST',
+    			data: {
+    				barcode: barcode,
+    				purchaseOrderId: purchaseOrderId
+    			}
+    		});
+    	},
+    	
     	removePurchaseOrderDetail: function(purchaseOrderDetailId) {
     		return $.ajax({
     			url: '/services/purchaseorder/removeitem',

@@ -1,10 +1,14 @@
-define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'viewmodels/purchase-order/search'], function (app, ko, purchaseOrderService, Search) {
+define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/purchaseorderservice', 'viewmodels/purchase-order/search'], 
+		function (app, ko, soundUtil, purchaseOrderService, Search) {
     var PurchaseOrderPage = function() {
     	this.purchaseOrderDetailList = ko.observable();
 
     	this.beforeVatAndDiscount = ko.observable(false);
     	this.beforeVatAfterDiscount = ko.observable(false);
     	this.afterVatBeforeDiscount = ko.observable(false);
+    	
+    	this.barcodeKey = ko.observable();
+    	this.barcodeFocus = ko.observable(true);
     	
     	this.itemsPerPage = ko.observable(app.user.itemsPerPage);
 		this.totalItems = ko.observable();
@@ -43,6 +47,24 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'viewmodels/
         		self.refreshPurchaseOrderDetailList();
         	});
     	});
+    };
+    
+    PurchaseOrderPage.prototype.addItemByBarcode = function() {
+    	var self = this;
+    		
+    	purchaseOrderService.addItemByBarcode(self.barcodeKey(), self.purchaseOrderPageModel.purchaseOrderId()).done(function(result) {	
+    		if(result.success) {
+    			self.currentPage(1);
+    			self.refreshPurchaseOrderDetailList();
+    		} else {
+    			soundUtil.beep();
+    			app.showMessage(result.message).done(function() {
+    				self.barcodeFocus(true);
+    			});
+    		}
+    	});
+    	
+    	self.barcodeKey("");
     };
     
     PurchaseOrderPage.prototype.refreshPurchaseOrderDetailList = function() {

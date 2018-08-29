@@ -553,21 +553,58 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		final PurchaseOrderDetail purchaseOrderDetail = purchaseOrderDetailService.findByOrderAndDetailId(purchaseOrder.getId(), productDetail.getId());
 		
 		if(purchaseOrderDetail == null) {
-			result = new ResultBean();
-			
-			final PurchaseOrderDetail newPurchaseOrderDetail = new PurchaseOrderDetail();
-			setPurchaseOrderDetail(newPurchaseOrderDetail, purchaseOrder, productDetail);
-			
-			result.setSuccess(purchaseOrderDetailService.insert(newPurchaseOrderDetail) != null && 
-					this.changePurchaseOrderDetailQuantity(newPurchaseOrderDetail, quantity).getSuccess());
-			
-			if(result.getSuccess()) {
-				result.setMessage("Successfully added item.");
+			if(purchaseOrder.getCompany().getId().equals(productDetail.getProduct().getCompany().getId())) {
+				result = new ResultBean();
+				
+				final PurchaseOrderDetail newPurchaseOrderDetail = new PurchaseOrderDetail();
+				setPurchaseOrderDetail(newPurchaseOrderDetail, purchaseOrder, productDetail);
+				
+				result.setSuccess(purchaseOrderDetailService.insert(newPurchaseOrderDetail) != null && 
+						this.changePurchaseOrderDetailQuantity(newPurchaseOrderDetail, quantity).getSuccess());
+				
+				if(result.getSuccess()) {
+					result.setMessage("Successfully added item.");
+				} else {
+					result.setMessage("Failed to add item.");
+				}
 			} else {
-				result.setMessage("Failed to add item.");
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Error! ") + Html.text(Color.TURQUOISE, productDetail.getProduct().getName()) + " is not a product of " + Html.text(Color.TURQUOISE, purchaseOrder.getCompany().getName()) + "."));
 			}
 		} else {
 			result = this.changePurchaseOrderDetailQuantity(purchaseOrderDetail, purchaseOrderDetail.getQuantity() + quantity);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public ResultBean addItemByBarcode(String barcode, Long purchaseOrderId) {
+		final ResultBean result;
+		
+		if(barcode != null && barcode.length() > 4) {
+			final ProductDetail productDetail;
+			String[] temp = barcode.split("\\*");
+			if(temp.length == 2) {
+				productDetail = productDetailService.findByBarcode(temp[1]);
+			} else if(temp.length == 1) {
+				productDetail = productDetailService.findByBarcode(temp[0]);
+			} else {
+				productDetail = null;
+			}
+			
+			if(productDetail != null) {
+				if(temp.length == 2) {
+					result = this.addItemByProductDetailId(productDetail.getId(), purchaseOrderId, Integer.parseInt(temp[0]));
+				} else if(temp.length == 1) {
+					result = this.addItemByProductDetailId(productDetail.getId(), purchaseOrderId, 1);
+				} else {
+					result = new ResultBean(false, "Invalid barcode.");
+				}
+			} else {
+				result = new ResultBean(false, "Barcode not found.");
+			}
+		} else {
+			result = new ResultBean(false, "Invalid barcode.");
 		}
 		
 		return result;
