@@ -1,7 +1,5 @@
 package com.chua.evergrocery.utility.template;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,28 +8,22 @@ import java.util.Map;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.enums.UnitType;
-import com.chua.evergrocery.rest.handler.ProductHandler;
 
 /**
  * @author  Adrian Jasper K. Chua
  * @version 1.0
  * @since   May 11, 2018
  */
-public class CustomerOrderListTemplate extends AbstractTemplate {
+public class CustomerOrderItemListTemplate extends AbstractTemplate {
 
-	private CustomerOrder customerOrder;
-	
 	private List<CustomerOrderDetail> wholeItems;
 	
 	private List<CustomerOrderDetail> counterItems;
 	
 	private List<CustomerOrderDetail> otherItems;
-	
-	private ProductHandler productHandler;
 	
 	private List<String> formattedWholeItems;
 	
@@ -39,10 +31,7 @@ public class CustomerOrderListTemplate extends AbstractTemplate {
 	
 	private List<String> formattedOtherItems;
 	
-	public CustomerOrderListTemplate(CustomerOrder customerOrder, List<CustomerOrderDetail> customerOrderItems, ProductHandler productHandler) {
-		this.customerOrder = customerOrder;
-		this.productHandler = productHandler;
-		
+	public CustomerOrderItemListTemplate(List<CustomerOrderDetail> customerOrderItems) {
 		this.wholeItems = new ArrayList<CustomerOrderDetail>();
 		this.counterItems = new ArrayList<CustomerOrderDetail>();
 		this.otherItems = new ArrayList<CustomerOrderDetail>();
@@ -83,24 +72,7 @@ public class CustomerOrderListTemplate extends AbstractTemplate {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("t", this);
-		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, docType.getFolderName() + "/customerOrderList.vm", "UTF-8", model);
-	}
-	
-	public String getOrderNumber() {
-		return customerOrder.getOrderNumber();
-	}
-	
-	public String getFormattedCustomer() {
-		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getFormattedName() : customerOrder.getName();
-	}
-	
-	public String getTotalItems() {
-		NumberFormat nf = new DecimalFormat("###.#");
-		return nf.format(customerOrder.getTotalItems());
-	}
-	
-	public String getFormattedServer() {
-		return customerOrder.getCreator().getFormattedName();
+		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, docType.getFolderName() + "/customerOrderItemList.vm", "UTF-8", model);
 	}
 	
 	public Boolean isWholeItemExists() {

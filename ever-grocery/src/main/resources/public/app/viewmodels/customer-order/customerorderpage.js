@@ -84,7 +84,9 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	var self = this;
     	
     	if(self.barcodeKey() === 'e') {
-    		self.print();
+    		self.submit();
+    	} else if(self.barcodeKey() === 'p') {
+    		self.printCopy();
     	} else if(self.barcodeKey() === 's') {
     		self.search();
     	} else {
@@ -118,20 +120,41 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	});
     };
     
-    CustomerOrderPage.prototype.print = function() {
-		var self = this;
-		
-		app.showMessage('<p>Confirm complete order for <span class="text-primary">' + self.customerOrderPageModel.customerName() + '</span>?<br>' +
-						'Make sure to label all packages with <span class="text-danger">#' + self.customerOrderPageModel.customerOrderNumber() + '</span>.<br><br>' +
-						'By clicking confirm, you will be forwarding the order to the cashier.</p>',
-				'Complete Order',
-				[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
+    CustomerOrderPage.prototype.submit = function() {
+    	var self = this;
+    	
+    	app.showMessage('<p>Submit order for <span class="text-primary">' + self.customerOrderPageModel.customerName() + '</span>?<br>' +
+				'Make sure to label all packages with <span class="text-danger">#' + self.customerOrderPageModel.customerOrderNumber() + '</span>.<br><br>' +
+				'By clicking confirm, you will be forwarding the order to the cashier.</p>',
+		'Submit Order',
+		[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
 		.then(function(confirm) {
 			if(confirm) {
-				customerOrderService.printCustomerOrderList(self.customerOrderPageModel.customerOrderId()).done(function(result) {
+				customerOrderService.submitCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(result) {
 					if(result.success) {
 						router.navigate('#customerorder');
 					} else {
+						app.showMessage(result.message).done(function() {
+							self.barcodeFocus(true);
+						});
+					}
+				});
+			} else {
+				self.barcodeFocus(true);
+			}
+		})
+    };
+    
+    CustomerOrderPage.prototype.printCopy = function() {
+		var self = this;
+		
+		app.showMessage('<p>Confirm print copy of Order <span class="text-danger">#' + self.customerOrderPageModel.customerOrderNumber() + '</span>',
+				'Print Order Copy',
+				[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+				customerOrderService.printCustomerOrderCopy(self.customerOrderPageModel.customerOrderId()).done(function(result) {
+					if(!result.success) {
 						app.showMessage(result.message).done(function() {
 							self.barcodeFocus(true);
 						});

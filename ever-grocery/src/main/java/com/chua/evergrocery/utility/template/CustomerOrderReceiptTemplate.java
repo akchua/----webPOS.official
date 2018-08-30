@@ -2,12 +2,14 @@ package com.chua.evergrocery.utility.template;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.database.entity.CustomerOrder;
+import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.StringHelper;
@@ -23,15 +25,24 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 
 	private CustomerOrder customerOrder;
 	
+	private List<CustomerOrderDetail> customerOrderItems;
+	
 	private Float cash;
 	
-	public CustomerOrderReceiptTemplate(CustomerOrder customerOrder, Float cash) {
+	private String formattedCustomerOrderItems;
+	
+	public CustomerOrderReceiptTemplate(CustomerOrder customerOrder, List<CustomerOrderDetail> customerOrderItems, Float cash) {
 		this.customerOrder = customerOrder;
+		this.customerOrderItems = customerOrderItems;
 		this.cash = cash;
+		
+		this.formattedCustomerOrderItems = "";
 	}
 	
 	@Override
 	public String merge(VelocityEngine velocityEngine, DocType docType) {
+		formattedCustomerOrderItems = new CustomerOrderItemListTemplate(customerOrderItems).merge(velocityEngine, docType);
+		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("t", this);
 		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, docType.getFolderName() + "/customerOrderReceipt.vm", "UTF-8", model);
@@ -100,5 +111,9 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	
 	public String getFormattedCashier() {
 		return customerOrder.getCashier().getFormattedName();
+	}
+
+	public String getFormattedCustomerOrderItems() {
+		return formattedCustomerOrderItems;
 	}
 }

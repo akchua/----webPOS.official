@@ -36,9 +36,11 @@ public interface CustomerOrderHandler {
 	
 	void refreshCustomerOrder(Long customerOrderId);
 	
+	ResultBean submitCustomerOrder(Long customerOrderId);
+	
 	ResultBean payCustomerOrder(Long customerOrderId, Float cash);
 	
-	ResultBean printCustomerOrderList(Long customerOrderId);
+	ResultBean printCustomerOrderCopy(Long customerOrderId);
 
 	ResultBean generateReport(SalesReportQueryBean salesReportQuery);
 	

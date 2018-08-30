@@ -1,9 +1,7 @@
-## Template for Customer Order Item
+## Template for Customer Order Item List
 ## Has a maximum of 44 columns in a line
-Order #${t.OrderNumber}
-Customer : ${t.FormattedCustomer}
 --------------------------------------------
-Qty Item(s)                           Amount
+Qty    Item(s)                        Amount
 --------------------------------------------
 #if(${t.WholeItemExists})
 #foreach( $formattedWholeItem in $t.FormattedWholeItems)
@@ -21,5 +19,3 @@ $formattedCounterItem
 $formattedOtherItem
 #end
 --------------------------------------------
-Items  : ${t.TotalItems}
-Server : ${t.FormattedServer}

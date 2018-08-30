@@ -7,17 +7,18 @@ public enum Status {
 
 	CANCELLED("Cancelled"),
 	
-	DECLINED("Declined"),
-	
 	LISTING("Listing"),
 
-	REQUESTING("Requesting"),
-	
-	PRINTED("Printed"),
+	SUBMITTED("Submitted"),
 	
 	PAID("Paid"),
 	
 	CHECKED("Checked"),
+	
+	// CASH FLOW
+	REQUESTING("Requesting"),
+	
+	DECLINED("Declined"),
 	
 	TRANSFERRED("Transferred");
 	

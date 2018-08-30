@@ -80,7 +80,7 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {
 			if(confirm) {
-				customerOrderService.printCustomerOrderList(customerOrderId).done(function(result) {
+				customerOrderService.printCustomerOrderCopy(customerOrderId).done(function(result) {
 					self.refreshCustomerOrderList();
 					app.showMessage(result.message);
 				});

@@ -138,9 +138,19 @@ define(['jquery'], function ($) {
     		});
     	},
     	
-    	printCustomerOrderList: function(customerOrderId) {
+    	submitCustomerOrder: function(customerOrderId) {
     		return $.ajax({
-    			url: '/services/customerorder/printorderlist',
+    			url: '/services/customerorder/submit',
+    			method: 'POST',
+    			data: {
+    				customerOrderId: customerOrderId
+    			}
+    		});
+    	},
+    	
+    	printCustomerOrderCopy: function(customerOrderId) {
+    		return $.ajax({
+    			url: '/services/customerorder/printordercopy',
     			method: 'POST',
     			data: {
     				customerOrderId: customerOrderId

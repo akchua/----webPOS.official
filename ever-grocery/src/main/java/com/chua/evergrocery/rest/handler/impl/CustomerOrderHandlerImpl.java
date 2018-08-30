@@ -42,7 +42,7 @@ import com.chua.evergrocery.utility.Html;
 import com.chua.evergrocery.utility.TaxUtil;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.chua.evergrocery.utility.print.Printer;
-import com.chua.evergrocery.utility.template.CustomerOrderListTemplate;
+import com.chua.evergrocery.utility.template.CustomerOrderCopyTemplate;
 import com.chua.evergrocery.utility.template.CustomerOrderReceiptTemplate;
 
 @Transactional
@@ -87,7 +87,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(showPaid) {
 			return customerOrderService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, null, daysAgo);
 		} else {
-			return customerOrderService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, new Status[] { Status.LISTING,  Status.PRINTED }, daysAgo);
+			return customerOrderService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, new Status[] { Status.LISTING,  Status.SUBMITTED }, daysAgo);
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final ResultBean result;
 		
 		if(customerOrderForm.getName() != null) {
-			if(!customerOrderService.isExistsByNameAndStatus(customerOrderForm.getName(), new Status[] { Status.LISTING, Status.PRINTED })) {
+			if(!customerOrderService.isExistsByNameAndStatus(customerOrderForm.getName(), new Status[] { Status.LISTING, Status.SUBMITTED })) {
 				final CustomerOrder customerOrder = new CustomerOrder();
 				setCustomerOrder(customerOrder, customerOrderForm);
 				customerOrder.setPaidOn(DateUtil.getDefaultDate());
@@ -151,7 +151,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			
 			if(customerOrder.getStatus().equals(Status.LISTING) && customerOrder.getCreator().getId() == currentUser.getId()) {
 				if(!(StringUtils.trimToEmpty(customerOrder.getName()).equalsIgnoreCase(customerOrderForm.getName())) &&
-						customerOrderService.isExistsByNameAndStatus(customerOrderForm.getName(), new Status[] { Status.LISTING, Status.PRINTED })) {
+						customerOrderService.isExistsByNameAndStatus(customerOrderForm.getName(), new Status[] { Status.LISTING, Status.SUBMITTED })) {
 					result = new ResultBean(false, "Customer order \"" + customerOrderForm.getName() + "\" already exists!");
 				} else {
 					setCustomerOrder(customerOrder, customerOrderForm);
@@ -256,7 +256,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			if(customerOrder.getStatus().equals(Status.PRINTED)) {
+			if(customerOrder.getStatus().equals(Status.SUBMITTED)) {
 				if(customerOrder.getTotalAmount() <= cash) {
 					Long SIN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag()));
 					
@@ -560,31 +560,48 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	public ResultBean printCustomerOrderList(Long customerOrderId) {
+	public ResultBean submitCustomerOrder(Long customerOrderId) {
 		final ResultBean result;
+		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
+		if(customerOrder != null) {
+			result = new ResultBean();
+			
+			customerOrder.setStatus(Status.SUBMITTED);
+			result.setSuccess(customerOrderService.update(customerOrder));
+			
+			if(result.getSuccess()) {
+				result.setMessage(Html.line(Color.GREEN, "Successfully") + " submitted customer order #" + customerOrder.getOrderNumber());
+			} else {
+				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+			}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load customer order. Please refresh the page."));
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public ResultBean printCustomerOrderCopy(Long customerOrderId) {
+		final ResultBean result;
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
 			final UserBean currentUser = UserContextHolder.getUser();
 			
 			if(customerOrder.getStatus().equals(Status.LISTING) || currentUser.getUserType().getAuthority() <= 3) {
-				result = new ResultBean();
+				final List<CustomerOrderDetail> customerOrderItems = customerOrderDetailService.findAllByCustomerOrderIdOrderByProductName(customerOrder.getId());
+				final CustomerOrderCopyTemplate customerOrderCopy = new CustomerOrderCopyTemplate(customerOrder, customerOrderItems);
 				
-				if(customerOrder.getStatus().equals(Status.LISTING)) {
-					customerOrder.setStatus(Status.PRINTED);
-					result.setSuccess(customerOrderService.update(customerOrder));
-				} else {
-					result.setSuccess(true);
+				Printer printer = new Printer();
+				try {
+					printer.print(customerOrderCopy.merge(velocityEngine, DocType.PRINT), "Customer Order #" + customerOrder.getOrderNumber() + " (COPY)");
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				
-				if(result.getSuccess()) {
-					this.printOrderList(customerOrder);
-					
-					result.setMessage("Successfully printed Customer order \"" + customerOrder.getName() + "\".");
-				} else {
-					result.setMessage("Failed to print Customer order \"" + customerOrder.getName() + "\".");
-				}
+				result = new ResultBean(Boolean.TRUE, "Successfully printed Customer order \"" + customerOrder.getName() + "\".");
 			} else {
 				result = new ResultBean(false, "You are not authorized to print a copy.");
 			}
@@ -609,35 +626,20 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		return result;
 	}
 	
-	private void printOrderList(CustomerOrder customerOrder) {
-		final List<CustomerOrderDetail> customerOrderItems = customerOrderDetailService.findAllByCustomerOrderIdOrderByProductName(customerOrder.getId());
-		final CustomerOrderListTemplate customerOrderList = new CustomerOrderListTemplate(customerOrder, customerOrderItems, productHandler);
-		
-		Printer printer = new Printer();
-		try {
-			printer.print(customerOrderList.merge(velocityEngine, DocType.PRINT), "Print Order List : " + customerOrder.getOrderNumber());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	@Override
 	public void printReceipt(Long customerOrderId, Float cash) {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			this.printReceipt(customerOrder, cash);
-		}
-	}
-	
-	private void printReceipt(CustomerOrder customerOrder, Float cash) {
-		final CustomerOrderReceiptTemplate customerOrderReceipt = new CustomerOrderReceiptTemplate(customerOrder, cash);
-		
-		Printer printer = new Printer();
-		try {
-			printer.print(customerOrderReceipt.merge(velocityEngine, DocType.PRINT), "Print Receipt : " + customerOrder.getOrderNumber());
-		} catch (Exception e) {
-			e.printStackTrace();
+			final List<CustomerOrderDetail> customerOrderItems = customerOrderDetailService.findAllByCustomerOrderIdOrderByProductName(customerOrder.getId());
+			final CustomerOrderReceiptTemplate customerOrderReceipt = new CustomerOrderReceiptTemplate(customerOrder, customerOrderItems, cash);
+			
+			Printer printer = new Printer();
+			try {
+				printer.print(customerOrderReceipt.merge(velocityEngine, DocType.PRINT), "Customer Order #" + customerOrder.getOrderNumber() + " (ORIG)");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

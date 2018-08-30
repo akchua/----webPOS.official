@@ -136,10 +136,17 @@ public class CustomerOrderEndpoint {
 	}
 	
 	@POST
-	@Path("/printorderlist")
+	@Path("/submit")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean printCustomerOrderList(@FormParam("customerOrderId") Long customerOrderId) {
-		return customerOrderHandler.printCustomerOrderList(customerOrderId);
+	public ResultBean submitCustomerOrder(@FormParam("customerOrderId") Long customerOrderId) {
+		return customerOrderHandler.submitCustomerOrder(customerOrderId);
+	}
+	
+	@POST
+	@Path("/printordercopy")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean printCustomerOrderCopy(@FormParam("customerOrderId") Long customerOrderId) {
+		return customerOrderHandler.printCustomerOrderCopy(customerOrderId);
 	}
 	
 	@POST

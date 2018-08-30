@@ -23,7 +23,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 
 	private CustomerOrderDetail customerOrderItem;
 	
-	private String formattedContent;
+	private Integer content;
 	
 	private List<String> overflowList;
 	
@@ -31,7 +31,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 	
 	public CustomerOrderItemTemplate(CustomerOrderDetail customerOrderItem) {
 		this.customerOrderItem = customerOrderItem;
-		this.formattedContent = customerOrderItem.getProductDetail().getFormattedContent();
+		this.content = customerOrderItem.getProductDetail().getContent();
 		
 		this.overflowList = new ArrayList<String>();
 	}
@@ -54,15 +54,16 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 		NumberFormat nf = new DecimalFormat("##.##");
 		
 		formattedName += customerOrderItem.getProductDisplayName();
-		if(customerOrderItem.getQuantity() > 1) {
-			formattedName += " @" + nf.format(customerOrderItem.getUnitPrice());
-		}
 		if((customerOrderItem.getQuantity() % 1.0f == 0.5f
 				|| customerOrderItem.getUnitType().equals(UnitType.CASE)
 				|| customerOrderItem.getUnitType().equals(UnitType.BUNDLE)
 				|| customerOrderItem.getUnitType().equals(UnitType.SACK))
-				&& !formattedContent.equals("-")) {
-			formattedName += " (" + formattedContent + ")";
+				&& !content.equals(0)) {
+			formattedName += "x" + content;
+		}
+		
+		if(customerOrderItem.getQuantity() > 1) {
+			formattedName += " @" + nf.format(customerOrderItem.getUnitPrice());
 		}
 		
 		int index = ITEM_NAME_MAX_LENGTH;
