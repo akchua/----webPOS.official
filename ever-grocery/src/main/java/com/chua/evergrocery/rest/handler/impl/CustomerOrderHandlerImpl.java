@@ -385,14 +385,15 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			if(customerOrder.getStatus().equals(Status.LISTING)) {
+			if(customerOrder.getStatus().equals(Status.LISTING) 
+					|| (customerOrder.getStatus().equals(Status.SUBMITTED) && UserContextHolder.getUser().getUserType().getAuthority() <= 3)) {
 				if(productDetail != null) {
 					result = this.addItem(productDetail, customerOrder, quantity);
 				} else {
 					result = new ResultBean(false, "Product not found.");
 				}
 			} else {
-				result = new ResultBean(false, "Customer order cannot be edited right now.");
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Declined!") + " You are not authorized to make changes on a submitted order."));
 			}
 		} else {
 			result = new ResultBean(false, "Customer order not found.");
@@ -443,10 +444,11 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(customerOrderDetail != null) {
 			final CustomerOrder customerOrder = customerOrderDetail.getCustomerOrder();
 			if(customerOrder != null) {
-				if(customerOrder.getStatus().equals(Status.LISTING)) {
+				if(customerOrder.getStatus().equals(Status.LISTING)
+						|| (customerOrder.getStatus().equals(Status.SUBMITTED) && UserContextHolder.getUser().getUserType().getAuthority() <= 3)) {
 					result = this.changeCustomerOrderDetailQuantity(customerOrderDetail, quantity);
 				} else {
-					result =  new ResultBean(false, "Customer order cannot be edited right now.");
+					result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Declined!") + " You are not authorized to make changes on a submitted order."));
 				}
 			} else {
 				result = new ResultBean(false, "Customer order not found.");
