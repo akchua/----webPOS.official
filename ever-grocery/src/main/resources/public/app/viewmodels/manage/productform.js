@@ -8,6 +8,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
         	id: ko.observable(),
         	name: ko.observable(),
         	displayName: ko.observable(),
+        	code: ko.observable(),
         	/*brandId: ko.observable(),*/
         	categoryId: ko.observable(),
         	companyId: ko.observable(),
@@ -19,6 +20,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
         this.errors = {
     		name: ko.observable(),
         	displayName: ko.observable(),
+        	code: ko.observable(),
         	category: ko.observable(),
         	company: ko.observable()
     	};
@@ -35,6 +37,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
     	self.productFormModel.id(self.product.id);
     	self.productFormModel.name(self.product.name);
     	self.productFormModel.displayName(self.product.displayName);
+    	self.productFormModel.code(self.product.code);
     	self.productFormModel.allowSeniorDiscount(self.product.allowSeniorDiscount);
     	
     	brandService.getBrandListByName().done(function(brandList) {
@@ -85,6 +88,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
         	} else {
         		self.errors.name(result.extras.errors.name);
         		self.errors.displayName(result.extras.errors.displayName);
+        		self.errors.code(result.extras.errors.code);
         		self.errors.category(result.extras.errors.category);
         		self.errors.company(result.extras.errors.company);
         		

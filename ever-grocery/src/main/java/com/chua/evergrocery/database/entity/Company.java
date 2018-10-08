@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -21,6 +22,7 @@ import org.hibernate.annotations.Where;
 import com.chua.evergrocery.database.entity.base.BaseObject;
 import com.chua.evergrocery.enums.ReceiptType;
 import com.chua.evergrocery.serializer.json.DistributorSerializer;
+import com.chua.evergrocery.utility.DateUtil;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity(name = "Company")
@@ -123,6 +125,11 @@ public class Company extends BaseObject {
 	@Column(name = "last_purchase_order_date")
 	public Date getLastPurchaseOrderDate() {
 		return lastPurchaseOrderDate;
+	}
+	
+	@Transient
+	public Boolean isAutoOrderActive() {
+		return !DateUtil.getDefaultDate().equals(lastPurchaseOrderDate);
 	}
 
 	public void setLastPurchaseOrderDate(Date lastPurchaseOrderDate) {

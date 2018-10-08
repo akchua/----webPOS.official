@@ -25,6 +25,7 @@
     		<table class="table table-responsive table-hover">
     			<thead>
     				<tr>
+    					<th>Code</th>
     					<th>Name</th>
     					<th>Display Name</th>
     					<th>Company</th>
@@ -34,6 +35,7 @@
     		
     			<tbody data-bind="foreach: { data: productList, as: 'product' }">
     				<tr>
+    					<td data-bind="text: product.code"></td>
     					<td data-bind="text: product.name"></td>
     					<td data-bind="text: product.displayName"></td>
     					<td>
@@ -43,7 +45,7 @@
     					</td>
     					<td>
     						<span data-bind="if: product.company">
-    							<span data-bind="text: product.company.receiptType.displayName"></span>
+    							<span data-bind="text: product.company.receiptType.shortHand"></span>
     						</span>
     					</td>
     					<td>

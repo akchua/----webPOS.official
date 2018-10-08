@@ -36,6 +36,8 @@ public class CustomerOrderDetail extends BaseObject {
 	
 	private String productDisplayName;
 	
+	private String productCode;
+	
 	private UnitType unitType;
 	
 	private Integer content;
@@ -100,6 +102,16 @@ public class CustomerOrderDetail extends BaseObject {
 
 	public void setProductDisplayName(String productDisplayName) {
 		this.productDisplayName = productDisplayName;
+	}
+
+	@Basic
+	@Column(name = "product_code")
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
 	}
 
 	@Enumerated(EnumType.STRING)

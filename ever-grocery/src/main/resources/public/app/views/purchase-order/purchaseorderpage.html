@@ -32,6 +32,7 @@ Purchase ID: <span data-bind="text: purchaseOrderPageModel.purchaseOrderId" clas
    				<tr>
    					<th class = "text-center col-md-1 col-xs-1">Quantity</th>
    					<th>Unit</th>
+   					<th>Code</th>
    					<th>Product Name</th>
    					<th data-bind="visible: beforeVatAndDiscount" class="text-right">No VAT Price</th>
    					<th data-bind="visible: beforeVatAfterDiscount" class="text-right">No VAT w/ Disc Price</th>
@@ -45,6 +46,7 @@ Purchase ID: <span data-bind="text: purchaseOrderPageModel.purchaseOrderId" clas
    				<tr>
    					<td class = "text-center"><input data-bind="value: orderDetail.quantity, event: { change: function() { $parent.changeQuantity(orderDetail.id, orderDetail.quantity) } }" type="text" size="5" class="form-control"></td>
    					<td data-bind="text: orderDetail.unitType.displayName"></td>
+   					<td data-bind="text: orderDetail.productCode"></td>
    					<td data-bind="text: orderDetail.productName"></td>
    					<td data-bind="text: orderDetail.formattedBeforeVatAndDiscountPrice, visible: $parent.beforeVatAndDiscount" class = "text-right"></td>
    					<td data-bind="text: orderDetail.formattedBeforeVatAfterDiscountPrice, visible: $parent.beforeVatAfterDiscount" class = "text-right"></td>

@@ -11,6 +11,11 @@ define(['plugins/router', 'plugins/dialog', 'durandal/app', 'knockout', 'modules
         	deliveredOn: ko.observable()
         }
         
+        this.errors = {
+        	companyId: ko.observable(),
+        	deliveredOn: ko.observable()
+    	};
+        
         this.companyList = ko.observable();
     };
  
@@ -37,8 +42,11 @@ define(['plugins/router', 'plugins/dialog', 'durandal/app', 'knockout', 'modules
         		dialog.close(self);
         		router.navigate('#purchaseorderpage/' + result.extras.purchaseOrderId);
         	} else {
-        		app.showMessage(result.message);
+        		self.errors.companyId(result.extras.errors.companyId);
+        		self.errors.deliveredOn(result.extras.errors.deliveredOn);
         	}
+        	
+        	if(result.message) app.showMessage(result.message);
         });
     };
     

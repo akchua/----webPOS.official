@@ -39,6 +39,6 @@ public class InventoryItemTemplate extends AbstractTemplate {
 	}
 	
 	public String getPieceInventory() {
-		return " " + String.format("%-14s", NumberFormatter.decimalFormat(this.inventoryItem.getPieceQuantity(), 1) + " " + inventoryItem.getPieceUnit().getShorthand()) + " ";
+		return " " + String.format("%-14s", NumberFormatter.decimalFormat(this.inventoryItem.getPieceQuantity(), 2) + " " + inventoryItem.getPieceUnit().getShorthand()) + " ";
 	}
 }

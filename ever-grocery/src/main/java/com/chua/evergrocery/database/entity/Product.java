@@ -53,6 +53,8 @@ public class Product extends BaseObject {
 	
 	private String displayName;
 	
+	private String code;
+	
 	private TaxType taxType;
 	
 	private Boolean allowSeniorDiscount;
@@ -129,6 +131,16 @@ public class Product extends BaseObject {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	@Basic
+	@Column(name = "code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	@Enumerated(EnumType.STRING)

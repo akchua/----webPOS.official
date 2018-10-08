@@ -33,6 +33,8 @@ public class PurchaseOrderDetail extends BaseObject {
 	
 	private String productName;
 	
+	private String productCode;
+	
 	private UnitType unitType;
 	
 	private Float grossPrice;
@@ -75,6 +77,16 @@ public class PurchaseOrderDetail extends BaseObject {
 
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+
+	@Basic
+	@Column(name = "product_code")
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
 	}
 
 	@Enumerated(EnumType.STRING)

@@ -3,7 +3,9 @@ package com.chua.evergrocery.utility;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
+
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 /**
  * @author	Adrian Jasper K. Chua
@@ -40,8 +42,24 @@ public class DateUtil {
 		                  cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 	}
 	
-	public static Long daysBetween(Date d1, Date d2) {
-		long diff = d2.getTime() - d1.getTime();
-	    return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	public static int daysBetween(Date d1, Date d2) {
+		LocalDate ld1 = new LocalDate(d1);
+	    LocalDate ld2 = new LocalDate(d2);
+	 
+	    return Days.daysBetween(ld1, ld2).getDays();
+	}
+	
+	public static boolean isDateInclusiveBetween(Date date1, Date date2, Date toCheck) {
+		return date1.compareTo(toCheck) * toCheck.compareTo(date2) >= 0;
+	}
+	
+	public static Date floorDay(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);  
+        cal.set(Calendar.MINUTE, 0);  
+        cal.set(Calendar.SECOND, 0);  
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
 	}
 }

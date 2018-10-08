@@ -8,6 +8,8 @@ public class ProductFormBean extends FormBean {
 	
 	private String displayName;
 	
+	private String code;
+	
 	/*private Long brandId;*/
 	
 	private Long categoryId;
@@ -32,6 +34,14 @@ public class ProductFormBean extends FormBean {
 	
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 	
 	/*public Long getBrandId() {

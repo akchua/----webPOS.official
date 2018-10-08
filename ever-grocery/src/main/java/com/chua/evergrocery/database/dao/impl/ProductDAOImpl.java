@@ -32,9 +32,14 @@ public class ProductDAOImpl
 		
 		if(StringUtils.isNotBlank(searchKey))
 		{
+			final Junction disjunction = Restrictions.disjunction();
+			final Junction conjunction2 = Restrictions.conjunction();
 			for(String s : searchKey.split("\\s+")) {
-				conjunction.add(Restrictions.ilike("name", s, MatchMode.ANYWHERE));
+				conjunction2.add(Restrictions.ilike("name", s, MatchMode.ANYWHERE));
 			}
+			disjunction.add(conjunction2);
+			disjunction.add(Restrictions.ilike("code", searchKey, MatchMode.ANYWHERE));
+			conjunction.add(disjunction);
 		}
 		
 		if(companyId != null) {

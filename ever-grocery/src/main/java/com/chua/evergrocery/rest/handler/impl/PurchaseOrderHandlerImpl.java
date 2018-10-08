@@ -38,6 +38,7 @@ import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.PurchaseOrderHandler;
+import com.chua.evergrocery.rest.validator.PurchaseOrderFormValidator;
 import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.Html;
 import com.chua.evergrocery.utility.StringHelper;
@@ -46,6 +47,11 @@ import com.chua.evergrocery.utility.format.DateFormatter;
 import com.chua.evergrocery.utility.template.GeneratedPurchaseTemplate;
 import com.chua.evergrocery.utility.template.InventoryTemplate;
 
+/**
+ * All 0.999 values found in this class are correction factors used only for computations and does not affect actual stored data
+ * @author EVER
+ *
+ */
 @Transactional
 @Component
 public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
@@ -70,6 +76,9 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	
 	@Autowired
 	private CustomerOrderDetailService customerOrderDetailService;
+	
+	@Autowired
+	private PurchaseOrderFormValidator purchaseOrderFormValidator;
 	
 	@Autowired
 	private FileConstants fileConstants;
@@ -98,31 +107,44 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	@Override
 	public ResultBean createPurchaseOrder(PurchaseOrderFormBean purchaseOrderForm) {
 		final ResultBean result;
+		Map<String, String> errors = purchaseOrderFormValidator.validate(purchaseOrderForm);
 		
-		if(purchaseOrderForm.getCompanyId() != null) {
-			final PurchaseOrder purchaseOrder = new PurchaseOrder();
-			setPurchaseOrder(purchaseOrder, purchaseOrderForm);
-			purchaseOrder.setTotalAmount(0.0f);
-			purchaseOrder.setTotalItems(0);
-			
-			purchaseOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
-			purchaseOrder.setStatus(Status.LISTING);
-			purchaseOrder.setDeliveredOn(purchaseOrderForm.getDeliveredOn());
-			purchaseOrder.setCheckedOn(DateUtil.getDefaultDate());
-			
-			result = new ResultBean();
-			result.setSuccess(purchaseOrderService.insert(purchaseOrder) != null);
-			if(result.getSuccess()) {
-				Map<String, Object> extras = new HashMap<String, Object>();
-				extras.put("purchaseOrderId", purchaseOrder.getId());
-				result.setExtras(extras);
-				
-				result.setMessage("Purchase order successfully created.");
+		if(errors.isEmpty()) {
+			final Company company = companyService.find(purchaseOrderForm.getCompanyId());
+			if(company != null) {
+				errors = purchaseOrderFormValidator.validateDeliveryDateWithCompanyLastPurchaseDate(purchaseOrderForm.getDeliveredOn(), company);
+				if(errors.isEmpty()) {
+					final PurchaseOrder purchaseOrder = new PurchaseOrder();
+					purchaseOrder.setCompany(company);
+					purchaseOrder.setTotalAmount(0.0f);
+					purchaseOrder.setTotalItems(0);
+					
+					purchaseOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
+					purchaseOrder.setStatus(Status.LISTING);
+					purchaseOrder.setDeliveredOn(purchaseOrderForm.getDeliveredOn());
+					purchaseOrder.setCheckedOn(DateUtil.getDefaultDate());
+					
+					result = new ResultBean();
+					result.setSuccess(purchaseOrderService.insert(purchaseOrder) != null);
+					if(result.getSuccess()) {
+						Map<String, Object> extras = new HashMap<String, Object>();
+						extras.put("purchaseOrderId", purchaseOrder.getId());
+						result.setExtras(extras);
+						
+						result.setMessage("Purchase order successfully created.");
+					} else {
+						result.setMessage("Failed to create purchase order.");
+					}
+				} else {
+					result = new ResultBean(Boolean.FALSE, "");
+					result.addToExtras("errors", errors);
+				}
 			} else {
-				result.setMessage("Failed to create purchase order.");
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load company. Please refresh the page."));
 			}
 		} else {
-			result = new ResultBean(Boolean.FALSE, "Select a company.");
+			result = new ResultBean(Boolean.FALSE, "");
+			result.addToExtras("errors", errors);
 		}
 		
 		return result;
@@ -140,7 +162,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		if(daysToBook >= 3) {
 			// Check if last purchase order date is more than 3 days ago
 			if(Days.daysBetween(new DateTime(company.getLastPurchaseOrderDate()), new DateTime()).getDays() > 3) {
-				// Retrieve purchase orders delivered within ninety days from now
+				// Retrieve purchase orders delivered since cutoff
 				final List<PurchaseOrder> deliveredAfterCutoff = purchaseOrderService.findDeliveredAfterCutoffByCompanyOrderByDeliveryDate(company.getId());
 				System.out.println("# of deliveries after " + DateFormatter.prettyFormat(DateUtil.getOrderCutoffDate()) + " : " + deliveredAfterCutoff.size());
 				
@@ -170,13 +192,16 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					}
 					System.out.println("Last Booked Days : " + company.getDaysBooked());
 					
+					// Determining actual sales period (in days)
+					final int salesPeriod = DateUtil.daysBetween(company.getLastPurchaseOrderDate(), generateStartTime);
+					System.out.println("Actual Sales Period (In Days) : " + salesPeriod);
+					
 					// Separating deliveries after last purchase order
 					final List<PurchaseOrder> deliveriesAfterLastPO = new ArrayList<PurchaseOrder>();
 					for(PurchaseOrder po : deliveredAfterCutoff) {
-						Calendar deliveredOn = Calendar.getInstance();
-						deliveredOn.setTime(po.getDeliveredOn());
-						if(deliveredOn.get(Calendar.YEAR) >= lastPODate.get(Calendar.YEAR) &&
-								deliveredOn.get(Calendar.DAY_OF_YEAR) >= lastPODate.get(Calendar.DAY_OF_YEAR)) {
+						Calendar yesterday = Calendar.getInstance();
+						yesterday.add(Calendar.DAY_OF_MONTH, -1);
+						if(DateUtil.isDateInclusiveBetween(DateUtil.floorDay(lastPODate.getTime()), DateUtil.floorDay(yesterday.getTime()), po.getDeliveredOn())) {
 							deliveriesAfterLastPO.add(po);
 						}
 					}
@@ -188,7 +213,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						System.out.println("Processing PO #" + po.getId());
 						final List<PurchaseOrderDetail> poDetails = purchaseOrderDetailService.findAllByPurchaseOrderId(po.getId());
 						for(PurchaseOrderDetail poDetail : poDetails) {
-							System.out.println("Found : " + poDetail.getProductName() + " worth " + poDetail.getFormattedNetPrice());
+							System.out.println("Found : " + poDetail.getProductName() + " worth " + poDetail.getFormattedTotalPrice());
 							final Long productId = poDetail.getProductDetail().getProduct().getId();
 							Float netPurchaseAmount = (lastPurchaseNetAmount.get(productId) == null) ? 0.0f : lastPurchaseNetAmount.get(productId);
 							netPurchaseAmount += poDetail.getTotalPrice();
@@ -242,7 +267,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						System.out.println("Total profit : " + netProfitAmount);
 						
 						// Compute for sale rate (net sales amount / actual budget * 100) [cap value between 0-100%]
-						Float tempRate = actualBudget.equals(0.0f) ? 0 : netSalesAmount / actualBudget * 100;
+						final Float proportionedNetSalesAmount = (netSalesAmount < actualBudget - 0.999) ? netSalesAmount / salesPeriod * company.getDaysBooked() : netSalesAmount;
+						Float tempRate = actualBudget.equals(0.0f) ? 0 : proportionedNetSalesAmount / actualBudget * 100;
 						final Float saleRate = tempRate > 100.0f ? 100.0f : (tempRate < 0.0f ? 0.0f : tempRate);
 						System.out.println("Computed sale rate : " + saleRate);
 						
@@ -434,8 +460,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 				final Float wholePurchasePrice = wholeProductDetail != null ? wholeProductDetail.getNetPrice() : -1.0f;
 				final Float piecePurchasePrice = pieceProductDetail != null ? pieceProductDetail.getNetPrice() : -1.0f;
 				
-				inventory.setWholeQuantity((int) Math.floor(stockBudget / wholePurchasePrice));
-				inventory.setPieceQuantity((stockBudget % wholePurchasePrice) / piecePurchasePrice);
+				inventory.setWholeQuantity((int) Math.floor((stockBudget + 0.999) / wholePurchasePrice));
+				inventory.setPieceQuantity(Math.round(((stockBudget + 0.999f) % wholePurchasePrice) / piecePurchasePrice) / 1.0f);
 				
 				inventory.setWholeUnit((wholeProductDetail.getUnitType() != null) ? wholeProductDetail.getUnitType() : UnitType.DEFAULT);
 				inventory.setPieceUnit((pieceProductDetail.getUnitType() != null) ? pieceProductDetail.getUnitType() : UnitType.DEFAULT);
@@ -472,7 +498,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		
 		final PurchaseOrder purchaseOrder = purchaseOrderService.find(purchaseOrderId);
 		if(purchaseOrder != null) {
-			if(purchaseOrder.getStatus().equals(Status.LISTING)) {
+			final Map<String, String> errors = purchaseOrderFormValidator.validateDeliveryDateWithCompanyLastPurchaseDate(purchaseOrder.getDeliveredOn(), purchaseOrder.getCompany());
+			if(purchaseOrder.getStatus().equals(Status.LISTING) && errors.isEmpty()) {
 				result = new ResultBean();
 				
 				purchaseOrder.setStatus(Status.CANCELLED);
@@ -484,19 +511,15 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					result.setMessage("Failed to remove Purchase order \"" + purchaseOrder.getId() + " of " + purchaseOrder.getCompany().getName() + "\".");
 				}
 			} else {
-				result = new ResultBean(Boolean.FALSE, "Purchase order cannot be removed right now.");
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Declined!") + " Processed purchase order cannot be deleted."));
 			}
 		} else {
-			result = new ResultBean(Boolean.FALSE, "Purchase order not found.");
+			result = new ResultBean(Boolean.FALSE, "Error please refresh the page.");
 		}
 		
 		return result;
 	}
 	
-	private void setPurchaseOrder(PurchaseOrder purchaseOrder, PurchaseOrderFormBean purchaseOrderForm) {
-		purchaseOrder.setCompany(companyService.find(purchaseOrderForm.getCompanyId()));
-	}
-
 	@Override
 	public void refreshPurchaseOrder(Long purchaseOrderId) {
 		this.refreshPurchaseOrder(purchaseOrderService.find(purchaseOrderId));
@@ -552,26 +575,31 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		
 		final PurchaseOrderDetail purchaseOrderDetail = purchaseOrderDetailService.findByOrderAndDetailId(purchaseOrder.getId(), productDetail.getId());
 		
-		if(purchaseOrderDetail == null) {
-			if(purchaseOrder.getCompany().getId().equals(productDetail.getProduct().getCompany().getId())) {
-				result = new ResultBean();
-				
-				final PurchaseOrderDetail newPurchaseOrderDetail = new PurchaseOrderDetail();
-				setPurchaseOrderDetail(newPurchaseOrderDetail, purchaseOrder, productDetail);
-				
-				result.setSuccess(purchaseOrderDetailService.insert(newPurchaseOrderDetail) != null && 
-						this.changePurchaseOrderDetailQuantity(newPurchaseOrderDetail, quantity).getSuccess());
-				
-				if(result.getSuccess()) {
-					result.setMessage("Successfully added item.");
+		final Map<String, String> errors = purchaseOrderFormValidator.validateDeliveryDateWithCompanyLastPurchaseDate(purchaseOrder.getDeliveredOn(), purchaseOrder.getCompany());
+		if(errors.isEmpty()) {
+			if(purchaseOrderDetail == null) {
+				if(purchaseOrder.getCompany().getId().equals(productDetail.getProduct().getCompany().getId())) {
+					result = new ResultBean();
+					
+					final PurchaseOrderDetail newPurchaseOrderDetail = new PurchaseOrderDetail();
+					setPurchaseOrderDetail(newPurchaseOrderDetail, purchaseOrder, productDetail);
+					
+					result.setSuccess(purchaseOrderDetailService.insert(newPurchaseOrderDetail) != null && 
+							this.changePurchaseOrderDetailQuantity(newPurchaseOrderDetail, quantity).getSuccess());
+					
+					if(result.getSuccess()) {
+						result.setMessage("Successfully added item.");
+					} else {
+						result.setMessage("Failed to add item.");
+					}
 				} else {
-					result.setMessage("Failed to add item.");
+					result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Error! ") + Html.text(Color.TURQUOISE, productDetail.getProduct().getName()) + " is not a product of " + Html.text(Color.TURQUOISE, purchaseOrder.getCompany().getName()) + "."));
 				}
 			} else {
-				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Error! ") + Html.text(Color.TURQUOISE, productDetail.getProduct().getName()) + " is not a product of " + Html.text(Color.TURQUOISE, purchaseOrder.getCompany().getName()) + "."));
+				result = this.changePurchaseOrderDetailQuantity(purchaseOrderDetail, purchaseOrderDetail.getQuantity() + quantity);
 			}
 		} else {
-			result = this.changePurchaseOrderDetailQuantity(purchaseOrderDetail, purchaseOrderDetail.getQuantity() + quantity);
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Declined!") + " Processed purchase order cannot be edited."));
 		}
 		
 		return result;
@@ -637,16 +665,22 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		final ResultBean result;
 		
 		final PurchaseOrder purchaseOrder = purchaseOrderDetail.getPurchaseOrder();
-		result = new ResultBean();
 		
-		purchaseOrder.setTotalAmount(purchaseOrder.getTotalAmount() - purchaseOrderDetail.getTotalPrice());
-		purchaseOrder.setTotalItems(purchaseOrder.getTotalItems() - purchaseOrderDetail.getQuantity());
-		result.setSuccess(purchaseOrderDetailService.erase(purchaseOrderDetail));
-		if(result.getSuccess()) {
-			purchaseOrderService.update(purchaseOrder);
-			result.setMessage("Successfully removed item \"" + purchaseOrderDetail.getProductName() + " (" + purchaseOrderDetail.getUnitType() + ")\".");
+		final Map<String, String> errors = purchaseOrderFormValidator.validateDeliveryDateWithCompanyLastPurchaseDate(purchaseOrder.getDeliveredOn(), purchaseOrder.getCompany());
+		if(errors.isEmpty()) {
+			result = new ResultBean();
+			
+			purchaseOrder.setTotalAmount(purchaseOrder.getTotalAmount() - purchaseOrderDetail.getTotalPrice());
+			purchaseOrder.setTotalItems(purchaseOrder.getTotalItems() - purchaseOrderDetail.getQuantity());
+			result.setSuccess(purchaseOrderDetailService.erase(purchaseOrderDetail));
+			if(result.getSuccess()) {
+				purchaseOrderService.update(purchaseOrder);
+				result.setMessage("Successfully removed item \"" + purchaseOrderDetail.getProductName() + " (" + purchaseOrderDetail.getUnitType() + ")\".");
+			} else {
+				result.setMessage("Failed to remove item \"" + purchaseOrderDetail.getProductName() + " (" + purchaseOrderDetail.getUnitType() + ")\".");
+			}
 		} else {
-			result.setMessage("Failed to remove Purchase order \"" + purchaseOrderDetail.getProductName() + " (" + purchaseOrderDetail.getUnitType() + ")\".");
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Declined!") + " Processed purchase order cannot be edited."));
 		}
 		
 		return result;
@@ -685,24 +719,29 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 				quantity = 999;
 			}
 			
-			result = new ResultBean();
-			
 			final PurchaseOrder purchaseOrder = purchaseOrderDetail.getPurchaseOrder();
 			
-			purchaseOrder.setTotalAmount(purchaseOrder.getTotalAmount() - purchaseOrderDetail.getTotalPrice());
-			purchaseOrder.setTotalItems(purchaseOrder.getTotalItems() - purchaseOrderDetail.getQuantity());
-			
-			setPurchaseOrderDetailQuantity(purchaseOrderDetail, quantity);
-			result.setSuccess(purchaseOrderDetailService.update(purchaseOrderDetail));
-			
-			if(result.getSuccess()) {
-				purchaseOrder.setTotalAmount(purchaseOrder.getTotalAmount() + purchaseOrderDetail.getTotalPrice());
-				purchaseOrder.setTotalItems(purchaseOrder.getTotalItems() + purchaseOrderDetail.getQuantity());
-				purchaseOrderService.update(purchaseOrder);
+			final Map<String, String> errors = purchaseOrderFormValidator.validateDeliveryDateWithCompanyLastPurchaseDate(purchaseOrder.getDeliveredOn(), purchaseOrder.getCompany());
+			if(errors.isEmpty()) {
+				result = new ResultBean();
 				
-				result.setMessage("Quantity successfully updated.");
+				purchaseOrder.setTotalAmount(purchaseOrder.getTotalAmount() - purchaseOrderDetail.getTotalPrice());
+				purchaseOrder.setTotalItems(purchaseOrder.getTotalItems() - purchaseOrderDetail.getQuantity());
+				
+				setPurchaseOrderDetailQuantity(purchaseOrderDetail, quantity);
+				result.setSuccess(purchaseOrderDetailService.update(purchaseOrderDetail));
+				
+				if(result.getSuccess()) {
+					purchaseOrder.setTotalAmount(purchaseOrder.getTotalAmount() + purchaseOrderDetail.getTotalPrice());
+					purchaseOrder.setTotalItems(purchaseOrder.getTotalItems() + purchaseOrderDetail.getQuantity());
+					purchaseOrderService.update(purchaseOrder);
+					
+					result.setMessage("Quantity successfully updated.");
+				} else {
+					result.setMessage("Failed to update quantity.");
+				}
 			} else {
-				result.setMessage("Failed to update quantity.");
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Declined!") + " Processed purchase order cannot be edited."));
 			}
 		} else {
 			result = this.removePurchaseOrderDetail(purchaseOrderDetail);
@@ -746,6 +785,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
 		purchaseOrderDetail.setProductDetail(productDetail);
 		purchaseOrderDetail.setProductName(productDetail.getProduct().getName());
+		purchaseOrderDetail.setProductCode(productDetail.getProduct().getCode());
 		purchaseOrderDetail.setUnitType(productDetail.getUnitType());
 		purchaseOrderDetail.setGrossPrice(productDetail.getGrossPrice());
 		purchaseOrderDetail.setNetPrice(productDetail.getNetPrice());

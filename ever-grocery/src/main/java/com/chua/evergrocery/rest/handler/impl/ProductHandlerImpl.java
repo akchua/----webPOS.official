@@ -213,6 +213,7 @@ public class ProductHandlerImpl implements ProductHandler {
 	private void setProduct(Product product, ProductFormBean productForm) {
 		product.setName(productForm.getName());
 		product.setDisplayName(productForm.getDisplayName());
+		product.setCode(productForm.getCode());
 		/*product.setBrand(brandService.find(productForm.getBrandId()));*/
 		product.setCategory(categoryService.find(productForm.getCategoryId()));
 		product.setCompany(companyService.find(productForm.getCompanyId()));

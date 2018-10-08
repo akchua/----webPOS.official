@@ -16,6 +16,11 @@
 				<input data-bind="value: productFormModel.displayName" type="text" class="form-control" id="inputDisplayName" placeholder="Display Name">
 				<p data-bind="text: errors.displayName" class="text-danger"></p>
 			</div>
+			<div class="form-group">
+				<label for="inputCode" class="control-label">Code</label>
+				<input data-bind="value: productFormModel.code" type="text" class="form-control" id="inputCode" placeholder="Code">
+				<p data-bind="text: errors.code" class="text-danger"></p>
+			</div>
 			<!-- <div class="form-group">
 				<label for="inputBrand">Brand</label>
 				<select data-bind="options: brandList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- Select Brand --', value: productFormModel.brandId" class="form-control" id="inputBrand"></select>

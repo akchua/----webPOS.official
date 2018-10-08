@@ -32,6 +32,9 @@
     					<th>Delivery Date</th>
     					<th>Company</th>
     					<th>Creator</th>
+    					<!-- ko if: showChecked -->
+    					<th>Checked By</th>
+    					<!-- /ko -->
     					<th class="text-right">Total Amount</th>
     				</tr>
     			</thead>
@@ -47,9 +50,16 @@
     					</td>
     					<td>
     						<span data-bind="if: purchaseOrder.creator">
-    							<span data-bind="text: purchaseOrder.creator.lastName"></span><span>, </span><span data-bind="text: purchaseOrder.creator.firstName"></span>
+    							<span data-bind="text: purchaseOrder.creator.shortName"></span>
     						</span>
     					</td>
+    					<!-- ko if: $parent.showChecked -->
+    					<td>
+    						<span data-bind="if: purchaseOrder.managerInCharge">
+    							<span data-bind="text: purchaseOrder.managerInCharge.shortName"></span>
+    						</span>
+    					</td>
+    					<!-- /ko -->
     					<td class="text-right"><span data-bind="text: purchaseOrder.formattedTotalAmount"></span></td>
     					<td>
     						<div class="pull-right">

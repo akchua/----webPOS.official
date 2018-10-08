@@ -26,6 +26,7 @@
     			<thead>
     				<tr>
     					<th>ID</th>
+    					<th>Delivery Date</th>
     					<th>Company</th>
     					<th>Creator</th>
     					<th class="text-right">Total Amount</th>
@@ -35,6 +36,7 @@
     			<tbody data-bind="foreach: { data: purchaseOrderList, as: 'purchaseOrder' }">
     				<tr>
     					<td data-bind="text: purchaseOrder.id"></td>
+    					<td data-bind="text: purchaseOrder.formattedDeliveredOn"></td>
     					<td>
     						<span data-bind="if: purchaseOrder.company">
     							<span data-bind="text: purchaseOrder.company.name"></span>

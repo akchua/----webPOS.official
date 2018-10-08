@@ -17,6 +17,7 @@
 	    				<tr>
 	    					<th class = "text-center">Quantity</th>
 	    					<th>Unit</th>
+	    					<th>Code</th>
 	    					<th>Product Name</th>
 	    					<th class = "text-right">Unit Price</th>
 	    					<th class = "text-right">Total Price</th>
@@ -27,6 +28,7 @@
 	    				<tr>
 	    					<td data-bind="text: orderDetail.quantity" class = "text-center"></td>
 	    					<td data-bind="text: orderDetail.unitType.displayName"></td>
+	    					<td data-bind="text: orderDetail.productCode"></td>
 	    					<td data-bind="text: orderDetail.productName"></td>
 	    					<td data-bind="text: orderDetail.formattedUnitPrice" class = "text-right"></td>
 	    					<td data-bind="text: orderDetail.formattedTotalPrice" class = "text-right"></td>
