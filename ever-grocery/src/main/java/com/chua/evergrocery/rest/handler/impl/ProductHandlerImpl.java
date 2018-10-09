@@ -96,11 +96,11 @@ public class ProductHandlerImpl implements ProductHandler {
 		final Map<String, String> errors = productFormValidator.validate(productForm);
 
 		if(errors.isEmpty()) {
-			if(!productService.isExistsByName(productForm.getName())) {
+			if(productService.isExistsByName(productForm.getName())) {
 				errors.put("name", "Name already exists!");
 			}
 			
-			if(productForm.getCode() != null && !productForm.getCode().isEmpty() && !productService.isExistsByCode(productForm.getCode())) {
+			if(productForm.getCode() != null && !productForm.getCode().isEmpty() && productService.isExistsByCode(productForm.getCode())) {
 				errors.put("code", "Code already exists!");
 			}
 			
