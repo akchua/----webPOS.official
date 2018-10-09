@@ -25,7 +25,7 @@ public class ProductFormValidator extends AbstractFormValidator<ProductFormBean>
 		if(!temp.isEmpty()) errors.put("name", temp);
 		temp = validateStringNull(productForm.getDisplayName(), 3, 25);
 		if(!temp.isEmpty()) errors.put("displayName", temp);
-		temp = (productForm.getCode().contains("\\s") ? "Spaces are not allowed in this field." : "");
+		temp = (productForm.getCode() != null && productForm.getCode().contains("\\s")) ? "Spaces are not allowed in this field." : "";
 		if(!temp.isEmpty()) errors.put("code", temp);
 		temp = validateStringNull(productForm.getCode(), 3, 25);
 		if(!temp.isEmpty()) errors.put("code", temp);

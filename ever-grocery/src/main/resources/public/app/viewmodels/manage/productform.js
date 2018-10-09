@@ -1,5 +1,5 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 'modules/brandservice', 'modules/categoryservice', 'modules/companyservice', 'modules/constantsservice', 'viewmodels/manage/productdetailsform'], 
-		function (dialog, app, ko, productService, brandService, categoryService, companyService, constantsService, ProductDetailsForm) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice'/*, 'modules/brandservice'*/, 'modules/categoryservice', 'modules/companyservice', 'modules/constantsservice', 'viewmodels/manage/productdetailsform'], 
+		function (dialog, app, ko, productService/*, brandService*/, categoryService, companyService, constantsService, ProductDetailsForm) {
     var ProductForm = function(preTitle, product) {
         this.preTitle = preTitle;
         this.product = product;
@@ -40,10 +40,10 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
     	self.productFormModel.code(self.product.code);
     	self.productFormModel.allowSeniorDiscount(self.product.allowSeniorDiscount);
     	
-    	brandService.getBrandListByName().done(function(brandList) {
+    	/*brandService.getBrandListByName().done(function(brandList) {
     		self.brandList(brandList);
     		self.productFormModel.brandId(self.product.brand.id);
-    	});
+    	});*/
     	
     	categoryService.getCategoryListByName().done(function(categoryList) {
     		self.categoryList(categoryList);

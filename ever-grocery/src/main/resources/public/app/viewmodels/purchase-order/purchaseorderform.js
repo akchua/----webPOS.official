@@ -46,7 +46,7 @@ define(['plugins/router', 'plugins/dialog', 'durandal/app', 'knockout', 'modules
         		self.errors.deliveredOn(result.extras.errors.deliveredOn);
         	}
         	
-        	if(result.message) app.showMessage(result.message);
+        	if(result.message && !result.success) app.showMessage(result.message);
         });
     };
     
