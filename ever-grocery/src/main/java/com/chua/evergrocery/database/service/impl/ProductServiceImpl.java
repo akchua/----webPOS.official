@@ -1,3 +1,4 @@
+
 package com.chua.evergrocery.database.service.impl;
 
 import java.util.List;
@@ -36,6 +37,11 @@ public class ProductServiceImpl
 	@Override
 	public Boolean isExistsByName(String name) {
 		return dao.findByName(StringUtils.trimToEmpty(name)) != null;
+	}
+	
+	@Override
+	public Boolean isExistsByCode(String code) {
+		return dao.findByCode(StringUtils.trimToEmpty(code)) != null;
 	}
 
 	@Override

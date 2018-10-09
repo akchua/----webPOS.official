@@ -11,6 +11,8 @@ public interface ProductService
 	
 	Boolean isExistsByName(String name);
 	
+	Boolean isExistsByCode(String code);
+	
 	ObjectList<Product> findAllWithPagingOrderByName(int pageNumber, int resultsPerPage, String searchKey, Long companyId);
 	
 	List<Product> findAllByCompanyOrderByName(Long companyId);

@@ -25,12 +25,14 @@ import com.chua.evergrocery.database.service.CompanyService;
 import com.chua.evergrocery.database.service.PriceHistoryService;
 import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.ProductService;
+import com.chua.evergrocery.enums.Color;
 import com.chua.evergrocery.enums.PriceHistoryType;
 import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.ProductHandler;
 import com.chua.evergrocery.rest.validator.ProductFormValidator;
+import com.chua.evergrocery.utility.Html;
 
 @Transactional
 @Component
@@ -95,6 +97,14 @@ public class ProductHandlerImpl implements ProductHandler {
 
 		if(errors.isEmpty()) {
 			if(!productService.isExistsByName(productForm.getName())) {
+				errors.put("name", "Name already exists!");
+			}
+			
+			if(productForm.getCode() != null && !productForm.getCode().isEmpty() && !productService.isExistsByCode(productForm.getCode())) {
+				errors.put("code", "Code already exists!");
+			}
+			
+			if(errors.isEmpty()) {
 				final Product product = new Product();
 				setProduct(product, productForm);
 				product.setSaleRate(70.0f);
@@ -108,12 +118,13 @@ public class ProductHandlerImpl implements ProductHandler {
 					extras.put("productId", product.getId());
 					result.setExtras(extras);
 					
-					result.setMessage("Product successfully created.");
+					result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created Product " + Html.text(Color.BLUE, product.getDisplayName()) + "."));
 				} else {
-					result.setMessage("Failed to create product.");
+					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
 			} else {
-				result = new ResultBean(false, "Product \"" + productForm.getName() + "\" already exists!");
+				result = new ResultBean(Boolean.FALSE, "");
+				result.addToExtras("errors", errors);
 			}
 		} else {
 			result = new ResultBean(Boolean.FALSE, "");
@@ -132,7 +143,12 @@ public class ProductHandlerImpl implements ProductHandler {
 			final Map<String, String> errors = productFormValidator.validate(productForm);
 			if(!(StringUtils.trimToEmpty(product.getName()).equalsIgnoreCase(productForm.getName())) &&
 					productService.isExistsByName(productForm.getName())) {
-				errors.put("name", productForm.getName() + " already exists!");
+				errors.put("name", "Name already exists!");
+			}
+			
+			if(!(StringUtils.trimToEmpty(product.getCode()).equalsIgnoreCase(productForm.getCode())) &&
+					productService.isExistsByCode(productForm.getCode())) {
+				errors.put("code", productForm.getName() + "Code already exists!");
 			}
 				
 			if(errors.isEmpty()) {
@@ -141,16 +157,16 @@ public class ProductHandlerImpl implements ProductHandler {
 				result = new ResultBean();
 				result.setSuccess(productService.update(product));
 				if(result.getSuccess()) {
-					result.setMessage("Product successfully updated.");
+					result.setMessage(Html.line("Product " + Html.text(Color.BLUE, product.getDisplayName()) + " has been successfully " + Html.text(Color.GREEN, "updated") + "."));
 				} else {
-					result.setMessage("Failed to update product.");
+					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
 			} else {
 				result = new ResultBean(Boolean.FALSE, "");
 				result.addToExtras("errors", errors);
 			}
 		} else {
-			result = new ResultBean(false, "Product not found.");
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load product. Please refresh the page."));
 		}
 		
 		return result;
@@ -166,12 +182,12 @@ public class ProductHandlerImpl implements ProductHandler {
 			
 			result.setSuccess(productService.delete(product));
 			if(result.getSuccess()) {
-				result.setMessage("Successfully removed Product \"" + product.getName() + "\".");
+				result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed Product " + Html.text(Color.BLUE, product.getName()) + "."));
 			} else {
-				result.setMessage("Failed to remove Product \"" + product.getName() + "\".");
+				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 			}
 		} else {
-			result = new ResultBean(false, "Product not found.");
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load product. Please refresh the page."));
 		}
 		
 		return result;

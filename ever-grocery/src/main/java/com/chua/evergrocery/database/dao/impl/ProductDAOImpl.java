@@ -57,6 +57,15 @@ public class ProductDAOImpl
 		
 		return findUniqueResult(null, null, null, conjunction);
 	}
+	
+	@Override
+	public Product findByCode(String code) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("code", code));
+		
+		return findUniqueResult(null, null, null, conjunction);
+	}
 
 	@Override
 	public List<Product> findAllByCompanyWithOrder(Long companyId, Order[] orders) {
