@@ -61,7 +61,7 @@ public class ProductHandlerImpl implements ProductHandler {
 
 	@Override
 	public ObjectList<Product> getProductList(Integer pageNumber, String searchKey, Long companyId) {
-		if(searchKey != null && searchKey.length() > 4 && searchKey.matches("[0-9]+")) {
+		if(searchKey != null && searchKey.length() > 6 && searchKey.matches("[0-9]+")) {
 			List<Product> products = new ArrayList<Product>();
 			ProductDetail productDetail = productDetailService.findByBarcode(searchKey);
 			if(productDetail != null) products.add(productDetail.getProduct());
