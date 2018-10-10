@@ -148,7 +148,7 @@ public class ProductHandlerImpl implements ProductHandler {
 			
 			if(!(StringUtils.trimToEmpty(product.getCode()).equalsIgnoreCase(productForm.getCode())) &&
 					productService.isExistsByCode(productForm.getCode())) {
-				errors.put("code", productForm.getName() + "Code already exists!");
+				errors.put("code", "Code already exists!");
 			}
 				
 			if(errors.isEmpty()) {
