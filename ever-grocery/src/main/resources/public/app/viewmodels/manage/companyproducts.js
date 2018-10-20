@@ -1,4 +1,4 @@
-define(['durandal/app', 'knockout', 'modules/companyservice', 'modules/productService'], 
+define(['durandal/app', 'knockout', 'modules/companyservice', 'modules/productservice'], 
 		function (app, ko, companyService, productService) {
     var CompanyProducts = function() {
     	this.companyId = ko.observable();
