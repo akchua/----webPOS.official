@@ -1,9 +1,11 @@
 package com.chua.evergrocery.database.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Repository;
 
 import com.chua.evergrocery.database.dao.PurchaseOrderDetailDAO;
@@ -42,5 +44,21 @@ public class PurchaseOrderDetailDAOImpl
 		conjunction.add(Restrictions.eq("purchaseOrder.id", purchaseOrderId));
 		
 		return findAllByCriterionList(null, null, null, null, conjunction);
+	}
+
+	@Override
+	public List<PurchaseOrderDetail> findAllByCompanyAndDeliveryDate(long companyId, Date deliveryStart,
+			Date deliveryEnd) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("po.isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("po.company.id", companyId));
+		conjunction.add(Restrictions.between("po.deliveredOn", deliveryStart, deliveryEnd));
+		
+		String[] associatedPaths = { "purchaseOrder" };
+		String[] aliasNames = { "po" };
+		JoinType[] joinTypes = { JoinType.INNER_JOIN };
+		
+		return findAllByCriterionList(associatedPaths, aliasNames, joinTypes, null, conjunction);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.chua.evergrocery.database.entity.Company;
 import com.chua.evergrocery.database.prototype.CompanyPrototype;
+import com.chua.evergrocery.objects.ObjectList;
 
 public interface CompanyService
 		extends Service<Company, Long>, CompanyPrototype {
@@ -13,6 +14,8 @@ public interface CompanyService
 	 * @return the list of company
 	 */
 	List<Company> findAllOrderByName();
+	
+	ObjectList<Company> findAllWithPagingOrderByPurchaseValue(int pageNumber, int resultsPerPage, String searchKey);
 	
 	Boolean isExistsByName(String name);
 }

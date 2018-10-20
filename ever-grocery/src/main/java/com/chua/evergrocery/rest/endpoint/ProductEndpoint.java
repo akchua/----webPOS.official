@@ -40,6 +40,14 @@ public class ProductEndpoint {
 	}
 	
 	@GET
+	@Path("/listbyrank")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<Product> getProductListByRank(@QueryParam("pageNumber") Integer pageNumber, 
+			@QueryParam("searchKey") String searchKey, @QueryParam("companyId") Long companyId) {
+		return productHandler.getProductListByRank(pageNumber, searchKey, companyId);
+	}
+	
+	@GET
 	@Path("/salepricehistory")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ObjectList<PriceHistory> getSalePriceHistoryList(@QueryParam("pageNumber") Integer pageNumber) {

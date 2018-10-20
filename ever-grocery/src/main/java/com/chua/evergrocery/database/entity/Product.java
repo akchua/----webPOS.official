@@ -28,6 +28,7 @@ import com.chua.evergrocery.serializer.json.BrandSerializer;
 import com.chua.evergrocery.serializer.json.CategorySerializer;
 import com.chua.evergrocery.serializer.json.CompanySerializer;
 import com.chua.evergrocery.serializer.json.ProductDetailSerializer;
+import com.chua.evergrocery.utility.format.NumberFormatter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity(name = "Product")
@@ -64,6 +65,13 @@ public class Product extends BaseObject {
 	private Float purchaseBudget;
 	
 	private Float totalBudget;
+	
+	// Percentage in respective company only (previous month only) (net amount is used)
+	private Float purchaseValuePercentage;
+	
+	private Float saleValuePercentage;
+	
+	private Float profitPercentage;
 	
 	@ManyToOne(targetEntity = Brand.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "brand_id")
@@ -196,5 +204,50 @@ public class Product extends BaseObject {
 
 	public void setTotalBudget(Float totalBudget) {
 		this.totalBudget = totalBudget;
+	}
+
+	@Basic
+	@Column(name = "purchase_value_percentage")
+	public Float getPurchaseValuePercentage() {
+		return purchaseValuePercentage;
+	}
+	
+	@Transient 
+	public String getFormattedPurchaseValuePercentage() {
+		return NumberFormatter.toPercent(purchaseValuePercentage);
+	}
+
+	public void setPurchaseValuePercentage(Float purchaseValuePercentage) {
+		this.purchaseValuePercentage = purchaseValuePercentage;
+	}
+
+	@Basic
+	@Column(name = "sale_value_percentage")
+	public Float getSaleValuePercentage() {
+		return saleValuePercentage;
+	}
+	
+	@Transient 
+	public String getFormattedSaleValuePercentage() {
+		return NumberFormatter.toPercent(saleValuePercentage);
+	}
+
+	public void setSaleValuePercentage(Float saleValuePercentage) {
+		this.saleValuePercentage = saleValuePercentage;
+	}
+	
+	@Basic
+	@Column(name = "profit_percentage")
+	public Float getProfitPercentage() {
+		return profitPercentage;
+	}
+	
+	@Transient 
+	public String getFormattedProfitPercentage() {
+		return NumberFormatter.toPercent(profitPercentage);
+	}
+
+	public void setProfitPercentage(Float profitPercentage) {
+		this.profitPercentage = profitPercentage;
 	}
 }

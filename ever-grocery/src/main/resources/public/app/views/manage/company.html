@@ -24,24 +24,31 @@
     			<thead>
     				<tr>
     					<th>Name</th>
-    					<th>Address</th>
+    					<!-- <th>Address</th>
     					<th>Agent</th>
-    					<th>Phone Number</th>
+    					<th>Phone Number</th> -->
     					<th>Receipt Type</th>
+    					<th class="text-right">Purchases (%)</th>
+    					<th class="text-right">Sales (%)</th>
+    					<th class="text-right">Profit (%)</th>
     				</tr>
     			</thead>
     		
     			<tbody data-bind="foreach: { data: companyList, as: 'company' }">
     				<tr>
     					<td data-bind="text: company.name"></td>
-    					<td data-bind="text: company.address"></td>
+    					<!-- <td data-bind="text: company.address"></td>
     					<td data-bind="text: company.agent"></td>
-    					<td data-bind="text: company.phoneNumber"></td>
+    					<td data-bind="text: company.phoneNumber"></td> -->
     					<td data-bind="text: company.receiptType.displayName"></td>
+    					<td class="text-right" data-bind="text: company.formattedPurchaseValuePercentage"></td>
+    					<td class="text-right" data-bind="text: company.formattedSaleValuePercentage"></td>
+    					<td class="text-right" data-bind="text: company.formattedProfitPercentage"></td>
     					<td>
     						<div class="pull-right">
-    							<button data-bind="click: function() { $parent.edit(company.id) }" type="button" class="btn btn-warning btn-sm">Edit</button>
-    							<button data-bind="click: function() { $parent.remove(company.id, company.name) }" type="button" class="btn btn-danger btn-sm">Remove</button>
+    							<button data-bind="click: function() { $parent.view(company.id) } " type="button" class="btn btn-info btn-sm" title="View"><i class="fa fa-eye"></i></button>
+    							<button data-bind="click: function() { $parent.edit(company.id) }" type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
+    							<button data-bind="click: function() { $parent.remove(company.id, company.name) }" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
     						</div>
     					</td>
     				</tr>

@@ -35,6 +35,12 @@ public class ProductServiceImpl
 	}
 	
 	@Override
+	public ObjectList<Product> findAllWithPagingOrderByPurchaseValue(int pageNumber, int resultsPerPage,
+			String searchKey, Long companyId) {
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, new Order[] { Order.desc("purchaseValuePercentage") });
+	}
+	
+	@Override
 	public Boolean isExistsByName(String name) {
 		return dao.findByName(StringUtils.trimToEmpty(name)) != null;
 	}

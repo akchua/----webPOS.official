@@ -8,6 +8,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.chua.evergrocery.utility.DateUtil;
+
 /**
  * @author	Adrian Jasper K. Chua
  * @version	1.0
@@ -24,6 +26,8 @@ public class DateFormatter {
 	private static final DateFormat FILE_SAFE_SHORT_DATE_FORMAT = new SimpleDateFormat("MM-dd-yyyy");
 	
 	private static final DateFormat FILE_SAFE_DATE_FORMAT = new SimpleDateFormat("MM-dd-yyyy-HH-mm");
+	
+	private static final DateFormat PRETTY_MONTH_FORMAT = new SimpleDateFormat("MMMMMMM yyyy");
 	
 	private static final DateTimeFormatter SHORT_DATETIME_FORMAT = DateTimeFormat.forPattern("MM/dd/yyyy");
 	
@@ -77,5 +81,9 @@ public class DateFormatter {
 	
 	public static String fileSafeFormat(DateTime toFormat) {
 		return toFormat.toString(FILE_SAFE_DATETIME_FORMAT);
+	}
+	
+	public static String prettyMonthFormat(int monthId) {
+		return PRETTY_MONTH_FORMAT.format(DateUtil.monthIdToDate(monthId));
 	}
 }

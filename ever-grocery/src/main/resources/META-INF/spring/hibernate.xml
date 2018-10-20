@@ -66,6 +66,10 @@
 				<value>com.chua.evergrocery.database.entity.PurchaseOrderDetail</value>
 				
 				<value>com.chua.evergrocery.database.entity.CashTransfer</value>
+				
+				<value>com.chua.evergrocery.database.entity.MTDPurchaseSummary</value>
+				<value>com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary</value>
+				<value>com.chua.evergrocery.database.entity.ProductMTDPurchaseSummary</value>
 			</list>
 		</property>
 	</bean>

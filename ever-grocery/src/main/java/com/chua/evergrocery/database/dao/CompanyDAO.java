@@ -6,6 +6,7 @@ import org.hibernate.criterion.Order;
 
 import com.chua.evergrocery.database.entity.Company;
 import com.chua.evergrocery.database.prototype.CompanyPrototype;
+import com.chua.evergrocery.objects.ObjectList;
 
 public interface CompanyDAO extends DAO<Company, Long>, CompanyPrototype {
 
@@ -17,6 +18,8 @@ public interface CompanyDAO extends DAO<Company, Long>, CompanyPrototype {
 	 * @return the list of company
 	 */
 	List<Company> findAllWithOrder(Order[] orders);
+	
+	ObjectList<Company> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey, Order[] orders);
 	
 	Company findByName(String name);
 }

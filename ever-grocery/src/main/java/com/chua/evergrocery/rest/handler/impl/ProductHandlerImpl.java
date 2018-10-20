@@ -76,6 +76,22 @@ public class ProductHandlerImpl implements ProductHandler {
 	}
 	
 	@Override
+	public ObjectList<Product> getProductListByRank(Integer pageNumber, String searchKey, Long companyId) {
+		if(searchKey != null && searchKey.length() > 6 && searchKey.matches("[0-9]+")) {
+			List<Product> products = new ArrayList<Product>();
+			ProductDetail productDetail = productDetailService.findByBarcode(searchKey);
+			if(productDetail != null) products.add(productDetail.getProduct());
+			
+			ObjectList<Product> productList = new ObjectList<Product>();
+			productList.setList(products);
+			productList.setTotal(products.size());
+			return productList;
+		} else {
+			return productService.findAllWithPagingOrderByPurchaseValue(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, companyId);
+		}
+	}
+	
+	@Override
 	public ObjectList<PriceHistory> getSalePriceHistoryList(Integer pageNumber) {
 		return priceHistoryService.findAllSaleTypeWithin30DaysOrderByCreatedOn(pageNumber, UserContextHolder.getItemsPerPage());
 	}
@@ -110,6 +126,9 @@ public class ProductHandlerImpl implements ProductHandler {
 				product.setSaleRate(70.0f);
 				product.setPurchaseBudget(0.0f);
 				product.setTotalBudget(0.0f);
+				product.setPurchaseValuePercentage(0.0f);
+				product.setSaleValuePercentage(0.0f);
+				product.setProfitPercentage(0.0f);
 				
 				result = new ResultBean();
 				result.setSuccess(productService.insert(product) != null);

@@ -35,6 +35,14 @@ public class CompanyEndpoint {
 	}
 	
 	@GET
+	@Path("/listbyrank")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<Company> getCompanyListByRank(@QueryParam("pageNumber") Integer pageNumber, 
+			@QueryParam("searchKey") String searchKey) {
+		return companyHandler.getCompanyListByRank(pageNumber, searchKey);
+	}
+	
+	@GET
 	@Path("/get")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Company getCompany(@QueryParam("companyId") Long companyId) {

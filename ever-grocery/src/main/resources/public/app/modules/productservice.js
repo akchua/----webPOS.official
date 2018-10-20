@@ -12,6 +12,18 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getProductListByRank: function(pageNumber, searchKey, companyId, async) {
+    		return $.ajax({
+    			url: '/services/product/listbyrank',
+    			async: async,
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				searchKey: searchKey,
+    				companyId: companyId
+    			}
+    		});
+    	},
+    	
     	getSalePriceHistoryList: function(pageNumber, async) {
     		return $.ajax({
     			url: '/services/product/salepricehistory',

@@ -10,6 +10,16 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getCompanyListByRank: function(pageNumber, searchKey) {
+    		return $.ajax({
+    			url: '/services/company/listbyrank',
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				searchKey: searchKey
+    			}
+    		});
+    	},
+    	
     	getCompany: function(companyId) {
     		return $.ajax({
     			url: '/services/company/get',

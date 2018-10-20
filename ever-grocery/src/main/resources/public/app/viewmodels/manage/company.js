@@ -1,4 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/companyservice', 'viewmodels/manage/companyform'], function (app, ko, companyService, CompanyForm) {
+define(['durandal/app', 'knockout', 'modules/companyservice', 'viewmodels/manage/companyform', 'viewmodels/manage/companyview'], 
+		function (app, ko, companyService, CompanyForm, CompanyView) {
 	var Company = function() {
 		this.companyList = ko.observable();
 		
@@ -31,7 +32,7 @@ define(['durandal/app', 'knockout', 'modules/companyservice', 'viewmodels/manage
 	Company.prototype.refreshCompanyList = function() {
 		var self = this;
 		
-		companyService.getCompanyList(self.currentPage(), self.searchKey()).done(function(data) {
+		companyService.getCompanyListByRank(self.currentPage(), self.searchKey()).done(function(data) {
 			self.companyList(data.list);
 			self.totalItems(data.total);
 		});
@@ -51,6 +52,14 @@ define(['durandal/app', 'knockout', 'modules/companyservice', 'viewmodels/manage
 			self.refreshCompanyList();
 		});
 	};
+	
+	Company.prototype.view = function(companyId) {
+    	var self = this;
+    	
+    	companyService.getCompany(companyId).done(function(company) {
+    		CompanyView.show(company);
+    	});
+    };
 	
 	Company.prototype.edit = function(companyId) {
 		var self = this;

@@ -12,6 +12,8 @@ public interface CompanyHandler {
 
 	ObjectList<Company> getCompanyObjectList(Integer pageNumber, String searchKey);
 	
+	ObjectList<Company> getCompanyListByRank(Integer pageNumber, String searchKey);
+	
 	Company getCompany(Long companyId);
 	
 	ResultBean createCompany(CompanyFormBean companyForm);

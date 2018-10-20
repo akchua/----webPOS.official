@@ -9,6 +9,7 @@ import com.chua.evergrocery.database.dao.PurchaseOrderDetailDAO;
 import com.chua.evergrocery.database.entity.PurchaseOrderDetail;
 import com.chua.evergrocery.database.service.PurchaseOrderDetailService;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.utility.DateUtil;
 
 @Service
 public class PurchaseOrderDetailServiceImpl
@@ -34,5 +35,10 @@ public class PurchaseOrderDetailServiceImpl
 	@Override
 	public List<PurchaseOrderDetail> findAllByPurchaseOrderId(Long purchaseOrderId) {
 		return dao.findAllByPurchaseOrderId(purchaseOrderId);
+	}
+
+	@Override
+	public List<PurchaseOrderDetail> findAllByCompanyAndMonthId(long companyId, int monthId) {
+		return dao.findAllByCompanyAndDeliveryDate(companyId, DateUtil.monthIdToDate(monthId), DateUtil.monthIdToDate(monthId + 1));
 	}
 }

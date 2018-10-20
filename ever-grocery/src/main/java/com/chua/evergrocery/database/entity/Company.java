@@ -23,6 +23,8 @@ import com.chua.evergrocery.database.entity.base.BaseObject;
 import com.chua.evergrocery.enums.ReceiptType;
 import com.chua.evergrocery.serializer.json.DistributorSerializer;
 import com.chua.evergrocery.utility.DateUtil;
+import com.chua.evergrocery.utility.format.DateFormatter;
+import com.chua.evergrocery.utility.format.NumberFormatter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity(name = "Company")
@@ -47,6 +49,15 @@ public class Company extends BaseObject {
 	private Float daysBooked;
 	
 	private Date lastPurchaseOrderDate;
+	
+	private Date lastStatisticsUpdate;
+	
+	// Percentage in whole system (previous month only) (net amount is used)
+	private Float purchaseValuePercentage;
+	
+	private Float saleValuePercentage;
+	
+	private Float profitPercentage;
 	
 	@JsonSerialize(using = DistributorSerializer.class)
 	private Distributor distributor;
@@ -128,6 +139,11 @@ public class Company extends BaseObject {
 	}
 	
 	@Transient
+	public String getFormattedLastPurchaseOrderDate() {
+		return DateFormatter.prettyFormat(lastPurchaseOrderDate);
+	}
+	
+	@Transient
 	public Boolean isAutoOrderActive() {
 		return !DateUtil.getDefaultDate().equals(lastPurchaseOrderDate);
 	}
@@ -146,5 +162,60 @@ public class Company extends BaseObject {
 	
 	public void setDistributor(Distributor distributor) {
 		this.distributor = distributor;
+	}
+
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name = "last_statistics_update")
+	public Date getLastStatisticsUpdate() {
+		return lastStatisticsUpdate;
+	}
+
+	public void setLastStatisticsUpdate(Date lastStatisticsUpdate) {
+		this.lastStatisticsUpdate = lastStatisticsUpdate;
+	}
+	
+	@Basic
+	@Column(name = "purchase_value_percentage")
+	public Float getPurchaseValuePercentage() {
+		return purchaseValuePercentage;
+	}
+	
+	@Transient 
+	public String getFormattedPurchaseValuePercentage() {
+		return NumberFormatter.toPercent(purchaseValuePercentage);
+	}
+
+	public void setPurchaseValuePercentage(Float purchaseValuePercentage) {
+		this.purchaseValuePercentage = purchaseValuePercentage;
+	}
+
+	@Basic
+	@Column(name = "sale_value_percentage")
+	public Float getSaleValuePercentage() {
+		return saleValuePercentage;
+	}
+	
+	@Transient 
+	public String getFormattedSaleValuePercentage() {
+		return NumberFormatter.toPercent(saleValuePercentage);
+	}
+
+	public void setSaleValuePercentage(Float saleValuePercentage) {
+		this.saleValuePercentage = saleValuePercentage;
+	}
+	
+	@Basic
+	@Column(name = "profit_percentage")
+	public Float getProfitPercentage() {
+		return profitPercentage;
+	}
+	
+	@Transient 
+	public String getFormattedProfitPercentage() {
+		return NumberFormatter.toPercent(profitPercentage);
+	}
+
+	public void setProfitPercentage(Float profitPercentage) {
+		this.profitPercentage = profitPercentage;
 	}
 }

@@ -1,0 +1,27 @@
+<div class="row">
+	<dl class="dl-horizontal">
+		<dt>Name:</dt>
+		<dd data-bind="text: company.name"></dd>
+		<dt>Address:</dt>
+		<dd data-bind="text: company.address"></dd>
+		<dt>Agent:</dt>
+		<dd data-bind="text: company.agent"></dd>
+		<dt>Contact Number:</dt>
+		<dd data-bind="text: company.phoneNumber"></dd>
+		<dt>Receipt Type:</dt>
+		<dd data-bind="text: company.receiptType"></dd>
+		<dt>Last PO Date:</dt>
+		<dd data-bind="text: company.formattedLastPurchaseOrderDate"></dd>
+   	</dl>
+   	<br>
+   	<hr>
+   	<br>
+   	<dl class="dl-horizontal">
+		<dt>Purchase Val.(%):</dt>
+		<dd data-bind="text: company.formattedPurchaseValuePercentage"></dd>
+		<dt>Sales Value (%):</dt>
+		<dd data-bind="text: company.formattedSaleValuePercentage"></dd>
+		<dt>Profit (%):</dt>
+		<dd data-bind="text: company.formattedProfitPercentage"></dd>
+   	</dl>
+</div>

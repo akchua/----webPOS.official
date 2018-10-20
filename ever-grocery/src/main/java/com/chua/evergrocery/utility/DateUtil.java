@@ -21,6 +21,18 @@ public class DateUtil {
 		return NAME_OF_MONTH[calendar.get(Calendar.MONTH)];
 	}
 	
+	public static int getMonthId(Date date) {
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return (cal.get(Calendar.YEAR) * 12) + cal.get(Calendar.MONTH);
+	}
+	
+	public static Date monthIdToDate(int monthId) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(monthId / 12, monthId % 12, 1, 0, 0, 0);
+		return cal.getTime();
+	}
+	
 	public static Date getDefaultDate() {
 		return new Date(0);
 	}

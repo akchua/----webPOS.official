@@ -28,6 +28,12 @@ public class CompanyServiceImpl
 	}
 	
 	@Override
+	public ObjectList<Company> findAllWithPagingOrderByPurchaseValue(int pageNumber, int resultsPerPage,
+			String searchKey) {
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey,  new Order[] { Order.desc("purchaseValuePercentage") });
+	}
+	
+	@Override
 	public List<Company> findAllOrderByName() {
 		return dao.findAllWithOrder(new Order[] { Order.asc("name") });
 	}
