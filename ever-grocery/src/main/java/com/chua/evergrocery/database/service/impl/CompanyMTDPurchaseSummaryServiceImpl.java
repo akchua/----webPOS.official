@@ -1,5 +1,8 @@
 package com.chua.evergrocery.database.service.impl;
 
+import java.util.List;
+
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +28,10 @@ public class CompanyMTDPurchaseSummaryServiceImpl
 	@Override
 	public CompanyMTDPurchaseSummary findByCompanyAndMonthId(long companyId, int monthId) {
 		return dao.findByCompanyAndMonthId(companyId, monthId);
+	}
+
+	@Override
+	public List<CompanyMTDPurchaseSummary> findAllByCompanyOrderByMonthId(Long companyId) {
+		return dao.findAllByCompanyWithOrder(companyId, new Order[] { Order.asc("monthId") });
 	}
 }

@@ -4,6 +4,10 @@
 	    { route: ['', 'home'], moduleId: 'viewmodels/home', title: 'Home', nav: false }
 	];
 	
+	var adminroute = [
+	    { route: 'admin', moduleId: 'viewmodels/admin/adminhome', title: 'Admin Home', nav: false, hash: '#admin' }
+	];
+	
 	var userroute = [
 	    { route: 'user', moduleId: 'viewmodels/user/user', title: 'Users', nav: true, hash: '#user' }
 	];
@@ -90,6 +94,7 @@
     		
     		switch(app.user.userType.name) {
 	        	case 'ADMINISTRATOR':
+	        		self.routes = self.routes.concat(adminroute);
 	        		self.routes = self.routes.concat(userroute);
 	        	case 'MANAGER':
 	        		self.routes = self.routes.concat(reportroute);

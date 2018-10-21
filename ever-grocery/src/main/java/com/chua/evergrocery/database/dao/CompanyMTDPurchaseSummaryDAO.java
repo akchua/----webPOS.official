@@ -1,5 +1,9 @@
 package com.chua.evergrocery.database.dao;
 
+import java.util.List;
+
+import org.hibernate.criterion.Order;
+
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
 import com.chua.evergrocery.database.prototype.CompanyMTDPurchaseSummaryPrototype;
 
@@ -10,4 +14,5 @@ import com.chua.evergrocery.database.prototype.CompanyMTDPurchaseSummaryPrototyp
  */
 public interface CompanyMTDPurchaseSummaryDAO extends DAO<CompanyMTDPurchaseSummary, Long>, CompanyMTDPurchaseSummaryPrototype {
 
+	List<CompanyMTDPurchaseSummary> findAllByCompanyWithOrder(Long companyId, Order[] orders);
 }

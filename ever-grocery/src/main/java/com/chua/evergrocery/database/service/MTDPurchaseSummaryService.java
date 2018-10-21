@@ -1,5 +1,7 @@
 package com.chua.evergrocery.database.service;
 
+import java.util.List;
+
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
 import com.chua.evergrocery.database.prototype.MTDPurchaseSummaryPrototype;
 
@@ -11,5 +13,5 @@ import com.chua.evergrocery.database.prototype.MTDPurchaseSummaryPrototype;
 public interface MTDPurchaseSummaryService 
 	extends Service<MTDPurchaseSummary, Long>, MTDPurchaseSummaryPrototype {
 
-	
+	List<MTDPurchaseSummary> findAllOrderByMonthId();
 }

@@ -11,7 +11,9 @@
         'fileDownload': '../lib/jquery/jquery.fileDownload',
         'bootstrap-datetimepicker': '../lib/bootstrap/js/bootstrap-datetimepicker',
         'moment': '../lib/moment/moment',
-        'fullcalendar' : '../lib/fullcalendar/js/fullcalendar.min'
+        'fullcalendar' : '../lib/fullcalendar/js/fullcalendar.min',
+        'd3' : '../lib/d3/d3.min',
+        'c3' : '../lib/c3/c3.min'
     },
     shim: {
         'bootstrap': {
@@ -21,6 +23,10 @@
        	'fileDownload': {
        		deps: ['jquery'],
        		exports: 'jQuery'
+       	},
+       	'c3': {
+       		deps: ['d3'],
+       		exports: 'd3'
        }
     }
 });

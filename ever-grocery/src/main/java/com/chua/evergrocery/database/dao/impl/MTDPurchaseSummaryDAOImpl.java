@@ -1,6 +1,9 @@
 package com.chua.evergrocery.database.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.criterion.Junction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +25,19 @@ public class MTDPurchaseSummaryDAOImpl
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.eq("monthId", monthId));
+		conjunction.add(Restrictions.isNull("company.id"));
+		conjunction.add(Restrictions.isNull("product.id"));
 		
 		return findUniqueResult(null, null, null, conjunction);
+	}
+
+	@Override
+	public List<MTDPurchaseSummary> findAllWithOrder(Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.isNull("company.id"));
+		conjunction.add(Restrictions.isNull("product.id"));
+		
+		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}
 }

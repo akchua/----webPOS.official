@@ -8,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.chua.evergrocery.utility.format.DateFormatter;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -31,6 +34,11 @@ public class MTDPurchaseSummary extends PurchaseSummary {
 	@Column(name = "month_id")
 	public Integer getMonthId() {
 		return monthId;
+	}
+	
+	@Transient
+	public String getFormattedMonth() {
+		return DateFormatter.prettyMonthFormat(monthId);
 	}
 
 	public void setMonthId(Integer monthId) {

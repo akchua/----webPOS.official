@@ -135,7 +135,6 @@ public class PurchaseStatisticsHandlerImpl implements PurchaseStatisticsHandler 
 					companyMTDPurchaseSummary.setMonthId(monthId);
 					companyMTDPurchaseSummary.setGrossTotal(grossTotal);
 					companyMTDPurchaseSummary.setNetTotal(netTotal);
-					
 					companyMTDPurchaseSummaryService.insert(companyMTDPurchaseSummary);
 				} else {
 					if(!(companyMTDPurchaseSummary.getGrossTotal().equals(grossTotal)
@@ -166,6 +165,7 @@ public class PurchaseStatisticsHandlerImpl implements PurchaseStatisticsHandler 
 				mtdPurchaseSummary.setNetTotal(totalPurchaseSummary.getNetTotal());
 				
 				mtdPurchaseSummaryService.insert(mtdPurchaseSummary);
+				LOG.info("############ NEW");
 			} else {
 				if(!(mtdPurchaseSummary.getGrossTotal().equals(totalPurchaseSummary.getGrossTotal())
 						&& mtdPurchaseSummary.getNetTotal().equals(totalPurchaseSummary.getNetTotal()))) {
@@ -173,6 +173,7 @@ public class PurchaseStatisticsHandlerImpl implements PurchaseStatisticsHandler 
 					mtdPurchaseSummary.setNetTotal(totalPurchaseSummary.getNetTotal());
 					mtdPurchaseSummaryService.update(mtdPurchaseSummary);
 				}
+				LOG.info("############ UPDATE");
 			}
 		}
 	}
