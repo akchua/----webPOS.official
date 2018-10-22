@@ -56,6 +56,9 @@ public class CompanyHandlerImpl implements CompanyHandler {
 			company.setDeliveryRate(0.0f);
 			company.setDaysBooked(0.0f);
 			company.setLastPurchaseOrderDate(DateUtil.getDefaultDate());
+			company.setPurchaseValuePercentage(0.0f);
+			company.setSaleValuePercentage(0.0f);
+			company.setProfitPercentage(0.0f);
 			
 			result = new ResultBean();
 			result.setSuccess(companyService.insert(company) != null);
