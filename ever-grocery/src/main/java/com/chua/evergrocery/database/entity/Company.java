@@ -140,7 +140,7 @@ public class Company extends BaseObject {
 	
 	@Transient
 	public String getFormattedLastPurchaseOrderDate() {
-		return DateFormatter.prettyFormat(lastPurchaseOrderDate);
+		return DateUtil.getDefaultDate().equals(lastPurchaseOrderDate) ? "n/a" : DateFormatter.prettyFormat(lastPurchaseOrderDate);
 	}
 	
 	@Transient
