@@ -1,5 +1,5 @@
-define(['jquery', 'd3', 'c3', 'durandal/app', 'knockout', 'modules/mtdpurchasesummaryservice'], 
-		function ($, d3, c3, app, ko, mtdPurchaseSummaryService) {
+define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/mtdpurchasesummaryservice', 'modules/c3utility'], 
+		function ($, c3, app, ko, mtdPurchaseSummaryService, c3Utility) {
 	var AdminHome = function() {
 		this.currentYear = (new Date()).getFullYear();
 		
@@ -75,24 +75,7 @@ define(['jquery', 'd3', 'c3', 'durandal/app', 'knockout', 'modules/mtdpurchasesu
 					    	],
 					    	type: 'bar'
 					    },
-					    axis: {
-					    	x: {
-					    		type: 'category',
-					    		tick: {
-					    			rotate: -45,
-					    			multiline: false
-					    		},
-					    		height: 80
-					    	},
-					    	y: {
-					    		tick: {
-					    			format: d3.format(",")
-					    		}
-					    	}
-					    },
-					    legend: {
-					        position: 'right'
-					    }
+					    axis: c3Utility.getDefaultAxis()
 					});
 				});
 			});
@@ -118,24 +101,7 @@ define(['jquery', 'd3', 'c3', 'durandal/app', 'knockout', 'modules/mtdpurchasesu
 				    		self.mtdNetPurchase
 				    	]
 				    },
-				    axis: {
-				    	x: {
-				    		type: 'category',
-				    		tick: {
-				    			rotate: -45,
-				    			multiline: false
-				    		},
-				    		height: 80
-				    	},
-				    	y: {
-				    		tick: {
-				    			format: d3.format(",")
-				    		}
-				    	}
-				    },
-				    legend: {
-				        position: 'right'
-				    }
+				    axis: c3Utility.getDefaultAxis()
 				});
 			});
 		}
