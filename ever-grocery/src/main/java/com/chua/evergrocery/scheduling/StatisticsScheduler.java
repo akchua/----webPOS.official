@@ -25,9 +25,9 @@ public class StatisticsScheduler {
 	
 	/**
 	 * Monthly Statistics Update
-	 * fires at 8:00PM every 1st day of the month
+	 * fires at 8:00PM every last day of the month
 	 */
-	@Scheduled(cron = "0 0 20 1 * ?")
+	@Scheduled(cron = "0 0 20 L * ?")
 	public void monthlyStatisticsUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting monthly statistics update");
