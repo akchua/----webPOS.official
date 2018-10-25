@@ -23,10 +23,9 @@ public class MTDPurchaseSummaryDAOImpl
 	@Override
 	public MTDPurchaseSummary findByMonthId(int monthId) {
 		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("class", "MTDPurchaseSummary"));
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.eq("monthId", monthId));
-		conjunction.add(Restrictions.isNull("company.id"));
-		conjunction.add(Restrictions.isNull("product.id"));
 		
 		return findUniqueResult(null, null, null, conjunction);
 	}
@@ -34,9 +33,18 @@ public class MTDPurchaseSummaryDAOImpl
 	@Override
 	public List<MTDPurchaseSummary> findAllWithOrder(Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("class", "MTDPurchaseSummary"));
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.isNull("company.id"));
-		conjunction.add(Restrictions.isNull("product.id"));
+		
+		return findAllByCriterionList(null, null, null, orders, conjunction);
+	}
+
+	@Override
+	public List<MTDPurchaseSummary> findByYearWithOrder(int year, Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("class", "MTDPurchaseSummary"));
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.between("monthId", year * 12, (year * 12) + 11));
 		
 		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}

@@ -15,4 +15,6 @@ import com.chua.evergrocery.database.prototype.MTDPurchaseSummaryPrototype;
 public interface MTDPurchaseSummaryDAO extends DAO<MTDPurchaseSummary, Long>, MTDPurchaseSummaryPrototype {
 
 	List<MTDPurchaseSummary> findAllWithOrder(Order[] orders);
+	
+	List<MTDPurchaseSummary> findByYearWithOrder(int year, Order[] orders);
 }

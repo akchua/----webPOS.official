@@ -34,4 +34,9 @@ public class MTDPurchaseSummaryServiceImpl
 	public List<MTDPurchaseSummary> findAllOrderByMonthId() {
 		return dao.findAllWithOrder(new Order[] { Order.asc("monthId") });
 	}
+
+	@Override
+	public List<MTDPurchaseSummary> findByYearOrderByMonthId(int year) {
+		return dao.findByYearWithOrder(year, new Order[] { Order.asc("monthId") });
+	}
 }

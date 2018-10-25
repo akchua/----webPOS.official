@@ -14,5 +14,7 @@ public interface MTDPurchaseSummaryHandler {
 
 	List<MTDPurchaseSummary> getMTDPurchaseSummaryList();
 	
+	List<MTDPurchaseSummary> getMTDPurchaseSummaryListByYear(int year);
+	
 	List<CompanyMTDPurchaseSummary> getCompanyMTDPurchaseSummaryList(Long companyId);
 }

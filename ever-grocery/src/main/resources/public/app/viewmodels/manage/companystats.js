@@ -5,8 +5,8 @@ define(['jquery', 'd3', 'c3', 'durandal/app', 'knockout', 'modules/mtdpurchasesu
 		
 		this.chart = null;
 		this.x = ['x'];
-		this.mtdGrossPurchase = ['MTD Gross Purchase'];
-		this.mtdNetPurchase = ['MTD Net Purchase'];
+		this.mtdGrossPurchase = ['Monthly Gross Purchase'];
+		this.mtdNetPurchase = ['Monthly Net Purchase'];
 	};
 	
 	CompanyStats.prototype.activate = function(activationData) {

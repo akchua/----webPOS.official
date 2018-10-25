@@ -21,6 +21,10 @@ public class DateUtil {
 		return NAME_OF_MONTH[calendar.get(Calendar.MONTH)];
 	}
 	
+	public static String[] getMonthNamesArray() {
+		return NAME_OF_MONTH;
+	}
+	
 	public static int getMonthId(Date date) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);

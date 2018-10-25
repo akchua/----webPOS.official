@@ -8,9 +8,19 @@ define(['jquery'], function ($) {
     			}
     		});
     	},
+    	
     	getMTDPurchaseSummaryList: function() {
     		return $.ajax({
     			url: '/services/mtdpurchasesummary/mtdlist'
+    		});
+    	},
+    	
+    	getMTDPurchaseSummaryListByYear: function(year) {
+    		return $.ajax({
+    			url: '/services/mtdpurchasesummary/mtdlistbyyear',
+    			data: {
+    				year: year
+    			}
     		});
     	}
     };

@@ -33,6 +33,13 @@ public class MTDPurchaseSummaryEndpoint {
 	}
 	
 	@GET
+	@Path("/mtdlistbyyear")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<MTDPurchaseSummary> getMTDPurchaseSummaryListByYear(@QueryParam("year") Integer year) {
+		return mtdPurchaseSummaryHandler.getMTDPurchaseSummaryListByYear(year);
+	}
+	
+	@GET
 	@Path("/companymtdlist")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<CompanyMTDPurchaseSummary> getCompanyMTDPurchaseSummaryList(@QueryParam("companyId") Long companyId) {

@@ -33,6 +33,11 @@ public class MTDPurchaseSummaryHandlerImpl implements MTDPurchaseSummaryHandler 
 	}
 	
 	@Override
+	public List<MTDPurchaseSummary> getMTDPurchaseSummaryListByYear(int year) {
+		return mtdPurchaseSummaryService.findByYearOrderByMonthId(year);
+	}
+	
+	@Override
 	public List<CompanyMTDPurchaseSummary> getCompanyMTDPurchaseSummaryList(Long companyId) {
 		return companyMTDPurchaseSummaryService.findAllByCompanyOrderByMonthId(companyId);
 	}

@@ -14,4 +14,6 @@ public interface MTDPurchaseSummaryService
 	extends Service<MTDPurchaseSummary, Long>, MTDPurchaseSummaryPrototype {
 
 	List<MTDPurchaseSummary> findAllOrderByMonthId();
+	
+	List<MTDPurchaseSummary> findByYearOrderByMonthId(int year);
 }
