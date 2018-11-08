@@ -10,10 +10,13 @@ import java.util.stream.Stream;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chua.evergrocery.UserContextHolder;
+import com.chua.evergrocery.beans.InventoryBean;
 import com.chua.evergrocery.beans.ProductDetailsFormBean;
 import com.chua.evergrocery.beans.ProductFormBean;
 import com.chua.evergrocery.beans.ResultBean;
@@ -30,6 +33,7 @@ import com.chua.evergrocery.enums.PriceHistoryType;
 import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.rest.handler.InventoryHandler;
 import com.chua.evergrocery.rest.handler.ProductHandler;
 import com.chua.evergrocery.rest.validator.ProductFormValidator;
 import com.chua.evergrocery.utility.Html;
@@ -57,7 +61,12 @@ public class ProductHandlerImpl implements ProductHandler {
 	private PriceHistoryService priceHistoryService;
 	
 	@Autowired
+	private InventoryHandler inventoryHandler;
+	
+	@Autowired
 	private ProductFormValidator productFormValidator;
+	
+	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
 	public ObjectList<Product> getProductList(Integer pageNumber, String searchKey, Long companyId) {
@@ -309,6 +318,28 @@ public class ProductHandlerImpl implements ProductHandler {
 				final PriceHistory priceHistory = new PriceHistory();
 				setPriceHistory(priceHistory, product, productDetail, productDetailsForm, PriceHistoryType.NET_PURCHASE);
 				priceHistoryService.insert(priceHistory);
+				
+				// Update stock budget
+				if(productDetailsForm.getTitle().equals("Whole")) {
+					final Float percentChange;
+					if(productDetail.getContent().equals(productDetailsForm.getContent())) {
+						percentChange = (productDetailsForm.getNetPrice() - productDetail.getNetPrice()) / productDetail.getNetPrice() * 100.0f;
+					} else {
+						Float newNetPrice = productDetailsForm.getNetPrice() / (productDetailsForm.getContent() != 0 ? productDetailsForm.getContent() : 1);
+						Float oldNetPrice = productDetail.getNetPrice() / (productDetail.getContent() != 0 ? productDetail.getContent() : 1);
+						percentChange = (newNetPrice - oldNetPrice) / oldNetPrice;
+					}
+					final InventoryBean inventoryBean = inventoryHandler.getProductInventory(product.getId());
+					final Float adjustedStockBudget = product.getStockBudget() + (inventoryBean.getStockBudget() * (percentChange / 100.0f));
+					final Float adjustedPurchaseBudget = product.getPurchaseBudget() * (1 + (percentChange / 100.0f));
+					
+					LOG.info("Adjusted stock budget of " + product.getName() + " from " + product.getStockBudget() + " to " + adjustedStockBudget + " ## earned " + (adjustedStockBudget - product.getStockBudget()));
+					LOG.info("Adjusted purchase budget of " + product.getName() + " from " + product.getPurchaseBudget() + " to " + adjustedPurchaseBudget);
+					
+					product.setPurchaseBudget(adjustedPurchaseBudget);
+					product.setTotalBudget(adjustedPurchaseBudget + adjustedStockBudget);
+					productService.update(product);
+				}
 			}
 		}
 		

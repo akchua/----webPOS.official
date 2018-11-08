@@ -271,8 +271,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					if(result.getSuccess()) {
 						//#############################################################################################		remove from stock!!!
 						result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(cash - customerOrder.getTotalAmount())) +
-								Html.newLine + Html.newLine + Html.text("Vat Sales : " + CurrencyFormatter.pesoFormat(customerOrder.getTotalAmount() / 1.12f)) +
-								Html.newLine + Html.text("Add Vat (12%) : " + CurrencyFormatter.pesoFormat(customerOrder.getTotalAmount() - (customerOrder.getTotalAmount() / 1.12f))) +
+								Html.newLine + Html.newLine + Html.text("Cash          : " + CurrencyFormatter.pesoFormat(cash)) +
 								Html.newLine + Html.text("Amount Due    : " + CurrencyFormatter.pesoFormat(customerOrder.getTotalAmount()))));
 					} else {
 						result.setMessage("Failed to pay Customer order \"" + customerOrder.getName() + "\".");
