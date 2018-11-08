@@ -5,10 +5,15 @@ import java.util.List;
 
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.FloatType;
 import org.springframework.stereotype.Repository;
 
+import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.dao.CustomerOrderDetailDAO;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.enums.Status;
@@ -56,13 +61,13 @@ public class CustomerOrderDetailDAOImpl
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 
 		String[] associatedPaths = { "productDetail", "customerOrder" };
-		String[] aliasNames = { "prod", "custOrder" };
+		String[] aliasNames = { "pd", "co" };
 		JoinType[] joinTypes = { JoinType.INNER_JOIN, JoinType.INNER_JOIN };
 		
-		conjunction.add(Restrictions.eq("prod.product.id", productId));
-		conjunction.add(Restrictions.eq("custOrder.isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.ge("custOrder.paidOn", start.before(DateUtil.getOrderCutoffDate()) ? DateUtil.getOrderCutoffDate() : start));
-		conjunction.add(Restrictions.eq("custOrder.status", Status.PAID));
+		conjunction.add(Restrictions.eq("pd.product.id", productId));
+		conjunction.add(Restrictions.eq("co.isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.ge("co.paidOn", start.before(DateUtil.getOrderCutoffDate()) ? DateUtil.getOrderCutoffDate() : start));
+		conjunction.add(Restrictions.eq("co.status", Status.PAID));
 		
 		return findAllByCriterionList(associatedPaths, aliasNames, joinTypes, null, conjunction);
 	}
@@ -75,5 +80,26 @@ public class CustomerOrderDetailDAOImpl
 		conjunction.add(Restrictions.eq("productDetail.id", productDetailId));
 		
 		return findUniqueResult(null, null, null, conjunction);
+	}
+
+	@Override
+	public SalesSummaryBean getSalesSummaryByProductAndDatePaid(long productId, Date datePaidStart, Date datePaidEnd) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("productId", productId));
+		conjunction.add(Restrictions.eq("co.isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.between("co.paidOn", datePaidStart, datePaidEnd));
+		
+		final ProjectionList pList = Projections.projectionList();
+		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");
+		pList.add(Projections.sqlProjection("sum(total_price - (total_price / (1 + (margin / 100)))) as totalProfit", new String[] { "totalProfit" }, new FloatType[] { new FloatType() }), "totalProfit");
+		
+		String[] associatedPaths = { "customerOrder" };
+		String[] aliasNames = { "co" };
+		JoinType[] joinTypes = { JoinType.INNER_JOIN };
+		
+		final List<SalesSummaryBean> salesSummaries = findAllByCriterionProjection(SalesSummaryBean.class, associatedPaths, aliasNames, joinTypes, pList, Transformers.aliasToBean(SalesSummaryBean.class), conjunction);
+		if(salesSummaries.isEmpty()) return new SalesSummaryBean();
+		else return salesSummaries.get(0);
 	}
 }

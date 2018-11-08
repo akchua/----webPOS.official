@@ -1,3 +1,3 @@
 ## Format for Generated Purchase Item
-## Has exactly 98 columns in a line
+## Has exactly 96 columns in a line
 |${t.ProductName}|${t.WholeInventory}|${t.PieceInventory}|

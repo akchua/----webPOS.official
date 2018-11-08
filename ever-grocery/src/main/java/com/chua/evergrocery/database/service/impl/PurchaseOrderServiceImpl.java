@@ -38,4 +38,9 @@ public class PurchaseOrderServiceImpl
 	public List<PurchaseOrder> findDeliveredAfterCutoffByCompanyOrderByDeliveryDate(Long companyId) {
 		return dao.findAllByCompanyAndDaysWithOrder(companyId, DateUtil.getOrderCutoffDate(), new Order[] { Order.desc("deliveredOn") });
 	}
+
+	@Override
+	public PurchaseOrder findLatestDeliveryByCompany(Long companyId) {
+		return dao.findLatestDeliveryByCompany(companyId);
+	}
 }

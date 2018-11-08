@@ -19,7 +19,7 @@ public class PurchaseSummary extends BaseObject {
 	private Float grossTotal;
 	
 	private Float netTotal;
-
+	
 	@Basic
 	@Column(name = "gross_total")
 	public Float getGrossTotal() {

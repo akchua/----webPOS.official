@@ -29,7 +29,6 @@ public class FileEndpoint {
 	@Path("/generatedpurchase/{fileName}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response getGeneratedPurchaseByFileName(@PathParam("fileName") String fileName) throws IOException {
-		System.out.println("File name : " + fileName);
 		File generatedPurchase = fileHandler.findGeneratedPurchaseByFileName(fileName);
 		if(generatedPurchase.exists())
 			return Response.ok(generatedPurchase, MediaType.APPLICATION_OCTET_STREAM)
@@ -42,7 +41,6 @@ public class FileEndpoint {
 	@Path("/inventory/{fileName}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response getInventoryByFileName(@PathParam("fileName") String fileName) throws IOException {
-		System.out.println("File name : " + fileName);
 		File inventory = fileHandler.findInventoryByFileName(fileName);
 		if(inventory.exists())
 			return Response.ok(inventory, MediaType.APPLICATION_OCTET_STREAM)

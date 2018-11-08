@@ -31,6 +31,8 @@ public class PurchaseOrderDetail extends BaseObject {
 	
 	private ProductDetail productDetail;
 	
+	private Long productId;
+	
 	private String productName;
 	
 	private String productCode;
@@ -67,6 +69,16 @@ public class PurchaseOrderDetail extends BaseObject {
 
 	public void setProductDetail(ProductDetail productDetail) {
 		this.productDetail = productDetail;
+	}
+
+	@Basic
+	@Column(name = "product_id")
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
 	}
 
 	@Basic

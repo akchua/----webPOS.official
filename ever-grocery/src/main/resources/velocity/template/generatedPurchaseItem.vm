@@ -1,3 +1,3 @@
 ## Format for Generated Purchase Item
-## Has exactly 163 columns in a line
-|${t.ProductName}|${t.Quantity}|${t.Unit}|${t.Sales}|${t.Profit}|${t.PreviousSaleRate}|${t.CurrentSaleRate}|${t.PreviousTotalBudget}|${t.CurrentTotalBudget}|${t.NetBudgetChange}|
+## Has exactly 127 columns in a line
+|${t.FormattedProductName}| ${t.FormattedOrder}| ${t.FormattedInventory}| ${t.FormattedSold}|

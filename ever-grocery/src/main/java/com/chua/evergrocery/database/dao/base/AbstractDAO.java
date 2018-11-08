@@ -12,7 +12,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.sql.JoinType;
 import org.hibernate.transform.ResultTransformer;
@@ -679,7 +679,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	}
 
 	@Override
-	public List<Object> findAllByCriterionProjection(Projection projection,
+	public List<Object> findAllByCriterionProjection(ProjectionList projection,
 			Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterionProjection(Object.class, false, -1, -1, false, null, null,
@@ -688,7 +688,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public List<Object> findAllByCriterionProjection(String associationPaths[],
-			String aliasNames[], JoinType joinTypes[], Projection projection,
+			String aliasNames[], JoinType joinTypes[], ProjectionList projection,
 			Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterionProjection(Object.class, false, -1, -1, false,
@@ -698,7 +698,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public List<Object> findAllByCriterionProjection(String associationPaths[],
-			String[] aliasNames, JoinType joinTypes[], Order orders[], Projection projection,
+			String[] aliasNames, JoinType joinTypes[], Order orders[], ProjectionList projection,
 			Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterionProjection(Object.class, false, -1, -1, false,
@@ -707,7 +707,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public <Y> List<Y> findAllByCriterionProjection(Class<Y> nc, String associationPaths[],
-			String aliasNames[], JoinType joinTypes[], Projection projection,
+			String aliasNames[], JoinType joinTypes[], ProjectionList projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws HibernateException
 	{
@@ -717,7 +717,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 
 	@Override
 	public <Y> List<Y> findAllByCriterionProjection(Class<Y> nc, String associationPaths[],
-			String aliasNames[], JoinType joinTypes[], Order orders[], Projection projection,
+			String aliasNames[], JoinType joinTypes[], Order orders[], ProjectionList projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws HibernateException
 	{
@@ -728,7 +728,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	@Override
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc, int pageNumber,
 			int maxResults, String associationPaths[], String[] aliasNames, JoinType joinTypes[],
-			Order orders[], Projection projection, ResultTransformer resultTransformer,
+			Order orders[], ProjectionList projection, ResultTransformer resultTransformer,
 			Criterion... criterions) throws HibernateException
 	{
 		return findAllByCriterionProjection(nc, true, pageNumber, maxResults, true,
@@ -739,7 +739,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	@Override
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc, int pageNumber,
 			int maxResults, boolean doGetTotalPages, String associationPaths[],
-			String[] aliasNames, JoinType joinTypes[], Order orders[], Projection projection,
+			String[] aliasNames, JoinType joinTypes[], Order orders[], ProjectionList projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws HibernateException
 	{
@@ -752,7 +752,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc,
 			boolean hasPagination, int pageNumber, int maxResults, String associationPaths[],
 			String[] aliasNames, JoinType joinTypes[], boolean hasOrder, Order orders[],
-			Projection projection, ResultTransformer resultTransformer, Criterion... criterions)
+			ProjectionList projection, ResultTransformer resultTransformer, Criterion... criterions)
 			throws HibernateException
 	{
 		return findAllByCriterionProjection(nc, hasPagination, pageNumber, maxResults, true,
@@ -763,7 +763,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	@Override
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc,
 			boolean doGetTotalPages, String associationPaths[], String[] aliasNames,
-			JoinType joinTypes[], Order orders[], Projection projection,
+			JoinType joinTypes[], Order orders[], ProjectionList projection,
 			ResultTransformer resultTransformer, Criterion... criterions)
 			throws HibernateException
 	{
@@ -777,7 +777,7 @@ public abstract class AbstractDAO<T extends IEntity<ID>, ID extends Serializable
 	public <Y> ObjectList<Y> findAllByCriterionProjection(Class<Y> nc,
 			boolean hasPagination, int pageNumber, int maxResults, boolean doGetTotalPages,
 			String associationPaths[], String aliasNames[], JoinType joinTypes[], boolean hasOrder,
-			Order orders[], Projection projection, ResultTransformer resultTransformer,
+			Order orders[], ProjectionList projection, ResultTransformer resultTransformer,
 			Criterion... criterions) throws HibernateException
 	{
 		ObjectList<Y> list = new ObjectList<Y>();

@@ -1,10 +1,12 @@
 package com.chua.evergrocery.database.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chua.evergrocery.beans.PurchaseSummaryBean;
 import com.chua.evergrocery.database.dao.PurchaseOrderDetailDAO;
 import com.chua.evergrocery.database.entity.PurchaseOrderDetail;
 import com.chua.evergrocery.database.service.PurchaseOrderDetailService;
@@ -40,5 +42,17 @@ public class PurchaseOrderDetailServiceImpl
 	@Override
 	public List<PurchaseOrderDetail> findAllByCompanyAndMonthId(long companyId, int monthId) {
 		return dao.findAllByCompanyAndDeliveryDate(companyId, DateUtil.monthIdToDate(monthId), DateUtil.monthIdToDate(monthId + 1));
+	}
+
+	@Override
+	public List<PurchaseOrderDetail> findAllByProductAndDeliveryDate(long productId, Date deliveryStart,
+			Date deliveryEnd) {
+		return dao.findAllByProductAndDeliveryDate(productId, deliveryStart, deliveryEnd);
+	}
+
+	@Override
+	public PurchaseSummaryBean getPurchaseSummaryByProductAndDeliveryDate(long productId, Date deliveryStart,
+			Date deliveryEnd) {
+		return dao.getPurchaseSummaryByProductAndDeliveryDate(productId, deliveryStart, deliveryEnd);
 	}
 }

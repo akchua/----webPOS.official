@@ -44,8 +44,6 @@ public class Company extends BaseObject {
 	
 	private ReceiptType receiptType;
 	
-	private Float deliveryRate;
-	
 	private Float daysBooked;
 	
 	private Date lastPurchaseOrderDate;
@@ -110,16 +108,6 @@ public class Company extends BaseObject {
 
 	public void setReceiptType(ReceiptType receiptType) {
 		this.receiptType = receiptType;
-	}
-
-	@Basic
-	@Column(name = "delivery_rate")
-	public Float getDeliveryRate() {
-		return deliveryRate;
-	}
-
-	public void setDeliveryRate(Float deliveryRate) {
-		this.deliveryRate = deliveryRate;
 	}
 
 	@Basic

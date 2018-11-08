@@ -16,8 +16,6 @@ public interface PurchaseOrderHandler {
 	
 	ResultBean generatePurchaseOrder(Long companyId, Float daysToBook);
 	
-	ResultBean generateInventory(Long companyId);
-	
 	ResultBean removePurchaseOrder(Long purchaseOrderId);
 	
 	void refreshPurchaseOrder(Long purchaseOrderId);

@@ -58,7 +58,7 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	@Autowired
 	private ProductFormValidator productFormValidator;
-
+	
 	@Override
 	public ObjectList<Product> getProductList(Integer pageNumber, String searchKey, Long companyId) {
 		if(searchKey != null && searchKey.length() > 6 && searchKey.matches("[0-9]+")) {
@@ -112,11 +112,11 @@ public class ProductHandlerImpl implements ProductHandler {
 		final Map<String, String> errors = productFormValidator.validate(productForm);
 
 		if(errors.isEmpty()) {
-			if(productService.isExistsByName(productForm.getName())) {
+			if(productService.isExistsByName(productForm.getName().trim())) {
 				errors.put("name", "Name already exists!");
 			}
 			
-			if(productForm.getCode() != null && !productForm.getCode().isEmpty() && productService.isExistsByCode(productForm.getCode())) {
+			if(productForm.getCode() != null && !productForm.getCode().trim().isEmpty() && productService.isExistsByCode(productForm.getCode().trim())) {
 				errors.put("code", "Code already exists!");
 			}
 			
@@ -166,6 +166,7 @@ public class ProductHandlerImpl implements ProductHandler {
 			}
 			
 			if(!(StringUtils.trimToEmpty(product.getCode()).equalsIgnoreCase(productForm.getCode())) &&
+					productForm.getCode() != null && !productForm.getCode().trim().isEmpty() &&
 					productService.isExistsByCode(productForm.getCode())) {
 				errors.put("code", "Code already exists!");
 			}
@@ -246,9 +247,9 @@ public class ProductHandlerImpl implements ProductHandler {
 	}
 	
 	private void setProduct(Product product, ProductFormBean productForm) {
-		product.setName(productForm.getName());
-		product.setDisplayName(productForm.getDisplayName());
-		product.setCode(productForm.getCode());
+		product.setName(productForm.getName().trim());
+		product.setDisplayName(productForm.getDisplayName() != null ? productForm.getDisplayName().trim() : "");
+		product.setCode(productForm.getCode() != null ? productForm.getCode().trim() : "");
 		/*product.setBrand(brandService.find(productForm.getBrandId()));*/
 		product.setCategory(categoryService.find(productForm.getCategoryId()));
 		product.setCompany(companyService.find(productForm.getCompanyId()));
@@ -295,16 +296,15 @@ public class ProductHandlerImpl implements ProductHandler {
 		}
 		
 		// RECORD PRICE CHANGES IN PRICE HISTORY
-		// for selling price
 		if(productDetailsForm.getTitle().equals("Whole") || productDetailsForm.getTitle().equals("Piece")) {
+			// for selling price
 			if(!productDetailsForm.getSellingPrice().equals(0.0f) && (productDetail.getSellingPrice() == null || !productDetail.getSellingPrice().equals(productDetailsForm.getSellingPrice()))) {
 				final PriceHistory priceHistory = new PriceHistory();
 				setPriceHistory(priceHistory, product, productDetail, productDetailsForm, PriceHistoryType.SALE);
 				priceHistoryService.insert(priceHistory);
 			}
-		}
-		// for net purchase price
-		if(productDetailsForm.getTitle().equals("Whole") || productDetailsForm.getTitle().equals("Piece")) {
+			
+			// for net purchase price
 			if(!productDetailsForm.getNetPrice().equals(0.0f) && (productDetail.getNetPrice() == null || !productDetail.getNetPrice().equals(productDetailsForm.getNetPrice()))) {
 				final PriceHistory priceHistory = new PriceHistory();
 				setPriceHistory(priceHistory, product, productDetail, productDetailsForm, PriceHistoryType.NET_PURCHASE);

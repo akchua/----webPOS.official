@@ -35,7 +35,15 @@ public class StatisticsScheduler {
 		purchaseStatisticsHandler.updateAllPurchaseStatistics(3);
 		
 		final Date end = new Date();
-		final Long seconds = (end.getTime() - start.getTime()) / 1000;
+		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
 		LOG.info("Monthly statistics update complete. Total execution time : " + seconds + "s");
 	}
+	
+	/*@Autowired
+	private InventoryHandler inventoryHandler;
+	
+	@Scheduled(cron = "0/15 * * * * ?")
+	public void test() {
+		inventoryHandler.getProductInventory(4146l);
+	}*/
 }

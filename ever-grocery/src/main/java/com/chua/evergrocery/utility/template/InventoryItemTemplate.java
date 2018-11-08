@@ -27,11 +27,11 @@ public class InventoryItemTemplate extends AbstractTemplate {
 	}
 
 	public String getProductName() {
-		return StringHelper.center(inventoryItem.getProductName(), 62);
+		return StringHelper.center(inventoryItem.getProduct().getName(), 60);
 	}
 	
 	public String getProductDisplayName() {
-		return inventoryItem.getProductDisplayName();
+		return inventoryItem.getProduct().getDisplayName();
 	}
 	
 	public String getWholeInventory() {

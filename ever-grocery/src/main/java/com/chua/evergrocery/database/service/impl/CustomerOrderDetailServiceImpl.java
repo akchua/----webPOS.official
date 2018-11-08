@@ -7,6 +7,7 @@ import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.dao.CustomerOrderDetailDAO;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
@@ -51,5 +52,10 @@ public class CustomerOrderDetailServiceImpl
 	@Override
 	public List<CustomerOrderDetail> findAllByProductLimitByDate(Long productId, Date start) {
 		return dao.findAllByProductLimitByDate(productId, start);
+	}
+
+	@Override
+	public SalesSummaryBean getSalesSummaryByProductAndDatePaid(long productId, Date datePaidStart, Date datePaidEnd) {
+		return dao.getSalesSummaryByProductAndDatePaid(productId, datePaidStart, datePaidEnd);
 	}
 }

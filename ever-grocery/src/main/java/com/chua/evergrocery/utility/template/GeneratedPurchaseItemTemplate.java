@@ -6,7 +6,8 @@ import java.util.Map;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import com.chua.evergrocery.beans.ProductStatisticsBean;
+import com.chua.evergrocery.beans.GeneratedProductPOBean;
+import com.chua.evergrocery.beans.InventoryBean;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.format.NumberFormatter;
@@ -18,10 +19,10 @@ import com.chua.evergrocery.utility.format.NumberFormatter;
  */
 public class GeneratedPurchaseItemTemplate extends AbstractTemplate {
 
-	private ProductStatisticsBean productStatisticsBean;
+	private GeneratedProductPOBean generatedProductPO;
 
-	public GeneratedPurchaseItemTemplate(ProductStatisticsBean productStatisticsBean) {
-		this.productStatisticsBean = productStatisticsBean;
+	public GeneratedPurchaseItemTemplate(GeneratedProductPOBean generatedProductPO) {
+		this.generatedProductPO = generatedProductPO;
 	}
 	
 	@Override
@@ -31,51 +32,63 @@ public class GeneratedPurchaseItemTemplate extends AbstractTemplate {
 		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, docType.getFolderName() + "/generatedPurchaseItem.vm", "UTF-8", model);
 	}
 	
-	public String getProductName() {
-		return StringHelper.center(productStatisticsBean.getProductName(), 62);
+	//62
+	public String getFormattedProductName() {
+		return StringHelper.center(generatedProductPO.getProductName(), 62);
 	}
 	
-	public String getQuantity() {
-		return StringHelper.center(productStatisticsBean.getQuantity() + "", 7);
-	}
-	
-	public String getUnit() {
-		return StringHelper.center(productStatisticsBean.getUnit().toString(), 8);
-	}
-	
-	public String getSales() {
-		return " " + String.format("%10s", productStatisticsBean.getFormattedSales()) + " ";
-	}
-	
-	public String getProfit() {
-		return " " + String.format("%10s", productStatisticsBean.getFormattedProfit()) + " ";
-	}
-	
-	public String getPreviousSaleRate() {
-		return String.format("%8s", productStatisticsBean.getFormattedPreviousSaleRate());
-	}
-	
-	public String getCurrentSaleRate() {
-		return String.format("%8s", productStatisticsBean.getFormattedCurrentSaleRate());
-	}
-	
-	public String getPreviousTotalBudget() {
-		return " " + String.format("%10s", productStatisticsBean.getFormattedPreviousTotalBudget()) + " ";
-	}
-	
-	public String getCurrentTotalBudget() {
-		return " " + String.format("%10s", productStatisticsBean.getFormattedCurrentTotalBudget()) + " ";
-	}
-	
-	public String getNetBudgetChange() {
-		final String netBudgetChange;
+	//19 right pad
+	public String getFormattedOrder() {
+		String formattedOrder = "";
+		final InventoryBean toPurchase = generatedProductPO.getToPurchase();
 		
-		if(productStatisticsBean.getPreviousTotalBudget() != 0.0f) {
-			netBudgetChange = NumberFormatter.toPercent((productStatisticsBean.getCurrentTotalBudget() - productStatisticsBean.getPreviousTotalBudget()) / productStatisticsBean.getPreviousTotalBudget() * 100);
+		if(toPurchase.getWholeQuantity() != 0) {
+			formattedOrder += toPurchase.getWholeQuantity() + toPurchase.getWholeUnit().getShorthand();
+			if(toPurchase.getPieceQuantity() != 0.0f) {
+				formattedOrder += " & " + NumberFormatter.decimalFormat(toPurchase.getPieceQuantity(), 2) + toPurchase.getPieceUnit().getShorthand();
+			}
+		} else if(toPurchase.getPieceQuantity() != 0.0f) {
+			formattedOrder += NumberFormatter.decimalFormat(toPurchase.getPieceQuantity(), 2) + toPurchase.getPieceUnit().getShorthand();
 		} else {
-			netBudgetChange = "0.0%";
+			formattedOrder += "=";
 		}
 		
-		return String.format("%8s", netBudgetChange);
+		return String.format("%-19s", formattedOrder);
+	}
+	
+	public String getFormattedInventory() {
+		String formattedInventory = "";
+		final InventoryBean inventory = generatedProductPO.getInventory();
+		
+		if(inventory.getWholeQuantity() != 0) {
+			formattedInventory += inventory.getWholeQuantity() + inventory.getWholeUnit().getShorthand();
+			if(inventory.getPieceQuantity() != 0.0f) {
+				formattedInventory += " & " + NumberFormatter.decimalFormat(inventory.getPieceQuantity(), 2) + inventory.getPieceUnit().getShorthand();
+			}
+		} else if(inventory.getPieceQuantity() != 0.0f) {
+			formattedInventory += NumberFormatter.decimalFormat(inventory.getPieceQuantity(), 2) + inventory.getPieceUnit().getShorthand();
+		} else {
+			formattedInventory += "=";
+		}
+		
+		return String.format("%-19s", formattedInventory);
+	}
+	
+	public String getFormattedSold() {
+		String formattedSold = "";
+		final InventoryBean inventory = generatedProductPO.getInventory();
+		
+		if(inventory.getSoldWholeQuantity() != 0) {
+			formattedSold += inventory.getSoldWholeQuantity() + inventory.getWholeUnit().getShorthand();
+			if(inventory.getSoldPieceQuantity() != 0.0f) {
+				formattedSold += " & " + NumberFormatter.decimalFormat(inventory.getSoldPieceQuantity(), 2) + inventory.getPieceUnit().getShorthand();
+			}
+		} else if(inventory.getSoldPieceQuantity() != 0.0f) {
+			formattedSold += NumberFormatter.decimalFormat(inventory.getSoldPieceQuantity(), 2) + inventory.getPieceUnit().getShorthand();
+		} else {
+			formattedSold += "=";
+		}
+		
+		return String.format("%-19s", formattedSold);
 	}
 }

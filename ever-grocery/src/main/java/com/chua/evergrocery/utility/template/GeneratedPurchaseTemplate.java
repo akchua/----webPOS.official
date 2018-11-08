@@ -10,7 +10,7 @@ import java.util.Map;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import com.chua.evergrocery.beans.ProductStatisticsBean;
+import com.chua.evergrocery.beans.GeneratedProductPOBean;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.chua.evergrocery.utility.format.DateFormatter;
@@ -32,26 +32,26 @@ public class GeneratedPurchaseTemplate extends AbstractTemplate {
 	
 	private Float daysToBook;
 	
-	private List<ProductStatisticsBean> productStats;
+	private List<GeneratedProductPOBean> generatedProductPOs;
 	
 	private List<String> formattedPurchaseItems;
 	
 	public GeneratedPurchaseTemplate(String companyName, Date salePeriodStart, Date salePeriodEnd, 
 			Date expectedDeliveryDate, Float daysToBook,
-			List<ProductStatisticsBean> productStats) {
+			List<GeneratedProductPOBean> generatedProductPOs) {
 		this.companyName = companyName;
 		this.salePeriodStart = salePeriodStart;
 		this.salePeriodEnd = salePeriodEnd;
 		this.expectedDeliveryDate = expectedDeliveryDate;
 		this.daysToBook = daysToBook;
-		this.productStats = productStats;
+		this.generatedProductPOs = generatedProductPOs;
 		this.formattedPurchaseItems = new ArrayList<String>();
 	}
 	
 	@Override
 	public String merge(VelocityEngine velocityEngine, DocType docType) {
-		for(ProductStatisticsBean prodStat : productStats) {
-			final GeneratedPurchaseItemTemplate genPurchaseItemTemplate = new GeneratedPurchaseItemTemplate(prodStat);
+		for(GeneratedProductPOBean generatedProductPO : generatedProductPOs) {
+			final GeneratedPurchaseItemTemplate genPurchaseItemTemplate = new GeneratedPurchaseItemTemplate(generatedProductPO);
 			formattedPurchaseItems.add(genPurchaseItemTemplate.merge(velocityEngine));
 		}
 		
@@ -86,31 +86,21 @@ public class GeneratedPurchaseTemplate extends AbstractTemplate {
 		return this.formattedPurchaseItems;
 	}
 	
-	public String getFormattedTotalSales() {
+	public String getFormattedTotalBaseSales() {
 		Float totalSales = 0.0f;
 		
-		for(ProductStatisticsBean prodStat : productStats) {
-			totalSales += prodStat.getSales();
+		for(GeneratedProductPOBean generatedProductPO : generatedProductPOs) {
+			totalSales += generatedProductPO.getInventory().getTotalBaseSales();
 		}
 		
 		return String.format("%15s", CurrencyFormatter.pesoFormat(totalSales));
 	}
 	
-	public String getFormattedTotalProfit() {
-		Float totalProfit = 0.0f;
-		
-		for(ProductStatisticsBean prodStat : productStats) {
-			totalProfit += prodStat.getProfit();
-		}
-		
-		return String.format("%15s", CurrencyFormatter.pesoFormat(totalProfit));
-	}
-	
 	public String getFormattedTotalBudget() {
 		Float totalBudget = 0.0f;
 		
-		for(ProductStatisticsBean prodStat : productStats) {
-			totalBudget += prodStat.getCurrentPurchaseBudget();
+		for(GeneratedProductPOBean generatedProductPO : generatedProductPOs) {
+			totalBudget += generatedProductPO.getToPurchase().getStockBudget();
 		}
 		
 		return String.format("%15s", CurrencyFormatter.pesoFormat(totalBudget));

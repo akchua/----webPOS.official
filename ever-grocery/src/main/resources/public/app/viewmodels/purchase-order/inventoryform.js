@@ -1,5 +1,5 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderservice', 'modules/companyservice', 'modules/fileservice'], 
-		function (dialog, app, ko, purchaseOrderService, companyService, fileService) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/inventoryservice', 'modules/companyservice', 'modules/fileservice'], 
+		function (dialog, app, ko, inventoryService, companyService, fileService) {
     var InventoryForm = function() {
         this.companyId = ko.observable();
 
@@ -24,7 +24,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
     	var self = this;
     	
     	self.enableGenerateButton(false);
-        purchaseOrderService.generateInventory(self.companyId()).done(function(result) {
+    	inventoryService.generateInventory(self.companyId()).done(function(result) {
         	if(result.success) {
 				fileService.downloadInventoryByFileName(result.extras.fileName);
     			dialog.close(self);

@@ -1,0 +1,169 @@
+package com.chua.evergrocery.rest.handler.impl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.transaction.Transactional;
+
+import org.apache.velocity.app.VelocityEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.chua.evergrocery.beans.InventoryBean;
+import com.chua.evergrocery.beans.PurchaseSummaryBean;
+import com.chua.evergrocery.beans.ResultBean;
+import com.chua.evergrocery.beans.SalesSummaryBean;
+import com.chua.evergrocery.constants.FileConstants;
+import com.chua.evergrocery.database.entity.Company;
+import com.chua.evergrocery.database.entity.Product;
+import com.chua.evergrocery.database.entity.ProductDetail;
+import com.chua.evergrocery.database.service.CompanyService;
+import com.chua.evergrocery.database.service.CustomerOrderDetailService;
+import com.chua.evergrocery.database.service.ProductDetailService;
+import com.chua.evergrocery.database.service.ProductService;
+import com.chua.evergrocery.database.service.PurchaseOrderDetailService;
+import com.chua.evergrocery.enums.UnitType;
+import com.chua.evergrocery.rest.handler.InventoryHandler;
+import com.chua.evergrocery.utility.DateUtil;
+import com.chua.evergrocery.utility.Html;
+import com.chua.evergrocery.utility.SimplePdfWriter;
+import com.chua.evergrocery.utility.StringHelper;
+import com.chua.evergrocery.utility.format.DateFormatter;
+import com.chua.evergrocery.utility.template.InventoryTemplate;
+
+/**
+ * @author  Adrian Jasper K. Chua
+ * @version 1.0
+ * @since   Nov 7, 2018
+ */
+@Transactional
+@Component
+public class InventoryHandlerImpl implements InventoryHandler {
+
+	@Autowired
+	private ProductService productService;
+	
+	@Autowired
+	private CompanyService companyService;
+	
+	@Autowired
+	private ProductDetailService productDetailService;
+	
+	@Autowired
+	private PurchaseOrderDetailService purchaseOrderDetailService;
+	
+	@Autowired
+	private CustomerOrderDetailService customerOrderDetailService;
+	
+	@Autowired
+	private FileConstants fileConstants;
+	
+	@Autowired
+	private VelocityEngine velocityEngine;
+	
+	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	
+	@Override
+	public InventoryBean getProductInventory(Long productId) {
+		return getProductInventory(productId, new Date());
+	}
+	
+	@Override
+	public InventoryBean getProductInventory(Long productId, Date upTo) {
+		final InventoryBean inventory;
+		final Product product = productService.find(productId);
+		
+		if(product != null) {
+			LOG.info("## Processing inventory of " + product.getName());
+			inventory = new InventoryBean();
+			
+			inventory.setProduct(product);
+			
+			final PurchaseSummaryBean purchaseSummary = purchaseOrderDetailService.getPurchaseSummaryByProductAndDeliveryDate(productId, DateUtil.floorDay(product.getCompany().getLastPurchaseOrderDate()), DateUtil.floorDay(upTo));
+			inventory.setTotalNetPurchase(purchaseSummary.getNetTotal());
+			LOG.info("Found total purchase : " + inventory.getTotalNetPurchase());
+			final SalesSummaryBean salesSummary = customerOrderDetailService.getSalesSummaryByProductAndDatePaid(productId, product.getCompany().getLastPurchaseOrderDate(), upTo);
+			inventory.setTotalBaseSales(salesSummary.getNetTotal() - salesSummary.getTotalProfit());
+			LOG.info("Found total base sales : " + inventory.getTotalBaseSales());
+			inventory.setStockBudget(product.getStockBudget() + inventory.getTotalNetPurchase() - inventory.getTotalBaseSales());
+			
+			final ProductDetail wholeProductDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Whole");
+			inventory.setWholePurchasePrice(wholeProductDetail != null ? wholeProductDetail.getNetPrice() : -1.0f);
+			inventory.setWholeUnit(wholeProductDetail != null ? wholeProductDetail.getUnitType() : UnitType.DEFAULT);
+			
+			final ProductDetail pieceProductDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Piece");
+			inventory.setPiecePurchasePrice(pieceProductDetail != null ? pieceProductDetail.getNetPrice() : -1.0f);
+			inventory.setPieceUnit(pieceProductDetail != null ? pieceProductDetail.getUnitType() : UnitType.DEFAULT);
+			
+			LOG.info("Inventory : " + inventory.getWholeQuantity() + " " + inventory.getWholeUnit().getDisplayName() + " AND " + inventory.getPieceQuantity() + " " + inventory.getPieceUnit().getDisplayName());
+		} else {
+			LOG.info("Individual product inventory exited due to invalid productId : " + productId);
+			inventory = null;
+		}
+		
+		return inventory;
+	}
+
+	@Override
+	public List<InventoryBean> getProductInventoryByCompany(Long companyId) {
+		return getProductInventoryByCompany(companyId, new Date());
+	}
+	
+	@Override
+	public List<InventoryBean> getProductInventoryByCompany(Long companyId, Date upTo) {
+		final List<InventoryBean> inventories;
+		final Company company = companyService.find(companyId);
+		
+		if(company != null) {
+			final Date start = new Date();
+			LOG.info("#### Processing inventory of " + company.getName());
+			LOG.info("Last Purchase Order Date : " + company.getFormattedLastPurchaseOrderDate());
+			inventories = new ArrayList<InventoryBean>();
+			for(Product product : productService.findAllByCompanyOrderByName(companyId)) {
+				inventories.add(getProductInventory(product.getId(), upTo));
+			}
+			final Date end = new Date();
+			final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
+			LOG.info("Inventory of " + company.getName() + " complete in " + seconds + "s");
+		} else {
+			LOG.info("Product inventory by company exited due to invalid companyId : " + companyId);
+			inventories = null;
+		}
+		
+		return inventories;
+	}
+
+	@Override
+	public ResultBean generateInventory(Long companyId) {
+		final ResultBean result;
+		final Company company = companyService.find(companyId);
+		
+		if(company != null) {
+			final List<InventoryBean> inventories = getProductInventoryByCompany(companyId);
+			
+			// Generate text file of inventory
+			final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_inventory_" + DateFormatter.fileSafeShortFormat(new Date()) + ".pdf";
+			final String filePath = fileConstants.getInventoryHome() + fileName;
+			final String temp = new InventoryTemplate(
+					company.getName(),
+					inventories)
+			.merge(velocityEngine);
+			SimplePdfWriter.write(temp, "Ever Bazar", filePath, false);
+			
+			final Map<String, Object> extras = new HashMap<String, Object>();
+			extras.put("fileName", fileName);
+			result = new ResultBean(Boolean.TRUE, "Done");
+			result.setExtras(extras);
+			LOG.info("File name : " + fileName);
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line("Please select a company."));
+		}
+		
+		return result;
+	}
+}
