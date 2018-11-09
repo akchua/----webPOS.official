@@ -299,9 +299,11 @@ public class ProductHandlerImpl implements ProductHandler {
 		final Boolean success;
 		
 		ProductDetail productDetail = productDetailService.find(productDetailsForm.getId());
+		boolean isNew = false;
 		
 		if(productDetail == null) {
 			productDetail = new ProductDetail();
+			isNew = true;
 		}
 		
 		// RECORD PRICE CHANGES IN PRICE HISTORY
@@ -320,14 +322,14 @@ public class ProductHandlerImpl implements ProductHandler {
 				priceHistoryService.insert(priceHistory);
 				
 				// Update stock budget
-				if(productDetailsForm.getTitle().equals("Whole")) {
-					final Float percentChange;
+				if(!isNew && !product.getStockBudget().equals(0.0f) && productDetailsForm.getTitle().equals("Whole")) {
+					Float percentChange = 0.0f;
 					if(productDetail.getContent().equals(productDetailsForm.getContent())) {
 						percentChange = (productDetailsForm.getNetPrice() - productDetail.getNetPrice()) / productDetail.getNetPrice() * 100.0f;
 					} else {
 						Float newNetPrice = productDetailsForm.getNetPrice() / (productDetailsForm.getContent() != 0 ? productDetailsForm.getContent() : 1);
 						Float oldNetPrice = productDetail.getNetPrice() / (productDetail.getContent() != 0 ? productDetail.getContent() : 1);
-						percentChange = (newNetPrice - oldNetPrice) / oldNetPrice;
+						percentChange = (newNetPrice - oldNetPrice) / oldNetPrice * 100.0f;
 					}
 					final InventoryBean inventoryBean = inventoryHandler.getProductInventory(product.getId());
 					final Float adjustedStockBudget = product.getStockBudget() + (inventoryBean.getStockBudget() * (percentChange / 100.0f));
