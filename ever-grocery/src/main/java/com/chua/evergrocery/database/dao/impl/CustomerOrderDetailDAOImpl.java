@@ -92,7 +92,7 @@ public class CustomerOrderDetailDAOImpl
 		
 		final ProjectionList pList = Projections.projectionList();
 		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");
-		pList.add(Projections.sqlProjection("sum(total_price - (total_price / (1 + (margin / 100)))) as totalProfit", new String[] { "totalProfit" }, new FloatType[] { new FloatType() }), "totalProfit");
+		pList.add(Projections.sqlProjection("sum(unit_price / (1 + (margin / 100)) * quantity) as baseTotal", new String[] { "baseTotal" }, new FloatType[] { new FloatType() }), "baseTotal");
 		
 		String[] associatedPaths = { "customerOrder" };
 		String[] aliasNames = { "co" };

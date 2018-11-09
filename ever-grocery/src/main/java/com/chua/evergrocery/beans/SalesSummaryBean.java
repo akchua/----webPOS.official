@@ -9,7 +9,7 @@ public class SalesSummaryBean {
 
 	private Float netTotal;
 	
-	private Float totalProfit;
+	private Float baseTotal;
 	
 	public Float getNetTotal() {
 		return netTotal == null ? 0.0f : netTotal;
@@ -19,11 +19,11 @@ public class SalesSummaryBean {
 		this.netTotal = netTotal;
 	}
 
-	public Float getTotalProfit() {
-		return totalProfit == null ? 0.0f : totalProfit;
+	public Float getBaseTotal() {
+		return baseTotal;
 	}
 
-	public void setTotalProfit(Float totalProfit) {
-		this.totalProfit = totalProfit;
+	public void setBaseTotal(Float baseTotal) {
+		this.baseTotal = baseTotal;
 	}
 }

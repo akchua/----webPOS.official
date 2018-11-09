@@ -34,6 +34,7 @@ import com.chua.evergrocery.enums.SystemVariableTag;
 import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
+import com.chua.evergrocery.rest.handler.InventoryHandler;
 import com.chua.evergrocery.rest.handler.ProductHandler;
 import com.chua.evergrocery.rest.handler.SalesReportHandler;
 import com.chua.evergrocery.utility.DateUtil;
@@ -69,6 +70,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Autowired
 	private ProductHandler productHandler;
+	
+	@Autowired
+	private InventoryHandler inventoryHandler;
 	
 	@Autowired
 	private SalesReportHandler salesReportHandler;
@@ -269,7 +273,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					
 					result.setSuccess(customerOrderService.update(customerOrder) && systemVariableService.updateByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag(), String.valueOf(SIN + 1)));
 					if(result.getSuccess()) {
-						//#############################################################################################		remove from stock!!!
+						inventoryHandler.checkForStockAdjustment(customerOrderId);
 						result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(cash - customerOrder.getTotalAmount())) +
 								Html.newLine + Html.newLine + Html.text("Cash          : " + CurrencyFormatter.pesoFormat(cash)) +
 								Html.newLine + Html.text("Amount Due    : " + CurrencyFormatter.pesoFormat(customerOrder.getTotalAmount()))));
@@ -478,6 +482,8 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			customerOrder.setTotalItems(customerOrder.getTotalItems() - customerOrderDetail.getQuantity());
 			
 			setCustomerOrderDetailQuantity(customerOrderDetail, quantity);
+			// Reset tax type to original every time quantity is changed
+			customerOrderDetail.setTaxType(customerOrderDetail.getProductDetail().getProduct().getTaxType());
 			result.setSuccess(customerOrderDetailService.update(customerOrderDetail));
 			
 			if(result.getSuccess()) {

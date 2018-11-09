@@ -20,6 +20,7 @@ import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.constants.FileConstants;
 import com.chua.evergrocery.database.entity.Company;
+import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.entity.ProductDetail;
 import com.chua.evergrocery.database.service.CompanyService;
@@ -88,7 +89,7 @@ public class InventoryHandlerImpl implements InventoryHandler {
 			inventory.setTotalNetPurchase(purchaseSummary.getNetTotal());
 			LOG.info("Found total purchase : " + inventory.getTotalNetPurchase());
 			final SalesSummaryBean salesSummary = customerOrderDetailService.getSalesSummaryByProductAndDatePaid(productId, product.getCompany().getLastPurchaseOrderDate(), upTo);
-			inventory.setTotalBaseSales(salesSummary.getNetTotal() - salesSummary.getTotalProfit());
+			inventory.setTotalBaseSales(salesSummary.getBaseTotal());
 			LOG.info("Found total base sales : " + inventory.getTotalBaseSales());
 			inventory.setStockBudget(product.getStockBudget() + inventory.getTotalNetPurchase() - inventory.getTotalBaseSales());
 			
@@ -165,5 +166,21 @@ public class InventoryHandlerImpl implements InventoryHandler {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public void checkForStockAdjustment(Long customerOrderId) {
+		final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrderId);
+		
+		for(CustomerOrderDetail cod : customerOrderDetails) {
+			Float diff = cod.getProductDetail().getNetPrice() - (cod.getUnitPrice() / (1 + (cod.getMargin() / 100)));
+			if(diff > 0.1f) {
+				final Product product = cod.getProductDetail().getProduct();
+				final Float newTotalBudget = product.getTotalBudget() - (diff * cod.getQuantity());
+				LOG.info("Adjusting Stock budget of " + product.getName() + " from " + product.getStockBudget() + " to " + (newTotalBudget - product.getPurchaseBudget()));
+				product.setTotalBudget(newTotalBudget);
+				productService.update(product);
+			}
+		}
 	}
 }
