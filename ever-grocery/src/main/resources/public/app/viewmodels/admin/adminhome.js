@@ -1,5 +1,5 @@
-define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/mtdpurchasesummaryservice', 'modules/c3utility'], 
-		function ($, c3, app, ko, mtdPurchaseSummaryService, c3Utility) {
+define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummaryservice', 'modules/c3utility'], 
+		function ($, c3, app, ko, transactionSummaryService, c3Utility) {
 	var AdminHome = function() {
 		this.currentYear = (new Date()).getFullYear();
 		
@@ -44,8 +44,8 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/mtdpurchasesummarys
 		self.clearGraph();
 		
 		if(self.baseYear() >= 2016 && self.baseYear() <= self.currentYear && self.vsYear() >= 2016 && self.vsYear() <= self.currentYear) {
-			mtdPurchaseSummaryService.getMTDPurchaseSummaryListByYear(self.baseYear()).done(function(baseMTDPurchaseSummaries) {
-				mtdPurchaseSummaryService.getMTDPurchaseSummaryListByYear(self.vsYear()).done(function(vsMTDPurchaseSummaries) {
+			transactionSummaryService.getMTDPurchaseSummaryListByYear(self.baseYear()).done(function(baseMTDPurchaseSummaries) {
+				transactionSummaryService.getMTDPurchaseSummaryListByYear(self.vsYear()).done(function(vsMTDPurchaseSummaries) {
 					self.baseGrossPurchases = [self.baseYear() + ' Gross Purchases', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 					self.baseNetPurchases = [self.baseYear() + ' Net Purchases', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 					self.vsGrossPurchases = [self.vsYear() + ' Gross Purchases', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -80,7 +80,7 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/mtdpurchasesummarys
 				});
 			});
 		} else {
-			mtdPurchaseSummaryService.getMTDPurchaseSummaryList().done(function(mtdList) {
+			transactionSummaryService.getMTDPurchaseSummaryList().done(function(mtdList) {
 				self.x = ['x'];
 				self.mtdGrossPurchase = ['Monthly Gross Purchase'];
 				self.mtdNetPurchase = ['Monthly Net Purchase'];

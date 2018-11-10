@@ -12,6 +12,7 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.FloatType;
 import org.springframework.stereotype.Repository;
 
+import com.chua.evergrocery.beans.ProductPurchaseSummaryBean;
 import com.chua.evergrocery.beans.PurchaseSummaryBean;
 import com.chua.evergrocery.database.dao.PurchaseOrderDetailDAO;
 import com.chua.evergrocery.database.entity.PurchaseOrderDetail;
@@ -103,5 +104,26 @@ public class PurchaseOrderDetailDAOImpl
 		final List<PurchaseSummaryBean> purchaseSummaries = findAllByCriterionProjection(PurchaseSummaryBean.class, associatedPaths, aliasNames, joinTypes, pList, Transformers.aliasToBean(PurchaseSummaryBean.class), conjunction);
 		if(purchaseSummaries.isEmpty()) return new PurchaseSummaryBean();
 		else return purchaseSummaries.get(0);
+	}
+
+	@Override
+	public List<ProductPurchaseSummaryBean> getAllProductPurchaseSummaryByCompanyAndDeliveryDate(long companyId,
+			Date deliveryStart, Date deliveryEnd) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("p.company.id", companyId));
+		conjunction.add(Restrictions.eq("po.isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.between("po.deliveredOn", deliveryStart, deliveryEnd));
+		
+		final ProjectionList pList = Projections.projectionList();
+		pList.add(Projections.groupProperty("p.id"), "productId");
+		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");
+		pList.add(Projections.sqlProjection("sum(gross_price*quantity) as grossTotal", new String[] { "grossTotal" }, new FloatType[] { new FloatType() }), "grossTotal");
+		
+		String[] associatedPaths = { "purchaseOrder", "product" };
+		String[] aliasNames = { "po", "p" };
+		JoinType[] joinTypes = { JoinType.INNER_JOIN, JoinType.INNER_JOIN };
+		
+		return findAllByCriterionProjection(ProductPurchaseSummaryBean.class, associatedPaths, aliasNames, joinTypes, pList, Transformers.aliasToBean(ProductPurchaseSummaryBean.class), conjunction);
 	}
 }

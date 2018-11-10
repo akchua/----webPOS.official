@@ -16,7 +16,7 @@ import com.chua.evergrocery.rest.endpoint.CustomerOrderEndpoint;
 import com.chua.evergrocery.rest.endpoint.DistributorEndpoint;
 import com.chua.evergrocery.rest.endpoint.FileEndpoint;
 import com.chua.evergrocery.rest.endpoint.InventoryEndpoint;
-import com.chua.evergrocery.rest.endpoint.MTDPurchaseSummaryEndpoint;
+import com.chua.evergrocery.rest.endpoint.TransactionSummaryEndpoint;
 import com.chua.evergrocery.rest.endpoint.ProductEndpoint;
 import com.chua.evergrocery.rest.endpoint.PurchaseOrderEndpoint;
 import com.chua.evergrocery.rest.endpoint.SecurityEndpoint;
@@ -47,7 +47,7 @@ public class JerseyConfig extends ResourceConfig {
 		register(PurchaseOrderEndpoint.class);
 		
 		register(CashTransferEndpoint.class);
-		register(MTDPurchaseSummaryEndpoint.class);
+		register(TransactionSummaryEndpoint.class);
 		
 		register(InventoryEndpoint.class);
 		

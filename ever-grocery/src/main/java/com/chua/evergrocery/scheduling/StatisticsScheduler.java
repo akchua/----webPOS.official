@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.chua.evergrocery.rest.handler.PurchaseStatisticsHandler;
+import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
 
 /**
  * @author	Adrian Jasper K. Chua
@@ -21,7 +21,7 @@ public class StatisticsScheduler {
 	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private PurchaseStatisticsHandler purchaseStatisticsHandler;
+	private TransactionSummaryHandler transactionSummaryHandler;
 	
 	/**
 	 * Monthly Statistics Update
@@ -32,7 +32,7 @@ public class StatisticsScheduler {
 		final Date start = new Date();
 		LOG.info("Starting monthly statistics update");
 		
-		purchaseStatisticsHandler.updateAllPurchaseStatistics(3);
+		transactionSummaryHandler.updateAllPurchaseSummaries(3);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;

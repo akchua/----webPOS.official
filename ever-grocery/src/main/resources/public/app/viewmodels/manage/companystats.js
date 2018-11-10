@@ -1,5 +1,5 @@
-define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/mtdpurchasesummaryservice', 'modules/c3utility'], 
-		function ($, c3, app, ko, mtdPurchaseSummaryService, c3Utility) {
+define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummaryservice', 'modules/c3utility'], 
+		function ($, c3, app, ko, transactionSummaryService, c3Utility) {
 	var CompanyStats = function() {
 		this.companyId = ko.observable();
 		
@@ -18,7 +18,7 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/mtdpurchasesummarys
 	CompanyStats.prototype.attached = function() {
 		var self = this;
 		
-		mtdPurchaseSummaryService.getCompanyMTDPurchaseSummaryList(self.companyId()).done(function(companyMTDList) {
+		transactionSummaryService.getCompanyMTDPurchaseSummaryList(self.companyId()).done(function(companyMTDList) {
 			var i = 0;
 			for (i = 0; i < companyMTDList.length; i++) {
 				self.x[i + 1] = companyMTDList[i].formattedMonth;

@@ -583,7 +583,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	private void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail, PurchaseOrder purchaseOrder, ProductDetail productDetail) {
 		purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
 		purchaseOrderDetail.setProductDetail(productDetail);
-		purchaseOrderDetail.setProductId(productDetail.getProduct().getId());
+		purchaseOrderDetail.setProduct(productDetail.getProduct());
 		purchaseOrderDetail.setProductName(productDetail.getProduct().getName());
 		purchaseOrderDetail.setProductCode(productDetail.getProduct().getCode());
 		purchaseOrderDetail.setUnitType(productDetail.getUnitType());

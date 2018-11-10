@@ -10,11 +10,13 @@ import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
  * @version 1.0
  * @since   Oct 21, 2018
  */
-public interface MTDPurchaseSummaryHandler {
+public interface TransactionSummaryHandler {
 
 	List<MTDPurchaseSummary> getMTDPurchaseSummaryList();
 	
 	List<MTDPurchaseSummary> getMTDPurchaseSummaryListByYear(int year);
 	
 	List<CompanyMTDPurchaseSummary> getCompanyMTDPurchaseSummaryList(Long companyId);
+	
+	void updateAllPurchaseSummaries(int includedMonthsAgo);
 }

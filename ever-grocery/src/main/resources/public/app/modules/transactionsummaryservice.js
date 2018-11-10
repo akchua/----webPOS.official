@@ -2,7 +2,7 @@ define(['jquery'], function ($) {
     return {
     	getCompanyMTDPurchaseSummaryList: function(companyId) {
     		return $.ajax({
-    			url: '/services/mtdpurchasesummary/companymtdlist',
+    			url: '/services/transactionsummary/companymtdpurchaselist',
     			data: {
     				companyId: companyId
     			}
@@ -11,13 +11,13 @@ define(['jquery'], function ($) {
     	
     	getMTDPurchaseSummaryList: function() {
     		return $.ajax({
-    			url: '/services/mtdpurchasesummary/mtdlist'
+    			url: '/services/transactionsummary/mtdpurchaselist'
     		});
     	},
     	
     	getMTDPurchaseSummaryListByYear: function(year) {
     		return $.ajax({
-    			url: '/services/mtdpurchasesummary/mtdlistbyyear',
+    			url: '/services/transactionsummary/mtdpurchaselistbyyear',
     			data: {
     				year: year
     			}

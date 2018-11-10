@@ -11,34 +11,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chua.evergrocery.beans.ProductPurchaseSummaryBean;
 import com.chua.evergrocery.beans.PurchaseSummaryBean;
 import com.chua.evergrocery.database.entity.Company;
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.entity.ProductMTDPurchaseSummary;
-import com.chua.evergrocery.database.entity.PurchaseOrderDetail;
 import com.chua.evergrocery.database.service.CompanyMTDPurchaseSummaryService;
 import com.chua.evergrocery.database.service.CompanyService;
 import com.chua.evergrocery.database.service.MTDPurchaseSummaryService;
 import com.chua.evergrocery.database.service.ProductMTDPurchaseSummaryService;
 import com.chua.evergrocery.database.service.ProductService;
 import com.chua.evergrocery.database.service.PurchaseOrderDetailService;
-import com.chua.evergrocery.rest.handler.PurchaseStatisticsHandler;
+import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
 import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.format.DateFormatter;
 
 /**
  * @author  Adrian Jasper K. Chua
  * @version 1.0
- * @since   Oct 19, 2018
+ * @since   Oct 21, 2018
  */
-@Transactional
 @Component
-public class PurchaseStatisticsHandlerImpl implements PurchaseStatisticsHandler {
+@Transactional
+public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
-	
 	@Autowired
 	private CompanyService companyService;
 	
@@ -57,68 +55,75 @@ public class PurchaseStatisticsHandlerImpl implements PurchaseStatisticsHandler 
 	@Autowired
 	private MTDPurchaseSummaryService mtdPurchaseSummaryService;
 	
+	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	
 	@Override
-	public void updateAllPurchaseStatistics(int includedMonthsAgo) {
+	public List<MTDPurchaseSummary> getMTDPurchaseSummaryList() {
+		return mtdPurchaseSummaryService.findAllOrderByMonthId();
+	}
+	
+	@Override
+	public List<MTDPurchaseSummary> getMTDPurchaseSummaryListByYear(int year) {
+		return mtdPurchaseSummaryService.findByYearOrderByMonthId(year);
+	}
+	
+	@Override
+	public List<CompanyMTDPurchaseSummary> getCompanyMTDPurchaseSummaryList(Long companyId) {
+		return companyMTDPurchaseSummaryService.findAllByCompanyOrderByMonthId(companyId);
+	}
+
+	@Override
+	public void updateAllPurchaseSummaries(int includedMonthsAgo) {
 		final List<Company> companies = companyService.findAllList();
 		
 		final int lastMonthId = DateUtil.getMonthId(new Date()) - 1;
 		
 		for(int monthId = lastMonthId; monthId > lastMonthId - includedMonthsAgo; monthId--) {
 			LOG.info("### Processing month of : " + DateFormatter.prettyMonthFormat(monthId));
+			
 			final Map<Long, PurchaseSummaryBean> companyPurchaseSummary = new HashMap<Long, PurchaseSummaryBean>();
 			
 			for(Company company : companies) {
 				LOG.info("Processing company : " + company.getName());
 				
-				final Map<Long, PurchaseSummaryBean> productPurchaseSummary = new HashMap<Long, PurchaseSummaryBean>();
-				
-				final List<PurchaseOrderDetail> purchaseOrderDetails = purchaseOrderDetailService.findAllByCompanyAndMonthId(company.getId(), monthId);
-				
-				for(PurchaseOrderDetail pod : purchaseOrderDetails) {
-					final Long productId = pod.getProductDetail().getProduct().getId();
-					PurchaseSummaryBean pps = productPurchaseSummary.get(productId);
-					if(pps == null) pps = new PurchaseSummaryBean();
-					pps.setGrossTotal(pps.getGrossTotal() + (pod.getGrossPrice() * pod.getQuantity()));
-					pps.setNetTotal(pps.getNetTotal() + pod.getTotalPrice());
-					productPurchaseSummary.put(productId, pps);
-				}
+				final List<ProductPurchaseSummaryBean> productPurchaseSummaries = purchaseOrderDetailService.getAllProductPurchaseSummaryByCompanyAndMonthId(company.getId(), monthId);
 				
 				final PurchaseSummaryBean tempCompanyPurchaseSummary = new PurchaseSummaryBean();
 				
-				for(Map.Entry<Long, PurchaseSummaryBean> prodPurchaseSummary : productPurchaseSummary.entrySet()) {
-					final Float grossTotal = prodPurchaseSummary.getValue().getGrossTotal();
-					final Float netTotal = prodPurchaseSummary.getValue().getNetTotal();
-					
-					ProductMTDPurchaseSummary productMTDPurchaseSummary = productMTDPurchaseSummaryService.findByProductAndMonthId(prodPurchaseSummary.getKey(), monthId);
+				// Process product of each company and add them to the company total
+				for(ProductPurchaseSummaryBean pps : productPurchaseSummaries) {
+					ProductMTDPurchaseSummary productMTDPurchaseSummary = productMTDPurchaseSummaryService.findByProductAndMonthId(pps.getProductId(), monthId);
 					if(productMTDPurchaseSummary == null) {
 						productMTDPurchaseSummary = new ProductMTDPurchaseSummary();
-						productMTDPurchaseSummary.setProduct(productService.find(prodPurchaseSummary.getKey()));
+						productMTDPurchaseSummary.setProduct(productService.find(pps.getProductId()));
 						productMTDPurchaseSummary.setMonthId(monthId);
-						productMTDPurchaseSummary.setGrossTotal(grossTotal);
-						productMTDPurchaseSummary.setNetTotal(netTotal);
+						productMTDPurchaseSummary.setGrossTotal(pps.getGrossTotal());
+						productMTDPurchaseSummary.setNetTotal(pps.getNetTotal());
 						
 						productMTDPurchaseSummaryService.insert(productMTDPurchaseSummary);
 					} else {
-						if(!(productMTDPurchaseSummary.getGrossTotal().equals(grossTotal)
-								&& productMTDPurchaseSummary.getNetTotal().equals(netTotal))) {
-							productMTDPurchaseSummary.setGrossTotal(grossTotal);
-							productMTDPurchaseSummary.setNetTotal(netTotal);
+						if(!(productMTDPurchaseSummary.getGrossTotal().equals(pps.getGrossTotal())
+								&& productMTDPurchaseSummary.getNetTotal().equals(pps.getNetTotal()))) {
+							productMTDPurchaseSummary.setGrossTotal(pps.getGrossTotal());
+							productMTDPurchaseSummary.setNetTotal(pps.getNetTotal());
 							productMTDPurchaseSummaryService.update(productMTDPurchaseSummary);
 						}
 					}
 					
-					tempCompanyPurchaseSummary.setGrossTotal(tempCompanyPurchaseSummary.getGrossTotal() + grossTotal);
-					tempCompanyPurchaseSummary.setNetTotal(tempCompanyPurchaseSummary.getNetTotal() + netTotal);
+					tempCompanyPurchaseSummary.setGrossTotal(tempCompanyPurchaseSummary.getGrossTotal() + pps.getGrossTotal());
+					tempCompanyPurchaseSummary.setNetTotal(tempCompanyPurchaseSummary.getNetTotal() + pps.getNetTotal());
 				}
 				
+				// Check if processing last month, then update each product's purchase value percentage
 				if(monthId == lastMonthId) {
-					for(Map.Entry<Long, PurchaseSummaryBean> prodPurchaseSummary : productPurchaseSummary.entrySet()) {
-						final Float netTotal = prodPurchaseSummary.getValue().getNetTotal();
-						final Product product = productService.find(prodPurchaseSummary.getKey());
+					for(ProductPurchaseSummaryBean pps : productPurchaseSummaries) {
+						final Float netTotal = pps.getNetTotal();
+						final Product product = productService.find(pps.getProductId());
 						product.setPurchaseValuePercentage(netTotal / tempCompanyPurchaseSummary.getNetTotal() * 100.0f);
 					}
 				}
 				
+				// Add company purchase summary to map of company purchase summaries
 				companyPurchaseSummary.put(company.getId(), tempCompanyPurchaseSummary);
 			}
 			
@@ -128,6 +133,7 @@ public class PurchaseStatisticsHandlerImpl implements PurchaseStatisticsHandler 
 				final Float grossTotal = compPurchaseSummary.getValue().getGrossTotal();
 				final Float netTotal = compPurchaseSummary.getValue().getNetTotal();
 				
+				// Save or Update each company purchase summary
 				CompanyMTDPurchaseSummary companyMTDPurchaseSummary = companyMTDPurchaseSummaryService.findByCompanyAndMonthId(compPurchaseSummary.getKey(), monthId);
 				if(companyMTDPurchaseSummary == null) {
 					companyMTDPurchaseSummary = new CompanyMTDPurchaseSummary();
@@ -145,10 +151,12 @@ public class PurchaseStatisticsHandlerImpl implements PurchaseStatisticsHandler 
 					}
 				}
 				
+				// Add company summary to grand total
 				totalPurchaseSummary.setGrossTotal(totalPurchaseSummary.getGrossTotal() + grossTotal);
 				totalPurchaseSummary.setNetTotal(totalPurchaseSummary.getNetTotal() + netTotal);
 			}
 			
+			// Check if processing last month, then update each company's purchase value percentage
 			if(monthId == lastMonthId) {
 				for(Map.Entry<Long, PurchaseSummaryBean> compPurchaseSummary : companyPurchaseSummary.entrySet()) {
 					final Float netTotal = compPurchaseSummary.getValue().getNetTotal();
@@ -157,6 +165,7 @@ public class PurchaseStatisticsHandlerImpl implements PurchaseStatisticsHandler 
 				}
 			}
 			
+			// Save or Update the total purchase summary
 			MTDPurchaseSummary mtdPurchaseSummary = mtdPurchaseSummaryService.findByMonthId(monthId);
 			if(mtdPurchaseSummary == null) {
 				mtdPurchaseSummary = new MTDPurchaseSummary();
@@ -165,7 +174,7 @@ public class PurchaseStatisticsHandlerImpl implements PurchaseStatisticsHandler 
 				mtdPurchaseSummary.setNetTotal(totalPurchaseSummary.getNetTotal());
 				
 				mtdPurchaseSummaryService.insert(mtdPurchaseSummary);
-				LOG.info("############ NEW");
+				LOG.info("## New Purchase Summary");
 			} else {
 				if(!(mtdPurchaseSummary.getGrossTotal().equals(totalPurchaseSummary.getGrossTotal())
 						&& mtdPurchaseSummary.getNetTotal().equals(totalPurchaseSummary.getNetTotal()))) {
@@ -173,7 +182,7 @@ public class PurchaseStatisticsHandlerImpl implements PurchaseStatisticsHandler 
 					mtdPurchaseSummary.setNetTotal(totalPurchaseSummary.getNetTotal());
 					mtdPurchaseSummaryService.update(mtdPurchaseSummary);
 				}
-				LOG.info("############ UPDATE");
+				LOG.info("## Updated Purchase Summary");
 			}
 		}
 	}

@@ -12,35 +12,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
-import com.chua.evergrocery.rest.handler.MTDPurchaseSummaryHandler;
+import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
 
 /**
  * @author  Adrian Jasper K. Chua
  * @version 1.0
  * @since   Oct 21, 2018
  */
-@Path("/mtdpurchasesummary")
-public class MTDPurchaseSummaryEndpoint {
+@Path("/transactionsummary")
+public class TransactionSummaryEndpoint {
 
 	@Autowired
-	private MTDPurchaseSummaryHandler mtdPurchaseSummaryHandler;
+	private TransactionSummaryHandler mtdPurchaseSummaryHandler;
 	
 	@GET
-	@Path("/mtdlist")
+	@Path("/mtdpurchaselist")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<MTDPurchaseSummary> getMTDPurchaseSummaryList() {
 		return mtdPurchaseSummaryHandler.getMTDPurchaseSummaryList();
 	}
 	
 	@GET
-	@Path("/mtdlistbyyear")
+	@Path("/mtdpurchaselistbyyear")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<MTDPurchaseSummary> getMTDPurchaseSummaryListByYear(@QueryParam("year") Integer year) {
 		return mtdPurchaseSummaryHandler.getMTDPurchaseSummaryListByYear(year);
 	}
 	
 	@GET
-	@Path("/companymtdlist")
+	@Path("/companymtdpurchaselist")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<CompanyMTDPurchaseSummary> getCompanyMTDPurchaseSummaryList(@QueryParam("companyId") Long companyId) {
 		return mtdPurchaseSummaryHandler.getCompanyMTDPurchaseSummaryList(companyId);
