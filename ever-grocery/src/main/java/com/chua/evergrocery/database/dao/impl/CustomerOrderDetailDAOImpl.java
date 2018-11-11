@@ -86,7 +86,7 @@ public class CustomerOrderDetailDAOImpl
 	public SalesSummaryBean getSalesSummaryByProductAndDatePaid(long productId, Date datePaidStart, Date datePaidEnd) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.eq("productId", productId));
+		conjunction.add(Restrictions.eq("product.id", productId));
 		conjunction.add(Restrictions.eq("co.isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.between("co.paidOn", datePaidStart, datePaidEnd));
 		

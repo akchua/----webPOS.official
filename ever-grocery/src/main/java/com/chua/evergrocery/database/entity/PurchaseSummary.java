@@ -35,7 +35,7 @@ public class PurchaseSummary extends BaseObject {
 	public Float getNetTotal() {
 		return netTotal;
 	}
-
+	
 	public void setNetTotal(Float netTotal) {
 		this.netTotal = netTotal;
 	}

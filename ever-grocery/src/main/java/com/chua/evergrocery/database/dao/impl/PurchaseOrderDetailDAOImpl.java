@@ -89,7 +89,7 @@ public class PurchaseOrderDetailDAOImpl
 			Date deliveryEnd) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.eq("productId", productId));
+		conjunction.add(Restrictions.eq("product.id", productId));
 		conjunction.add(Restrictions.eq("po.isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.between("po.deliveredOn", deliveryStart, deliveryEnd));
 		

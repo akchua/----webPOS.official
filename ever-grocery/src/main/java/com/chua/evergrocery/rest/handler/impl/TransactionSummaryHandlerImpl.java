@@ -1,9 +1,8 @@
 package com.chua.evergrocery.rest.handler.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chua.evergrocery.beans.CompanyPurchaseSummaryBean;
 import com.chua.evergrocery.beans.ProductPurchaseSummaryBean;
 import com.chua.evergrocery.beans.PurchaseSummaryBean;
 import com.chua.evergrocery.database.entity.Company;
@@ -81,14 +81,15 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 		for(int monthId = lastMonthId; monthId > lastMonthId - includedMonthsAgo; monthId--) {
 			LOG.info("### Processing month of : " + DateFormatter.prettyMonthFormat(monthId));
 			
-			final Map<Long, PurchaseSummaryBean> companyPurchaseSummary = new HashMap<Long, PurchaseSummaryBean>();
+			final List<CompanyPurchaseSummaryBean> companyPurchaseSummaries = new ArrayList<CompanyPurchaseSummaryBean>();
 			
 			for(Company company : companies) {
 				LOG.info("Processing company : " + company.getName());
 				
 				final List<ProductPurchaseSummaryBean> productPurchaseSummaries = purchaseOrderDetailService.getAllProductPurchaseSummaryByCompanyAndMonthId(company.getId(), monthId);
 				
-				final PurchaseSummaryBean tempCompanyPurchaseSummary = new PurchaseSummaryBean();
+				final CompanyPurchaseSummaryBean companyPurchaseSummary = new CompanyPurchaseSummaryBean();
+				companyPurchaseSummary.setCompanyId(company.getId());
 				
 				// Process product of each company and add them to the company total
 				for(ProductPurchaseSummaryBean pps : productPurchaseSummaries) {
@@ -110,8 +111,8 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 						}
 					}
 					
-					tempCompanyPurchaseSummary.setGrossTotal(tempCompanyPurchaseSummary.getGrossTotal() + pps.getGrossTotal());
-					tempCompanyPurchaseSummary.setNetTotal(tempCompanyPurchaseSummary.getNetTotal() + pps.getNetTotal());
+					companyPurchaseSummary.setGrossTotal(companyPurchaseSummary.getGrossTotal() + pps.getGrossTotal());
+					companyPurchaseSummary.setNetTotal(companyPurchaseSummary.getNetTotal() + pps.getNetTotal());
 				}
 				
 				// Check if processing last month, then update each product's purchase value percentage
@@ -119,49 +120,45 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 					for(ProductPurchaseSummaryBean pps : productPurchaseSummaries) {
 						final Float netTotal = pps.getNetTotal();
 						final Product product = productService.find(pps.getProductId());
-						product.setPurchaseValuePercentage(netTotal / tempCompanyPurchaseSummary.getNetTotal() * 100.0f);
+						product.setPurchaseValuePercentage(netTotal / companyPurchaseSummary.getNetTotal() * 100.0f);
 					}
 				}
 				
 				// Add company purchase summary to map of company purchase summaries
-				companyPurchaseSummary.put(company.getId(), tempCompanyPurchaseSummary);
+				companyPurchaseSummaries.add(companyPurchaseSummary);
 			}
 			
 			final PurchaseSummaryBean totalPurchaseSummary = new PurchaseSummaryBean();
 			
-			for(Map.Entry<Long, PurchaseSummaryBean> compPurchaseSummary : companyPurchaseSummary.entrySet()) {
-				final Float grossTotal = compPurchaseSummary.getValue().getGrossTotal();
-				final Float netTotal = compPurchaseSummary.getValue().getNetTotal();
-				
+			for(CompanyPurchaseSummaryBean cps : companyPurchaseSummaries) {
 				// Save or Update each company purchase summary
-				CompanyMTDPurchaseSummary companyMTDPurchaseSummary = companyMTDPurchaseSummaryService.findByCompanyAndMonthId(compPurchaseSummary.getKey(), monthId);
+				CompanyMTDPurchaseSummary companyMTDPurchaseSummary = companyMTDPurchaseSummaryService.findByCompanyAndMonthId(cps.getCompanyId(), monthId);
 				if(companyMTDPurchaseSummary == null) {
 					companyMTDPurchaseSummary = new CompanyMTDPurchaseSummary();
-					companyMTDPurchaseSummary.setCompany(companyService.find(compPurchaseSummary.getKey()));
+					companyMTDPurchaseSummary.setCompany(companyService.find(cps.getCompanyId()));
 					companyMTDPurchaseSummary.setMonthId(monthId);
-					companyMTDPurchaseSummary.setGrossTotal(grossTotal);
-					companyMTDPurchaseSummary.setNetTotal(netTotal);
+					companyMTDPurchaseSummary.setGrossTotal(cps.getGrossTotal());
+					companyMTDPurchaseSummary.setNetTotal(cps.getNetTotal());
 					companyMTDPurchaseSummaryService.insert(companyMTDPurchaseSummary);
 				} else {
-					if(!(companyMTDPurchaseSummary.getGrossTotal().equals(grossTotal)
-							&& companyMTDPurchaseSummary.getNetTotal().equals(netTotal))) {
-						companyMTDPurchaseSummary.setGrossTotal(grossTotal);
-						companyMTDPurchaseSummary.setNetTotal(netTotal);
+					if(!(companyMTDPurchaseSummary.getGrossTotal().equals(cps.getGrossTotal())
+							&& companyMTDPurchaseSummary.getNetTotal().equals(cps.getNetTotal()))) {
+						companyMTDPurchaseSummary.setGrossTotal(cps.getGrossTotal());
+						companyMTDPurchaseSummary.setNetTotal(cps.getNetTotal());
 						companyMTDPurchaseSummaryService.update(companyMTDPurchaseSummary);
 					}
 				}
 				
 				// Add company summary to grand total
-				totalPurchaseSummary.setGrossTotal(totalPurchaseSummary.getGrossTotal() + grossTotal);
-				totalPurchaseSummary.setNetTotal(totalPurchaseSummary.getNetTotal() + netTotal);
+				totalPurchaseSummary.setGrossTotal(totalPurchaseSummary.getGrossTotal() + cps.getGrossTotal());
+				totalPurchaseSummary.setNetTotal(totalPurchaseSummary.getNetTotal() + cps.getNetTotal());
 			}
 			
 			// Check if processing last month, then update each company's purchase value percentage
 			if(monthId == lastMonthId) {
-				for(Map.Entry<Long, PurchaseSummaryBean> compPurchaseSummary : companyPurchaseSummary.entrySet()) {
-					final Float netTotal = compPurchaseSummary.getValue().getNetTotal();
-					final Company company = companyService.find(compPurchaseSummary.getKey());
-					company.setPurchaseValuePercentage(netTotal / totalPurchaseSummary.getNetTotal() * 100.0f);
+				for(CompanyPurchaseSummaryBean cps : companyPurchaseSummaries) {
+					final Company company = companyService.find(cps.getCompanyId());
+					company.setPurchaseValuePercentage(cps.getNetTotal() / totalPurchaseSummary.getNetTotal() * 100.0f);
 				}
 			}
 			
