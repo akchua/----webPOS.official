@@ -86,10 +86,10 @@ public class InventoryHandlerImpl implements InventoryHandler {
 			inventory.setProduct(product);
 			
 			final PurchaseSummaryBean purchaseSummary = purchaseOrderDetailService.getPurchaseSummaryByProductAndDeliveryDate(productId, DateUtil.floorDay(product.getCompany().getLastPurchaseOrderDate()), DateUtil.floorDay(upTo));
-			inventory.setTotalNetPurchase(purchaseSummary.getNetTotal());
+			inventory.setTotalNetPurchase(purchaseSummary.getNetTotal() != null ? purchaseSummary.getNetTotal() : 0.0f);
 			LOG.info("Found total purchase : " + inventory.getTotalNetPurchase());
 			final SalesSummaryBean salesSummary = customerOrderDetailService.getSalesSummaryByProductAndDatePaid(productId, product.getCompany().getLastPurchaseOrderDate(), upTo);
-			inventory.setTotalBaseSales(salesSummary.getBaseTotal());
+			inventory.setTotalBaseSales(salesSummary.getBaseTotal() != null ? salesSummary.getBaseTotal() : 0.0f);
 			LOG.info("Found total base sales : " + inventory.getTotalBaseSales());
 			inventory.setStockBudget(product.getStockBudget() + inventory.getTotalNetPurchase() - inventory.getTotalBaseSales());
 			
