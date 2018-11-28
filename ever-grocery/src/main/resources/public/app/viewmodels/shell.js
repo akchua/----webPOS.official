@@ -101,6 +101,7 @@
 	        	case 'ASSISTANT_MANAGER':
 	        		self.routes = self.routes.concat(manageroute);
 	        		self.routes = self.routes.concat(cashierroute);
+	        		self.routes = self.routes.concat(cashtransferroute);
 	        	case 'SENIOR_STAFF':
 	        		self.routes = self.routes.concat(purchaseorderroute);
 	        	case 'STAFF':
@@ -108,12 +109,12 @@
 	        		break;
 	        	case 'CASHIER':
 	        		self.routes = self.routes.concat(cashierroute);
+	        		self.routes = self.routes.concat(cashtransferroute);
 	        		break;
 	        	case 'STORAGE_MANAGER':
 	        		break;
 	    	}
 	    	
-    		self.routes = self.routes.concat(cashtransferroute);
     		self.routes = self.routes.concat(searchroute);
 		}
     		
