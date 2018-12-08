@@ -21,7 +21,7 @@ public class DateFormatter {
 
 	private static final DateFormat LONG_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	
-	private static final DateFormat PRETTY_DATE_FORMAT = new SimpleDateFormat("MMMM dd, yyyy");
+	private static final DateFormat PRETTY_DATE_FORMAT = new SimpleDateFormat("MMM dd, yyyy");
 	
 	private static final DateFormat FILE_SAFE_SHORT_DATE_FORMAT = new SimpleDateFormat("MM-dd-yyyy");
 	
@@ -33,7 +33,7 @@ public class DateFormatter {
 	
 	private static final DateTimeFormatter LONG_DATETIME_FORMAT = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss");
 	
-	private static final DateTimeFormatter PRETTY_DATETIME_FORMAT = DateTimeFormat.forPattern("MMMM dd, yyyy");
+	private static final DateTimeFormatter PRETTY_DATETIME_FORMAT = DateTimeFormat.forPattern("MMM dd, yyyy");
 	
 	private static final DateTimeFormatter FILE_SAFE_SHORT_DATETIME_FORMAT = DateTimeFormat.forPattern("MM-dd-yyyy");
 	

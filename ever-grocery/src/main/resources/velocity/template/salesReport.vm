@@ -1,8 +1,10 @@
 ## Template for Sales Report
-## Has a maximum of 119 columns per line
-                                            VPKC GROCERY SALES REPORT
-                                          ${t.FormattedDateFrom} - ${t.FormattedDateTo}
-                                               ${t.FormattedDate}
+## Has a maximum of 133 columns per line
+                                                      VPKC GROCERY SALES REPORT
+                                                    ${t.FormattedDateFrom} - ${t.FormattedDateTo}
+                                                         ${t.FormattedDate}
+                                                         
+         Transactions Included : ${t.FormattedTransactionsIncluded}
  
            Total VATable Sales : ${t.FormattedTotalVatableSales}
         Total VAT-Exempt Sales : ${t.FormattedTotalVatExSales}
@@ -11,9 +13,9 @@
 		
                    GRAND TOTAL : ${t.FormattedGrandTotal}
 
-+---------------+----------+----------+---------------+---------------+---------------+---------------+---------------+
-|     Date      | SINStart | SIN End  |    VATable    |  VAT-Exempt   |  Zero Rated   |      VAT      |     Total     |
-+---------------+----------+----------+---------------+---------------+---------------+---------------+---------------+
-#foreach( $formattedDailySales in $t.FormattedDailySalesList)
-$formattedDailySales
++---------------+----------+----------+---------------+---------------+---------------+---------------+-------------+---------------+
+|     Date      | SINStart | SIN End  |    VATable    |  VAT-Exempt   |  Zero Rated   |      VAT      |  Discount   |     Total     |
++---------------+----------+----------+---------------+---------------+---------------+---------------+-------------+---------------+
+#foreach( $formattedDailySalesReport in $t.FormattedDailySalesReportList)
+$formattedDailySalesReport
 #end

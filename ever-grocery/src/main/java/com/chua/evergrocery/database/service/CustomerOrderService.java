@@ -3,9 +3,11 @@ package com.chua.evergrocery.database.service;
 import java.util.Date;
 import java.util.List;
 
+import com.chua.evergrocery.beans.DailySalesReportBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.prototype.CustomerOrderPrototype;
+import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.Status;
 
 public interface CustomerOrderService 
@@ -16,4 +18,8 @@ public interface CustomerOrderService
 	List<CustomerOrder> findAllPaidByCashierAndDateFromToNow(Long cashierId, Date dateFrom);
 	
 	List<CustomerOrder> findAllBySalesReportQueryBean(SalesReportQueryBean salesReportQuery);
+	
+	List<DailySalesReportBean> getDailySalesReportByDateRange(Date startDate, Date endDate);
+	
+	List<DailySalesReportBean> getDailySalesReportByDateRangeAndDiscountType(Date startDate, Date endDate, List<DiscountType> discountType);
 }

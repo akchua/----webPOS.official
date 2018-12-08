@@ -90,7 +90,7 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedDiscountLabel() {
-		return String.format("%-3s", customerOrder.getDiscountType().getShortHand()) + String.format("%2s", customerOrder.getDiscountType().getTotalPercentDiscount() + "%");
+		return String.format("%-3s", customerOrder.getDiscountType().getShortHand()) + String.format("%2s", customerOrder.getDiscountType().getPercentDiscount() + "%");
 	}
 	
 	public String getFormattedTotalDiscountAmount() {

@@ -119,6 +119,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				customerOrder.setVatExSales(0.0f);
 				customerOrder.setZeroRatedSales(0.0f);
 				customerOrder.setDiscountType(DiscountType.NO_DISCOUNT);
+				customerOrder.setTotalDiscountAmount(0.0f);
 				customerOrder.setTotalItems(0.0f);
 				
 				customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
@@ -213,23 +214,27 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			if(customerOrder.getTotalDiscountAmount().equals(0.0f)) {
+			if(customerOrder.getTotalDiscountAmount().equals(0.0f) && customerOrder.getDiscountType().equals(DiscountType.NO_DISCOUNT)) {
 				if(discountType.equals(DiscountType.SENIOR_DISCOUNT)) {
 					// Apply hard cap to gross amount
 					grossAmountLimit = Math.min(grossAmountLimit, discountType.getGrossHardCap());
 					
 					final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrderId);
+					Float totalDiscounted = 0.0f;
 					
 					for(CustomerOrderDetail customerOrderDetail : customerOrderDetails) {
 						if(customerOrderDetail.getProductDetail().getProduct().getAllowSeniorDiscount() && customerOrderDetail.getTotalPrice() <= grossAmountLimit) {
 							grossAmountLimit -= customerOrderDetail.getTotalPrice();
 							customerOrderDetail.setTotalPrice(TaxUtil.convertTaxType(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), TaxType.ZERO_RATED));
 							customerOrderDetail.setTaxType(TaxType.ZERO_RATED);
+							
+							totalDiscounted += customerOrderDetail.getTotalPrice();
 						}
 					}
 					
 					customerOrderDetailService.batchUpdate(customerOrderDetails);
 					customerOrder.setDiscountType(discountType);
+					customerOrder.setTotalDiscountAmount(totalDiscounted * (discountType.getPercentDiscount() / 100));
 					
 					result = new ResultBean();
 					
@@ -628,8 +633,6 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					"Sales Report for " + salesReportQuery.getFrom() + " - " + salesReportQuery.getTo() + ".",
 					new String[] { fileConstants.getSalesHome() + (String) result.getExtras().get("fileName") });
 		}
-		System.out.println(result != null);
-		System.out.println(result != null ? result.getSuccess() : "OUT");
 		return result;
 	}
 	

@@ -60,6 +60,8 @@ public class CustomerOrder extends BaseObject {
 	
 	private DiscountType discountType;
 	
+	private Float totalDiscountAmount;
+	
 	private Float totalItems;
 	
 	private Status status;
@@ -79,7 +81,7 @@ public class CustomerOrder extends BaseObject {
 	
 	@Transient
 	public String getFormattedSIN() {
-		DecimalFormat SIN_FORMAT = new DecimalFormat("00000000");
+		DecimalFormat SIN_FORMAT = new DecimalFormat("0000000000");
 		return SIN_FORMAT.format(serialInvoiceNumber);
 	}
 
@@ -211,14 +213,19 @@ public class CustomerOrder extends BaseObject {
 		return CurrencyFormatter.pesoFormat(getGrossAmount());
 	}
 	
-	@Transient
+	@Basic
+	@Column(name = "discount_amount")
 	public Float getTotalDiscountAmount() {
-		return zeroRatedSales * (discountType.getPercentZeroRatedDiscount() / 100);
+		return totalDiscountAmount;
 	}
 	
 	@Transient
 	public String getFormattedTotalDiscountAmount() {
 		return CurrencyFormatter.pesoFormat(getTotalDiscountAmount());
+	}
+
+	public void setTotalDiscountAmount(Float totalDiscountAmount) {
+		this.totalDiscountAmount = totalDiscountAmount;
 	}
 
 	@Transient

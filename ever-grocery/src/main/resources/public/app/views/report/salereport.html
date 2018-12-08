@@ -20,6 +20,15 @@
 				</div>
 			</div>
 			
+			<div class="row">	
+				<div class="control-group col-xs-12">
+					<label class="control-label" for="discountType">Select Included Transactions</label>
+					<div class="controls">
+						<select data-bind="options: discountTypeList, optionsValue: 'name', optionsText: 'displayName', optionsCaption: '-- All Transactions --', value: salesReportQuery.discountType" class="form-control select-lg" id="discountType"></select>
+					</div>
+				</div>
+			</div>
+			
 			<br>
 			
 			<div class="row">

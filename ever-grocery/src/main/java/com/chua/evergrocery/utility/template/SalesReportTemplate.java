@@ -9,7 +9,7 @@ import java.util.Map;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import com.chua.evergrocery.beans.DailySalesBean;
+import com.chua.evergrocery.beans.DailySalesReportBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
@@ -24,7 +24,7 @@ public class SalesReportTemplate extends AbstractTemplate {
 
 	private SalesReportQueryBean salesReportQuery;
 	
-	private List<DailySalesBean> dailySalesList;
+	private List<DailySalesReportBean> dailySalesReports;
 	
 	private Float totalVatSales;
 	
@@ -32,30 +32,30 @@ public class SalesReportTemplate extends AbstractTemplate {
 	
 	private Float totalZeroRatedSales;
 	
-	private List<String> formattedDailySalesList;
+	private List<String> formattedDailySalesReportList;
 	
-	public SalesReportTemplate(SalesReportQueryBean salesReportQuery, List<DailySalesBean> dailySalesList) {
+	public SalesReportTemplate(SalesReportQueryBean salesReportQuery, List<DailySalesReportBean> dailySalesReports) {
 		this.salesReportQuery = salesReportQuery;
-		this.dailySalesList = dailySalesList;
+		this.dailySalesReports = dailySalesReports;
 		
 		this.totalVatSales = 0.0f;
 		this.totalVatExSales = 0.0f;
 		this.totalZeroRatedSales = 0.0f;
 		
-		for(DailySalesBean dailySales : dailySalesList) {
-			this.totalVatSales += dailySales.getTotalVatSales();
-			this.totalVatExSales += dailySales.getTotalVatExSales();
-			this.totalZeroRatedSales += dailySales.getTotalZeroRatedSales();
+		for(DailySalesReportBean dailySalesReport : dailySalesReports) {
+			this.totalVatSales += dailySalesReport.getTotalVatSales();
+			this.totalVatExSales += dailySalesReport.getTotalVatExSales();
+			this.totalZeroRatedSales += dailySalesReport.getTotalZeroRatedSales();
 		}
 		
-		this.formattedDailySalesList = new ArrayList<String>();
+		this.formattedDailySalesReportList = new ArrayList<String>();
 	}
 	
 	@Override
 	public String merge(VelocityEngine velocityEngine, DocType docType) {
-		for(DailySalesBean dailySales : dailySalesList) {
-			final DailySalesTemplate dailySalesTemplate = new DailySalesTemplate(dailySales);
-			formattedDailySalesList.add(dailySalesTemplate.merge(velocityEngine, docType));
+		for(DailySalesReportBean dailySalesReport : dailySalesReports) {
+			final DailySalesReportTemplate dailySalesTemplate = new DailySalesReportTemplate(dailySalesReport);
+			formattedDailySalesReportList.add(dailySalesTemplate.merge(velocityEngine, docType));
 		}
 		
 		Map<String, Object> model = new HashMap<String, Object>();
@@ -75,6 +75,16 @@ public class SalesReportTemplate extends AbstractTemplate {
 		return DateFormatter.longFormat(new Date());
 	}
 	
+	public String getFormattedTransactionsIncluded() {
+		String temp = "";
+		if(salesReportQuery.getDiscountType() == null) {
+			temp = "ALL TRANSACTIONS";
+		} else {
+			temp = salesReportQuery.getDiscountType().getDisplayName() + " TRANSACTIONS";
+		}
+		
+		return temp;
+	}
 	public String getFormattedTotalVatableSales() {
 		return String.format("%17s", CurrencyFormatter.pesoFormat(this.totalVatSales / 1.12));
 	}
@@ -94,8 +104,8 @@ public class SalesReportTemplate extends AbstractTemplate {
 	public String getFormattedGrandTotal() {
 		return String.format("%17s", CurrencyFormatter.pesoFormat(this.totalVatSales + this.totalVatExSales + this.totalZeroRatedSales));
 	}
-	
-	public List<String> getFormattedDailySalesList() {
-		return formattedDailySalesList;
+
+	public List<String> getFormattedDailySalesReportList() {
+		return formattedDailySalesReportList;
 	}
 }

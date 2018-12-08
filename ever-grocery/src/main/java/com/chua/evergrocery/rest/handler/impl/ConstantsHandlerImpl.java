@@ -49,7 +49,7 @@ public class ConstantsHandlerImpl implements ConstantsHandler {
 	@Override
 	public List<DiscountType> getDiscountTypeList() {
 		return Stream.of(DiscountType.values())
-					.filter(discountType -> !discountType.equals(DiscountType.NO_DISCOUNT))
+					/*.filter(discountType -> !discountType.equals(DiscountType.NO_DISCOUNT))*/
 					.collect(Collectors.toList());
 	}
 	

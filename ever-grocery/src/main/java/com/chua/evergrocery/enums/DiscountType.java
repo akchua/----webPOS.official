@@ -19,14 +19,14 @@ public enum DiscountType {
 	// max 3 characters
 	private final String shortHand;
 	
-	private final Float percentZeroRatedDiscount;
+	private final Float percentDiscount;
 	
 	private final Float grossHardCap;
 	
-	DiscountType(final String displayName, final String shortHand, final Float percentZeroRatedDiscount, final Float grossHardCap) {
+	DiscountType(final String displayName, final String shortHand, final Float percentDiscount, final Float grossHardCap) {
 		this.displayName = displayName;
 		this.shortHand = shortHand;
-		this.percentZeroRatedDiscount = percentZeroRatedDiscount;
+		this.percentDiscount = percentDiscount;
 		this.grossHardCap = grossHardCap;
 	}
 	
@@ -42,15 +42,11 @@ public enum DiscountType {
 		return shortHand;
 	}
 
-	public Float getPercentZeroRatedDiscount() {
-		return percentZeroRatedDiscount;
+	public Float getPercentDiscount() {
+		return percentDiscount;
 	}
 
 	public Float getGrossHardCap() {
 		return grossHardCap;
-	}
-	
-	public Float getTotalPercentDiscount() {
-		return percentZeroRatedDiscount;
 	}
 }

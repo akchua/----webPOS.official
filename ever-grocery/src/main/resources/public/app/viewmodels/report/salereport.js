@@ -1,11 +1,14 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderservice', 'modules/fileservice'],
-			function (dialog, app, ko, customerOrderService, fileService) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderservice', 'modules/fileservice', 'modules/constantsservice'],
+			function (dialog, app, ko, customerOrderService, fileService, constantsService) {
     var SalesReport = function() {
     	this.enableGenerateButton = ko.observable(true);
+    	
+    	this.discountTypeList = ko.observable();
     	
     	this.salesReportQuery = {
     		from: ko.observable(),
     		to: ko.observable(),
+    		discountType: ko.observable(),
     		
     		sendMail: ko.observable(false)
 	    };
@@ -15,6 +18,14 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     
     SalesReport.show = function() {
     	return dialog.show(new SalesReport());
+    };
+    
+    SalesReport.prototype.activate = function() {
+    	var self = this;
+    	
+    	constantsService.getDiscountTypeList().done(function(discountTypeList) {
+    		self.discountTypeList(discountTypeList);
+    	});
     };
     
     SalesReport.prototype.generateReport = function() {

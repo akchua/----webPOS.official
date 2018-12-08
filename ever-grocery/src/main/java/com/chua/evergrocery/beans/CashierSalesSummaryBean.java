@@ -5,24 +5,50 @@ import com.chua.evergrocery.utility.format.CurrencyFormatter;
 /**
  * @author  Adrian Jasper K. Chua
  * @version 1.0
- * @since   8 Jul 2018
+ * @since   Dec 8, 2018
  */
-public class DailySalesBreakdownBean {
+public class CashierSalesSummaryBean {
 
-	private String cashierName;
+	private Long cashierId;
+	
+	private String cashierFirstName;
+	
+	private String cashierLastName;
 	
 	private Float vatSales;
 	
 	private Float vatExSales;
 	
 	private Float zeroRatedSales;
+	
+	private Float discountAmount;
 
-	public String getCashierName() {
-		return cashierName;
+	public Long getCashierId() {
+		return cashierId;
 	}
 
-	public void setCashierName(String cashierName) {
-		this.cashierName = cashierName;
+	public void setCashierId(Long cashierId) {
+		this.cashierId = cashierId;
+	}
+
+	public String getCashierFirstName() {
+		return cashierFirstName;
+	}
+	
+	public String getCashierFormattedName() {
+		return cashierLastName + ", " + cashierFirstName;
+	}
+
+	public void setCashierFirstName(String cashierFirstName) {
+		this.cashierFirstName = cashierFirstName;
+	}
+
+	public String getCashierLastName() {
+		return cashierLastName;
+	}
+
+	public void setCashierLastName(String cashierLastName) {
+		this.cashierLastName = cashierLastName;
 	}
 
 	public Float getVatSales() {
@@ -67,6 +93,18 @@ public class DailySalesBreakdownBean {
 
 	public void setZeroRatedSales(Float zeroRatedSales) {
 		this.zeroRatedSales = zeroRatedSales;
+	}
+
+	public Float getDiscountAmount() {
+		return discountAmount;
+	}
+	
+	public String getFormattedDiscountAmount() {
+		return CurrencyFormatter.pesoFormat(discountAmount);
+	}
+
+	public void setDiscountAmount(Float discountAmount) {
+		this.discountAmount = discountAmount;
 	}
 	
 	public Float getTotalSales() {

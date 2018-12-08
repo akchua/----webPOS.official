@@ -1,9 +1,0 @@
-## Template for daily sales
-## Has a maximum of 119 columns per line
-|${t.FormattedSaleDate}|${t.FormattedSinStart}|${t.FormattedSinEnd}|${t.FormattedTotalVatableSales}|${t.FormattedTotalVatExSales}|${t.FormattedTotalZeroRatedSales}|${t.FormattedTotalVatAmount}|${t.FormattedTotalSales}|
-|               +----------+----------+---------------+---------------+---------------+---------------+---------------+
-|                BREAKDOWN:           |               |               |               |               |               |
-#foreach( $formattedDailySalesBreakdown in $t.FormattedDailySalesBreakdowns)
-$formattedDailySalesBreakdown
-#end
-+-------------------------------------+---------------+---------------+---------------+---------------+---------------+
