@@ -28,7 +28,7 @@
     			<thead>
     				<tr>
     					<th>SIN</th>
-    					<th>Name</th>
+    					<th>Date</th>
     					<th>Customer</th>
     					<th>Creator</th>
     					<th>Cashier</th>
@@ -40,11 +40,15 @@
     			<tbody data-bind="foreach: { data: customerOrderList, as: 'customerOrder' }">
     				<tr>
     					<td data-bind="text: customerOrder.formattedSIN"></td>
-    					<td data-bind="text: customerOrder.name"></td>
+    					<td data-bind="text: customerOrder.formattedPaidOn"></td>
     					<td>
     						<span data-bind="if: customerOrder.customer">
     							<span data-bind="text: customerOrder.customer.lastName"></span><span>, </span><span data-bind="text: customerOrder.customer.firstName"></span>
     						</span>
+    						<span data-bind="ifnot: customerOrder.customer">
+    							<span data-bind="text: customerOrder.name"></span>
+    						</span>
+    						
     					</td>
     					<td>
     						<span data-bind="if: customerOrder.creator">
