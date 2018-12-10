@@ -46,4 +46,13 @@ public class StatisticsScheduler {
 	public void test() {
 		inventoryHandler.getProductInventory(4146l);
 	}*/
+	
+	/*@Autowired
+	private CustomerOrderHandler customerOrderHandler;
+	
+	@Scheduled(cron = "0/10 * * * * ?")
+	public void test() {
+		System.out.println("RUN#################################");
+		customerOrderHandler.printReceipt(1l, 4000.0f);
+	}*/
 }

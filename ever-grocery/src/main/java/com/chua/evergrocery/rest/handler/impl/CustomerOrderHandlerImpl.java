@@ -41,6 +41,7 @@ import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.EmailUtil;
 import com.chua.evergrocery.utility.Html;
 import com.chua.evergrocery.utility.TaxUtil;
+import com.chua.evergrocery.utility.TextWriter;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.chua.evergrocery.utility.print.Printer;
 import com.chua.evergrocery.utility.template.CustomerOrderCopyTemplate;
@@ -646,7 +647,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			
 			Printer printer = new Printer();
 			try {
-				printer.print(customerOrderReceipt.merge(velocityEngine, DocType.PRINT), "Customer Order #" + customerOrder.getOrderNumber() + " (ORIG)");
+				final String receipt = customerOrderReceipt.merge(velocityEngine, DocType.PRINT);
+				TextWriter.write(receipt, fileConstants.getReceiptHome() + customerOrder.getSerialInvoiceNumber() + ".txt");
+				//printer.print(receipt, "Customer Order #" + customerOrder.getOrderNumber() + " (ORIG)");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

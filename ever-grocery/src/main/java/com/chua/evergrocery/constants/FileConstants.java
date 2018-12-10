@@ -18,6 +18,8 @@ public class FileConstants {
 	
 	private final String salesHome;
 	
+	private final String receiptHome;
+	
 	private final String generatePurchasesHome;
 	
 	private final String inventoryHome;
@@ -30,6 +32,7 @@ public class FileConstants {
 		this.fileHome = fileHome;
 		this.userImageHome = fileHome + "program_data/user_image/";
 		this.salesHome = fileHome + "files/sales_report/";
+		this.receiptHome = fileHome + "files/receipt/";
 		this.generatePurchasesHome = fileHome + "files/generate_purchase/";
 		this.inventoryHome = fileHome + "files/inventory/";
 		this.imageDefaultFileName = imageDefaultFileName;
@@ -45,6 +48,10 @@ public class FileConstants {
 
 	public String getSalesHome() {
 		return salesHome;
+	}
+
+	public String getReceiptHome() {
+		return receiptHome;
 	}
 
 	public String getGeneratePurchasesHome() {

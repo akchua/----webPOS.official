@@ -3,8 +3,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/cashtransferservi
     var AcceptForm = function(cashTransferId) {
     	this.cashTransferId = cashTransferId;
     	
-    	this.formattedCashFromName = null;
-    	this.formattedAmount = null;
+    	this.formattedCashFromName = ko.observable();
+    	this.formattedAmount = ko.observable();
     	
     	this.auth = ko.observable();
     };
@@ -28,7 +28,9 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/cashtransferservi
     	cashTransferService.acceptCashTransfer(self.cashTransferId, self.auth()).done(function(result) {
     		if(result.success) {
         		dialog.close(self);
-        	} 
+        	} else {
+        		self.auth('');
+        	}
         	app.showMessage(result.message);
     	});
     };

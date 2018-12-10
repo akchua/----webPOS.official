@@ -105,8 +105,9 @@ public class CashTransferHandlerImpl implements CashTransferHandler {
 	@Override
 	public ResultBean acceptCashTransfer(Long cashTransferId, String auth) {
 		final ResultBean result;
+		final User refUser = userService.findByUsernameAndPassword(UserContextHolder.getUser().getUsername(), EncryptionUtil.getMd5(auth));
 		
-		if(UserContextHolder.getUser().getPassword().equals(EncryptionUtil.getMd5(auth))) {
+		if(refUser != null && refUser.getId().equals(UserContextHolder.getUser().getId())) {
 			final CashTransfer cashTransfer = cashTransferService.find(cashTransferId);
 			
 			if(cashTransfer != null) {
@@ -198,9 +199,9 @@ public class CashTransferHandlerImpl implements CashTransferHandler {
 					Float cashTransferOut = 0.0f;
 					Float cashTransferReceived = 0.0f;
 					for(CashTransfer cashTransfer : cashTransfers) {
-						if(cashTransfer.getCashTo().equals(user.getId())) {
+						if(cashTransfer.getCashTo().getId().equals(user.getId())) {
 							cashTransferReceived += cashTransfer.getAmount();
-						} else if(cashTransfer.getCashFrom().equals(user.getId())) {
+						} else if(cashTransfer.getCashFrom().getId().equals(user.getId())) {
 							cashTransferOut += cashTransfer.getAmount();
 						}
 					}

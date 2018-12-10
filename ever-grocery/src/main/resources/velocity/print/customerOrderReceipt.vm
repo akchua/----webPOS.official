@@ -1,11 +1,11 @@
 ## Template for Customer Order Receipt
 ## Has a maximum of 44 columns in a line
-         VPKC Grocery
+        VPKC Grocery
            Abadilla St., Brgy. 17
           Laoag City, Ilocos Norte
        VAT Reg. TIN: 102-198-471-000
          SATURNINO O. CHUA - PROP.
-               SIN: ${t.FormattedSIN}
+              SIN: ${t.FormattedSIN}
 ${t.Date}
 
 Order #${t.OrderNumber}

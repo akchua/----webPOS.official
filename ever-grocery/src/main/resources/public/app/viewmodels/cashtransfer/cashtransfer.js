@@ -1,5 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/cashtransferservice'/*, 'viewmodels/cashtransfer/acceptform'*/, 'viewmodels/cashtransfer/cashtransferform'], 
-		function (app, ko, cashTransferService/*, AcceptForm*/, CashTransferForm) {
+define(['durandal/app', 'knockout', 'modules/cashtransferservice', 'viewmodels/cashtransfer/acceptform', 'viewmodels/cashtransfer/cashtransferform'], 
+		function (app, ko, cashTransferService, AcceptForm, CashTransferForm) {
 	var CashTransfer = function() {
 		this.myCashTransfers = ko.observable();
 		
