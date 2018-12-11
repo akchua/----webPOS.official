@@ -99,7 +99,7 @@ public class DailySalesReportBean {
 	}
 	
 	public Float getTotalSales() {
-		return totalVatSales + totalVatExSales + totalZeroRatedSales;
+		return totalVatSales + totalVatExSales + totalZeroRatedSales - totalDiscountAmount;
 	}
 	
 	public String getFormattedTotalSales() {

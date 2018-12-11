@@ -32,6 +32,8 @@ public class SalesReportTemplate extends AbstractTemplate {
 	
 	private Float totalZeroRatedSales;
 	
+	private Float totalDiscountAmount;
+	
 	private List<String> formattedDailySalesReportList;
 	
 	public SalesReportTemplate(SalesReportQueryBean salesReportQuery, List<DailySalesReportBean> dailySalesReports) {
@@ -41,11 +43,13 @@ public class SalesReportTemplate extends AbstractTemplate {
 		this.totalVatSales = 0.0f;
 		this.totalVatExSales = 0.0f;
 		this.totalZeroRatedSales = 0.0f;
+		this.totalDiscountAmount = 0.0f;
 		
 		for(DailySalesReportBean dailySalesReport : dailySalesReports) {
 			this.totalVatSales += dailySalesReport.getTotalVatSales();
 			this.totalVatExSales += dailySalesReport.getTotalVatExSales();
 			this.totalZeroRatedSales += dailySalesReport.getTotalZeroRatedSales();
+			this.totalDiscountAmount += dailySalesReport.getTotalDiscountAmount();
 		}
 		
 		this.formattedDailySalesReportList = new ArrayList<String>();
@@ -101,8 +105,12 @@ public class SalesReportTemplate extends AbstractTemplate {
 		return String.format("%17s", CurrencyFormatter.pesoFormat(this.totalVatSales - (this.totalVatSales / 1.12)));
 	}
 	
+	public String getFormattedTotalDiscountAmount() {
+		return String.format("%17s", CurrencyFormatter.pesoFormat(this.totalDiscountAmount));
+	}
+	
 	public String getFormattedGrandTotal() {
-		return String.format("%17s", CurrencyFormatter.pesoFormat(this.totalVatSales + this.totalVatExSales + this.totalZeroRatedSales));
+		return String.format("%17s", CurrencyFormatter.pesoFormat(this.totalVatSales + this.totalVatExSales + this.totalZeroRatedSales - this.totalDiscountAmount));
 	}
 
 	public List<String> getFormattedDailySalesReportList() {

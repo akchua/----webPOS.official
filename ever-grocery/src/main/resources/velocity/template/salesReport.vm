@@ -10,6 +10,7 @@
         Total VAT-Exempt Sales : ${t.FormattedTotalVatExSales}
         Total Zero Rated Sales : ${t.FormattedTotalZeroRatedSales}
               Total VAT Amount : ${t.FormattedTotalVatAmount}
+         Total Discount Amount : ${t.FormattedTotalDiscountAmount}
 		
                    GRAND TOTAL : ${t.FormattedGrandTotal}
 
