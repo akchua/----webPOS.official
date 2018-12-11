@@ -649,7 +649,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			try {
 				final String receipt = customerOrderReceipt.merge(velocityEngine, DocType.PRINT);
 				TextWriter.write(receipt, fileConstants.getReceiptHome() + customerOrder.getSerialInvoiceNumber() + ".txt");
-				//printer.print(receipt, "Customer Order #" + customerOrder.getOrderNumber() + " (ORIG)");
+				printer.print(receipt, "Customer Order #" + customerOrder.getOrderNumber() + " (ORIG)");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

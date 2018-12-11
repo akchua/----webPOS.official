@@ -53,6 +53,6 @@ public class StatisticsScheduler {
 	@Scheduled(cron = "0/10 * * * * ?")
 	public void test() {
 		System.out.println("RUN#################################");
-		customerOrderHandler.printReceipt(1l, 4000.0f);
+		customerOrderHandler.printReceipt(8l, -12404.4f);
 	}*/
 }
