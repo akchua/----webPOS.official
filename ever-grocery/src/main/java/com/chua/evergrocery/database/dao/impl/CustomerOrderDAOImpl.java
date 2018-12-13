@@ -128,9 +128,9 @@ public class CustomerOrderDAOImpl
 		
 		if(returnsOnly != null) {
 			if(returnsOnly) {
-				conjunction.add(Restrictions.lt("totalItems", 0));
+				conjunction.add(Restrictions.lt("totalItems", 0.0f));
 			} else {
-				conjunction.add(Restrictions.gt("totalItems", 0));
+				conjunction.add(Restrictions.gt("totalItems", 0.0f));
 			}
 		}
 		
