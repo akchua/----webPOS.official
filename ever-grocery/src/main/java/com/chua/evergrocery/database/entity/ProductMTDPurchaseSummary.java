@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -18,7 +17,6 @@ import org.hibernate.annotations.Where;
  */
 @DiscriminatorValue("Product")
 @Entity(name = "ProductMTDPurchaseSummary")
-@Table(name = ProductMTDPurchaseSummary.TABLE_NAME)
 public class ProductMTDPurchaseSummary extends MTDPurchaseSummary {
 
 	private static final long serialVersionUID = 2856734920543733062L;
