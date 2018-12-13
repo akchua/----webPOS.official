@@ -53,7 +53,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 		
 		NumberFormat nf = new DecimalFormat("##.##");
 		
-		formattedName += customerOrderItem.getProductDisplayName();
+		formattedName += customerOrderItem.getFormattedDisplayName();
 		if((customerOrderItem.getQuantity() % 1.0f == 0.5f
 				|| customerOrderItem.getUnitType().equals(UnitType.CASE)
 				|| customerOrderItem.getUnitType().equals(UnitType.BUNDLE)

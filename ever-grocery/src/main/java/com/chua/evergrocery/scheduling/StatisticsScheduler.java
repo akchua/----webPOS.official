@@ -50,9 +50,9 @@ public class StatisticsScheduler {
 	/*@Autowired
 	private CustomerOrderHandler customerOrderHandler;
 	
-	@Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/15 * * * * ?")
 	public void test() {
-		System.out.println("RUN#################################");
 		customerOrderHandler.printReceipt(8l, -12404.4f);
+		System.out.println("RUN#################################");
 	}*/
 }

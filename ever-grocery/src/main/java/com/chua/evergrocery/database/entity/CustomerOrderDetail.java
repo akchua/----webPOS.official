@@ -113,6 +113,11 @@ public class CustomerOrderDetail extends BaseObject {
 	public String getProductDisplayName() {
 		return productDisplayName;
 	}
+	
+	@Transient
+	public String getFormattedDisplayName() {
+		return (productDisplayName != null && !productDisplayName.isEmpty()) ? productDisplayName : productName;
+	}
 
 	public void setProductDisplayName(String productDisplayName) {
 		this.productDisplayName = productDisplayName;
