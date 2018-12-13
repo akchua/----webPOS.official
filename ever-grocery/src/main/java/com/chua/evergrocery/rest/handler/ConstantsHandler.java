@@ -3,6 +3,7 @@ package com.chua.evergrocery.rest.handler;
 import java.util.List;
 
 import com.chua.evergrocery.enums.DiscountType;
+import com.chua.evergrocery.enums.ReportType;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UserType;
@@ -23,6 +24,8 @@ public interface ConstantsHandler {
 	List<TaxType> getTaxTypeList();
 	
 	List<DiscountType> getDiscountTypeList();
+	
+	List<ReportType> getReportTypeList();
 	
 	List<Status> getCashTransferStatusList();
 }

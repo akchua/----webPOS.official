@@ -81,10 +81,10 @@ public class SalesReportTemplate extends AbstractTemplate {
 	
 	public String getFormattedTransactionsIncluded() {
 		String temp = "";
-		if(salesReportQuery.getDiscountType() == null) {
+		if(salesReportQuery.getReportType() == null) {
 			temp = "ALL TRANSACTIONS";
 		} else {
-			temp = salesReportQuery.getDiscountType().getDisplayName() + " TRANSACTIONS";
+			temp = salesReportQuery.getReportType().getDisplayName();
 		}
 		
 		return temp;

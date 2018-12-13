@@ -30,6 +30,12 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getReportTypeList: function() {
+    		return $.ajax({
+    			url: '/services/constants/reporttypelist'
+    		});
+    	},
+    	
     	getCashTransferStatusList: function() {
     		return $.ajax({
     			url: '/services/constants/cashtransferstatus'

@@ -21,5 +21,5 @@ public interface CustomerOrderService
 	
 	List<DailySalesReportBean> getDailySalesReportByDateRange(Date startDate, Date endDate);
 	
-	List<DailySalesReportBean> getDailySalesReportByDateRangeAndDiscountType(Date startDate, Date endDate, List<DiscountType> discountType);
+	List<DailySalesReportBean> getDailySalesReportByDateRangeAndDiscountType(Date startDate, Date endDate, List<DiscountType> discountType, Boolean returnsOnly);
 }

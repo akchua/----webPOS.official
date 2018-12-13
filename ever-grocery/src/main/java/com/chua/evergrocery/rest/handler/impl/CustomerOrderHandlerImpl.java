@@ -423,8 +423,10 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				final CustomerOrderDetail newCustomerOrderDetail = new CustomerOrderDetail();
 				setCustomerOrderDetail(newCustomerOrderDetail, customerOrder, productDetail);
 				
-				result.setSuccess(customerOrderDetailService.insert(newCustomerOrderDetail) != null &&
-						this.changeCustomerOrderDetailQuantity(newCustomerOrderDetail, quantity).getSuccess());
+				final ResultBean tempResult = this.changeCustomerOrderDetailQuantity(newCustomerOrderDetail, quantity);
+				
+				result.setSuccess(tempResult.getSuccess() && 
+						customerOrderDetailService.insert(newCustomerOrderDetail) != null);
 				
 				if(result.getSuccess()) {
 					//result message used instead as boolean to check if item is new
@@ -432,7 +434,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					
 					result.setMessage(isNew);
 				} else {
-					result.setMessage("Failed to add item.");
+					result.setMessage(tempResult.getMessage());
 				}
 			} else {
 				result = this.changeCustomerOrderDetailQuantity(customerOrderDetail, customerOrderDetail.getQuantity() + quantity);
@@ -475,31 +477,35 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		quantity = resolveCustomerOrderDetailUnitType(customerOrderDetail, quantity);
 		
 		if(quantity > 0 || (quantity < 0 && UserContextHolder.getUser().getUserType().getAuthority() <= 2)) {
-			
-			// Limit maximum quantity to 999
-			if(quantity > 999) {
-				quantity = 999.0f;
-			}
-			
-			result = new ResultBean();
-			final CustomerOrder customerOrder = customerOrderDetail.getCustomerOrder();
-			
-			addAmountToOrder(-customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), customerOrder);
-			customerOrder.setTotalItems(customerOrder.getTotalItems() - customerOrderDetail.getQuantity());
-			
-			setCustomerOrderDetailQuantity(customerOrderDetail, quantity);
-			// Reset tax type to original every time quantity is changed
-			customerOrderDetail.setTaxType(customerOrderDetail.getProductDetail().getProduct().getTaxType());
-			result.setSuccess(customerOrderDetailService.update(customerOrderDetail));
-			
-			if(result.getSuccess()) {
-				addAmountToOrder(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), customerOrder);
-				customerOrder.setTotalItems(customerOrder.getTotalItems() + customerOrderDetail.getQuantity());
-				customerOrderService.update(customerOrder);
+			final Float tempTotalItems = customerOrderDetail.getCustomerOrder().getTotalItems();
+			if((quantity > 0 && tempTotalItems >= 0) || (quantity < 0 && tempTotalItems <= 0)) {
+				// Limit maximum quantity to 999
+				if(quantity > 999) {
+					quantity = 999.0f;
+				}
 				
-				result.setMessage("Successfully updated quantity.");
+				result = new ResultBean();
+				final CustomerOrder customerOrder = customerOrderDetail.getCustomerOrder();
+				
+				addAmountToOrder(-customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), customerOrder);
+				customerOrder.setTotalItems(customerOrder.getTotalItems() - customerOrderDetail.getQuantity());
+				
+				setCustomerOrderDetailQuantity(customerOrderDetail, quantity);
+				// Reset tax type to original every time quantity is changed
+				customerOrderDetail.setTaxType(customerOrderDetail.getProductDetail().getProduct().getTaxType());
+				result.setSuccess(customerOrderDetailService.update(customerOrderDetail));
+				
+				if(result.getSuccess()) {
+					addAmountToOrder(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), customerOrder);
+					customerOrder.setTotalItems(customerOrder.getTotalItems() + customerOrderDetail.getQuantity());
+					customerOrderService.update(customerOrder);
+					
+					result.setMessage("Successfully updated quantity.");
+				} else {
+					result.setMessage("Failed to update quantity.");
+				}
 			} else {
-				result.setMessage("Failed to update quantity.");
+				result = new ResultBean(Boolean.FALSE, "Returns must be on a separate transaction.");
 			}
 		} else {
 			result = this.removeCustomerOrderDetail(customerOrderDetail);
@@ -527,9 +533,12 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		// trim off values not divisible by minimum quantity
 		quantity -= (quantity % minQuantity);
 		
-		if(upperProductDetail != null) {
+		// get min quantity of upper product detail
+		final Float upperMinQuantity = productDetail.getQuantity() % 2 == 0 ? 0.5f : 1.0f;
+		
+		if(upperProductDetail != null && quantity / productDetail.getQuantity() > upperMinQuantity) {
 			this.addItem(upperProductDetail, customerOrderDetail.getCustomerOrder(), quantity / productDetail.getQuantity());
-			result = quantity % (productDetail.getQuantity() * (productDetail.getQuantity() % 2 == 0 ? 0.5f : 1.0f));
+			result = quantity % (productDetail.getQuantity() * upperMinQuantity);
 		} else {
 			result = quantity;
 		}

@@ -1,6 +1,6 @@
 package com.chua.evergrocery.beans;
 
-import com.chua.evergrocery.enums.DiscountType;
+import com.chua.evergrocery.enums.ReportType;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -11,7 +11,7 @@ public class SalesReportQueryBean extends ReportQueryBean {
 
 	private Boolean sendMail;
 	
-	private DiscountType discountType;
+	private ReportType reportType;
 
 	public Boolean getSendMail() {
 		return sendMail;
@@ -21,11 +21,11 @@ public class SalesReportQueryBean extends ReportQueryBean {
 		this.sendMail = sendMail;
 	}
 
-	public DiscountType getDiscountType() {
-		return discountType;
+	public ReportType getReportType() {
+		return reportType;
 	}
 
-	public void setDiscountType(DiscountType discountType) {
-		this.discountType = discountType;
+	public void setReportType(ReportType reportType) {
+		this.reportType = reportType;
 	}
 }

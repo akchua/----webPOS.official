@@ -112,7 +112,7 @@ public class CustomerOrderDAOImpl
 
 	@Override
 	public List<CashierSalesSummaryBean> findAllCashierSalesSummaryByDatePaidAndDiscountType(Date dateFrom, Date dateTo,
-			List<DiscountType> discountTypes) {
+			List<DiscountType> discountTypes, Boolean returnsOnly) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.eq("status", Status.PAID));
@@ -124,6 +124,14 @@ public class CustomerOrderDAOImpl
 				disjunction.add(Restrictions.eq("discountType", dt));
 			}
 			conjunction.add(disjunction);
+		}
+		
+		if(returnsOnly != null) {
+			if(returnsOnly) {
+				conjunction.add(Restrictions.lt("totalItems", 0));
+			} else {
+				conjunction.add(Restrictions.gt("totalItems", 0));
+			}
 		}
 		
 		final ProjectionList pList = Projections.projectionList();

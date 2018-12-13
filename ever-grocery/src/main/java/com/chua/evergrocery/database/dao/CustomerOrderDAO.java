@@ -18,7 +18,7 @@ public interface CustomerOrderDAO extends DAO<CustomerOrder, Long>, CustomerOrde
 	
 	List<CustomerOrder> findAllByCashierStatusAndDatePaidWithOrder(Long cashierId, Status[] status, Date dateFrom, Date dateTo, Order[] orders);
 	
-	List<CashierSalesSummaryBean> findAllCashierSalesSummaryByDatePaidAndDiscountType(Date dateFrom, Date dateTo, List<DiscountType> discountTypes);
+	List<CashierSalesSummaryBean> findAllCashierSalesSummaryByDatePaidAndDiscountType(Date dateFrom, Date dateTo, List<DiscountType> discountTypes, Boolean returnsOnly);
 	
 	SINRangeBean getSINRangeByDate(Date dateFrom, Date dateTo);
 }

@@ -57,12 +57,12 @@ public class CustomerOrderServiceImpl
 
 	@Override
 	public List<DailySalesReportBean> getDailySalesReportByDateRange(Date startDate, Date endDate) {
-		return getDailySalesReportByDateRangeAndDiscountType(startDate, endDate, null);
+		return getDailySalesReportByDateRangeAndDiscountType(startDate, endDate, null, null);
 	}
 
 	@Override
 	public List<DailySalesReportBean> getDailySalesReportByDateRangeAndDiscountType(Date startDate, Date endDate,
-			List<DiscountType> discountType) {
+			List<DiscountType> discountType, Boolean returnsOnly) {
 		final List<DailySalesReportBean> dailySalesReports = new ArrayList<DailySalesReportBean>();
 		final Calendar currentDate = Calendar.getInstance();
 		currentDate.setTime(startDate);
@@ -77,7 +77,7 @@ public class CustomerOrderServiceImpl
 			
 			dailySalesReport.setSaleDate(dateFrom);
 			dailySalesReport.setSinRange(dao.getSINRangeByDate(dateFrom, dateTo));
-			dailySalesReport.setCashierSalesSummaries(dao.findAllCashierSalesSummaryByDatePaidAndDiscountType(dateFrom, dateTo, discountType));
+			dailySalesReport.setCashierSalesSummaries(dao.findAllCashierSalesSummaryByDatePaidAndDiscountType(dateFrom, dateTo, discountType, returnsOnly));
 			
 			dailySalesReports.add(dailySalesReport);
 			currentDate.add(Calendar.DAY_OF_MONTH, 1);

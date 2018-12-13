@@ -3,12 +3,12 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     var SalesReport = function() {
     	this.enableGenerateButton = ko.observable(true);
     	
-    	this.discountTypeList = ko.observable();
+    	this.reportTypeList = ko.observable();
     	
     	this.salesReportQuery = {
     		from: ko.observable(),
     		to: ko.observable(),
-    		discountType: ko.observable(),
+    		reportType: ko.observable(),
     		
     		sendMail: ko.observable(false)
 	    };
@@ -23,8 +23,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     SalesReport.prototype.activate = function() {
     	var self = this;
     	
-    	constantsService.getDiscountTypeList().done(function(discountTypeList) {
-    		self.discountTypeList(discountTypeList);
+    	constantsService.getReportTypeList().done(function(reportTypeList) {
+    		self.reportTypeList(reportTypeList);
     	});
     };
     

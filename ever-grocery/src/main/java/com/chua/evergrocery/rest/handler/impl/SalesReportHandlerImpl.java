@@ -50,33 +50,56 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 	public ResultBean generateReport(SalesReportQueryBean salesReportQuery) {
 		final ResultBean result;
 		
-		final List<DiscountType> discountTypes = salesReportQuery.getDiscountType() != null ? new ArrayList<DiscountType>() : null;
-		if(discountTypes != null) discountTypes.add(salesReportQuery.getDiscountType());
-		final List<DailySalesReportBean> dailySalesReports = customerOrderService.getDailySalesReportByDateRangeAndDiscountType(salesReportQuery.getFrom(), salesReportQuery.getTo(), discountTypes);
-				
-		String fileName = "";
-		fileName += DateFormatter.fileSafeFormat(salesReportQuery.getFrom()) + "_to_";
-		fileName += DateFormatter.fileSafeFormat(salesReportQuery.getTo());
-		fileName += ".pdf";
-		fileName = StringHelper.convertToFileSafeFormat(fileName);
-		final String filePath = fileConstants.getSalesHome() + fileName;
-		result = new ResultBean();
-		result.setSuccess(
-				SimplePdfWriter.write(
-						new SalesReportTemplate(
-								salesReportQuery,
-								dailySalesReports).merge(velocityEngine),
-						businessConstants.getBusinessShortName(),
-						filePath,
-						true)
-				);
-		if(result.getSuccess()) {
-			final Map<String, Object> extras = new HashMap<String, Object>();
-			extras.put("fileName", fileName);
-			result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created sales report."));
-			result.setExtras(extras);
+		if(salesReportQuery.getReportType() != null) {
+			final List<DailySalesReportBean> dailySalesReports;
+			
+			switch(salesReportQuery.getReportType()) {
+				case FULL:
+					dailySalesReports = customerOrderService.getDailySalesReportByDateRange(salesReportQuery.getFrom(), salesReportQuery.getTo());
+					break;
+				case REGULAR:
+					dailySalesReports = customerOrderService.getDailySalesReportByDateRangeAndDiscountType(salesReportQuery.getFrom(), salesReportQuery.getTo(), null, false);
+					break;
+				case SCD:
+					final List<DiscountType> discountTypes = new ArrayList<DiscountType>();
+					discountTypes.add(DiscountType.SENIOR_DISCOUNT);
+					dailySalesReports = customerOrderService.getDailySalesReportByDateRangeAndDiscountType(salesReportQuery.getFrom(), salesReportQuery.getTo(), discountTypes, null);
+					break;
+				case RETURNS:
+					dailySalesReports = customerOrderService.getDailySalesReportByDateRangeAndDiscountType(salesReportQuery.getFrom(), salesReportQuery.getTo(), null, true);
+					break;
+				default:
+					dailySalesReports = new ArrayList<DailySalesReportBean>();
+			}
+			
+					
+			String fileName = "";
+			fileName += salesReportQuery.getReportType().getName() + "_";
+			fileName += DateFormatter.fileSafeFormat(salesReportQuery.getFrom()) + "_to_";
+			fileName += DateFormatter.fileSafeFormat(salesReportQuery.getTo());
+			fileName += ".pdf";
+			fileName = StringHelper.convertToFileSafeFormat(fileName);
+			final String filePath = fileConstants.getSalesHome() + fileName;
+			result = new ResultBean();
+			result.setSuccess(
+					SimplePdfWriter.write(
+							new SalesReportTemplate(
+									salesReportQuery,
+									dailySalesReports).merge(velocityEngine),
+							businessConstants.getBusinessShortName(),
+							filePath,
+							true)
+					);
+			if(result.getSuccess()) {
+				final Map<String, Object> extras = new HashMap<String, Object>();
+				extras.put("fileName", fileName);
+				result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created sales report."));
+				result.setExtras(extras);
+			} else {
+				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+			}
 		} else {
-			result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+			result = new ResultBean(Boolean.FALSE, Html.line("Please select the type of report."));
 		}
 		
 		return result;
