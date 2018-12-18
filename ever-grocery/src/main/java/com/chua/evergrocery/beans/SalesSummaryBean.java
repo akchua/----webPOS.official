@@ -20,7 +20,11 @@ public class SalesSummaryBean {
 	}
 
 	public Float getBaseTotal() {
-		return baseTotal;
+		return baseTotal == null ? 0.0f : baseTotal;
+	}
+	
+	public Float getTotalProfit() {
+		return getNetTotal() - getBaseTotal();
 	}
 
 	public void setBaseTotal(Float baseTotal) {

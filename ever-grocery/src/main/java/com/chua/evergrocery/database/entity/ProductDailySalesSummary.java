@@ -16,13 +16,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 /**
  * @author  Adrian Jasper K. Chua
  * @version 1.0
- * @since   Oct 19, 2018
+ * @since   18 Dec 2018
  */
 @DiscriminatorValue("Product")
-@Entity(name = "ProductMTDPurchaseSummary")
-public class ProductMTDPurchaseSummary extends MTDPurchaseSummary {
+@Entity(name = "ProductDailySalesSummary")
+public class ProductDailySalesSummary extends DailySalesSummary {
 
-	private static final long serialVersionUID = 2856734920543733062L;
+	private static final long serialVersionUID = -884186580306304749L;
 
 	@JsonSerialize(using = ProductSerializer.class)
 	private Product product;

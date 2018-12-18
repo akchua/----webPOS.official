@@ -1,6 +1,7 @@
 package com.chua.evergrocery.rest.handler.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,16 +12,26 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.beans.CompanyPurchaseSummaryBean;
+import com.chua.evergrocery.beans.CompanySalesSummaryBean;
 import com.chua.evergrocery.beans.ProductPurchaseSummaryBean;
+import com.chua.evergrocery.beans.ProductSalesSummaryBean;
 import com.chua.evergrocery.beans.PurchaseSummaryBean;
+import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.entity.Company;
+import com.chua.evergrocery.database.entity.CompanyDailySalesSummary;
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
+import com.chua.evergrocery.database.entity.DailySalesSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.Product;
+import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
 import com.chua.evergrocery.database.entity.ProductMTDPurchaseSummary;
+import com.chua.evergrocery.database.service.CompanyDailySalesSummaryService;
 import com.chua.evergrocery.database.service.CompanyMTDPurchaseSummaryService;
 import com.chua.evergrocery.database.service.CompanyService;
+import com.chua.evergrocery.database.service.CustomerOrderDetailService;
+import com.chua.evergrocery.database.service.DailySalesSummaryService;
 import com.chua.evergrocery.database.service.MTDPurchaseSummaryService;
+import com.chua.evergrocery.database.service.ProductDailySalesSummaryService;
 import com.chua.evergrocery.database.service.ProductMTDPurchaseSummaryService;
 import com.chua.evergrocery.database.service.ProductService;
 import com.chua.evergrocery.database.service.PurchaseOrderDetailService;
@@ -44,6 +55,9 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	private ProductService productService;
 	
 	@Autowired
+	private CustomerOrderDetailService customerOrderDetailService;
+	
+	@Autowired
 	private PurchaseOrderDetailService purchaseOrderDetailService;
 	
 	@Autowired
@@ -51,6 +65,15 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	
 	@Autowired
 	private CompanyMTDPurchaseSummaryService companyMTDPurchaseSummaryService;
+	
+	@Autowired
+	private DailySalesSummaryService dailySalesSummaryService;
+	
+	@Autowired
+	private ProductDailySalesSummaryService productDailySalesSummaryService;
+	
+	@Autowired
+	private CompanyDailySalesSummaryService companyDailySalesSummaryService;
 	
 	@Autowired
 	private MTDPurchaseSummaryService mtdPurchaseSummaryService;
@@ -118,9 +141,9 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 				// Check if processing last month, then update each product's purchase value percentage
 				if(monthId == lastMonthId) {
 					for(ProductPurchaseSummaryBean pps : productPurchaseSummaries) {
-						final Float netTotal = pps.getNetTotal();
 						final Product product = productService.find(pps.getProductId());
-						product.setPurchaseValuePercentage(netTotal / companyPurchaseSummary.getNetTotal() * 100.0f);
+						product.setPurchaseValuePercentage(companyPurchaseSummary.getNetTotal().equals(0.0f) ? 0.0f : pps.getNetTotal() / companyPurchaseSummary.getNetTotal() * 100.0f);
+						productService.update(product);
 					}
 				}
 				
@@ -158,7 +181,8 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 			if(monthId == lastMonthId) {
 				for(CompanyPurchaseSummaryBean cps : companyPurchaseSummaries) {
 					final Company company = companyService.find(cps.getCompanyId());
-					company.setPurchaseValuePercentage(cps.getNetTotal() / totalPurchaseSummary.getNetTotal() * 100.0f);
+					company.setPurchaseValuePercentage(totalPurchaseSummary.getNetTotal().equals(0.0f) ? 0.0f : cps.getNetTotal() / totalPurchaseSummary.getNetTotal() * 100.0f);
+					companyService.update(company);
 				}
 			}
 			
@@ -181,6 +205,126 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 				}
 				LOG.info("## Updated Purchase Summary");
 			}
+		}
+	}
+
+	@Override
+	public void updateDailySalesSummaries(int includedDaysAgo) {
+		final List<Company> companies = companyService.findAllList();
+		
+		final Calendar currentDay = Calendar.getInstance();
+		
+		for(int i = 0; i < includedDaysAgo; i++) {
+			LOG.info("### Processing date : " + DateFormatter.prettyFormat(currentDay.getTime()));
+			
+			final List<CompanySalesSummaryBean> companySalesSummaries = new ArrayList<CompanySalesSummaryBean>();
+			
+			for(Company company : companies) {
+				LOG.info("Processing company : " + company.getName());
+				
+				System.out.println("before getAllProductSalesSummaryByCompanyAndDate");
+				final List<ProductSalesSummaryBean> productSalesSummaries = customerOrderDetailService.getAllProductSalesSummaryByCompanyAndDate(company.getId(), currentDay.getTime());
+				System.out.println("after getAllProductSalesSummaryByCompanyAndDate");
+				
+				final CompanySalesSummaryBean companySalesSummary = new CompanySalesSummaryBean();
+				companySalesSummary.setCompanyId(company.getId());
+				
+				// Process product of each company and add them to the company total
+				for(ProductSalesSummaryBean pss : productSalesSummaries) {
+					ProductDailySalesSummary productDailySalesSummary = productDailySalesSummaryService.findByProductAndSalesDate(pss.getProductId(), currentDay.getTime());
+					if(productDailySalesSummary == null) {
+						productDailySalesSummary = new ProductDailySalesSummary();
+						productDailySalesSummary.setProduct(productService.find(pss.getProductId()));
+						productDailySalesSummary.setSalesDate(DateUtil.floorDay(currentDay.getTime()));
+						productDailySalesSummary.setNetTotal(pss.getNetTotal());
+						productDailySalesSummary.setBaseTotal(pss.getBaseTotal());
+						
+						productDailySalesSummaryService.insert(productDailySalesSummary);
+					} else {
+						if(!(productDailySalesSummary.getNetTotal().equals(pss.getNetTotal())
+								&& productDailySalesSummary.getBaseTotal().equals(pss.getBaseTotal()))) {
+							productDailySalesSummary.setNetTotal(pss.getNetTotal());
+							productDailySalesSummary.setBaseTotal(pss.getBaseTotal());
+							productDailySalesSummaryService.update(productDailySalesSummary);
+						}
+					}
+					System.out.println("Product " + productDailySalesSummary.getProduct().getName() + " Company " + productDailySalesSummary.getProduct().getCompany().getName() + " Found " + productDailySalesSummary.getNetTotal());
+					
+					companySalesSummary.setNetTotal(companySalesSummary.getNetTotal() + pss.getNetTotal());
+					companySalesSummary.setBaseTotal(companySalesSummary.getBaseTotal() + pss.getBaseTotal());
+				}
+				
+				// Check if processing today, then update each product's sale value percentage & profit percentage
+				if(DateUtil.isSameDay(new Date(), currentDay.getTime())) {
+					for(ProductSalesSummaryBean pss : productSalesSummaries) {
+						final Product product = productService.find(pss.getProductId());
+						product.setSaleValuePercentage(companySalesSummary.getNetTotal().equals(0.0f) ? 0.0f : pss.getNetTotal() / companySalesSummary.getNetTotal() * 100.0f);
+						product.setProfitPercentage(companySalesSummary.getTotalProfit().equals(0.0f) ? 0.0f : pss.getTotalProfit() / companySalesSummary.getTotalProfit() * 100.0f);
+						productService.update(product);
+					}
+				}
+				
+				// Add company purchase summary to map of company purchase summaries
+				companySalesSummaries.add(companySalesSummary);
+			}
+			
+			final SalesSummaryBean totalSalesSummary = new SalesSummaryBean();
+			
+			for(CompanySalesSummaryBean css : companySalesSummaries) {
+				// Save or Update each company purchase summary
+				CompanyDailySalesSummary companyDailySalesSummary = companyDailySalesSummaryService.findByCompanyAndSalesDate(css.getCompanyId(), currentDay.getTime());
+				if(companyDailySalesSummary == null) {
+					companyDailySalesSummary = new CompanyDailySalesSummary();
+					companyDailySalesSummary.setCompany(companyService.find(css.getCompanyId()));
+					companyDailySalesSummary.setSalesDate(DateUtil.floorDay(currentDay.getTime()));
+					companyDailySalesSummary.setNetTotal(css.getNetTotal());
+					companyDailySalesSummary.setBaseTotal(css.getBaseTotal());
+					companyDailySalesSummaryService.insert(companyDailySalesSummary);
+				} else {
+					if(!(companyDailySalesSummary.getNetTotal().equals(css.getNetTotal())
+							&& companyDailySalesSummary.getBaseTotal().equals(css.getBaseTotal()))) {
+						companyDailySalesSummary.setNetTotal(css.getNetTotal());
+						companyDailySalesSummary.setBaseTotal(css.getBaseTotal());
+						companyDailySalesSummaryService.update(companyDailySalesSummary);
+					}
+				}
+				
+				// Add company summary to grand total
+				totalSalesSummary.setNetTotal(totalSalesSummary.getNetTotal() + css.getNetTotal());
+				totalSalesSummary.setBaseTotal(totalSalesSummary.getBaseTotal() + css.getBaseTotal());
+			}
+			
+			// Check if processing today, then update each company's sale value percentage & profit percentage
+			if(DateUtil.isSameDay(new Date(), currentDay.getTime())) {
+				for(CompanySalesSummaryBean css : companySalesSummaries) {
+					final Company company = companyService.find(css.getCompanyId());
+					company.setSaleValuePercentage(totalSalesSummary.getNetTotal().equals(0.0f) ? 0.0f : css.getNetTotal() / totalSalesSummary.getNetTotal() * 100.0f);
+					company.setProfitPercentage(totalSalesSummary.getTotalProfit().equals(0.0f) ? 0.0f : css.getTotalProfit() / totalSalesSummary.getTotalProfit() * 100.0f);
+					companyService.update(company);
+				}
+			}
+			
+			// Save or Update the total purchase summary
+			DailySalesSummary dailySalesSummary = dailySalesSummaryService.findBySalesDate(currentDay.getTime());
+			if(dailySalesSummary == null) {
+				dailySalesSummary = new DailySalesSummary();
+				dailySalesSummary.setSalesDate(DateUtil.floorDay(currentDay.getTime()));
+				dailySalesSummary.setNetTotal(totalSalesSummary.getNetTotal());
+				dailySalesSummary.setBaseTotal(totalSalesSummary.getBaseTotal());
+				
+				dailySalesSummaryService.insert(dailySalesSummary);
+				LOG.info("## New Daily Sales Summary");
+			} else {
+				if(!(dailySalesSummary.getNetTotal().equals(totalSalesSummary.getNetTotal())
+						&& dailySalesSummary.getBaseTotal().equals(totalSalesSummary.getBaseTotal()))) {
+					dailySalesSummary.setNetTotal(totalSalesSummary.getNetTotal());
+					dailySalesSummary.setBaseTotal(totalSalesSummary.getBaseTotal());
+					dailySalesSummaryService.update(dailySalesSummary);
+				}
+				LOG.info("## Updated Daily Sales Summary");
+			}
+			
+			currentDay.add(Calendar.DAY_OF_MONTH, -1);
 		}
 	}
 }

@@ -3,6 +3,7 @@ package com.chua.evergrocery.database.service;
 import java.util.Date;
 import java.util.List;
 
+import com.chua.evergrocery.beans.ProductSalesSummaryBean;
 import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.prototype.CustomerOrderDetailPrototype;
@@ -16,4 +17,6 @@ public interface CustomerOrderDetailService
 	List<CustomerOrderDetail> findAllByCustomerOrderIdOrderByProductName(Long customerOrderId);
 	
 	SalesSummaryBean getSalesSummaryByProductAndDatePaid(long productId, Date datePaidStart, Date datePaidEnd);
+	
+	List<ProductSalesSummaryBean> getAllProductSalesSummaryByCompanyAndDate(long companyId, Date salesDay);
 }

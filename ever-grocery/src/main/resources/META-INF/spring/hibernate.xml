@@ -70,6 +70,10 @@
 				<value>com.chua.evergrocery.database.entity.MTDPurchaseSummary</value>
 				<value>com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary</value>
 				<value>com.chua.evergrocery.database.entity.ProductMTDPurchaseSummary</value>
+				
+				<value>com.chua.evergrocery.database.entity.DailySalesSummary</value>
+				<value>com.chua.evergrocery.database.entity.CompanyDailySalesSummary</value>
+				<value>com.chua.evergrocery.database.entity.ProductDailySalesSummary</value>
 			</list>
 		</property>
 	</bean>

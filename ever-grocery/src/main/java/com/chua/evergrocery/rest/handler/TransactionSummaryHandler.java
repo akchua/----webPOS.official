@@ -19,4 +19,6 @@ public interface TransactionSummaryHandler {
 	List<CompanyMTDPurchaseSummary> getCompanyMTDPurchaseSummaryList(Long companyId);
 	
 	void updateAllPurchaseSummaries(int includedMonthsAgo);
+	
+	void updateDailySalesSummaries(int includedDaysAgo);
 }

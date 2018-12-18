@@ -7,16 +7,18 @@ import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chua.evergrocery.beans.ProductSalesSummaryBean;
 import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.dao.CustomerOrderDetailDAO;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.utility.DateUtil;
 
 @Service
 public class CustomerOrderDetailServiceImpl
 		extends AbstractService<CustomerOrderDetail, Long, CustomerOrderDetailDAO>
-		implements CustomerOrderDetailService{
+		implements CustomerOrderDetailService {
 
 	@Autowired
 	protected CustomerOrderDetailServiceImpl(CustomerOrderDetailDAO dao) {
@@ -57,5 +59,10 @@ public class CustomerOrderDetailServiceImpl
 	@Override
 	public SalesSummaryBean getSalesSummaryByProductAndDatePaid(long productId, Date datePaidStart, Date datePaidEnd) {
 		return dao.getSalesSummaryByProductAndDatePaid(productId, datePaidStart, datePaidEnd);
+	}
+
+	@Override
+	public List<ProductSalesSummaryBean> getAllProductSalesSummaryByCompanyAndDate(long companyId, Date salesDay) {
+		return dao.getAllProductSalesSummaryByCompanyAndPaidDate(companyId, DateUtil.floorDay(salesDay), DateUtil.ceilDay(salesDay));
 	}
 }

@@ -13,6 +13,7 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.FloatType;
 import org.springframework.stereotype.Repository;
 
+import com.chua.evergrocery.beans.ProductSalesSummaryBean;
 import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.dao.CustomerOrderDetailDAO;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
@@ -101,5 +102,26 @@ public class CustomerOrderDetailDAOImpl
 		final List<SalesSummaryBean> salesSummaries = findAllByCriterionProjection(SalesSummaryBean.class, associatedPaths, aliasNames, joinTypes, pList, Transformers.aliasToBean(SalesSummaryBean.class), conjunction);
 		if(salesSummaries.isEmpty()) return new SalesSummaryBean();
 		else return salesSummaries.get(0);
+	}
+	
+	@Override
+	public List<ProductSalesSummaryBean> getAllProductSalesSummaryByCompanyAndPaidDate(long companyId,
+			Date datePaidStart, Date datePaidEnd) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("p.company.id", companyId));
+		conjunction.add(Restrictions.eq("co.isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.between("co.paidOn", datePaidStart, datePaidEnd));
+		
+		final ProjectionList pList = Projections.projectionList();
+		pList.add(Projections.groupProperty("p.id"), "productId");
+		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");
+		pList.add(Projections.sqlProjection("sum(unit_price / (1 + (margin / 100)) * quantity) as baseTotal", new String[] { "baseTotal" }, new FloatType[] { new FloatType() }), "baseTotal");
+		
+		String[] associatedPaths = { "customerOrder", "product" };
+		String[] aliasNames = { "co", "p" };
+		JoinType[] joinTypes = { JoinType.INNER_JOIN, JoinType.INNER_JOIN };
+		
+		return findAllByCriterionProjection(ProductSalesSummaryBean.class, associatedPaths, aliasNames, joinTypes, pList, Transformers.aliasToBean(ProductSalesSummaryBean.class), conjunction);
 	}
 }

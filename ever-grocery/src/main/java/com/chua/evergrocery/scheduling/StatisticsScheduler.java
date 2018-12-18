@@ -24,19 +24,35 @@ public class StatisticsScheduler {
 	private TransactionSummaryHandler transactionSummaryHandler;
 	
 	/**
-	 * Monthly Statistics Update
-	 * fires at 8:00PM every first day of the month
+	 * Monthly Purchase Statistics Update
+	 * fires at 7:00PM every first day of the month
 	 */
-	@Scheduled(cron = "0 0 20 1 * ?")
-	public void monthlyStatisticsUpdate() {
+	@Scheduled(cron = "0 0 19 1 * ?")
+	public void monthlyPurchaseStatisticsUpdate() {
 		final Date start = new Date();
-		LOG.info("Starting monthly statistics update");
+		LOG.info("Starting monthly purchase statistics update");
 		
 		transactionSummaryHandler.updateAllPurchaseSummaries(3);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
-		LOG.info("Monthly statistics update complete. Total execution time : " + seconds + "s");
+		LOG.info("Monthly purchase statistics update complete. Total execution time : " + seconds + "s");
+	}
+	
+	/**
+	 * Daily Sales Statistics Update
+	 * fires at 6:45PM every day
+	 */
+	@Scheduled(cron = "0 45 18 * * ?")
+	public void dailySalesStatisticsUpdate() {
+		final Date start = new Date();
+		LOG.info("Starting daily sales statistics update");
+		
+		transactionSummaryHandler.updateDailySalesSummaries(3);
+		
+		final Date end = new Date();
+		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
+		LOG.info("Daily sales statistics update complete. Total execution time : " + seconds + "s");
 	}
 	
 	/*@Autowired
