@@ -322,7 +322,8 @@ public class ProductHandlerImpl implements ProductHandler {
 				priceHistoryService.insert(priceHistory);
 				
 				// Update stock budget
-				if(!isNew && !product.getStockBudget().equals(0.0f) && productDetailsForm.getTitle().equals("Whole")) {
+				final InventoryBean productLatestInventory = inventoryHandler.getProductInventory(product.getId());
+				if(!isNew && !productLatestInventory.equals(0.0f) && productDetailsForm.getTitle().equals("Whole")) {
 					Float percentChange = 0.0f;
 					if(productDetail.getContent().equals(productDetailsForm.getContent())) {
 						percentChange = (productDetailsForm.getNetPrice() - productDetail.getNetPrice()) / productDetail.getNetPrice() * 100.0f;
@@ -331,8 +332,8 @@ public class ProductHandlerImpl implements ProductHandler {
 						Float oldNetPrice = productDetail.getNetPrice() / (productDetail.getContent() != 0 ? productDetail.getContent() : 1);
 						percentChange = (newNetPrice - oldNetPrice) / oldNetPrice * 100.0f;
 					}
-					final InventoryBean inventoryBean = inventoryHandler.getProductInventory(product.getId());
-					final Float adjustedStockBudget = product.getStockBudget() + (inventoryBean.getStockBudget() * (percentChange / 100.0f));
+					
+					final Float adjustedStockBudget = product.getStockBudget() + (productLatestInventory.getStockBudget() * (percentChange / 100.0f));
 					final Float adjustedPurchaseBudget = product.getPurchaseBudget() * (1 + (percentChange / 100.0f));
 					
 					LOG.info("Adjusted stock budget of " + product.getName() + " from " + product.getStockBudget() + " to " + adjustedStockBudget + " ## earned " + (adjustedStockBudget - product.getStockBudget()));
