@@ -12,6 +12,26 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getCashierCustomerOrderList: function(pageNumber, searchKey) {
+    		return $.ajax({
+    			url: '/services/customerorder/cashierlist',
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				searchKey: searchKey
+    			}
+    		});
+    	},
+    	
+    	getListingCustomerOrderList: function(pageNumber, searchKey) {
+    		return $.ajax({
+    			url: '/services/customerorder/listinglist',
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				searchKey: searchKey
+    			}
+    		});
+    	},
+    	
     	getCustomerOrder: function(customerOrderId) {
     		return $.ajax({
     			url: '/services/customerorder/get',

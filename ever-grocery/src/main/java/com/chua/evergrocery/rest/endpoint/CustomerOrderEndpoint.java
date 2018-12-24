@@ -39,6 +39,22 @@ public class CustomerOrderEndpoint {
 	}
 	
 	@GET
+	@Path("/cashierlist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<CustomerOrder> getCashierCustomerOrderList(@QueryParam("pageNumber") Integer pageNumber,
+			@QueryParam("searchKey") String searchKey) {
+		return customerOrderHandler.getCashierCustomerOrderList(pageNumber, searchKey);
+	}
+	
+	@GET
+	@Path("/listinglist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<CustomerOrder> getListingCustomerOrderList(@QueryParam("pageNumber") Integer pageNumber,
+			@QueryParam("searchKey") String searchKey) {
+		return customerOrderHandler.getListingCustomerOrderList(pageNumber, searchKey);
+	}
+	
+	@GET
 	@Path("/get")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public CustomerOrder getCustomerOrder(@QueryParam("customerOrderId") Long customerOrderId) {

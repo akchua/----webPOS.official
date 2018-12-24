@@ -97,6 +97,16 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
+	public ObjectList<CustomerOrder> getCashierCustomerOrderList(Integer pageNumber, String searchKey) {
+		return customerOrderService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, new Status[] { Status.SUBMITTED, Status.DISCOUNTED}, null);
+	}
+
+	@Override
+	public ObjectList<CustomerOrder> getListingCustomerOrderList(Integer pageNumber, String searchKey) {
+		return customerOrderService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, new Status[] { Status.LISTING}, null);
+	}
+	
+	@Override
 	public CustomerOrder getCustomerOrder(Long customerOrderId) {
 		return customerOrderService.find(customerOrderId);
 	}
@@ -235,6 +245,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					
 					customerOrderDetailService.batchUpdate(customerOrderDetails);
 					customerOrder.setDiscountType(discountType);
+					customerOrder.setStatus(Status.DISCOUNTED);
 					customerOrder.setTotalDiscountAmount(totalDiscounted * (discountType.getPercentDiscount() / 100));
 					
 					result = new ResultBean();
@@ -266,7 +277,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			if(customerOrder.getStatus().equals(Status.SUBMITTED)) {
+			if(customerOrder.getStatus().equals(Status.SUBMITTED) || customerOrder.getStatus().equals(Status.DISCOUNTED)) {
 				if(customerOrder.getTotalAmount() <= cash) {
 					Long SIN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag()));
 					
@@ -418,24 +429,12 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			final CustomerOrderDetail customerOrderDetail = customerOrderDetailService.findByOrderAndDetailId(customerOrder.getId(), productDetail.getId());
 			
 			if(customerOrderDetail == null) {
-				result = new ResultBean();
-				
 				final CustomerOrderDetail newCustomerOrderDetail = new CustomerOrderDetail();
 				setCustomerOrderDetail(newCustomerOrderDetail, customerOrder, productDetail);
 				
-				final ResultBean tempResult = this.changeCustomerOrderDetailQuantity(newCustomerOrderDetail, quantity);
+				customerOrderDetailService.insert(newCustomerOrderDetail);
 				
-				result.setSuccess(tempResult.getSuccess() && 
-						customerOrderDetailService.insert(newCustomerOrderDetail) != null);
-				
-				if(result.getSuccess()) {
-					//result message used instead as boolean to check if item is new
-					final String isNew = "NEW";
-					
-					result.setMessage(isNew);
-				} else {
-					result.setMessage(tempResult.getMessage());
-				}
+				result = this.changeCustomerOrderDetailQuantity(newCustomerOrderDetail, quantity);
 			} else {
 				result = this.changeCustomerOrderDetailQuantity(customerOrderDetail, customerOrderDetail.getQuantity() + quantity);
 			}
@@ -491,8 +490,6 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				customerOrder.setTotalItems(customerOrder.getTotalItems() - customerOrderDetail.getQuantity());
 				
 				setCustomerOrderDetailQuantity(customerOrderDetail, quantity);
-				// Reset tax type to original every time quantity is changed
-				customerOrderDetail.setTaxType(customerOrderDetail.getProductDetail().getProduct().getTaxType());
 				result.setSuccess(customerOrderDetailService.update(customerOrderDetail));
 				
 				if(result.getSuccess()) {

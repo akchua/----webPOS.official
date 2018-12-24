@@ -12,6 +12,10 @@ public interface CustomerOrderHandler {
 
 	ObjectList<CustomerOrder> getCustomerOrderList(Integer pageNumber, String searchKey, Boolean showPaid, Integer daysAgo);
 	
+	ObjectList<CustomerOrder> getCashierCustomerOrderList(Integer pageNumber, String searchKey);
+	
+	ObjectList<CustomerOrder> getListingCustomerOrderList(Integer pageNumber, String searchKey);
+	
 	CustomerOrder getCustomerOrder(Long customerOrderId);
 	
 	CustomerOrder getCustomerOrderBySIN(Long serialInvoiceNumber);

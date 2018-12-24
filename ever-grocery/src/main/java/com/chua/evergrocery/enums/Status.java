@@ -11,6 +11,8 @@ public enum Status {
 
 	SUBMITTED("Submitted"),
 	
+	DISCOUNTED("Discounted"),
+	
 	PAID("Paid"),
 	
 	CHECKED("Checked"),
