@@ -101,7 +101,13 @@ public class InventoryHandlerImpl implements InventoryHandler {
 			inventory.setPiecePurchasePrice(pieceProductDetail != null ? pieceProductDetail.getNetPrice() : -1.0f);
 			inventory.setPieceUnit(pieceProductDetail != null ? pieceProductDetail.getUnitType() : UnitType.DEFAULT);
 			
-			LOG.info("Inventory : " + inventory.getWholeQuantity() + " " + inventory.getWholeUnit().getDisplayName() + " AND " + inventory.getPieceQuantity() + " " + inventory.getPieceUnit().getDisplayName());
+			String inventoryMessage = "Inventory : ";
+			if(inventory.getWholeUnit() != null) inventoryMessage += inventory.getWholeQuantity() + " " + inventory.getWholeUnit().getDisplayName();
+			if(inventory.getWholeUnit() != null && inventory.getPieceUnit() != null) inventoryMessage += " AND ";
+			if(inventory.getPieceUnit() != null) inventoryMessage += inventory.getPieceQuantity() + " " + inventory.getPieceUnit().getDisplayName();
+			
+			LOG.info(inventoryMessage);
+			
 		} else {
 			LOG.info("Individual product inventory exited due to invalid productId : " + productId);
 			inventory = null;
