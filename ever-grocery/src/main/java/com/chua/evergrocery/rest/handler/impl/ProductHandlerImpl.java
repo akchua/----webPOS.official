@@ -298,7 +298,6 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	private Boolean upsertProductDetails(Product product, ProductDetailsFormBean productDetailsForm) {
 		final Boolean success;
-		
 		ProductDetail productDetail = productDetailService.find(productDetailsForm.getId());
 		boolean isNew = false;
 		
@@ -322,31 +321,34 @@ public class ProductHandlerImpl implements ProductHandler {
 				setPriceHistory(priceHistory, product, productDetail, productDetailsForm, PriceHistoryType.NET_PURCHASE);
 				priceHistoryService.insert(priceHistory);
 				
-				// Update stock budget if inventory is activated
-				if(!product.getCompany().getLastPurchaseOrderDate().equals(DateUtil.getDefaultDate())) {
-					final InventoryBean productLatestInventory = inventoryHandler.getProductInventory(product.getId());
-					if(!isNew && !productLatestInventory.equals(0.0f) && productDetailsForm.getTitle().equals("Whole")) {
-						Float percentChange = 0.0f;
-						if(productDetail.getContent().equals(productDetailsForm.getContent())) {
-							percentChange = (productDetailsForm.getNetPrice() - productDetail.getNetPrice()) / productDetail.getNetPrice() * 100.0f;
-						} else {
-							Float newNetPrice = productDetailsForm.getNetPrice() / (productDetailsForm.getContent() != 0 ? productDetailsForm.getContent() : 1);
-							Float oldNetPrice = productDetail.getNetPrice() / (productDetail.getContent() != 0 ? productDetail.getContent() : 1);
-							percentChange = (newNetPrice - oldNetPrice) / oldNetPrice * 100.0f;
+				// Update stock budget if whole 
+				if(productDetailsForm.getTitle().equals("Whole")) {
+					// AND if inventory is activated
+					if(product.getCompany().getLastPurchaseOrderDate().after(DateUtil.getOrderCutoffDate())) {
+						final InventoryBean productLatestInventory = inventoryHandler.getProductInventory(product.getId());
+						if(!isNew && !productLatestInventory.equals(0.0f) && productDetailsForm.getTitle().equals("Whole")) {
+							Float percentChange = 0.0f;
+							if(productDetail.getContent() != null && productDetail.getContent().equals(productDetailsForm.getContent())) {
+								percentChange = (productDetailsForm.getNetPrice() - productDetail.getNetPrice()) / productDetail.getNetPrice() * 100.0f;
+							} else {
+								Float newNetPrice = productDetailsForm.getNetPrice() / (productDetailsForm.getContent() != 0 ? productDetailsForm.getContent() : 1);
+								Float oldNetPrice = productDetail.getNetPrice() / (productDetail.getContent() != null && productDetail.getContent() != 0 ? productDetail.getContent() : 1);
+								percentChange = (newNetPrice - oldNetPrice) / oldNetPrice * 100.0f;
+							}
+							
+							final Float adjustedStockBudget = product.getStockBudget() + (productLatestInventory.getStockBudget() * (percentChange / 100.0f));
+							final Float adjustedPurchaseBudget = product.getPurchaseBudget() * (1 + (percentChange / 100.0f));
+							
+							LOG.info("Adjusted stock budget of " + product.getName() + " from " + product.getStockBudget() + " to " + adjustedStockBudget + " ## earned " + (adjustedStockBudget - product.getStockBudget()));
+							LOG.info("Adjusted purchase budget of " + product.getName() + " from " + product.getPurchaseBudget() + " to " + adjustedPurchaseBudget);
+							
+							product.setPurchaseBudget(adjustedPurchaseBudget);
+							product.setTotalBudget(adjustedPurchaseBudget + adjustedStockBudget);
+							productService.update(product);
 						}
-						
-						final Float adjustedStockBudget = product.getStockBudget() + (productLatestInventory.getStockBudget() * (percentChange / 100.0f));
-						final Float adjustedPurchaseBudget = product.getPurchaseBudget() * (1 + (percentChange / 100.0f));
-						
-						LOG.info("Adjusted stock budget of " + product.getName() + " from " + product.getStockBudget() + " to " + adjustedStockBudget + " ## earned " + (adjustedStockBudget - product.getStockBudget()));
-						LOG.info("Adjusted purchase budget of " + product.getName() + " from " + product.getPurchaseBudget() + " to " + adjustedPurchaseBudget);
-						
-						product.setPurchaseBudget(adjustedPurchaseBudget);
-						product.setTotalBudget(adjustedPurchaseBudget + adjustedStockBudget);
-						productService.update(product);
+					} else {
+						LOG.info("Inventory not yet activated for " + product.getCompany().getName() + ".");
 					}
-				} else {
-					LOG.info("Inventory not yet activated for " + product.getCompany().getName() + ".");
 				}
 			}
 		}
