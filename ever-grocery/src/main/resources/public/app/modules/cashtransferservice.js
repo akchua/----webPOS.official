@@ -58,9 +58,9 @@ define(['jquery'], function ($) {
     				cashTransferId: cashTransferId
     			}
     		});
-    	},
+    	}
     	
-    	auditUser: function(userId, fullAudit) {
+    	/*auditUser: function(userId, fullAudit) {
     		return $.ajax({
     			url: '/services/cashtransfer/audit',
     			method: 'POST',
@@ -69,6 +69,6 @@ define(['jquery'], function ($) {
     				fullAudit: fullAudit
     			}
     		});
-    	}
+    	}*/
     };
 });

@@ -14,8 +14,7 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
 		this.customerOrderPageModel = {
 			customerOrderId: ko.observable(),
 			customerOrderNumber: ko.observable(),
-			formattedTotalAmount: ko.observable(),
-			customerName: ko.observable()
+			formattedTotalAmount: ko.observable()
 		};
     };
     
@@ -51,7 +50,6 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	customerOrderService.getCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(customerOrder) { 
     		self.customerOrderPageModel.customerOrderNumber(customerOrder.orderNumber);
     		self.customerOrderPageModel.formattedTotalAmount(customerOrder.formattedTotalAmount);
-    		self.customerOrderPageModel.customerName(customerOrder.formattedName);
     	});
     	
     	customerOrderService.getCustomerOrderDetailList(self.currentPage(), self.customerOrderPageModel.customerOrderId(), true).done(function(data) { 
@@ -84,12 +82,14 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	var self = this;
     	
     	if(self.barcodeKey() === 'e') {
-    		self.submit();
+    		self.submit(false);
     	} else if(self.barcodeKey() === 'p') {
     		self.printCopy();
     	} else if(self.barcodeKey() === 's') {
     		self.search();
-    	} else {
+    	} else if(self.barcodeKey() === 'n') {
+    		self.submit(true);
+    	}  else {
     		customerOrderService.addItemByBarcode(self.barcodeKey(), self.customerOrderPageModel.customerOrderId()).done(function(result) {	
         		if(result.success) {
         			self.currentPage(1);
@@ -120,10 +120,10 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	});
     };
     
-    CustomerOrderPage.prototype.submit = function() {
+    CustomerOrderPage.prototype.submit = function(createNew) {
     	var self = this;
     	
-    	app.showMessage('<p>Submit order for <span class="text-primary">' + self.customerOrderPageModel.customerName() + '</span>?<br>' +
+    	app.showMessage('<p>Submit order #<span class="text-primary">' + self.customerOrderPageModel.customerOrderNumber() + '</span>?<br>' +
 				'Make sure to label all packages with <span class="text-danger">#' + self.customerOrderPageModel.customerOrderNumber() + '</span>.<br><br>' +
 				'By clicking confirm, you will be forwarding the order to the cashier.</p>',
 		'Submit Order',
@@ -132,7 +132,17 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
 			if(confirm) {
 				customerOrderService.submitCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(result) {
 					if(result.success) {
-						router.navigate('#customerorder');
+						if(createNew) {
+							customerOrderService.createCustomerOrder().done(function(result) {
+				            	if(result.success) {
+				            		router.navigate('#customerorderpage/' + result.extras.customerOrderId);
+				            	} else {
+				            		app.showMessage(result.message);
+				            	}
+				            });
+						} else {
+							router.navigate('#customerorder');
+						}
 					} else {
 						app.showMessage(result.message).done(function() {
 							self.barcodeFocus(true);

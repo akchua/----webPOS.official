@@ -10,6 +10,7 @@ import com.chua.evergrocery.database.entity.base.BaseObject;
 @Entity(name = "Brand")
 @Table(name = Brand.TABLE_NAME)
 public class Brand extends BaseObject {
+	
 	private static final long serialVersionUID = 7028392275601746824L;
 	
 	public static final String TABLE_NAME = "brand";

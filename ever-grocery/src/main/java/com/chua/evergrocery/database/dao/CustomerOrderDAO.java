@@ -14,8 +14,6 @@ import com.chua.evergrocery.enums.Status;
 
 public interface CustomerOrderDAO extends DAO<CustomerOrder, Long>, CustomerOrderPrototype {
 
-	CustomerOrder findByNameAndStatus(String name, Status[] status);
-	
 	List<CustomerOrder> findAllByCashierStatusAndDatePaidWithOrder(Long cashierId, Status[] status, Date dateFrom, Date dateTo, Order[] orders);
 	
 	List<CashierSalesSummaryBean> findAllCashierSalesSummaryByDatePaidAndDiscountType(Date dateFrom, Date dateTo, List<DiscountType> discountTypes, Boolean returnsOnly);

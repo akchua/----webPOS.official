@@ -1,5 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/cashtransferservice', 'modules/userservice', 'modules/constantsservice', 'viewmodels/report/auditform'], 
-		function (app, ko, cashTransferService, userService, constantsService, AuditForm) {
+define(['durandal/app', 'knockout', 'modules/cashtransferservice', 'modules/userservice', 'modules/constantsservice', 'viewmodels/report/auditlog'/*, 'viewmodels/report/auditform'*/], 
+		function (app, ko, cashTransferService, userService, constantsService, AuditLog/*, AuditForm*/) {
 	var CashFlow = function() {
 		this.cashTransferList = ko.observable();
 		
@@ -34,8 +34,12 @@ define(['durandal/app', 'knockout', 'modules/cashtransferservice', 'modules/user
 		self.refreshCashTransferList();
 	};
 	
-	CashFlow.prototype.auditUser = function() {
+	/*CashFlow.prototype.auditUser = function() {
 		AuditForm.show();
+	};*/
+	
+	CashFlow.prototype.auditLog = function() {
+		AuditLog.show();
 	};
 	
 	CashFlow.prototype.refreshCashTransferList = function() {

@@ -50,13 +50,10 @@ define(['jquery'], function ($) {
     		});
     	},
     	
-    	saveCustomerOrder: function(customerOrderFormData) {
+    	createCustomerOrder: function() {
     		return $.ajax({
-    			url: '/services/customerorder/save',
-    			method: 'POST',
-    			data: {
-    				customerOrderFormData: customerOrderFormData
-    			}
+    			url: '/services/customerorder/create',
+    			method: 'POST'
     		});
     	},
     	
@@ -178,13 +175,12 @@ define(['jquery'], function ($) {
     		});
     	},
     	
-    	printReceipt: function(customerOrderId, cash) {
+    	printReceipt: function(customerOrderId) {
     		return $.ajax({
     			url: '/services/customerorder/printreceipt',
     			method: 'POST',
     			data: {
-    				customerOrderId: customerOrderId,
-    				cash: cash
+    				customerOrderId: customerOrderId
     			}
     		});
     	},

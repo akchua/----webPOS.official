@@ -1,7 +1,6 @@
 ## Template for Customer Order Printable Copy
 ## Has a maximum of 44 columns in a line
 Order #${t.OrderNumber}
-Customer : ${t.FormattedCustomer}
 ${t.FormattedCustomerOrderItems}
                    Sub Total ${t.FormattedGrossAmount}
 

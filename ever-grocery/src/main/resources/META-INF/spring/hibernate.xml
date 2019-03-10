@@ -65,6 +65,7 @@
 				<value>com.chua.evergrocery.database.entity.PurchaseOrder</value>
 				<value>com.chua.evergrocery.database.entity.PurchaseOrderDetail</value>
 				
+				<value>com.chua.evergrocery.database.entity.AuditLog</value>
 				<value>com.chua.evergrocery.database.entity.CashTransfer</value>
 				
 				<value>com.chua.evergrocery.database.entity.MTDPurchaseSummary</value>

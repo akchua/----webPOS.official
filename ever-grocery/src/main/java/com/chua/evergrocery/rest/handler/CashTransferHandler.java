@@ -25,5 +25,5 @@ public interface CashTransferHandler {
 	
 	ResultBean cancelCashTransfer(Long cashTransferId);
 	
-	ResultBean auditUser(Long userId, Boolean fullAudit);
+	/*ResultBean auditUser(Long userId, Boolean fullAudit);*/
 }

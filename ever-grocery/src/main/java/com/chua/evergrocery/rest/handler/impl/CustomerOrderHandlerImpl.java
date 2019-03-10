@@ -5,14 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.UserContextHolder;
-import com.chua.evergrocery.beans.CustomerOrderFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.beans.UserBean;
@@ -22,10 +20,10 @@ import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.ProductDetail;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
 import com.chua.evergrocery.database.service.CustomerOrderService;
-import com.chua.evergrocery.database.service.CustomerService;
 import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.SystemVariableService;
 import com.chua.evergrocery.database.service.UserService;
+import com.chua.evergrocery.enums.AuditLogType;
 import com.chua.evergrocery.enums.Color;
 import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.DocType;
@@ -33,6 +31,7 @@ import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.SystemVariableTag;
 import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.rest.handler.AuditLogHandler;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
 import com.chua.evergrocery.rest.handler.InventoryHandler;
 import com.chua.evergrocery.rest.handler.ProductHandler;
@@ -52,9 +51,6 @@ import com.chua.evergrocery.utility.template.CustomerOrderReceiptTemplate;
 public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Autowired
-	private CustomerService customerService;
-	
-	@Autowired
 	private UserService userService;
 	
 	@Autowired
@@ -71,6 +67,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Autowired
 	private ProductHandler productHandler;
+	
+	@Autowired
+	private AuditLogHandler auditLogHandler;
 	
 	@Autowired
 	private InventoryHandler inventoryHandler;
@@ -117,79 +116,37 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	public ResultBean createCustomerOrder(CustomerOrderFormBean customerOrderForm) {
+	public ResultBean createCustomerOrder() {
 		final ResultBean result;
 		
-		if(customerOrderForm.getName() != null) {
-			if(!customerOrderService.isExistsByNameAndStatus(customerOrderForm.getName(), new Status[] { Status.LISTING, Status.SUBMITTED })) {
-				final CustomerOrder customerOrder = new CustomerOrder();
-				setCustomerOrder(customerOrder, customerOrderForm);
-				customerOrder.setPaidOn(DateUtil.getDefaultDate());
-				customerOrder.setSerialInvoiceNumber(0l);
-				customerOrder.setVatSales(0.0f);
-				customerOrder.setVatExSales(0.0f);
-				customerOrder.setZeroRatedSales(0.0f);
-				customerOrder.setDiscountType(DiscountType.NO_DISCOUNT);
-				customerOrder.setTotalDiscountAmount(0.0f);
-				customerOrder.setTotalItems(0.0f);
-				
-				customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
-				customerOrder.setStatus(Status.LISTING);
-				
-				result = new ResultBean();
-				result.setSuccess(customerOrderService.insert(customerOrder) != null);
-				if(result.getSuccess()) {
-					Map<String, Object> extras = new HashMap<String, Object>();
-					extras.put("customerOrderId", customerOrder.getId());
-					result.setExtras(extras);
-					
-					result.setMessage("Customer order successfully created.");
-				} else {
-					result.setMessage("Failed to create customer order.");
-				}
-			} else {
-				result = new ResultBean(false, "Customer order \"" + customerOrderForm.getName() + "\" already exists!");
-			}
+		final CustomerOrder customerOrder = new CustomerOrder();
+		customerOrder.setPaidOn(DateUtil.getDefaultDate());
+		customerOrder.setSerialInvoiceNumber(0l);
+		customerOrder.setVatSales(0.0f);
+		customerOrder.setVatExSales(0.0f);
+		customerOrder.setZeroRatedSales(0.0f);
+		customerOrder.setDiscountType(DiscountType.NO_DISCOUNT);
+		customerOrder.setTotalDiscountAmount(0.0f);
+		customerOrder.setTotalItems(0.0f);
+		
+		customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
+		customerOrder.setStatus(Status.LISTING);
+		
+		result = new ResultBean();
+		result.setSuccess(customerOrderService.insert(customerOrder) != null);
+		if(result.getSuccess()) {
+			Map<String, Object> extras = new HashMap<String, Object>();
+			extras.put("customerOrderId", customerOrder.getId());
+			result.setExtras(extras);
+			
+			result.setMessage("Customer order successfully created.");
 		} else {
-			result = new ResultBean(false, "Input a name for the customer order.");
+			result.setMessage("Failed to create customer order.");
 		}
 		
 		return result;
 	}
 	
-	@Override
-	public ResultBean updateCustomerOrder(CustomerOrderFormBean customerOrderForm) {
-		final ResultBean result;
-		
-		final CustomerOrder customerOrder = customerOrderService.find(customerOrderForm.getId());
-		if(customerOrder != null) {
-			final UserBean currentUser = UserContextHolder.getUser();
-			
-			if(customerOrder.getStatus().equals(Status.LISTING) && customerOrder.getCreator().getId() == currentUser.getId()) {
-				if(!(StringUtils.trimToEmpty(customerOrder.getName()).equalsIgnoreCase(customerOrderForm.getName())) &&
-						customerOrderService.isExistsByNameAndStatus(customerOrderForm.getName(), new Status[] { Status.LISTING, Status.SUBMITTED })) {
-					result = new ResultBean(false, "Customer order \"" + customerOrderForm.getName() + "\" already exists!");
-				} else {
-					setCustomerOrder(customerOrder, customerOrderForm);
-					
-					result = new ResultBean();
-					result.setSuccess(customerOrderService.update(customerOrder));
-					if(result.getSuccess()) {
-						result.setMessage("Customer order successfully updated.");
-					} else {
-						result.setMessage("Failed to update customer order.");
-					}
-				}
-			} else {
-				result = new ResultBean(false, "Customer order cannot be edited right now.");
-			}
-		} else {
-			result = new ResultBean(false, "Customer order not found.");
-		}
-		
-		return result;
-	}
-
 	@Override
 	public ResultBean removeCustomerOrder(Long customerOrderId) {
 		final ResultBean result;
@@ -205,9 +162,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				
 				result.setSuccess(customerOrderService.delete(customerOrder));
 				if(result.getSuccess()) {
-					result.setMessage("Successfully removed Customer order \"" + customerOrder.getName() + "\".");
+					result.setMessage("Successfully removed Customer order \"" + customerOrder.getOrderNumber() + "\".");
 				} else {
-					result.setMessage("Failed to remove Customer order \"" + customerOrder.getName() + "\".");
+					result.setMessage("Failed to remove Customer order \"" + customerOrder.getOrderNumber() + "\".");
 				}
 			} else {
 				result = new ResultBean(false, "Customer order cannot be removed right now.");
@@ -286,16 +243,22 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					customerOrder.setCashier(userService.find(UserContextHolder.getUser().getId()));
 					customerOrder.setStatus(Status.PAID);
 					customerOrder.setPaidOn(new Date());
+					customerOrder.setCash(cash);
 					customerOrder.setSerialInvoiceNumber(SIN);
 					
 					result.setSuccess(customerOrderService.update(customerOrder) && systemVariableService.updateByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag(), String.valueOf(SIN + 1)));
 					if(result.getSuccess()) {
+						// UPDATE INVENTORY if any item is sold at old price
 						inventoryHandler.checkForStockAdjustment(customerOrderId);
+						
+						// UPDATE AUDIT LOG
+						auditLogHandler.addLog(UserContextHolder.getUser().getId(), AuditLogType.SALES, customerOrder.getTotalAmount());
+						
 						result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(cash - customerOrder.getTotalAmount())) +
 								Html.newLine + Html.newLine + Html.text("Cash          : " + CurrencyFormatter.pesoFormat(cash)) +
 								Html.newLine + Html.text("Amount Due    : " + CurrencyFormatter.pesoFormat(customerOrder.getTotalAmount()))));
 					} else {
-						result.setMessage("Failed to pay Customer order \"" + customerOrder.getName() + "\".");
+						result.setMessage("Failed to pay Customer order \"" + customerOrder.getOrderNumber() + "\".");
 					}
 				} else {
 					result = new ResultBean(false, "Insufficient cash.");
@@ -312,11 +275,6 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		return result;
 	}
 	
-	private void setCustomerOrder(CustomerOrder customerOrder, CustomerOrderFormBean customerOrderForm) {
-		customerOrder.setName(customerOrderForm.getName());
-		customerOrder.setCustomer(customerService.find(customerOrderForm.getCustomerId()));
-	}
-
 	@Override
 	public ObjectList<CustomerOrderDetail> getCustomerOrderDetailList(Integer pageNumber, Long customerOrderId) {
 		return customerOrderDetailService.findAllWithPagingOrderByLastUpdate(pageNumber, UserContextHolder.getItemsPerPage(), customerOrderId);
@@ -620,7 +578,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					e.printStackTrace();
 				}
 				
-				result = new ResultBean(Boolean.TRUE, "Successfully printed Customer order \"" + customerOrder.getName() + "\".");
+				result = new ResultBean(Boolean.TRUE, "Successfully printed Customer order \"" + customerOrder.getOrderNumber() + "\".");
 			} else {
 				result = new ResultBean(false, "You are not authorized to print a copy.");
 			}
@@ -644,12 +602,12 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	public void printReceipt(Long customerOrderId, Float cash) {
+	public void printReceipt(Long customerOrderId) {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
 			final List<CustomerOrderDetail> customerOrderItems = customerOrderDetailService.findAllByCustomerOrderIdOrderByProductName(customerOrder.getId());
-			final CustomerOrderReceiptTemplate customerOrderReceipt = new CustomerOrderReceiptTemplate(customerOrder, customerOrderItems, cash);
+			final CustomerOrderReceiptTemplate customerOrderReceipt = new CustomerOrderReceiptTemplate(customerOrder, customerOrderItems);
 			
 			Printer printer = new Printer();
 			try {

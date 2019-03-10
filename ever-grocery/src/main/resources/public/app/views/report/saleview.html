@@ -1,11 +1,14 @@
 <div id="divSaleViewModal" class="modal-content modal-lg">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
-		<h3 align="center"><span data-bind="text: customerOrderViewModel.name"></span> - ID: <span data-bind="text: customerOrderViewModel.customerOrderId"></span></h3>
+		<h3 align="center">Sales View</h3>
 	</div>
 	
 	<div class="modal-body">
-		<h1 class="text-center">Total Amount: <span class="label label-success">Php <span data-bind="text: customerOrderViewModel.formattedTotalAmount"></span></span></h1>
+		<h3>
+			<span class="col-xs-4">Order <span class="text-md-red-elite">#<span data-bind="text: customerOrderViewModel.customerOrderNumber"></span></span></span>
+			<span class="col-xs-offset-2 col-xs-6 text-center">TOTAL: <span class="text-lg-green-neuton">&#8369; <span data-bind="text: customerOrderViewModel.formattedTotalAmount" ></span></span></span>
+		</h3>
 		<div class="row">
 			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
 		</div>

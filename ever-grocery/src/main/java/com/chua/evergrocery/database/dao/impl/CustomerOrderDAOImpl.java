@@ -3,10 +3,8 @@ package com.chua.evergrocery.database.dao.impl;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Junction;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -36,12 +34,12 @@ public class CustomerOrderDAOImpl
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		
-		if(StringUtils.isNotBlank(searchKey))
+		/*if(StringUtils.isNotBlank(searchKey))
 		{
 			for(String s : searchKey.split("\\s+")) {
-				conjunction.add(Restrictions.ilike("name", s, MatchMode.ANYWHERE));
+				conjunction.add(Restrictions.ilike("id", s, MatchMode.ANYWHERE));
 			}
-		}
+		}*/
 		
 		if(status != null && status.length > 0) {
 			final Disjunction disjunction = Restrictions.disjunction();
@@ -62,23 +60,6 @@ public class CustomerOrderDAOImpl
 		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
 	}
 	
-	@Override
-	public CustomerOrder findByNameAndStatus(String name, Status[] status) {
-		final Junction conjunction = Restrictions.conjunction();
-		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.eq("name", name));
-		
-		final Disjunction disjunction = Restrictions.disjunction();
-		
-		for(Status statuz : status) {
-			disjunction.add(Restrictions.eq("status", statuz));
-		}
-		
-		conjunction.add(disjunction);
-		
-		return findUniqueResult(null, null, null, conjunction);
-	}
-
 	@Override
 	public List<CustomerOrder> findAllByCashierStatusAndDatePaidWithOrder(Long cashierId, Status[] status, Date dateFrom, Date dateTo, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();

@@ -41,7 +41,7 @@ public class CustomerOrder extends BaseObject {
 
 	private Long serialInvoiceNumber;
 	
-	private String name;
+	/*private String name;*/
 	
 	@JsonSerialize(using = CustomerSerializer.class)
 	private Customer customer;
@@ -68,6 +68,8 @@ public class CustomerOrder extends BaseObject {
 	
 	private Date paidOn;
 	
+	private Float cash;
+	
 	@Transient
 	public String getOrderNumber() {
 		return String.valueOf(this.getId() % 1000);
@@ -89,7 +91,7 @@ public class CustomerOrder extends BaseObject {
 		this.serialInvoiceNumber = serialInvoiceNumber;
 	}
 
-	@Basic
+	/*@Basic
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -110,7 +112,7 @@ public class CustomerOrder extends BaseObject {
 
 	public void setName(String name) {
 		this.name = name;
-	}
+	}*/
 
 	@ManyToOne(targetEntity = Customer.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id")
@@ -280,5 +282,15 @@ public class CustomerOrder extends BaseObject {
 
 	public void setPaidOn(Date paidOn) {
 		this.paidOn = paidOn;
+	}
+
+	@Basic
+	@Column(name = "cash")
+	public Float getCash() {
+		return cash;
+	}
+
+	public void setCash(Float cash) {
+		this.cash = cash;
 	}
 }

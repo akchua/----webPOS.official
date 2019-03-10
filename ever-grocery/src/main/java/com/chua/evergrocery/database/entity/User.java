@@ -44,11 +44,13 @@ public class User extends BaseObject {
 	
 	private Date lastSuccessfulLogin;
 
-	private Date lastAudit;
+	private Long auditLogId;
+	
+	/*private Date lastAudit;
 	
 	private Float withheldCash;
 	
-	private Date lastFullAudit;
+	private Date lastFullAudit;*/
 	
 	@Basic
 	@Column(name = "image")
@@ -164,7 +166,17 @@ public class User extends BaseObject {
 		this.lastSuccessfulLogin = lastSuccessfulLogin;
 	}
 
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Basic
+	@Column(name = "audit_log_id")
+	public Long getAuditLogId() {
+		return auditLogId;
+	}
+
+	public void setAuditLogId(Long auditLogId) {
+		this.auditLogId = auditLogId;
+	}
+
+	/*@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "last_audit")
 	public Date getLastAudit() {
 		return lastAudit;
@@ -192,5 +204,5 @@ public class User extends BaseObject {
 
 	public void setLastFullAudit(Date lastFullAudit) {
 		this.lastFullAudit = lastFullAudit;
-	}
+	}*/
 }

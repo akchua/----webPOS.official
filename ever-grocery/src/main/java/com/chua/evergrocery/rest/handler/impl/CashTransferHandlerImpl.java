@@ -1,7 +1,6 @@
 package com.chua.evergrocery.rest.handler.impl;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,18 +8,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.UserContextHolder;
-import com.chua.evergrocery.beans.AuditResultBean;
 import com.chua.evergrocery.beans.CashTransferFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.database.entity.CashTransfer;
-import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.User;
 import com.chua.evergrocery.database.service.CashTransferService;
-import com.chua.evergrocery.database.service.CustomerOrderService;
 import com.chua.evergrocery.database.service.UserService;
+import com.chua.evergrocery.enums.AuditLogType;
 import com.chua.evergrocery.enums.Color;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.rest.handler.AuditLogHandler;
 import com.chua.evergrocery.rest.handler.CashTransferHandler;
 import com.chua.evergrocery.rest.validator.CashTransferValidator;
 import com.chua.evergrocery.utility.DateUtil;
@@ -42,11 +40,14 @@ public class CashTransferHandlerImpl implements CashTransferHandler {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private CustomerOrderService customerOrderService;
+	/*@Autowired
+	private CustomerOrderService customerOrderService;*/
 	
 	@Autowired
 	private CashTransferValidator cashTransferValidator;
+	
+	@Autowired
+	private AuditLogHandler auditLogHandler;
 
 	@Override
 	public CashTransfer getCashTransfer(Long cashTransferId) {
@@ -120,6 +121,10 @@ public class CashTransferHandlerImpl implements CashTransferHandler {
 						
 						result.setSuccess(cashTransferService.update(cashTransfer));
 						if(result.getSuccess()) {
+							// UPDATE AUDIT LOG
+							auditLogHandler.addLog(cashTransfer.getCashFrom().getId(), AuditLogType.CASH_TRANSFER, 0.0f - cashTransfer.getAmount());
+							auditLogHandler.addLog(cashTransfer.getCashTo().getId(), AuditLogType.CASH_TRANSFER, cashTransfer.getAmount());
+							
 							result.setMessage(Html.line(Html.text(Color.GREEN, "Success!") + " You have just received Php " + cashTransfer.getFormattedAmount() + " from " + cashTransfer.getCashFrom().getFormattedName() + "." ));
 						} else {
 							result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
@@ -176,7 +181,7 @@ public class CashTransferHandlerImpl implements CashTransferHandler {
 		return result;
 	}
 
-	@Override
+	/*@Override
 	public ResultBean auditUser(Long userId, Boolean fullAudit) {
 		final ResultBean result;
 		
@@ -245,5 +250,5 @@ public class CashTransferHandlerImpl implements CashTransferHandler {
 		}
 		
 		return result;
-	}
+	}*/
 }

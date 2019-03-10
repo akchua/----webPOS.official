@@ -6,6 +6,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
+import com.chua.evergrocery.rest.endpoint.AuditLogEndpoint;
 import com.chua.evergrocery.rest.endpoint.BrandEndpoint;
 import com.chua.evergrocery.rest.endpoint.CashTransferEndpoint;
 import com.chua.evergrocery.rest.endpoint.CategoryEndpoint;
@@ -16,11 +17,11 @@ import com.chua.evergrocery.rest.endpoint.CustomerOrderEndpoint;
 import com.chua.evergrocery.rest.endpoint.DistributorEndpoint;
 import com.chua.evergrocery.rest.endpoint.FileEndpoint;
 import com.chua.evergrocery.rest.endpoint.InventoryEndpoint;
-import com.chua.evergrocery.rest.endpoint.TransactionSummaryEndpoint;
 import com.chua.evergrocery.rest.endpoint.ProductEndpoint;
 import com.chua.evergrocery.rest.endpoint.PurchaseOrderEndpoint;
 import com.chua.evergrocery.rest.endpoint.SecurityEndpoint;
 import com.chua.evergrocery.rest.endpoint.SettingsEndpoint;
+import com.chua.evergrocery.rest.endpoint.TransactionSummaryEndpoint;
 import com.chua.evergrocery.rest.endpoint.UserEndpoint;
 
 @Component
@@ -47,6 +48,7 @@ public class JerseyConfig extends ResourceConfig {
 		register(PurchaseOrderEndpoint.class);
 		
 		register(CashTransferEndpoint.class);
+		register(AuditLogEndpoint.class);
 		register(TransactionSummaryEndpoint.class);
 		
 		register(InventoryEndpoint.class);

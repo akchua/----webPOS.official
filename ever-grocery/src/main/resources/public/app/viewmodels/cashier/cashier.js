@@ -4,7 +4,6 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 		this.customerOrderList = ko.observable();
 		
 		this.searchKey = ko.observable();
-		this.showPaid = ko.observable(false);
 		
 		this.itemsPerPage = ko.observable(app.user.itemsPerPage);
 		this.totalItems = ko.observable();
@@ -17,9 +16,6 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 
 		self.currentPage(1);
 		self.currentPageSubscription = self.currentPage.subscribe(function() {
-			self.refreshCustomerOrderList();
-		});
-		self.showPaid.subscribe(function() {
 			self.refreshCustomerOrderList();
 		});
 		

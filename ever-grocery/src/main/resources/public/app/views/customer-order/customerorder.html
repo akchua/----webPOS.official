@@ -1,21 +1,22 @@
 <section>
-	<div class="row">
-		<div class="col-md-4 col-xs-4">
-			<button data-bind="click: create" type="button" class="btn btn-success">Add New Customer Order</button>
-		</div>
+	<!-- <div class="row">
+		
 		<form role="search" class="form-inline">
 			<div class="input-group pull-right col-md-4 col-xs-4">
-	          	<input data-bind="textInput: searchKey" type="text" class="form-control" placeholder="Search">
+	          	<input data-bind="textInput: searchKey" type="text" class="form-control" placeholder="Search by Order #">
 		        <span class="input-group-btn">
 		        	<button data-bind="click: search" type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
 		        </span>
 	        </div>
         </form>
 	</div>
-	<br />
+	<br /> -->
 	
 	<div class="row">
-		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
+		<div class="col-md-4 col-xs-4">
+			<button data-bind="click: create" type="button" class="btn btn-success">New Transaction</button>
+		</div>
+		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-8 col-xs-8"></div>
 	</div>
 	
     <div class="row">
@@ -23,9 +24,7 @@
     		<table class="table table-responsive table-hover">
     			<thead>
     				<tr>
-    					<th>ID</th>
-    					<th>Name</th>
-    					<th>Customer</th>
+    					<th>Order #</th>
     					<th>Creator</th>
     					<th class="text-right">Total Amount</th>
     					<th class="text-center">Status</th>
@@ -35,12 +34,6 @@
     			<tbody data-bind="foreach: { data: customerOrderList, as: 'customerOrder' }">
     				<tr>
     					<td data-bind="text: customerOrder.orderNumber"></td>
-    					<td data-bind="text: customerOrder.name"></td>
-    					<td>
-    						<span data-bind="if: customerOrder.customer">
-    							<span data-bind="text: customerOrder.customer.lastName"></span><span>, </span><span data-bind="text: customerOrder.customer.firstName"></span>
-    						</span>
-    					</td>
     					<td>
     						<span data-bind="if: customerOrder.creator">
     							<span data-bind="text: customerOrder.creator.lastName"></span><span>, </span><span data-bind="text: customerOrder.creator.firstName"></span>
@@ -50,9 +43,8 @@
     					<td data-bind="text: customerOrder.status.displayName" class="text-center"></td>
     					<td>
     						<div class="pull-right">
-    							<a data-bind="click: function() { $parent.details(customerOrder.id) }" type="button" class="btn btn-info btn-sm">Details</a>
-    							<button data-bind="click: function() { $parent.edit(customerOrder.id) }" type="button" class="btn btn-warning btn-sm">Edit</button>
-    							<button data-bind="click: function() { $parent.remove(customerOrder.id, customerOrder.name) }" type="button" class="btn btn-danger btn-sm">Cancel Order</button>
+    							<a data-bind="click: function() { $parent.details(customerOrder.id) }" type="button" class="btn btn-info btn-sm" title="Edit"><i class="fa fa-edit"></i></a>
+    							<button data-bind="click: function() { $parent.remove(customerOrder.id, customerOrder.name) }" type="button" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash"></i></button>
     						</div>
     					</td>
     				</tr>

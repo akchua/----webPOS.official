@@ -76,11 +76,11 @@ public class CashTransferEndpoint {
 		return cashTransferHandler.cancelCashTransfer(cashTransferId);
 	}
 	
-	@POST
+	/*@POST
 	@Path("audit")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ResultBean auditUser(@FormParam("userId") Long userId,
 				@FormParam("fullAudit") Boolean fullAudit) {
 		return cashTransferHandler.auditUser(userId, fullAudit);
-	}
+	}*/
 }

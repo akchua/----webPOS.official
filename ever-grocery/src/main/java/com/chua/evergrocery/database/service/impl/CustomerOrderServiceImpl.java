@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +32,6 @@ public class CustomerOrderServiceImpl
 	@Override
 	public ObjectList<CustomerOrder> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey, Status[] status, Integer daysAgo) {
 	return dao.findAllWithPaging(pageNumber, resultsPerPage, searchKey, status, daysAgo);
-	}
-	
-	@Override
-	public Boolean isExistsByNameAndStatus(String name, Status[] status) {
-	return dao.findByNameAndStatus(StringUtils.trimToEmpty(name), status) != null;
 	}
 
 	@Override

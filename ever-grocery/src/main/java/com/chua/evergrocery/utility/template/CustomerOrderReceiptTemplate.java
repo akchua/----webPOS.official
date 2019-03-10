@@ -27,14 +27,11 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	
 	private List<CustomerOrderDetail> customerOrderItems;
 	
-	private Float cash;
-	
 	private String formattedCustomerOrderItems;
 	
-	public CustomerOrderReceiptTemplate(CustomerOrder customerOrder, List<CustomerOrderDetail> customerOrderItems, Float cash) {
+	public CustomerOrderReceiptTemplate(CustomerOrder customerOrder, List<CustomerOrderDetail> customerOrderItems) {
 		this.customerOrder = customerOrder;
 		this.customerOrderItems = customerOrderItems;
-		this.cash = cash;
 		
 		this.formattedCustomerOrderItems = "";
 	}
@@ -58,10 +55,6 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	
 	public String getOrderNumber() {
 		return customerOrder.getOrderNumber();
-	}
-	
-	public String getFormattedCustomer() {
-		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getFormattedName() : customerOrder.getName();
 	}
 	
 	public String getFormattedVatable() {
@@ -102,11 +95,11 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedCash() {
-		return String.format("%12s", CurrencyFormatter.pesoFormat(cash));
+		return String.format("%12s", CurrencyFormatter.pesoFormat(customerOrder.getCash()));
 	}
 	
 	public String getFormattedChange() {
-		return String.format("%10s", CurrencyFormatter.pesoFormat(cash - customerOrder.getTotalAmount()));
+		return String.format("%10s", CurrencyFormatter.pesoFormat(customerOrder.getCash() - customerOrder.getTotalAmount()));
 	}
 	
 	public String getFormattedCashier() {

@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.chua.evergrocery.beans.CustomerOrderFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
@@ -69,19 +68,10 @@ public class CustomerOrderEndpoint {
 	}
 	
 	@POST
-	@Path("/save")
+	@Path("/create")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean saveCustomerOrder(@FormParam("customerOrderFormData") String customerOrderFormData) throws IOException {
-		final ResultBean result;
-		
-		final CustomerOrderFormBean customerOrderForm = new ObjectMapper().readValue(customerOrderFormData, CustomerOrderFormBean.class);
-		if(customerOrderForm.getId() != null) {
-			result = customerOrderHandler.updateCustomerOrder(customerOrderForm);
-		} else {
-			result = customerOrderHandler.createCustomerOrder(customerOrderForm);
-		}
-		
-		return result;
+	public ResultBean newCustomerOrder() {
+		return customerOrderHandler.createCustomerOrder();
 	}
 	
 	@POST
@@ -168,8 +158,8 @@ public class CustomerOrderEndpoint {
 	@POST
 	@Path("/printreceipt")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public void printReceipt(@FormParam("customerOrderId") Long customerOrderId, @FormParam("cash") Float cash) {
-		customerOrderHandler.printReceipt(customerOrderId, cash);
+	public void printReceipt(@FormParam("customerOrderId") Long customerOrderId) {
+		customerOrderHandler.printReceipt(customerOrderId);
 	}
 	
 	@POST

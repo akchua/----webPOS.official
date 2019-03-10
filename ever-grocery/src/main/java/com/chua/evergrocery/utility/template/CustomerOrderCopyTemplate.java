@@ -46,10 +46,6 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 		return customerOrder.getOrderNumber();
 	}
 	
-	public String getFormattedCustomer() {
-		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getFormattedName() : customerOrder.getName();
-	}
-	
 	public String getFormattedGrossAmount() {
 		return String.format("%12s", customerOrder.getFormattedGrossAmount());
 	}

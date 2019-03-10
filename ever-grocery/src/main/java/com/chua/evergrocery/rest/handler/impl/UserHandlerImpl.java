@@ -101,9 +101,9 @@ public class UserHandlerImpl implements UserHandler {
 				user.setImage(fileConstants.getImageDefaultFileName());
 				user.setPassword(EncryptionUtil.getMd5(userForm.getPassword()));
 				user.setLastSuccessfulLogin(DateUtil.getDefaultDate());
-				user.setLastAudit(DateUtil.getDefaultDate());
+				/*user.setLastAudit(DateUtil.getDefaultDate());
 				user.setWithheldCash(0.0f);
-				user.setLastFullAudit(DateUtil.getDefaultDate());
+				user.setLastFullAudit(DateUtil.getDefaultDate());*/
 				setUser(user, userForm);
 				setSettings(user, userForm);
 				

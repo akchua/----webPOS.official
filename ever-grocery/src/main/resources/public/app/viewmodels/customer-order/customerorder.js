@@ -1,5 +1,5 @@
-define(['plugins/router', 'durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/customer-order/customerorderform', 'viewmodels/customer-order/customerorderpage'], 
-		function (router, app, ko, customerOrderService, CustomerOrderForm, CustomerOrderPage) {
+define(['plugins/router', 'durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/customer-order/customerorderpage'], 
+		function (router, app, ko, customerOrderService, CustomerOrderPage) {
 	var CustomerOrder = function() {
 		this.customerOrderList = ko.observable();
 		
@@ -40,20 +40,13 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/customerorderserv
 	CustomerOrder.prototype.create = function() {
 		var self = this;
 		
-		CustomerOrderForm.show('Create', new Object()).then(function() {
-			self.refreshCustomerOrderList();
-		});
-	};
-	
-	
-	CustomerOrder.prototype.edit = function(customerOrderId) {
-		var self = this;
-		
-		customerOrderService.getCustomerOrder(customerOrderId).done(function(data) {
-			CustomerOrderForm.show('Update', data).then(function() {
-				self.refreshCustomerOrderList();
-			});
-		});
+		customerOrderService.createCustomerOrder().done(function(result) {
+        	if(result.success) {
+        		router.navigate('#customerorderpage/' + result.extras.customerOrderId);
+        	} else {
+        		app.showMessage(result.message);
+        	}
+        });
 	};
 	
 	CustomerOrder.prototype.remove = function(customerOrderId, customerOrderName) {

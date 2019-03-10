@@ -37,7 +37,7 @@
 	];
 	
 	var customerorderroute = [
-	    { route: 'customerorder', moduleId: 'viewmodels/customer-order/customerorder', title: 'Customer Order', nav: true, hash: '#customerorder' },
+	    { route: 'customerorder', moduleId: 'viewmodels/customer-order/customerorder', title: 'Sales Order', nav: true, hash: '#customerorder' },
 	    { route: 'customerorderpage/:id', moduleId: 'viewmodels/customer-order/customerorderpage', title: 'Customer Order Page', nav: false, hash: '#customerorderpage' }
 	];
 	

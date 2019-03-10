@@ -1,6 +1,5 @@
 package com.chua.evergrocery.rest.handler;
 
-import com.chua.evergrocery.beans.CustomerOrderFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
@@ -20,9 +19,7 @@ public interface CustomerOrderHandler {
 	
 	CustomerOrder getCustomerOrderBySIN(Long serialInvoiceNumber);
 	
-	ResultBean createCustomerOrder(CustomerOrderFormBean customerOrderForm);
-	
-	ResultBean updateCustomerOrder(CustomerOrderFormBean customerOrderForm);
+	ResultBean createCustomerOrder();
 	
 	ResultBean removeCustomerOrder(Long customerOrderId);
 	
@@ -48,5 +45,5 @@ public interface CustomerOrderHandler {
 
 	ResultBean generateReport(SalesReportQueryBean salesReportQuery);
 	
-	void printReceipt(Long customerOrderId, Float cash);
+	void printReceipt(Long customerOrderId);
 }
