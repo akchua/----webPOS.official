@@ -1,4 +1,5 @@
-define(['knockout', 'modules/productservice'], function (ko, productService) {
+define(['durandal/app', 'knockout', 'modules/productservice'], 
+		function (app, ko, productService) {
     var ProductDetails = function(productDetails, enableConfig) {
     	this.productDetails = productDetails;
 
@@ -51,6 +52,8 @@ define(['knockout', 'modules/productservice'], function (ko, productService) {
         this.enableSellingPrice = null;
         
         this.enableNetProfit = null;
+        
+        this.allowPricing = app.user.userType.authority < 3;
     };
     
     ProductDetails.prototype.activate = function() {

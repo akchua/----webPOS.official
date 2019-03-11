@@ -1,5 +1,5 @@
-﻿define(['plugins/router', 'durandal/app', 'knockout', 'modules/securityservice', 'modules/userservice', 'modules/constantsservice', 'viewmodels/profile', 'viewmodels/passwordform', 'viewmodels/forgotpassword', 'viewmodels/settings'], 
-		function (router, app, ko, securityService, userService, constantsService, Profile, PasswordForm, ForgotPasswordForm, Settings) {
+﻿define(['plugins/router', 'durandal/app', 'knockout', 'modules/securityservice', 'modules/userservice', 'modules/constantsservice', 'viewmodels/profile', 'viewmodels/passwordform', 'viewmodels/forgotpassword', 'viewmodels/settings', 'viewmodels/recenttransactions'], 
+		function (router, app, ko, securityService, userService, constantsService, Profile, PasswordForm, ForgotPasswordForm, Settings, RecentTransactions) {
 	var homeroute = [
 	    { route: ['', 'home'], moduleId: 'viewmodels/home', title: 'Home', nav: false }
 	];
@@ -171,6 +171,12 @@
 		Settings.show().done(function() {
 			self.refreshUser();
 		});
+	};
+	
+	Shell.prototype.recentTransactions = function() {
+		var self = this;
+		
+		RecentTransactions.show();
 	};
 	
 	Shell.prototype.logout = function() {
