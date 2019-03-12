@@ -3,6 +3,7 @@ package com.chua.evergrocery.database.entity;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
 
@@ -34,6 +35,11 @@ public class SalesSummary extends BaseObject {
 	@Column(name = "base_total")
 	public Float getBaseTotal() {
 		return baseTotal;
+	}
+	
+	@Transient
+	public Float getProfit() {
+		return netTotal - baseTotal;
 	}
 
 	public void setBaseTotal(Float baseTotal) {

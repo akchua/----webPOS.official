@@ -3,7 +3,9 @@ package com.chua.evergrocery.rest.handler;
 import java.util.List;
 
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
+import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
+import com.chua.evergrocery.database.entity.MTDSalesSummary;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -18,7 +20,15 @@ public interface TransactionSummaryHandler {
 	
 	List<CompanyMTDPurchaseSummary> getCompanyMTDPurchaseSummaryList(Long companyId);
 	
+	List<MTDSalesSummary> getMTDSalesSummaryList();
+	
+	List<MTDSalesSummary> getMTDSalesSummaryListByYear(int year);
+	
+	List<CompanyMTDSalesSummary> getCompanyMTDSalesSummaryList(Long companyId);
+	
 	void updateAllPurchaseSummaries(int includedMonthsAgo);
+	
+	void updateMonthlySalesSummaries(int includedMonthsAgo);
 	
 	void updateDailySalesSummaries(int includedDaysAgo);
 }

@@ -11,7 +11,9 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
+import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
+import com.chua.evergrocery.database.entity.MTDSalesSummary;
 import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
 
 /**
@@ -23,26 +25,47 @@ import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
 public class TransactionSummaryEndpoint {
 
 	@Autowired
-	private TransactionSummaryHandler mtdPurchaseSummaryHandler;
+	private TransactionSummaryHandler transactionSummaryHandler;
 	
 	@GET
 	@Path("/mtdpurchaselist")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<MTDPurchaseSummary> getMTDPurchaseSummaryList() {
-		return mtdPurchaseSummaryHandler.getMTDPurchaseSummaryList();
+		return transactionSummaryHandler.getMTDPurchaseSummaryList();
 	}
 	
 	@GET
 	@Path("/mtdpurchaselistbyyear")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<MTDPurchaseSummary> getMTDPurchaseSummaryListByYear(@QueryParam("year") Integer year) {
-		return mtdPurchaseSummaryHandler.getMTDPurchaseSummaryListByYear(year);
+		return transactionSummaryHandler.getMTDPurchaseSummaryListByYear(year);
 	}
 	
 	@GET
 	@Path("/companymtdpurchaselist")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<CompanyMTDPurchaseSummary> getCompanyMTDPurchaseSummaryList(@QueryParam("companyId") Long companyId) {
-		return mtdPurchaseSummaryHandler.getCompanyMTDPurchaseSummaryList(companyId);
+		return transactionSummaryHandler.getCompanyMTDPurchaseSummaryList(companyId);
+	}
+	
+	@GET
+	@Path("/mtdsaleslist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<MTDSalesSummary> getMTDSalesSummaryList() {
+		return transactionSummaryHandler.getMTDSalesSummaryList();
+	}
+	
+	@GET
+	@Path("/mtdsaleslistbyyear")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<MTDSalesSummary> getMTDSalesSummaryListByYear(@QueryParam("year") Integer year) {
+		return transactionSummaryHandler.getMTDSalesSummaryListByYear(year);
+	}
+	
+	@GET
+	@Path("/companymtdsaleslist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<CompanyMTDSalesSummary> getCompanyMTDSalesSummaryList(@QueryParam("companyId") Long companyId) {
+		return transactionSummaryHandler.getCompanyMTDSalesSummaryList(companyId);
 	}
 }

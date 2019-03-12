@@ -20,19 +20,25 @@ import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.entity.Company;
 import com.chua.evergrocery.database.entity.CompanyDailySalesSummary;
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
+import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
 import com.chua.evergrocery.database.entity.DailySalesSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
+import com.chua.evergrocery.database.entity.MTDSalesSummary;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
 import com.chua.evergrocery.database.entity.ProductMTDPurchaseSummary;
+import com.chua.evergrocery.database.entity.ProductMTDSalesSummary;
 import com.chua.evergrocery.database.service.CompanyDailySalesSummaryService;
 import com.chua.evergrocery.database.service.CompanyMTDPurchaseSummaryService;
+import com.chua.evergrocery.database.service.CompanyMTDSalesSummaryService;
 import com.chua.evergrocery.database.service.CompanyService;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
 import com.chua.evergrocery.database.service.DailySalesSummaryService;
 import com.chua.evergrocery.database.service.MTDPurchaseSummaryService;
+import com.chua.evergrocery.database.service.MTDSalesSummaryService;
 import com.chua.evergrocery.database.service.ProductDailySalesSummaryService;
 import com.chua.evergrocery.database.service.ProductMTDPurchaseSummaryService;
+import com.chua.evergrocery.database.service.ProductMTDSalesSummaryService;
 import com.chua.evergrocery.database.service.ProductService;
 import com.chua.evergrocery.database.service.PurchaseOrderDetailService;
 import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
@@ -67,6 +73,18 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	private CompanyMTDPurchaseSummaryService companyMTDPurchaseSummaryService;
 	
 	@Autowired
+	private MTDPurchaseSummaryService mtdPurchaseSummaryService;
+	
+	@Autowired
+	private ProductMTDSalesSummaryService productMTDSalesSummaryService;
+	
+	@Autowired
+	private CompanyMTDSalesSummaryService companyMTDSalesSummaryService;
+	
+	@Autowired
+	private MTDSalesSummaryService mtdSalesSummaryService;
+	
+	@Autowired
 	private DailySalesSummaryService dailySalesSummaryService;
 	
 	@Autowired
@@ -74,9 +92,6 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	
 	@Autowired
 	private CompanyDailySalesSummaryService companyDailySalesSummaryService;
-	
-	@Autowired
-	private MTDPurchaseSummaryService mtdPurchaseSummaryService;
 	
 	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 	
@@ -93,6 +108,21 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	@Override
 	public List<CompanyMTDPurchaseSummary> getCompanyMTDPurchaseSummaryList(Long companyId) {
 		return companyMTDPurchaseSummaryService.findAllByCompanyOrderByMonthId(companyId);
+	}
+	
+	@Override
+	public List<MTDSalesSummary> getMTDSalesSummaryList() {
+		return mtdSalesSummaryService.findAllOrderByMonthId();
+	}
+
+	@Override
+	public List<MTDSalesSummary> getMTDSalesSummaryListByYear(int year) {
+		return mtdSalesSummaryService.findByYearOrderByMonthId(year);
+	}
+
+	@Override
+	public List<CompanyMTDSalesSummary> getCompanyMTDSalesSummaryList(Long companyId) {
+		return companyMTDSalesSummaryService.findAllByCompanyOrderByMonthId(companyId);
 	}
 
 	@Override
@@ -207,7 +237,122 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 			}
 		}
 	}
-
+	
+	@Override
+	public void updateMonthlySalesSummaries(int includedMonthsAgo) {
+		final List<Company> companies = companyService.findAllList();
+		
+		final int lastMonthId = DateUtil.getMonthId(new Date()) - 1;
+		
+		for(int monthId = lastMonthId; monthId > lastMonthId - includedMonthsAgo; monthId--) {
+			LOG.info("### Processing month of : " + DateFormatter.prettyMonthFormat(monthId));
+			
+			final List<CompanySalesSummaryBean> companySalesSummaries = new ArrayList<CompanySalesSummaryBean>();
+			
+			for(Company company : companies) {
+				LOG.info("Processing company : " + company.getName());
+				
+				final List<ProductSalesSummaryBean> productSalesSummaries = productDailySalesSummaryService.getAllProductSalesSummaryByCompanyAndMonthId(company.getId(), monthId);
+				
+				final CompanySalesSummaryBean companySalesSummary = new CompanySalesSummaryBean();
+				companySalesSummary.setCompanyId(company.getId());
+				
+				// Process product of each company and add them to the company total
+				for(ProductSalesSummaryBean pss : productSalesSummaries) {
+					ProductMTDSalesSummary productMTDSalesSummary = productMTDSalesSummaryService.findByProductAndMonthId(pss.getProductId(), monthId);
+					if(productMTDSalesSummary == null) {
+						productMTDSalesSummary = new ProductMTDSalesSummary();
+						productMTDSalesSummary.setProduct(productService.find(pss.getProductId()));
+						productMTDSalesSummary.setMonthId(monthId);
+						productMTDSalesSummary.setNetTotal(pss.getNetTotal());
+						productMTDSalesSummary.setBaseTotal(pss.getBaseTotal());
+						
+						productMTDSalesSummaryService.insert(productMTDSalesSummary);
+					} else {
+						if(!(productMTDSalesSummary.getNetTotal().equals(pss.getNetTotal())
+								&& productMTDSalesSummary.getBaseTotal().equals(pss.getBaseTotal()))) {
+							productMTDSalesSummary.setNetTotal(pss.getNetTotal());
+							productMTDSalesSummary.setBaseTotal(pss.getBaseTotal());
+							productMTDSalesSummaryService.update(productMTDSalesSummary);
+						}
+					}
+					
+					companySalesSummary.setNetTotal(companySalesSummary.getNetTotal() + pss.getNetTotal());
+					companySalesSummary.setBaseTotal(companySalesSummary.getBaseTotal() + pss.getBaseTotal());
+				}
+				
+				// Check if processing last month, then update each product's sales value and profit percentage
+				if(monthId == lastMonthId) {
+					for(ProductSalesSummaryBean pss : productSalesSummaries) {
+						final Product product = productService.find(pss.getProductId());
+						product.setSaleValuePercentage(companySalesSummary.getNetTotal().equals(0.0f) ? 0.0f : pss.getNetTotal() / companySalesSummary.getNetTotal() * 100.0f);
+						product.setProfitPercentage(companySalesSummary.getBaseTotal().equals(0.0f) ? 0.0f : pss.getBaseTotal() / companySalesSummary.getBaseTotal() * 100.0f);
+						productService.update(product);
+					}
+				}
+				
+				// Add company purchase summary to map of company sales summaries
+				companySalesSummaries.add(companySalesSummary);
+			}
+			
+			final SalesSummaryBean totalSalesSummary = new SalesSummaryBean();
+			
+			for(CompanySalesSummaryBean css : companySalesSummaries) {
+				// Save or Update each company sales summary
+				CompanyMTDSalesSummary companyMTDSalesSummary = companyMTDSalesSummaryService.findByCompanyAndMonthId(css.getCompanyId(), monthId);
+				if(companyMTDSalesSummary == null) {
+					companyMTDSalesSummary = new CompanyMTDSalesSummary();
+					companyMTDSalesSummary.setCompany(companyService.find(css.getCompanyId()));
+					companyMTDSalesSummary.setMonthId(monthId);
+					companyMTDSalesSummary.setNetTotal(css.getNetTotal());
+					companyMTDSalesSummary.setBaseTotal(css.getBaseTotal());
+					companyMTDSalesSummaryService.insert(companyMTDSalesSummary);
+				} else {
+					if(!(companyMTDSalesSummary.getNetTotal().equals(css.getNetTotal())
+							&& companyMTDSalesSummary.getBaseTotal().equals(css.getBaseTotal()))) {
+						companyMTDSalesSummary.setNetTotal(css.getNetTotal());
+						companyMTDSalesSummary.setBaseTotal(css.getBaseTotal());
+						companyMTDSalesSummaryService.update(companyMTDSalesSummary);
+					}
+				}
+				
+				// Add company summary to grand total
+				totalSalesSummary.setNetTotal(totalSalesSummary.getNetTotal() + css.getNetTotal());
+				totalSalesSummary.setBaseTotal(totalSalesSummary.getBaseTotal() + css.getBaseTotal());
+			}
+			
+			// Check if processing last month, then update each company's sales value and profit percentage
+			if(monthId == lastMonthId) {
+				for(CompanySalesSummaryBean css : companySalesSummaries) {
+					final Company company = companyService.find(css.getCompanyId());
+					company.setSaleValuePercentage(totalSalesSummary.getNetTotal().equals(0.0f) ? 0.0f : css.getNetTotal() / totalSalesSummary.getNetTotal() * 100.0f);
+					company.setProfitPercentage(totalSalesSummary.getBaseTotal().equals(0.0f) ? 0.0f : css.getBaseTotal() / totalSalesSummary.getBaseTotal() * 100.0f);
+					companyService.update(company);
+				}
+			}
+			
+			// Save or Update the total sales summary
+			MTDSalesSummary mtdSalesSummary = mtdSalesSummaryService.findByMonthId(monthId);
+			if(mtdSalesSummary == null) {
+				mtdSalesSummary = new MTDSalesSummary();
+				mtdSalesSummary.setMonthId(monthId);
+				mtdSalesSummary.setNetTotal(totalSalesSummary.getNetTotal());
+				mtdSalesSummary.setBaseTotal(totalSalesSummary.getBaseTotal());
+				
+				mtdSalesSummaryService.insert(mtdSalesSummary);
+				LOG.info("## New Sales Summary");
+			} else {
+				if(!(mtdSalesSummary.getNetTotal().equals(totalSalesSummary.getNetTotal())
+						&& mtdSalesSummary.getBaseTotal().equals(totalSalesSummary.getBaseTotal()))) {
+					mtdSalesSummary.setNetTotal(totalSalesSummary.getNetTotal());
+					mtdSalesSummary.setBaseTotal(totalSalesSummary.getBaseTotal());
+					mtdSalesSummaryService.update(mtdSalesSummary);
+				}
+				LOG.info("## Updated Sales Summary");
+			}
+		}
+	}
+	
 	@Override
 	public void updateDailySalesSummaries(int includedDaysAgo) {
 		final List<Company> companies = companyService.findAllList();
@@ -222,9 +367,7 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 			for(Company company : companies) {
 				LOG.info("Processing company : " + company.getName());
 				
-				System.out.println("before getAllProductSalesSummaryByCompanyAndDate");
 				final List<ProductSalesSummaryBean> productSalesSummaries = customerOrderDetailService.getAllProductSalesSummaryByCompanyAndDate(company.getId(), currentDay.getTime());
-				System.out.println("after getAllProductSalesSummaryByCompanyAndDate");
 				
 				final CompanySalesSummaryBean companySalesSummary = new CompanySalesSummaryBean();
 				companySalesSummary.setCompanyId(company.getId());
@@ -252,16 +395,6 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 					
 					companySalesSummary.setNetTotal(companySalesSummary.getNetTotal() + pss.getNetTotal());
 					companySalesSummary.setBaseTotal(companySalesSummary.getBaseTotal() + pss.getBaseTotal());
-				}
-				
-				// Check if processing today, then update each product's sale value percentage & profit percentage
-				if(DateUtil.isSameDay(new Date(), currentDay.getTime())) {
-					for(ProductSalesSummaryBean pss : productSalesSummaries) {
-						final Product product = productService.find(pss.getProductId());
-						product.setSaleValuePercentage(companySalesSummary.getNetTotal().equals(0.0f) ? 0.0f : pss.getNetTotal() / companySalesSummary.getNetTotal() * 100.0f);
-						product.setProfitPercentage(companySalesSummary.getTotalProfit().equals(0.0f) ? 0.0f : pss.getTotalProfit() / companySalesSummary.getTotalProfit() * 100.0f);
-						productService.update(product);
-					}
 				}
 				
 				// Add company purchase summary to map of company purchase summaries
@@ -292,16 +425,6 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 				// Add company summary to grand total
 				totalSalesSummary.setNetTotal(totalSalesSummary.getNetTotal() + css.getNetTotal());
 				totalSalesSummary.setBaseTotal(totalSalesSummary.getBaseTotal() + css.getBaseTotal());
-			}
-			
-			// Check if processing today, then update each company's sale value percentage & profit percentage
-			if(DateUtil.isSameDay(new Date(), currentDay.getTime())) {
-				for(CompanySalesSummaryBean css : companySalesSummaries) {
-					final Company company = companyService.find(css.getCompanyId());
-					company.setSaleValuePercentage(totalSalesSummary.getNetTotal().equals(0.0f) ? 0.0f : css.getNetTotal() / totalSalesSummary.getNetTotal() * 100.0f);
-					company.setProfitPercentage(totalSalesSummary.getTotalProfit().equals(0.0f) ? 0.0f : css.getTotalProfit() / totalSalesSummary.getTotalProfit() * 100.0f);
-					companyService.update(company);
-				}
 			}
 			
 			// Save or Update the total purchase summary

@@ -11,11 +11,15 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		this.x = null;
 		this.mtdGrossPurchase = null;
 		this.mtdNetPurchase = null;
+		this.mtdNetSales = null;
+		this.mtdProfit = null;
 		
-		this.baseGrossPurchases = null;
 		this.baseNetPurchases = null;
-		this.vsGrossPurchases = null;
+		this.baseNetSales = null;
+		this.baseProfit = null;
 		this.vsNetPurchases = null;
+		this.vsNetSales = null;
+		this.vsProfit = null;
 	};
 	
 	AdminHome.prototype.activate = function() {
@@ -46,20 +50,81 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		if(self.baseYear() >= 2016 && self.baseYear() <= self.currentYear && self.vsYear() >= 2016 && self.vsYear() <= self.currentYear) {
 			transactionSummaryService.getMTDPurchaseSummaryListByYear(self.baseYear()).done(function(baseMTDPurchaseSummaries) {
 				transactionSummaryService.getMTDPurchaseSummaryListByYear(self.vsYear()).done(function(vsMTDPurchaseSummaries) {
-					self.baseGrossPurchases = [self.baseYear() + ' Gross Purchases', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-					self.baseNetPurchases = [self.baseYear() + ' Net Purchases', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-					self.vsGrossPurchases = [self.vsYear() + ' Gross Purchases', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-					self.vsNetPurchases = [self.vsYear() + ' Net Purchases', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-					self.x = ['x', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-					
-					for(var i = 0; i < baseMTDPurchaseSummaries.length; i++) {
-						self.baseGrossPurchases[(baseMTDPurchaseSummaries[i].monthId % 12) + 1] = baseMTDPurchaseSummaries[i].grossTotal;
-						self.baseNetPurchases[(baseMTDPurchaseSummaries[i].monthId % 12) + 1] = baseMTDPurchaseSummaries[i].netTotal;
-					}
-					
-					for(var i = 0; i < vsMTDPurchaseSummaries.length; i++) {
-						self.vsGrossPurchases[(vsMTDPurchaseSummaries[i].monthId % 12) + 1] = vsMTDPurchaseSummaries[i].grossTotal;
-						self.vsNetPurchases[(vsMTDPurchaseSummaries[i].monthId % 12) + 1] = vsMTDPurchaseSummaries[i].netTotal;
+					transactionSummaryService.getMTDSalesSummaryListByYear(self.baseYear()).done(function(baseMTDSalesSummaries) {
+						transactionSummaryService.getMTDSalesSummaryListByYear(self.vsYear()).done(function(vsMTDSalesSummaries) {
+							self.baseNetPurchases = [self.baseYear() + ' Net Purchases', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+							self.baseNetSales = [self.baseYear() + ' Net Sales', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+							self.baseProfit = [self.baseYear() + ' Profit', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+							self.vsNetPurchases = [self.vsYear() + ' Net Purchases', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+							self.vsNetSales = [self.vsYear() + ' Net Sales', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+							self.vsProfit = [self.vsYear() + ' Profit', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+							self.x = ['x', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+							
+							for(var i = 0; i < baseMTDPurchaseSummaries.length; i++) {
+								self.baseNetPurchases[(baseMTDPurchaseSummaries[i].monthId % 12) + 1] = baseMTDPurchaseSummaries[i].netTotal;
+							}
+							
+							for(var i = 0; i < vsMTDPurchaseSummaries.length; i++) {
+								self.vsNetPurchases[(vsMTDPurchaseSummaries[i].monthId % 12) + 1] = vsMTDPurchaseSummaries[i].netTotal;
+							}
+							
+							for(var i = 0; i < baseMTDSalesSummaries.length; i++) {
+								self.baseNetSales[(baseMTDSalesSummaries[i].monthId % 12) + 1] = baseMTDSalesSummaries[i].netTotal;
+								self.baseProfit[(baseMTDSalesSummaries[i].monthId % 12) + 1] = baseMTDSalesSummaries[i].profit;
+							}
+							
+							for(var i = 0; i < vsMTDSalesSummaries.length; i++) {
+								self.vsNetSales[(vsMTDSalesSummaries[i].monthId % 12) + 1] = vsMTDSalesSummaries[i].netTotal;
+								self.vsProfit[(vsMTDSalesSummaries[i].monthId % 12) + 1] = vsMTDSalesSummaries[i].profit;
+							}
+							
+							self.chart = c3.generate({
+							    bindto: '#chart',
+							    data: {
+							    	x: 'x',
+							    	columns: [
+							    		self.x,
+							    		self.baseNetPurchases,
+							    		self.vsNetPurchases,
+							    		self.baseNetSales,
+							    		self.vsNetSales,
+							    		self.baseProfit,
+							    		self.vsProfit
+							    	],
+							    	type: 'bar'
+							    },
+							    axis: c3Utility.getDefaultAxis()
+							});
+						});
+					});
+				});
+			});
+		} else {
+			transactionSummaryService.getMTDPurchaseSummaryList().done(function(MTDPurchaseList) {
+				self.x = ['x'];
+				self.mtdGrossPurchase = ['Monthly Gross Purchase'];
+				self.mtdNetPurchase = ['Monthly Net Purchase'];
+				self.mtdNetSales = ['Monthly Net Sales'];
+				self.mtdProfit = ['Monthly Profit'];
+				
+				for(var i = 0; i < MTDPurchaseList.length; i++) {
+					self.x[i + 1] = MTDPurchaseList[i].formattedMonth;
+					self.mtdGrossPurchase[i + 1] = MTDPurchaseList[i].grossTotal;
+					self.mtdNetPurchase[i + 1] = MTDPurchaseList[i].netTotal;
+				}
+				
+				transactionSummaryService.getMTDSalesSummaryList().done(function(MTDSalesList) {
+					var j = 0;
+					var k = 0;
+					for (j = 0; j < MTDPurchaseList.length; j++) {
+						if(MTDSalesList[k].formattedMonth != self.x[j + 1]) {
+							self.mtdNetSales[j + 1] = 0;
+							self.mtdProfit[j + 1] = 0;
+						} else {
+							self.mtdNetSales[j + 1] = MTDSalesList[k].netTotal;
+							self.mtdProfit[j + 1] = MTDSalesList[k].profit;
+							k++;
+						}
 					}
 					
 					self.chart = c3.generate({
@@ -68,40 +133,14 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 					    	x: 'x',
 					    	columns: [
 					    		self.x,
-					    		self.baseGrossPurchases,
-					    		self.baseNetPurchases,
-					    		self.vsGrossPurchases,
-					    		self.vsNetPurchases
-					    	],
-					    	type: 'bar'
+					    		self.mtdGrossPurchase,
+					    		self.mtdNetPurchase,
+					    		self.mtdNetSales,
+					    		self.mtdProfit
+					    	]
 					    },
 					    axis: c3Utility.getDefaultAxis()
 					});
-				});
-			});
-		} else {
-			transactionSummaryService.getMTDPurchaseSummaryList().done(function(mtdList) {
-				self.x = ['x'];
-				self.mtdGrossPurchase = ['Monthly Gross Purchase'];
-				self.mtdNetPurchase = ['Monthly Net Purchase'];
-				
-				for(var i = 0; i < mtdList.length; i++) {
-					self.x[i + 1] = mtdList[i].formattedMonth;
-					self.mtdGrossPurchase[i + 1] = mtdList[i].grossTotal;
-					self.mtdNetPurchase[i + 1] = mtdList[i].netTotal;
-				}
-				
-				self.chart = c3.generate({
-				    bindto: '#chart',
-				    data: {
-				    	x: 'x',
-				    	columns: [
-				    		self.x,
-				    		self.mtdGrossPurchase,
-				    		self.mtdNetPurchase
-				    	]
-				    },
-				    axis: c3Utility.getDefaultAxis()
 				});
 			});
 		}

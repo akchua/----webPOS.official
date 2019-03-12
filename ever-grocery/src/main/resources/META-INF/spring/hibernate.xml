@@ -72,6 +72,10 @@
 				<value>com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary</value>
 				<value>com.chua.evergrocery.database.entity.ProductMTDPurchaseSummary</value>
 				
+				<value>com.chua.evergrocery.database.entity.MTDSalesSummary</value>
+				<value>com.chua.evergrocery.database.entity.CompanyMTDSalesSummary</value>
+				<value>com.chua.evergrocery.database.entity.ProductMTDSalesSummary</value>
+				
 				<value>com.chua.evergrocery.database.entity.DailySalesSummary</value>
 				<value>com.chua.evergrocery.database.entity.CompanyDailySalesSummary</value>
 				<value>com.chua.evergrocery.database.entity.ProductDailySalesSummary</value>

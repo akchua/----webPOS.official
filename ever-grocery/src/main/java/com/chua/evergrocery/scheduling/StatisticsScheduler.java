@@ -40,6 +40,22 @@ public class StatisticsScheduler {
 	}
 	
 	/**
+	 * Monthly Sales Statistics Update
+	 * fires at 7:05PM every first day of the month
+	 */
+	@Scheduled(cron = "0 5 19 1 * ?")
+	public void monthlySalesStatisticsUpdate() {
+		final Date start = new Date();
+		LOG.info("Starting monthly sales statistics update");
+		
+		transactionSummaryHandler.updateMonthlySalesSummaries(15);
+		
+		final Date end = new Date();
+		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
+		LOG.info("Monthly sales statistics update complete. Total execution time : " + seconds + "s");
+	}
+	
+	/**
 	 * Daily Sales Statistics Update
 	 * fires at 6:45PM every day
 	 */
@@ -48,7 +64,7 @@ public class StatisticsScheduler {
 		final Date start = new Date();
 		LOG.info("Starting daily sales statistics update");
 		
-		transactionSummaryHandler.updateDailySalesSummaries(3);
+		transactionSummaryHandler.updateDailySalesSummaries(350);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;

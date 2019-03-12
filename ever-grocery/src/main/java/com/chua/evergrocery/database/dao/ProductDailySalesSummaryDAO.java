@@ -1,5 +1,9 @@
 package com.chua.evergrocery.database.dao;
 
+import java.util.Date;
+import java.util.List;
+
+import com.chua.evergrocery.beans.ProductSalesSummaryBean;
 import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
 import com.chua.evergrocery.database.prototype.ProductDailySalesSummaryPrototype;
 
@@ -10,4 +14,6 @@ import com.chua.evergrocery.database.prototype.ProductDailySalesSummaryPrototype
  */
 public interface ProductDailySalesSummaryDAO extends DAO<ProductDailySalesSummary, Long>, ProductDailySalesSummaryPrototype {
 
+	List<ProductSalesSummaryBean> getAllProductSalesSummaryByCompanyAndPaidDate(long companyId,
+			Date paidStart, Date paidEnd);
 }

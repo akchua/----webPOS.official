@@ -22,6 +22,30 @@ define(['jquery'], function ($) {
     				year: year
     			}
     		});
+    	},
+    	
+    	getCompanyMTDSalesSummaryList: function(companyId) {
+    		return $.ajax({
+    			url: '/services/transactionsummary/companymtdsaleslist',
+    			data: {
+    				companyId: companyId
+    			}
+    		});
+    	},
+    	
+    	getMTDSalesSummaryList: function() {
+    		return $.ajax({
+    			url: '/services/transactionsummary/mtdsaleslist'
+    		});
+    	},
+    	
+    	getMTDSalesSummaryListByYear: function(year) {
+    		return $.ajax({
+    			url: '/services/transactionsummary/mtdsaleslistbyyear',
+    			data: {
+    				year: year
+    			}
+    		});
     	}
     };
 });

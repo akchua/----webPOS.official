@@ -1,14 +1,18 @@
 package com.chua.evergrocery.database.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chua.evergrocery.beans.ProductSalesSummaryBean;
 import com.chua.evergrocery.database.dao.ProductDailySalesSummaryDAO;
 import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
 import com.chua.evergrocery.database.service.ProductDailySalesSummaryService;
 import com.chua.evergrocery.utility.DateUtil;
+import com.chua.evergrocery.utility.format.DateFormatter;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -28,5 +32,17 @@ public class ProductDailySalesSummaryServiceImpl
 	@Override
 	public ProductDailySalesSummary findByProductAndSalesDate(long productId, Date salesDate) {
 		return dao.findByProductAndSalesDate(productId, DateUtil.floorDay(salesDate));
+	}
+	
+	@Override
+	public List<ProductSalesSummaryBean> getAllProductSalesSummaryByCompanyAndMonthId(long companyId,
+			int monthId) {
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(DateUtil.monthIdToDate(monthId));
+		cal.add(Calendar.SECOND, -1);
+		
+		System.out.println(DateFormatter.longFormat(cal.getTime()) + " - " + DateFormatter.longFormat(DateUtil.monthIdToDate(monthId + 1)));
+		
+		return dao.getAllProductSalesSummaryByCompanyAndPaidDate(companyId, cal.getTime(), DateUtil.monthIdToDate(monthId + 1));
 	}
 }
