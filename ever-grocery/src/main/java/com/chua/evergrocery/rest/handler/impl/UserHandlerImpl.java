@@ -177,7 +177,8 @@ public class UserHandlerImpl implements UserHandler {
 					result = new ResultBean();
 					result.setSuccess(userService.update(user));
 					if(result.getSuccess()) {
-						UserContextHolder.refreshUser(user);
+						// refresh if updated current user
+						if(UserContextHolder.getUser().getId().equals(user.getId())) UserContextHolder.refreshUser(user);
 						result.setMessage(Html.line("Your profile has been " + Html.text(Color.GREEN, "updated") + "."));
 					} else {
 						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));

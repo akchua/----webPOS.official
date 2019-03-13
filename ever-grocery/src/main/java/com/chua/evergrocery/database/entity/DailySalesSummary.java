@@ -29,7 +29,7 @@ public class DailySalesSummary extends SalesSummary {
 	public static final String TABLE_NAME = "daily_sales_summary";
 	
 	private Date salesDate;
-
+	
 	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "sales_date")
 	public Date getSalesDate() {
