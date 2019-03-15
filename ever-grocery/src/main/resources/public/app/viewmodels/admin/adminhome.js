@@ -7,8 +7,8 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		this.yearErrorMessage = ko.observable();
 		this.vsYear = ko.observable();
 		
-		this.chart = null;
-		this.x = null;
+		this.monthlyChart = null;
+		this.mx = null;
 		this.mtdGrossPurchase = null;
 		this.mtdNetPurchase = null;
 		this.mtdNetSales = null;
@@ -20,10 +20,21 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		this.vsNetPurchases = null;
 		this.vsNetSales = null;
 		this.vsProfit = null;
+		
+		this.daysAgo = ko.observable(90);
+		
+		this.dailyChart = null;
+		this.dx = null;
+		this.dailyNetSales = null;
+		this.dailyProfit = null;
 	};
 	
 	AdminHome.prototype.activate = function() {
 		var self = this;
+		
+		self.daysAgo.subscribe(function() {
+			self.refreshDailySalesGraph();
+		});
 		
 		self.baseYear.subscribe(function(newValue) {
 			if(newValue < 2016 || newValue > self.currentYear || self.vsYear() < 2016 || self.vsYear() > self.currentYear) {
@@ -39,6 +50,37 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 			} else {
 				self.yearErrorMessage('');
 			}
+		});
+	};
+	
+	AdminHome.prototype.refreshDailySalesGraph = function() {
+		var self = this;
+		
+		self.clearDailySalesGraph();
+		
+		transactionSummaryService.getDailySalesSummaryList(self.daysAgo()).done(function(dailySalesList) {
+			self.dx = ['x'];
+			self.dailyNetSales = ['Daily Net Sales'];
+			self.dailyProfit = ['Daily Profit'];
+			
+			for(var i = 0; i < dailySalesList.length; i++) {
+				self.dx[i + 1] = dailySalesList[i].formattedSalesDate;
+				self.dailyNetSales[i + 1] = dailySalesList[i].netTotal;
+				self.dailyProfit[i + 1] = dailySalesList[i].profit;
+			}
+				
+			self.dailyChart = c3.generate({
+			    bindto: '#dailyChart',
+			    data: {
+			    	x: 'x',
+			    	columns: [
+			    		self.dx,
+			    		self.dailyNetSales,
+			    		self.dailyProfit
+			    	]
+			    },
+			    axis: c3Utility.getDefaultAxis()
+			});
 		});
 	};
 	
@@ -58,7 +100,7 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 							self.vsNetPurchases = [self.vsYear() + ' Net Purchases', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 							self.vsNetSales = [self.vsYear() + ' Net Sales', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 							self.vsProfit = [self.vsYear() + ' Profit', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-							self.x = ['x', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+							self.mx = ['x', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 							
 							for(var i = 0; i < baseMTDPurchaseSummaries.length; i++) {
 								self.baseNetPurchases[(baseMTDPurchaseSummaries[i].monthId % 12) + 1] = baseMTDPurchaseSummaries[i].netTotal;
@@ -78,12 +120,12 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 								self.vsProfit[(vsMTDSalesSummaries[i].monthId % 12) + 1] = vsMTDSalesSummaries[i].profit;
 							}
 							
-							self.chart = c3.generate({
-							    bindto: '#chart',
+							self.monthlyChart = c3.generate({
+							    bindto: '#monthlyChart',
 							    data: {
 							    	x: 'x',
 							    	columns: [
-							    		self.x,
+							    		self.mx,
 							    		self.baseNetPurchases,
 							    		self.vsNetPurchases,
 							    		self.baseNetSales,
@@ -101,14 +143,14 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 			});
 		} else {
 			transactionSummaryService.getMTDPurchaseSummaryList().done(function(MTDPurchaseList) {
-				self.x = ['x'];
+				self.mx = ['x'];
 				self.mtdGrossPurchase = ['Monthly Gross Purchase'];
 				self.mtdNetPurchase = ['Monthly Net Purchase'];
 				self.mtdNetSales = ['Monthly Net Sales'];
 				self.mtdProfit = ['Monthly Profit'];
 				
 				for(var i = 0; i < MTDPurchaseList.length; i++) {
-					self.x[i + 1] = MTDPurchaseList[i].formattedMonth;
+					self.mx[i + 1] = MTDPurchaseList[i].formattedMonth;
 					self.mtdGrossPurchase[i + 1] = MTDPurchaseList[i].grossTotal;
 					self.mtdNetPurchase[i + 1] = MTDPurchaseList[i].netTotal;
 				}
@@ -117,7 +159,7 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 					var j = 0;
 					var k = 0;
 					for (j = 0; j < MTDPurchaseList.length; j++) {
-						if(MTDSalesList[k].formattedMonth != self.x[j + 1]) {
+						if(MTDSalesList[k].formattedMonth != self.mx[j + 1]) {
 							self.mtdNetSales[j + 1] = 0;
 							self.mtdProfit[j + 1] = 0;
 						} else {
@@ -127,12 +169,12 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 						}
 					}
 					
-					self.chart = c3.generate({
-					    bindto: '#chart',
+					self.monthlyChart = c3.generate({
+					    bindto: '#monthlyChart',
 					    data: {
 					    	x: 'x',
 					    	columns: [
-					    		self.x,
+					    		self.mx,
 					    		self.mtdGrossPurchase,
 					    		self.mtdNetPurchase,
 					    		self.mtdNetSales,
@@ -157,8 +199,8 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 	AdminHome.prototype.clearGraph = function() {
 		var self = this;
 		
-		self.chart = null;
-		self.x = null;
+		self.monthlyChart = null;
+		self.mx = null;
 		self.mtdGrossPurchase = null;
 		self.mtdNetPurchase = null;
 		
@@ -168,10 +210,20 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		self.vsNetPurchases = null;
 	};
 	
+	AdminHome.prototype.clearDailySalesGraph = function() {
+		var self = this;
+		
+		self.dailyChart = null;
+		self.dx = null;
+		self.dailyNetPurchase = null;
+		self.dailyProfit = null;
+	};
+	
 	AdminHome.prototype.attached = function() {
 		var self = this;
 		
 		self.compare();
+		self.refreshDailySalesGraph();
 	};
 	
     return AdminHome;

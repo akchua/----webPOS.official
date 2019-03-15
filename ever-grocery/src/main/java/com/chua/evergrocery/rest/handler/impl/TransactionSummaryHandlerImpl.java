@@ -124,6 +124,13 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	public List<CompanyMTDSalesSummary> getCompanyMTDSalesSummaryList(Long companyId) {
 		return companyMTDSalesSummaryService.findAllByCompanyOrderByMonthId(companyId);
 	}
+	
+	@Override
+	public List<DailySalesSummary> getDailySalesSummaryList(int daysAgo) {
+		final Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_MONTH, -daysAgo);
+		return dailySalesSummaryService.findByRangeOrderBySalesDate(cal.getTime(), new Date());
+	}
 
 	@Override
 	public void updateAllPurchaseSummaries(int includedMonthsAgo) {

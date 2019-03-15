@@ -46,6 +46,15 @@ define(['jquery'], function ($) {
     				year: year
     			}
     		});
+    	},
+    	
+    	getDailySalesSummaryList: function(daysAgo) {
+    		return $.ajax({
+    			url: '/services/transactionsummary/dailysaleslist',
+    			data: {
+    				daysAgo: daysAgo
+    			}
+    		});
     	}
     };
 });

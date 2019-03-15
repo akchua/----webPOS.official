@@ -11,6 +11,9 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import com.chua.evergrocery.utility.format.DateFormatter;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -34,6 +37,11 @@ public class DailySalesSummary extends SalesSummary {
 	@Column(name = "sales_date")
 	public Date getSalesDate() {
 		return salesDate;
+	}
+	
+	@Transient
+	public String getFormattedSalesDate() {
+		return DateFormatter.prettyDayFormat(salesDate);
 	}
 
 	public void setSalesDate(Date salesDate) {

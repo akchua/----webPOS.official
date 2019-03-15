@@ -31,6 +31,8 @@ public class DateFormatter {
 	
 	private static final DateFormat TIME_ONLY_FORMAT = new SimpleDateFormat("HH:mm:ss");
 	
+	private static final DateFormat PRETTY_DAY_FORMAT = new SimpleDateFormat("MMM dd");
+	
 	private static final DateTimeFormatter SHORT_DATETIME_FORMAT = DateTimeFormat.forPattern("MM/dd/yyyy");
 	
 	private static final DateTimeFormatter LONG_DATETIME_FORMAT = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss");
@@ -42,6 +44,8 @@ public class DateFormatter {
 	private static final DateTimeFormatter FILE_SAFE_DATETIME_FORMAT = DateTimeFormat.forPattern("MM-dd-yyyy-HH-mm");
 	
 	private static final DateTimeFormatter TIME_ONLY_DATETIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
+	
+	private static final DateTimeFormatter PRETTY_DAY_DATETIME_FORMAT = DateTimeFormat.forPattern("MMM dd");
 	
 	private DateFormatter() {
 		
@@ -89,6 +93,14 @@ public class DateFormatter {
 	
 	public static String timeOnlyFormat(Date toFormat) {
 		return TIME_ONLY_FORMAT.format(toFormat);
+	}
+	
+	public static String prettyDayFormat(DateTime toFormat) {
+		return toFormat.toString(PRETTY_DAY_DATETIME_FORMAT);
+	}
+	
+	public static String prettyDayFormat(Date toFormat) {
+		return PRETTY_DAY_FORMAT.format(toFormat);
 	}
 	
 	public static String timeOnlyFormat(DateTime toFormat) {

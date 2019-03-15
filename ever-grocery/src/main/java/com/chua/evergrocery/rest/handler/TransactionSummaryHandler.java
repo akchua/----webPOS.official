@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
+import com.chua.evergrocery.database.entity.DailySalesSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.MTDSalesSummary;
 
@@ -25,6 +26,8 @@ public interface TransactionSummaryHandler {
 	List<MTDSalesSummary> getMTDSalesSummaryListByYear(int year);
 	
 	List<CompanyMTDSalesSummary> getCompanyMTDSalesSummaryList(Long companyId);
+	
+	List<DailySalesSummary> getDailySalesSummaryList(int daysAgo);
 	
 	void updateAllPurchaseSummaries(int includedMonthsAgo);
 	

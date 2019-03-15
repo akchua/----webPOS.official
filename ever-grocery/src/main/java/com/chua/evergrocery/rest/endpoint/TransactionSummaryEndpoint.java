@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
+import com.chua.evergrocery.database.entity.DailySalesSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.MTDSalesSummary;
 import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
@@ -67,5 +68,12 @@ public class TransactionSummaryEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<CompanyMTDSalesSummary> getCompanyMTDSalesSummaryList(@QueryParam("companyId") Long companyId) {
 		return transactionSummaryHandler.getCompanyMTDSalesSummaryList(companyId);
+	}
+	
+	@GET
+	@Path("/dailysaleslist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<DailySalesSummary> getDailySalesSummaryList(@QueryParam("daysAgo") Integer daysAgo) {
+		return transactionSummaryHandler.getDailySalesSummaryList(daysAgo);
 	}
 }

@@ -35,7 +35,7 @@ public class DailySalesSummaryDAOImpl
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("class", "DailySalesSummary"));
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.between("salesDay", startDate, endDate));
+		conjunction.add(Restrictions.between("salesDate", startDate, endDate));
 		
 		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}
