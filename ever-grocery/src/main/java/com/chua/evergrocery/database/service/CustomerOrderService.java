@@ -14,6 +14,8 @@ public interface CustomerOrderService
 	
 	List<CustomerOrder> findAllPaidByCashierAndDateFromToNow(Long cashierId, Date dateFrom);
 	
+	Integer getPaidCountToday();
+	
 	List<CustomerOrder> findAllBySalesReportQueryBean(SalesReportQueryBean salesReportQuery);
 	
 	List<DailySalesReportBean> getDailySalesReportByDateRange(Date startDate, Date endDate);

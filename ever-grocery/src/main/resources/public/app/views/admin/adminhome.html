@@ -1,7 +1,28 @@
+<div class="row">
+	<div class="panel panel-info col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-12">
+		<div class="panel-body">
+			<h4 class="text-center"><strong>Live Data</strong>
+				<span class="text-muted pull-right"><i data-bind="click: refreshLiveSales" class="fa fa-refresh"></i></span>
+			</h4>
+			<div class="container-fluid">
+		    	<dl class="dl-horizontal">
+					<dt>Completed Sales:</dt>
+					<dd data-bind="text: completedSales"></dd>
+					<dt>Total Sales:</dt>
+					<dd data-bind="text: totalSales"></dd>
+					<dt>Total Profit:</dt>
+					<dd data-bind="text: totalProfit"></dd>
+		    	</dl>
+	    	</div>
+	    	<h5 class="text-muted pull-right">As of <span data-bind="text: time"></span></h5>
+		</div>
+	</div>
+</div>
+<br><hr><br>
 <h3 class="text-center">Daily Summary</h3>
 <br>
 <div class="row">
-	<div class="panel panel-info col-md-4 col-sm-8 col-xs-12">
+	<div class="panel panel-info col-md-offset-5 col-md-2 col-sm-offset-3 col-sm-6 col-xs-12">
 		<div class="panel-body">
 			<form>
 				<div class="row">
@@ -22,7 +43,7 @@
 <h3 class="text-center">Monthly Summary</h3>
 <br>
 <div class="row">
-	<div class="panel panel-info col-md-4 col-sm-8 col-xs-12">
+	<div class="panel panel-info col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8 col-xs-12">
 		<div class="panel-body">
 			<form>
 				<h4><strong>Compare Years</strong></h4>

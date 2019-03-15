@@ -27,6 +27,12 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		this.dx = null;
 		this.dailyNetSales = null;
 		this.dailyProfit = null;
+		
+		this.completedSales = ko.observable();
+		this.totalSales = ko.observable();
+		this.totalProfit = ko.observable();
+		
+		this.time = ko.observable();
 	};
 	
 	AdminHome.prototype.activate = function() {
@@ -35,6 +41,8 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		self.daysAgo.subscribe(function() {
 			self.refreshDailySalesGraph();
 		});
+		
+		self.refreshLiveSales();
 		
 		self.baseYear.subscribe(function(newValue) {
 			if(newValue < 2016 || newValue > self.currentYear || self.vsYear() < 2016 || self.vsYear() > self.currentYear) {
@@ -50,6 +58,22 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 			} else {
 				self.yearErrorMessage('');
 			}
+		});
+	};
+	
+	AdminHome.prototype.refreshLiveSales = function() {
+		var self = this;
+		
+		var today = new Date();
+		self.time(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds());
+		
+		transactionSummaryService.getPaidCountToday().done(function(paidCount) {
+			self.completedSales(paidCount);
+		});
+		
+		transactionSummaryService.getLiveSalesSummary().done(function(liveSalesSummary) {
+			self.totalSales(liveSalesSummary.netTotal);
+			self.totalProfit(liveSalesSummary.totalProfit);
 		});
 	};
 	

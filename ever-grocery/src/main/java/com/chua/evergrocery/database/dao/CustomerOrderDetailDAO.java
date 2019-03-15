@@ -17,7 +17,7 @@ public interface CustomerOrderDetailDAO extends DAO<CustomerOrderDetail, Long>, 
 	
 	List<CustomerOrderDetail> findAllByCustomerOrderIdWithOrder(Long customerOrderId, Order[] orders);
 	
-	SalesSummaryBean getSalesSummaryByProductAndDatePaid(long productId, Date datePaidStart, Date datePaidEnd);
+	SalesSummaryBean getSalesSummaryByProductAndDatePaid(Long productId, Date datePaidStart, Date datePaidEnd);
 	
 	List<ProductSalesSummaryBean> getAllProductSalesSummaryByCompanyAndPaidDate(long companyId,
 			Date datePaidStart, Date datePaidEnd);

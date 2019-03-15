@@ -38,6 +38,11 @@ public class CustomerOrderServiceImpl
 	public List<CustomerOrder> findAllPaidByCashierAndDateFromToNow(Long cashierId, Date dateFrom) {
 		return dao.findAllByCashierStatusAndDatePaidWithOrder(cashierId, new Status[] { Status.PAID }, dateFrom, new Date(), null);
 	}
+	
+	@Override
+	public Integer getPaidCountToday() {
+		return dao.findAllByCashierStatusAndDatePaidWithOrder(null, new Status[] { Status.PAID }, DateUtil.floorDay(new Date()), DateUtil.ceilDay(new Date()), null).size();
+	}
 
 	@Override
 	public List<CustomerOrder> findAllBySalesReportQueryBean(SalesReportQueryBean salesReportQuery) {

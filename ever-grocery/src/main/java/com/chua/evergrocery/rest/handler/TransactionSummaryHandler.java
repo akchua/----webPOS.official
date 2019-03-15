@@ -2,6 +2,7 @@ package com.chua.evergrocery.rest.handler;
 
 import java.util.List;
 
+import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
 import com.chua.evergrocery.database.entity.DailySalesSummary;
@@ -28,6 +29,10 @@ public interface TransactionSummaryHandler {
 	List<CompanyMTDSalesSummary> getCompanyMTDSalesSummaryList(Long companyId);
 	
 	List<DailySalesSummary> getDailySalesSummaryList(int daysAgo);
+	
+	SalesSummaryBean getLiveSalesSummary();
+	
+	Integer getPaidCountToday();
 	
 	void updateAllPurchaseSummaries(int includedMonthsAgo);
 	

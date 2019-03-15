@@ -57,8 +57,13 @@ public class CustomerOrderDetailServiceImpl
 	}
 
 	@Override
-	public SalesSummaryBean getSalesSummaryByProductAndDatePaid(long productId, Date datePaidStart, Date datePaidEnd) {
+	public SalesSummaryBean getSalesSummaryByProductAndDatePaid(Long productId, Date datePaidStart, Date datePaidEnd) {
 		return dao.getSalesSummaryByProductAndDatePaid(productId, datePaidStart, datePaidEnd);
+	}
+	
+	@Override
+	public SalesSummaryBean getSalesSummaryToday() {
+		return dao.getSalesSummaryByProductAndDatePaid(null, DateUtil.floorDay(new Date()), DateUtil.ceilDay(new Date()));
 	}
 
 	@Override

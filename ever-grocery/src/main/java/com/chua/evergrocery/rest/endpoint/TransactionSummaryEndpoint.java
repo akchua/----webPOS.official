@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
 import com.chua.evergrocery.database.entity.DailySalesSummary;
@@ -75,5 +76,19 @@ public class TransactionSummaryEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<DailySalesSummary> getDailySalesSummaryList(@QueryParam("daysAgo") Integer daysAgo) {
 		return transactionSummaryHandler.getDailySalesSummaryList(daysAgo);
+	}
+	
+	@GET
+	@Path("/livesales")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public SalesSummaryBean getLiveSalesSummary() {
+		return transactionSummaryHandler.getLiveSalesSummary();
+	}
+	
+	@GET
+	@Path("/paidcount")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Integer getPaidCountToday() {
+		return transactionSummaryHandler.getPaidCountToday();
 	}
 }

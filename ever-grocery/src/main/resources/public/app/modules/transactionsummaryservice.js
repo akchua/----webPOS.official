@@ -55,6 +55,18 @@ define(['jquery'], function ($) {
     				daysAgo: daysAgo
     			}
     		});
+    	},
+    	
+    	getLiveSalesSummary: function() {
+    		return $.ajax({
+    			url: '/services/transactionsummary/livesales'
+    		});
+    	},
+    	
+    	getPaidCountToday: function() {
+    		return $.ajax({
+    			url: '/services/transactionsummary/paidcount'
+    		});
     	}
     };
 });

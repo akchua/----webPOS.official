@@ -84,12 +84,15 @@ public class CustomerOrderDetailDAOImpl
 	}
 
 	@Override
-	public SalesSummaryBean getSalesSummaryByProductAndDatePaid(long productId, Date datePaidStart, Date datePaidEnd) {
+	public SalesSummaryBean getSalesSummaryByProductAndDatePaid(Long productId, Date datePaidStart, Date datePaidEnd) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.eq("product.id", productId));
 		conjunction.add(Restrictions.eq("co.isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.between("co.paidOn", datePaidStart, datePaidEnd));
+		
+		if(productId != null) {
+			conjunction.add(Restrictions.eq("product.id", productId));
+		}
 		
 		final ProjectionList pList = Projections.projectionList();
 		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");

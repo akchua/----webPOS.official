@@ -33,6 +33,7 @@ import com.chua.evergrocery.database.service.CompanyMTDPurchaseSummaryService;
 import com.chua.evergrocery.database.service.CompanyMTDSalesSummaryService;
 import com.chua.evergrocery.database.service.CompanyService;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
+import com.chua.evergrocery.database.service.CustomerOrderService;
 import com.chua.evergrocery.database.service.DailySalesSummaryService;
 import com.chua.evergrocery.database.service.MTDPurchaseSummaryService;
 import com.chua.evergrocery.database.service.MTDSalesSummaryService;
@@ -59,6 +60,9 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private CustomerOrderService customerOrderService;
 	
 	@Autowired
 	private CustomerOrderDetailService customerOrderDetailService;
@@ -130,6 +134,16 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, -daysAgo);
 		return dailySalesSummaryService.findByRangeOrderBySalesDate(cal.getTime(), new Date());
+	}
+	
+	@Override
+	public SalesSummaryBean getLiveSalesSummary() {
+		return customerOrderDetailService.getSalesSummaryToday();
+	}
+	
+	@Override
+	public Integer getPaidCountToday() {
+		return customerOrderService.getPaidCountToday();
 	}
 
 	@Override
