@@ -6,10 +6,10 @@
     
     <div class="modal-body">
     	<div class="row">
-	    	<button data-bind="click: payThousand" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedThousand"></span></button>
-	    	<button data-bind="click: payFiveHundred" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedFiveHundred"></span></button>
-	    	<button data-bind="click: payHundred" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedHundred"></span></button>
-	    	<button data-bind="click: payExact" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedExact"></span></button>
+	    	<button data-bind="click: payThousand, enable: enableButtons" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedThousand"></span></button>
+	    	<button data-bind="click: payFiveHundred, enable: enableButtons" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedFiveHundred"></span></button>
+	    	<button data-bind="click: payHundred, enable: enableButtons" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedHundred"></span></button>
+	    	<button data-bind="click: payExact, enable: enableButtons" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedExact"></span></button>
 	    </div>
 	    <br>
 	    <div class="row">
@@ -17,7 +17,7 @@
 		        <div class="input-group col-xs-12 text-center">
 					<input data-bind="value: cash" type="text" class="form-control autofocus" id="inputCash" placeholder="Cash Php ...">
 					<span class="input-group-btn">
-			        	<button class="btn btn-primary" type="submit" data-bind="click: payAmount"><i class="fa fa-money"></i></button>
+			        	<button class="btn btn-primary" type="submit" data-bind="click: payAmount, enable: enableButtons"><i class="fa fa-money"></i></button>
 			        </span>
 				</div>
 			</form>
@@ -25,7 +25,7 @@
     </div>
     
     <div class="modal-footer">
-    	<button class="btn btn-success pull-left" data-bind="click: discount">Discount</button>
+    	<button class="btn btn-success pull-left" data-bind="click: discount, enable: enableButtons">Discount</button>
         <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
     </div>
 </div>

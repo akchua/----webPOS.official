@@ -9,6 +9,8 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 		this.totalItems = ko.observable();
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
+		
+		this.enableButtons = ko.observable(true);
 	};
 	
 	Cashier.prototype.activate = function() {
@@ -39,20 +41,24 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 	
 	Cashier.prototype.view = function(customerOrderId) {
 		var self = this;
+		self.enableButtons(false);
 		
 		customerOrderService.getCustomerOrder(customerOrderId).done(function(data) {
 			SaleView.show(data).done(function() {
 				self.refreshCustomerOrderList();
+				self.enableButtons(true);
 			});
 		});
 	};
 	
 	Cashier.prototype.pay = function(customerOrderId) {
 		var self = this;
+		self.enableButtons(false);
 		
 		customerOrderService.refreshCustomerOrder(customerOrderId).done(function() {
 			PayForm.show(customerOrderId).then(function() {
 				self.refreshCustomerOrderList();
+				self.enableButtons(true);
 			});
 		});
 	};

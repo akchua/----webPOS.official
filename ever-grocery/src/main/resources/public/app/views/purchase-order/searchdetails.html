@@ -28,7 +28,7 @@
     					<td data-bind="text: productDetail.formattedNetPrice" class = "text-right"></td>
     					<td>
     						<div class="pull-right">
-    							<button data-bind="click: function() { $parent.add(productDetail.id, productDetail.unitType.displayName) }" type="button" class="btn btn-info btn-sm">Add</button>
+    							<button data-bind="click: function() { $parent.add(productDetail.id, productDetail.unitType.displayName) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm">Add</button>
     						</div>
     					</td>
     				</tr>
@@ -38,6 +38,6 @@
 	</div>
 	
 	<div class="modal-footer">
-        <button data-bind="click: cancel" class="btn btn-warning">Cancel</button>
+        <button data-bind="click: cancel, enable: enableButtons" class="btn btn-warning">Cancel</button>
     </div>
 </div> 

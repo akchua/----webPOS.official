@@ -13,6 +13,8 @@ define(['durandal/app', 'knockout', 'modules/cashtransferservice', 'modules/user
 		this.totalItems = ko.observable();
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
+		
+		this.enableButtons = ko.observable(true);
 	};
 	
 	CashFlow.prototype.activate = function() {
@@ -39,7 +41,12 @@ define(['durandal/app', 'knockout', 'modules/cashtransferservice', 'modules/user
 	};*/
 	
 	CashFlow.prototype.auditLog = function() {
-		AuditLog.show();
+		var self = this;
+		self.enableButtons(false);
+		
+		AuditLog.show().then(function() {
+			self.enableButtons(true);
+		});
 	};
 	
 	CashFlow.prototype.refreshCashTransferList = function() {

@@ -1,5 +1,5 @@
 <div class="row">
-	<button data-bind="click: request" type="button" class="btn btn-success col-md-3 col-xs-4"><i class="fa fa-plus-circle"></i> Request Cash Transfer</button>
+	<button data-bind="click: request, enable: enableButtons" type="button" class="btn btn-success col-md-3 col-xs-4"><i class="fa fa-plus-circle"></i> Request Cash Transfer</button>
 </div>
 <br/>
 <div class="row">
@@ -29,11 +29,11 @@
 					<td>
 						<div class="btn-group pull-right">
 							<!-- ko if: cashTransfer.transferToMe -->
-							<button data-bind="click: function() { $parent.accept(cashTransfer.id) } " type="button" class="btn btn-success btn-sm" title="Accept"><i class="fa fa-check"></i></button>
-							<button data-bind="click: function() { $parent.decline(cashTransfer.id, cashTransfer.cashFrom.formattedName, cashTransfer.formattedAmount) } " type="button" class="btn btn-danger btn-sm" title="Decline"><i class="fa fa-ban"></i></button>
+							<button data-bind="click: function() { $parent.accept(cashTransfer.id) }, enable: $parent.enableButtons" type="button" class="btn btn-success btn-sm" title="Accept"><i class="fa fa-check"></i></button>
+							<button data-bind="click: function() { $parent.decline(cashTransfer.id, cashTransfer.cashFrom.formattedName, cashTransfer.formattedAmount) }, enable: $parent.enableButtons" type="button" class="btn btn-danger btn-sm" title="Decline"><i class="fa fa-ban"></i></button>
 							<!-- /ko -->
 							<!-- ko ifnot: cashTransfer.transferToMe -->
-							<button data-bind="click: function() { $parent.cancel(cashTransfer.id, cashTransfer.cashTo.formattedName, cashTransfer.formattedAmount) } " type="button" class="btn btn-danger btn-sm" title="Cancel"><i class="fa fa-close"></i></button>
+							<button data-bind="click: function() { $parent.cancel(cashTransfer.id, cashTransfer.cashTo.formattedName, cashTransfer.formattedAmount) }, enable: $parent.enableButtons" type="button" class="btn btn-danger btn-sm" title="Cancel"><i class="fa fa-close"></i></button>
 							<!-- /ko -->
 						</div>
 					</td>

@@ -29,7 +29,6 @@
     				<tr>
     					<th>SIN</th>
     					<th>Date</th>
-    					<th>Customer</th>
     					<th>Creator</th>
     					<th>Cashier</th>
     					<th class="text-right">Total Amount</th>
@@ -41,15 +40,6 @@
     				<tr>
     					<td data-bind="text: customerOrder.formattedSIN"></td>
     					<td data-bind="text: customerOrder.formattedPaidOn"></td>
-    					<td>
-    						<span data-bind="if: customerOrder.customer">
-    							<span data-bind="text: customerOrder.customer.lastName"></span><span>, </span><span data-bind="text: customerOrder.customer.firstName"></span>
-    						</span>
-    						<span data-bind="ifnot: customerOrder.customer">
-    							<span data-bind="text: customerOrder.name"></span>
-    						</span>
-    						
-    					</td>
     					<td>
     						<span data-bind="if: customerOrder.creator">
     							<span data-bind="text: customerOrder.creator.lastName"></span><span>, </span><span data-bind="text: customerOrder.creator.firstName"></span>
@@ -64,8 +54,8 @@
     					<td data-bind="text: customerOrder.status.displayName" class="text-center"></td>
     					<td>
     						<div class="pull-right">
-    							<button data-bind="click: function() { $parent.view(customerOrder.id) }" type="button" class="btn btn-info btn-sm">View</button>
-    							<button data-bind="click: function() { $parent.print(customerOrder.id, customerOrder.name) }" type="button" class="btn btn-primary btn-sm">Print</button>
+    							<button data-bind="click: function() { $parent.view(customerOrder.id) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm">View</button>
+    							<button data-bind="click: function() { $parent.print(customerOrder.id, customerOrder.name) }, enable: $parent.enableButtons" type="button" class="btn btn-primary btn-sm">Print</button>
     						</div>
     					</td>
     				</tr>

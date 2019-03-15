@@ -7,6 +7,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
     	this.productName = ko.observable();
     	
     	this.productDetailList = ko.observable();
+    	
+    	this.enableButtons = ko.observable(true);
     };
     
     SearchDetails.prototype.activate = function() {
@@ -21,8 +23,10 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
     
     SearchDetails.prototype.add = function(productDetailId, productUnitType) {
     	var self = this;
+    	self.enableButtons(false);
     	
     	QuantityForm.show(productDetailId, productUnitType, self.customerOrder.id, self.productName()).then(function() {
+    		self.enableButtons(true);
     		dialog.close(self);
     	});
     };

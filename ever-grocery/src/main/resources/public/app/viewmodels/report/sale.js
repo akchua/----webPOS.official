@@ -11,6 +11,8 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/
 		this.totalItems = ko.observable();
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
+		
+		this.enableButtons = ko.observable(true);
 	};
 	
 	CustomerOrder.prototype.activate = function() {
@@ -64,16 +66,19 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/
 	
 	CustomerOrder.prototype.view = function(customerOrderId) {
 		var self = this;
+		self.enableButtons(false);
 		
 		customerOrderService.getCustomerOrder(customerOrderId).done(function(data) {
 			SaleView.show(data).done(function() {
 				self.refreshCustomerOrderList();
+				self.enableButtons(true);
 			});
 		});
 	};
 	
 	CustomerOrder.prototype.print = function(customerOrderId, customerOrderName) {
 		var self = this;
+		self.enableButtons(false);
 		
 		app.showMessage('Are you sure you want to print Customer Order "' + customerOrderName + '"?',
 				'Confirm Print',
@@ -85,6 +90,7 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/
 					app.showMessage(result.message);
 				});
 			}
+			self.enableButtons(true);
 		});
 	};
 	

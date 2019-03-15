@@ -36,7 +36,7 @@
     					<td data-bind="text: product.name"></td>
     					<td class="col-xs-2">
     						<div class="pull-right">
-    							<button data-bind="click: function() { $parent.details(product.id) }" type="button" class="btn btn-info btn-sm">Add</button>
+    							<button data-bind="click: function() { $parent.details(product.id) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm">Add</button>
     						</div>
     					</td>
     				</tr>
@@ -46,6 +46,6 @@
 	</div>
 	
 	<div class="modal-footer">
-        <button data-bind="click: cancel" class="btn btn-warning">Done</button>
+        <button data-bind="click: cancel, enable: enableButtons" class="btn btn-warning">Done</button>
     </div>
 </div>

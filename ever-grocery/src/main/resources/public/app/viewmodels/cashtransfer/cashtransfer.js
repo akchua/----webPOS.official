@@ -7,6 +7,8 @@ define(['durandal/app', 'knockout', 'modules/cashtransferservice', 'viewmodels/c
 		this.totalItems = ko.observable();
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
+		
+		this.enableButtons = ko.observable(true);
 	};
 	
 	CashTransfer.prototype.activate = function() {
@@ -31,22 +33,27 @@ define(['durandal/app', 'knockout', 'modules/cashtransferservice', 'viewmodels/c
 	
 	CashTransfer.prototype.request = function() {
 		var self = this;
+		self.enableButtons(false);
 		
 		CashTransferForm.show().then(function() {
 			self.refreshMyCashTransfers();
+			self.enableButtons(true);
 		});
 	};
 	
 	CashTransfer.prototype.accept = function(cashTransferId) {
 		var self = this;
+		self.enableButtons(false);
 		
 		AcceptForm.show(cashTransferId).then(function() {
 			self.refreshMyCashTransfers();
+			self.enableButtons(true);
 		});
 	};
 	
 	CashTransfer.prototype.cancel = function(cashTransferId, cashToFormattedName, formattedAmount) {
 		var self = this;
+		self.enableButtons(false);
 		
 		app.showMessage('Are you sure you want to cancel transfer of Php ' + formattedAmount + ' to ' + cashToFormattedName + '?',
 				'Confirm Cancel',
@@ -58,11 +65,13 @@ define(['durandal/app', 'knockout', 'modules/cashtransferservice', 'viewmodels/c
 					app.showMessage(result.message);
 				});
 			}
+			self.enableButtons(true);
 		})
 	};
 	
 	CashTransfer.prototype.decline = function(cashTransferId, cashFromFormattedName, formattedAmount) {
 		var self = this;
+		self.enableButtons(false);
 		
 		app.showMessage('Are you sure you want to decline transfer of Php ' + formattedAmount + ' from ' + cashFromFormattedName + '?',
 				'Confirm Decline',
@@ -74,6 +83,7 @@ define(['durandal/app', 'knockout', 'modules/cashtransferservice', 'viewmodels/c
 					app.showMessage(result.message);
 				});
 			}
+			self.enableButtons(true);
 		})
 	};
 	

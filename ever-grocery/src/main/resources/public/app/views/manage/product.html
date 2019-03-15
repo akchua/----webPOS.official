@@ -1,7 +1,7 @@
 <section>
 	<div class="row">
 		<div class="col-md-4 col-xs-6">
-			<button data-bind="click: create" type="button" class="btn btn-success">Add New Product</button>
+			<button data-bind="click: create, enable: enableButtons" type="button" class="btn btn-success">Add New Product</button>
 		</div>
 		<form class="form-inline" role="form">
 			<div class="input-group col-md-5 col-xs-12 pull-right">
@@ -50,9 +50,9 @@
     					</td>
     					<td>
     						<div class="pull-right">
-    							<button data-bind="click: function() { $parent.details(product.id) }" type="button" class="btn btn-info btn-sm">Details</button>
-    							<button data-bind="click: function() { $parent.edit(product.id) }" type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
-    							<button data-bind="click: function() { $parent.remove(product.id, product.name) }" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
+    							<button data-bind="click: function() { $parent.details(product.id) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm">Details</button>
+    							<button data-bind="click: function() { $parent.edit(product.id) }, enable: $parent.enableButtons" type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
+    							<button data-bind="click: function() { $parent.remove(product.id, product.name) }, enable: $parent.enableButtons" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
     						</div>
     					</td>
     				</tr>

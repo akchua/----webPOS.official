@@ -11,6 +11,8 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyse
 		this.totalItems = ko.observable();
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
+		
+		this.enableButtons = ko.observable(true);
 	};
 	
 	Product.prototype.activate = function() {
@@ -52,24 +54,29 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyse
 	
 	Product.prototype.create = function() {
 		var self = this;
+		self.enableButtons(false);
 		
 		ProductForm.show('Create', new Object()).then(function() {
 			self.refreshProductList();
+			self.enableButtons(true);
 		});
 	};
 	
 	Product.prototype.edit = function(productId) {
 		var self = this;
+		self.enableButtons(false);
 		
 		productService.getProduct(productId).done(function(data) {
 			ProductForm.show('Update', data).then(function() {
 				self.refreshProductList();
+				self.enableButtons(true);
 			});
 		});
 	};
 	
 	Product.prototype.remove = function(productId, productName) {
 		var self = this;
+		self.enableButtons(false);
 		
 		app.showMessage('Are you sure you want to remove Product "' + productName + '"?',
 				'Confirm Remove',
@@ -81,15 +88,19 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyse
 					app.showMessage(result.message);
 				});
 			}
+			self.enableButtons(true);
 		})
 	};
 	
 	Product.prototype.details = function(productId) {
 		var self = this;
+		self.enableButtons(false);
 		
 		productService.getProduct(productId).done(function(data) {
 			productService.getProductDetailList(productId).done(function(data2) {
-				ProductDetailsForm.show(data, data2)
+				ProductDetailsForm.show(data, data2).then(function() {
+					self.enableButtons(true);
+				});
 			});
 		});
 	};

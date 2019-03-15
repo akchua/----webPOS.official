@@ -12,6 +12,8 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'modules/com
 		this.totalItems = ko.observable();
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
+		
+		this.enableButtons = ko.observable(true);
 	};
 	
 	PurchaseOrder.prototype.activate = function() {
@@ -51,13 +53,16 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'modules/com
 	
 	PurchaseOrder.prototype.view = function(purchaseOrderId) {
 		var self = this;
+		self.enableButtons(false)
 		
 		purchaseOrderService.getPurchaseOrder(purchaseOrderId).done(function(purchaseOrder) {
 			if(purchaseOrder) {
 				PurchaseView.show(purchaseOrder).done(function() {
 					self.refreshPurchaseOrderList();
+					self.enableButtons(true);
 				});
 			} else {
+				self.enableButtons(true);
 				app.showMessage('Purchase Order ID ' + purchaseOrderId + ' does not exist.');
 			}
 		});
@@ -65,6 +70,7 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'modules/com
 
 	PurchaseOrder.prototype.check = function(purchaseOrderId, companyName, formattedTotalAmount) {
 		var self = this;
+		self.enableButtons(false);
 		
 		app.showMessage('<div class="container-fluid"><dl class="dl-horizontal"><dt>Purchase ID  :</dt><dd>' + purchaseOrderId + '</dd>' +
 						'<dt>Company Name :</dt><dd>' + companyName + '</dd>' +
@@ -78,6 +84,7 @@ define(['durandal/app', 'knockout', 'modules/purchaseorderservice', 'modules/com
 					app.showMessage(result.message);
 				});
 			}
+			self.enableButtons(true);
 		})
 	};
 	

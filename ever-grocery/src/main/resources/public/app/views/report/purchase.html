@@ -63,7 +63,7 @@
     					<td class="text-right"><span data-bind="text: purchaseOrder.formattedTotalAmount"></span></td>
     					<td>
     						<div class="pull-right">
-    							<button data-bind="click: function() { $parent.view(purchaseOrder.id) }" type="button" class="btn btn-info btn-sm">View</button>
+    							<button data-bind="click: function() { $parent.view(purchaseOrder.id) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></button>
 								<button data-bind="click: function() { $parent.check(purchaseOrder.id, purchaseOrder.company.name, purchaseOrder.formattedTotalAmount) }, disable: purchaseOrder.checked" type="button" class="btn btn-primary btn-sm">
 									<!-- ko if: purchaseOrder.checked -->
 									<span>Checked</span>

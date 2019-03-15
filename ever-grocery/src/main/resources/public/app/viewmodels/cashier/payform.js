@@ -14,6 +14,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		
 		this.formattedTotalAmount = ko.observable();
 		this.cash = ko.observable();
+		
+		this.enableButtons = ko.observable(true);
 	};
 	
 	PayForm.prototype.activate = function() {
@@ -62,6 +64,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 	
 	PayForm.prototype.pay = function(cash, formattedCash) {
 		var self = this;
+		self.enableButtons(false);
 		
 		app.showMessage('Confirm Received Amount : <strong>' + formattedCash + '</strong>',
 				'Confirm',
@@ -73,6 +76,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		        		dialog.close(self);
 		        		customerOrderService.printReceipt(self.customerOrderId);
 		        	} 
+					self.enableButtons(true);
 		        	app.showMessage(result.message);
 				});
 			}
@@ -81,10 +85,12 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 	
 	PayForm.prototype.discount = function() {
 		var self = this;
+		self.enableButtons(false);
 		
 		customerOrderService.getCustomerOrder(self.customerOrderId).done(function(customerOrder) {
 			DiscountForm.show(customerOrder).then(function() {
 				self.refreshCustomerOrder();
+				self.enableButtons(true);
 			});
 		});
 	};

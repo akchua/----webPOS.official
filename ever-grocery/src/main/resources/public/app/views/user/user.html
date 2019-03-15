@@ -1,5 +1,5 @@
 <div class="row">
-	<button data-bind="click: add" type="button" class="btn btn-success col-md-2 col-xs-3"><i class="fa fa-plus-circle"></i> Add User</button>
+	<button data-bind="click: add, enable: $parent.enableButtons" type="button" class="btn btn-success col-md-2 col-xs-3"><i class="fa fa-plus-circle"></i> Add User</button>
 	<form role="search" class="form-inline">
         <div class="input-group pull-right col-md-4 col-xs-4">
           	<input data-bind="textInput: searchKey" type="text" class="form-control" placeholder="Search">
@@ -36,10 +36,10 @@
 					
 					<td>
 						<div class="btn-group pull-right">
-							<button data-bind="click: function() { $parent.view(user.id) } " type="button" class="btn btn-info btn-sm" title="View"><i class="fa fa-eye"></i></button>
-							<button data-bind="click: function() { $parent.resetPassword(user.id, user.formattedName) }, enable: $parent.enableReset " type="button" class="btn btn-warning btn-sm" title="Reset Password"><i class="fa fa-refresh"></i></button>
-							<button data-bind="click: function() { $parent.edit(user.id) } " type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
-							<button data-bind="click: function() { $parent.remove(user.id, user.formattedName) }" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
+							<button data-bind="click: function() { $parent.view(user.id) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm" title="View"><i class="fa fa-eye"></i></button>
+							<button data-bind="click: function() { $parent.resetPassword(user.id, user.formattedName) }, enable: $parent.enableButtons" type="button" class="btn btn-warning btn-sm" title="Reset Password"><i class="fa fa-refresh"></i></button>
+							<button data-bind="click: function() { $parent.edit(user.id) }, enable: $parent.enableButtons" type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
+							<button data-bind="click: function() { $parent.remove(user.id, user.formattedName) }, enable: $parent.enableButtons" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
 						</div>
 					</td>
 				</tr>

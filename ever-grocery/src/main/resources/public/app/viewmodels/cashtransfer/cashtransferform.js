@@ -14,6 +14,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/cashtransferservi
 			cashToId: ko.observable(),
 	    	amount: ko.observable()
     	};
+    	
+    	this.enableButtons = ko.observable(true);
     };
     
     CashTransferForm.prototype.activate = function() {
@@ -30,6 +32,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/cashtransferservi
     
     CashTransferForm.prototype.request = function() {
     	var self = this;
+    	self.enableButtons(false);
     	
         cashTransferService.requestCashTransfer(ko.toJSON(self.cashTransferFormModel)).done(function(result) {
         	if(result.success) {
@@ -42,6 +45,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/cashtransferservi
         			}
         		}
         	}
+        	self.enableButtons(true);
         	if(result.message) app.showMessage(result.message);
         });
     };

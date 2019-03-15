@@ -11,6 +11,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
 		this.totalItems = ko.observable();
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
+		
+		this.enableButtons = ko.observable(true);
 	};
 	
 	Search.prototype.activate = function() {
@@ -52,11 +54,13 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice', 
 	
 	Search.prototype.details = function(productId) {
 		var self = this;
+		self.enableButtons(false);
 
 		productService.getProduct(productId).done(function (data) {
 			SearchDetails.show(data, self.customerOrder).then(function() {
 				self.searchKey('');
 				self.searchFocus(true);
+				self.enableButtons(true);
 			});
 		});
 	};

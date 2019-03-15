@@ -8,6 +8,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		this.productName = productName;
 		
 		this.quantity = ko.observable();
+		
+		this.enableButtons = ko.observable(true);
 	};
 	
 	QuantityForm.prototype.activate = function() {
@@ -19,6 +21,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 	
 	QuantityForm.prototype.add = function() {
 		var self = this;
+		self.enableButtons(false);
 		
 		customerOrderService.addItem(self.productDetailId, self.customerOrderId, self.quantity()).done(function (result) {
     		if(result.success) {
@@ -26,6 +29,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
         	}  else {
         		app.showMessage(result.message);
         	}
+    		self.enableButtons(true);
     	});
 	};
 	
