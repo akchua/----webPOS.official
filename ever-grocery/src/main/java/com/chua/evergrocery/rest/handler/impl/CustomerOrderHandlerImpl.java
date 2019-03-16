@@ -491,7 +491,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		// get min quantity of upper product detail
 		final Float upperMinQuantity = productDetail.getQuantity() % 2 == 0 ? 0.5f : 1.0f;
 		
-		if(upperProductDetail != null && quantity / productDetail.getQuantity() > upperMinQuantity) {
+		if(upperProductDetail != null && quantity / productDetail.getQuantity() >= upperMinQuantity) {
 			this.addItem(upperProductDetail, customerOrderDetail.getCustomerOrder(), quantity / productDetail.getQuantity());
 			result = quantity % (productDetail.getQuantity() * upperMinQuantity);
 		} else {

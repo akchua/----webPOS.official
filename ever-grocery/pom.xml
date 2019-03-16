@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.chua</groupId>
   <artifactId>ever-grocery</artifactId>
-  <version>1.11.9</version>
+  <version>1.11.10</version>
   <packaging>jar</packaging>
   
   <properties>
