@@ -48,7 +48,7 @@ public class StatisticsScheduler {
 		final Date start = new Date();
 		LOG.info("Starting monthly sales statistics update");
 		
-		transactionSummaryHandler.updateMonthlySalesSummaries(15);
+		transactionSummaryHandler.updateMonthlySalesSummaries(3);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
@@ -59,12 +59,12 @@ public class StatisticsScheduler {
 	 * Daily Sales Statistics Update
 	 * fires at 6:45PM every day
 	 */
-	@Scheduled(cron = "0 45 18 * * ?")
+	@Scheduled(cron = "0 55 18 * * ?")
 	public void dailySalesStatisticsUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting daily sales statistics update");
 		
-		transactionSummaryHandler.updateDailySalesSummaries(350);
+		transactionSummaryHandler.updateDailySalesSummaries(3);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;

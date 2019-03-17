@@ -49,10 +49,10 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/customerorderserv
         });
 	};
 	
-	CustomerOrder.prototype.remove = function(customerOrderId, customerOrderName) {
+	CustomerOrder.prototype.remove = function(customerOrderId, customerOrderNumber) {
 		var self = this;
 		
-		app.showMessage('Are you sure you want to cancel Customer Order "' + customerOrderName + '"?',
+		app.showMessage('Are you sure you want to cancel Customer Order #' + customerOrderNumber + '?',
 				'Confirm Remove',
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {

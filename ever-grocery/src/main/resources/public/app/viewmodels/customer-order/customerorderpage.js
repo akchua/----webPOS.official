@@ -165,10 +165,9 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
 			if(confirm) {
 				customerOrderService.printCustomerOrderCopy(self.customerOrderPageModel.customerOrderId()).done(function(result) {
 					if(!result.success) {
-						app.showMessage(result.message).done(function() {
-							self.barcodeFocus(true);
-						});
+						app.showMessage(result.message);
 					}
+					self.barcodeFocus(true);
 				});
 			} else {
 				self.barcodeFocus(true);
