@@ -9,7 +9,11 @@ package com.chua.evergrocery.constants;
  */
 public class PrintConstants
 {
-	public static final String LOCAL_PRINTER_SERVICE = /*"\\" + "\\" + "LAPTOP-HRU02081" + "\\" +*/ "EPSON TM-U220 Receipt";
+	// My Laptop "LAPTOP-G19T4NBH"
+	// Laptop Main Cashier"LAPTOP-HRU02081"
+	public static final String DEFAULT_PRINTER_SERVICE = "EPSON TM-U220 Receipt";
+	
+	public static final String EVER_CASHIER_PRINTER = "Ever Cashier Printer";
 	
 	public static final byte [] CUTTER_CODE = {27, 109};
 	

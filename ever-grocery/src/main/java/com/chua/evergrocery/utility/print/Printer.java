@@ -7,12 +7,9 @@ import java.awt.print.PrinterJob;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.print.Doc;
 import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
 import javax.print.attribute.DocAttributeSet;
 import javax.print.attribute.HashDocAttributeSet;
 import javax.print.attribute.HashPrintRequestAttributeSet;
@@ -43,7 +40,7 @@ public class Printer
 		this.setPrintDocFlavor(DocFlavor.BYTE_ARRAY.AUTOSENSE);
 		this.setPrintRequestAttributeSet(new HashPrintRequestAttributeSet());
 		this.setDocAttributeSet(new HashDocAttributeSet());
-		this.setServiceName(PrintConstants.LOCAL_PRINTER_SERVICE);		
+		this.setServiceName(PrintConstants.DEFAULT_PRINTER_SERVICE);		
 	}
 	
 	public Printer(HttpServletRequest request, ServletContext servletContext)
@@ -164,14 +161,20 @@ public class Printer
 		return Arrays.asList(PrintServiceLookup.lookupPrintServices(getServiceDocFlavor(), getPrintRequestAttributeSet()));
 	}
 	
-	private PrintService getPrintService(DocFlavor serviceDocFlavor) throws Exception
+	private PrintService getPrintService(String printerName) throws Exception
 	{
 		PrintService printService = null;
+		String serviceName = "";
+		if(printerName != null && !printerName.isEmpty()) {
+			serviceName = printerName;
+		} else {
+			serviceName = getServiceName();
+		}
 		//System.out.println("service name: " + getServiceName());
 		for(PrintService ps : getPrintServices())
 		{			
 			//System.out.println("print service: " + ps.getName());
-			if(getServiceName().equalsIgnoreCase(ps.getName()))
+			if(ps.getName().contains(serviceName))
 			{
 				printService = ps;
 			}
@@ -179,25 +182,24 @@ public class Printer
 		return printService;
 	}
 	
-	private DocPrintJob getDocPrintJob(DocFlavor serviceDocFlavor) throws Exception
+	/*private DocPrintJob getDocPrintJob(DocFlavor serviceDocFlavor) throws Exception
 	{
 		return getPrintService(serviceDocFlavor).createPrintJob();
-	}
+	}*/
 	
-	private Doc getDoc(DocFlavor printDocFlavor, byte [] printByte) throws Exception
+	/*private Doc getDoc(DocFlavor printDocFlavor, byte [] printByte) throws Exception
 	{
 		return new SimpleDoc(printByte, printDocFlavor, null);
-	}	
+	}	*/
 	
-	public void print(String text, String jobName) throws Exception
+	public void print(String text, String jobName, String printerName) throws Exception
 	{
 		PrintableDoc doc = new PrintableDoc(text);
 		PrinterJob pj = PrinterJob.getPrinterJob();
 		
 		try {
-			
-			pj.setPrintService(getPrintService(getServiceDocFlavor()));
-		} catch (PrinterException ex) {        
+			pj.setPrintService(getPrintService(printerName));
+		} catch (PrinterException ex) {
 		    throw new RuntimeException("Unable to set printer to \"" + pj.getPrintService().toString() + "\" because " + ex.getMessage());
 		}
 		
@@ -220,15 +222,15 @@ public class Printer
 		}
 	}
 	
-	public void print(byte [] printByte, Boolean cutPaper) throws Exception
+	/*public void print(byte [] printByte, Boolean cutPaper) throws Exception
 	{
 		DocPrintJob docPrintJob = getDocPrintJob(getServiceDocFlavor());
 		if(cutPaper) printByte = addCutPaper(printByte);
 		Doc doc = getDoc(getPrintDocFlavor(), printByte);		
 		docPrintJob.print(doc, null);		
-	}
+	}*/
 	
-	private byte [] addCutPaper(byte [] printByte) throws Exception
+	/*private byte [] addCutPaper(byte [] printByte) throws Exception
 	{
 		byte [] addCutPaper = new byte[printByte.length + PrintConstants.CUTTER_CODE.length];
 		System.arraycopy(printByte, 0, addCutPaper, 0, printByte.length);
@@ -237,7 +239,7 @@ public class Printer
 			addCutPaper[printByte.length + c] = PrintConstants.CUTTER_CODE[c];
 		}
 		return addCutPaper;
-	}
+	}*/
 	
 	public void kickDrawer() throws Exception
 	{
