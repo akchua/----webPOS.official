@@ -11,9 +11,9 @@ public class PrintConstants
 {
 	// My Laptop "LAPTOP-G19T4NBH"
 	// Laptop Main Cashier"LAPTOP-HRU02081"
-	public static final String DEFAULT_PRINTER_SERVICE = "EPSON TM-U220 Receipt";
+	public static final String DEFAULT_PRINTER_SERVICE = "\\\\LAPTOP-G19T4NBH\\EPSON TM-U220 Receipt";
 	
-	public static final String EVER_CASHIER_PRINTER = "Ever Cashier Printer";
+	public static final String EVER_CASHIER_PRINTER = "\\\\LAPTOP-HRU02081\\Ever Cashier Printer";
 	
 	public static final byte [] CUTTER_CODE = {27, 109};
 	

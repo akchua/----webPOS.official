@@ -170,11 +170,11 @@ public class Printer
 		} else {
 			serviceName = getServiceName();
 		}
-		//System.out.println("service name: " + getServiceName());
+		//System.out.println("service name: " + serviceName);
 		for(PrintService ps : getPrintServices())
 		{			
 			//System.out.println("print service: " + ps.getName());
-			if(ps.getName().contains(serviceName))
+			if(ps.getName().equalsIgnoreCase(serviceName))
 			{
 				printService = ps;
 			}
