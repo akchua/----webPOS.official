@@ -599,7 +599,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 				
 				Printer printer = new Printer();
 				try {
-					printer.print(purchaseOrderCopy.merge(velocityEngine, DocType.PRINT), "Purchase Order #" + purchaseOrder.getId() + " (COPY)", PrintConstants.EVER_CASHIER_PRINTER);
+					printer.print(purchaseOrderCopy.merge(velocityEngine, DocType.PRINT), "Purchase Order #" + purchaseOrder.getId() + " (COPY)", PrintConstants.EVER_ACCOUNTING_PRINTER);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
