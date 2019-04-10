@@ -156,6 +156,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrder.setTotalItems(0.0f);
 		customerOrder.setCash(0.0f);
 		customerOrder.setCheckAmount(0.0f);
+		customerOrder.setCardAmount(0.0f);
 		
 		customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
 		customerOrder.setStatus(Status.LISTING);
