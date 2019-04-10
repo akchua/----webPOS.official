@@ -16,6 +16,13 @@ define(['knockout'], function (ko) {
     	this.currentPage = settings.config.currentPage;
     };
     
+    Pager.prototype.ensureCurrentPage = function() {
+    	var noOfPages = this.numberOfPages();
+    	if(this.currentPage() > noOfPages) {
+    		this.currentPage(noOfPages);
+    	}
+    };
+    
     Pager.prototype.numberOfPages = function() {
     	var noOfPages = this.totalItems() / this.itemsPerPage();
     	noOfPages = parseInt(noOfPages + (this.totalItems() % this.itemsPerPage() > 0 ? 1 : 0));
@@ -23,6 +30,8 @@ define(['knockout'], function (ko) {
     };
     
     Pager.prototype.computePageNumbers = function() {
+    	this.ensureCurrentPage();
+    	
     	var pageNumbers = new Array();
     	
     	var c;
