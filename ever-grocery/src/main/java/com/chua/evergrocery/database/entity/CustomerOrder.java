@@ -1,6 +1,5 @@
 package com.chua.evergrocery.database.entity;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -29,6 +28,7 @@ import com.chua.evergrocery.serializer.json.UserSerializer;
 import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.chua.evergrocery.utility.format.DateFormatter;
+import com.chua.evergrocery.utility.format.NumberFormatter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity(name = "CustomerOrder")
@@ -40,6 +40,10 @@ public class CustomerOrder extends BaseObject {
 	public static final String TABLE_NAME = "customer_order";
 
 	private Long serialInvoiceNumber;
+	
+	private Long referenceSerialInvoiceNumber;
+	
+	private Long refundNumber;
 	
 	/*private String name;*/
 	
@@ -60,7 +64,13 @@ public class CustomerOrder extends BaseObject {
 	
 	private DiscountType discountType;
 	
-	private Float totalDiscountAmount;
+	private Float vatDiscount;
+	
+	private Float vatExDiscount;
+	
+	private Float zeroRatedDiscount;
+	
+	private String discountIdNumber;
 	
 	private Float totalItems;
 	
@@ -69,6 +79,16 @@ public class CustomerOrder extends BaseObject {
 	private Date paidOn;
 	
 	private Float cash;
+	
+	private String checkAccountNumber;
+	
+	private String checkNumber;
+	
+	private Float checkAmount;
+	
+	private String cardTransactionNumber;
+	
+	private Float cardAmount;
 	
 	@Transient
 	public String getOrderNumber() {
@@ -83,12 +103,41 @@ public class CustomerOrder extends BaseObject {
 	
 	@Transient
 	public String getFormattedSIN() {
-		DecimalFormat SIN_FORMAT = new DecimalFormat("0000000000");
-		return SIN_FORMAT.format(serialInvoiceNumber);
+		return NumberFormatter.SINFormat(getSerialInvoiceNumber());
 	}
 
 	public void setSerialInvoiceNumber(Long serialInvoiceNumber) {
 		this.serialInvoiceNumber = serialInvoiceNumber;
+	}
+	
+	@Basic()
+	@Column(name = "ref_SIN")
+	public Long getReferenceSerialInvoiceNumber() {
+		return referenceSerialInvoiceNumber;
+	}
+	
+	@Transient
+	public String getFormattedRefSIN() {
+		return NumberFormatter.SINFormat(getReferenceSerialInvoiceNumber());
+	}
+
+	public void setReferenceSerialInvoiceNumber(Long referenceSerialInvoiceNumber) {
+		this.referenceSerialInvoiceNumber = referenceSerialInvoiceNumber;
+	}
+
+	@Basic
+	@Column(name = "refund_number")
+	public Long getRefundNumber() {
+		return refundNumber;
+	}
+	
+	@Transient
+	public String getFormattedRefundNumber() {
+		return NumberFormatter.SINFormat(getRefundNumber());
+	}
+
+	public void setRefundNumber(Long refundNumber) {
+		this.refundNumber = refundNumber;
 	}
 
 	/*@Basic
@@ -157,8 +206,13 @@ public class CustomerOrder extends BaseObject {
 	}
 	
 	@Transient
-	public String getFormattedVatSales() {
-		return CurrencyFormatter.pesoFormat(vatSales);
+	public Float getNetVatSales() {
+		return vatSales - vatDiscount;
+	}
+	
+	@Transient
+	public String getFormattedNetVatSales() {
+		return CurrencyFormatter.pesoFormat(getNetVatSales());
 	}
 
 	public void setVatSales(Float vatSales) {
@@ -172,8 +226,13 @@ public class CustomerOrder extends BaseObject {
 	}
 	
 	@Transient
-	public String getFormattedVatExSales() {
-		return CurrencyFormatter.pesoFormat(vatExSales);
+	public Float getNetVatExSales() {
+		return vatExSales - vatExDiscount;
+	}
+	
+	@Transient
+	public String getFormattedNetVatExSales() {
+		return CurrencyFormatter.pesoFormat(getNetVatExSales());
 	}
 
 	public void setVatExSales(Float vatExSales) {
@@ -187,8 +246,13 @@ public class CustomerOrder extends BaseObject {
 	}
 	
 	@Transient
-	public String getFormattedZeroRatedSales() {
-		return CurrencyFormatter.pesoFormat(zeroRatedSales);
+	public Float getNetZeroRatedSales() {
+		return zeroRatedSales - zeroRatedDiscount;
+	}
+	
+	@Transient
+	public String getFormattedNetZeroRatedSales() {
+		return CurrencyFormatter.pesoFormat(getNetZeroRatedSales());
 	}
 
 	public void setZeroRatedSales(Float zeroRatedSales) {
@@ -207,32 +271,76 @@ public class CustomerOrder extends BaseObject {
 
 	@Transient
 	public Float getGrossAmount() {
-		return vatSales + vatExSales + zeroRatedSales;
+		return getNetVatSales() + getNetVatExSales() + getNetZeroRatedSales();
 	}
 	
 	@Transient
 	public String getFormattedGrossAmount() {
 		return CurrencyFormatter.pesoFormat(getGrossAmount());
 	}
-	
+
 	@Basic
-	@Column(name = "discount_amount")
+	@Column(name = "vat_discount")
+	public Float getVatDiscount() {
+		return vatDiscount;
+	}
+
+	public void setVatDiscount(Float vatDiscount) {
+		this.vatDiscount = vatDiscount;
+	}
+
+	@Basic
+	@Column(name = "vat_ex_discount")
+	public Float getVatExDiscount() {
+		return vatExDiscount;
+	}
+
+	public void setVatExDiscount(Float vatExDiscount) {
+		this.vatExDiscount = vatExDiscount;
+	}
+
+	@Column(name = "zero_rated_discount")
+	public Float getZeroRatedDiscount() {
+		return zeroRatedDiscount;
+	}
+
+	public void setZeroRatedDiscount(Float zeroRatedDiscount) {
+		this.zeroRatedDiscount = zeroRatedDiscount;
+	}
+
+	@Transient
 	public Float getTotalDiscountAmount() {
-		return totalDiscountAmount;
+		return vatDiscount + vatExDiscount + zeroRatedDiscount;
 	}
 	
 	@Transient
 	public String getFormattedTotalDiscountAmount() {
 		return CurrencyFormatter.pesoFormat(getTotalDiscountAmount());
 	}
+	
+	@Transient
+	public Float getTotalDiscountableAmount() {
+		return discountType.getPercentDiscount().equals(0.0f) ? 0.0f : getTotalDiscountAmount() / (discountType.getPercentDiscount() / 100.0f);
+	}
+	
+	@Transient
+	public String getFormattedTotalDiscountableAmount() {
+		return CurrencyFormatter.pesoFormat(getTotalDiscountableAmount());
+	}
 
-	public void setTotalDiscountAmount(Float totalDiscountAmount) {
-		this.totalDiscountAmount = totalDiscountAmount;
+	@Basic
+	@Column(name = "discount_id_number")
+	public String getDiscountIdNumber() {
+		return discountIdNumber;
+	}
+
+	public void setDiscountIdNumber(String discountIdNumber) {
+		this.discountIdNumber = discountIdNumber;
 	}
 
 	@Transient
 	public Float getTotalAmount() {
-		return getGrossAmount() - getTotalDiscountAmount();
+		return getGrossAmount();
 	}
 	
 	@Transient
@@ -289,8 +397,83 @@ public class CustomerOrder extends BaseObject {
 	public Float getCash() {
 		return cash;
 	}
+	
+	@Transient
+	public String getFormattedCash() {
+		return CurrencyFormatter.pesoFormat(getCash());
+	}
 
 	public void setCash(Float cash) {
 		this.cash = cash;
+	}
+
+	@Basic
+	@Column(name = "check_account_number")
+	public String getCheckAccountNumber() {
+		return checkAccountNumber;
+	}
+
+	public void setCheckAccountNumber(String checkAccountNumber) {
+		this.checkAccountNumber = checkAccountNumber;
+	}
+
+	@Basic
+	@Column(name = "check_number")
+	public String getCheckNumber() {
+		return checkNumber;
+	}
+
+	public void setCheckNumber(String checkNumber) {
+		this.checkNumber = checkNumber;
+	}
+
+	@Basic
+	@Column(name = "check_amount")
+	public Float getCheckAmount() {
+		return checkAmount;
+	}
+	
+	@Transient
+	public String getFormattedCheckAmount() {
+		return CurrencyFormatter.pesoFormat(getCheckAmount());
+	}
+	
+	public void setCheckAmount(Float checkAmount) {
+		this.checkAmount = checkAmount;
+	}
+
+	@Basic
+	@Column(name = "card_txn_number")
+	public String getCardTransactionNumber() {
+		return cardTransactionNumber;
+	}
+
+	public void setCardTransactionNumber(String cardTransactionNumber) {
+		this.cardTransactionNumber = cardTransactionNumber;
+	}
+
+	@Basic
+	@Column(name = "card_amount")
+	public Float getCardAmount() {
+		return cardAmount;
+	}
+	
+	@Transient
+	public String getFormattedCardAmount() {
+		return CurrencyFormatter.pesoFormat(getCardAmount());
+	}
+	
+	@Transient
+	public Float getTotalPayment() {
+		return getCash() + getCheckAmount() + getCardAmount();
+	}
+	
+	@Transient
+	public String getFormattedTotalPayment() {
+		return CurrencyFormatter.pesoFormat(getTotalPayment());
+	}
+
+	public void setCardAmount(Float cardAmount) {
+		this.cardAmount = cardAmount;
 	}
 }

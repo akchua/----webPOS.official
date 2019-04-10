@@ -1,0 +1,1 @@
+package com.chua.evergrocery.database.service;import com.chua.evergrocery.database.entity.XReading;import com.chua.evergrocery.database.prototype.XReadingPrototype;/** * @author  Adrian Jasper K. Chua * @version 1.0 * @since   23 March 2019 */public interface XReadingService extends Service<XReading, Long>, XReadingPrototype {		XReading getLatestXReading();}

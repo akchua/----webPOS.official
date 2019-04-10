@@ -38,7 +38,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 	
 	@Override
 	public ObjectList<Company> getCompanyListByRank(Integer pageNumber, String searchKey) {
-		return companyService.findAllWithPagingOrderByPurchaseValue(pageNumber, UserContextHolder.getItemsPerPage(), searchKey);
+		return companyService.findAllWithPagingOrderByProfit(pageNumber, UserContextHolder.getItemsPerPage(), searchKey);
 	}
 	
 	@Override

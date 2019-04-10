@@ -16,6 +16,10 @@ define(['knockout'], function (ko) {
     		return (Math.ceil(number * 4)) / 4;
     	},
     	
+    	roundToCent: function(number) {
+    		return (Math.ceil(number * 100)) / 100;
+    	},
+    	
     	ceilToThousand: function(value) {
     		return (Math.ceil(value / 1000)) * 1000;
     	},

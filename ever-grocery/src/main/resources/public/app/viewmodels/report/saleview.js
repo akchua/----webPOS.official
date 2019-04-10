@@ -11,8 +11,11 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		this.customerOrderViewModel = {
 			customerOrderId: ko.observable(),
 			customerOrderNumber: ko.observable(),
-			formattedTotalAmount: ko.observable()
+			formattedTotalAmount: ko.observable(),
+			formattedTotalDiscount: ko.observable()
 		};
+		
+		this.discounted = ko.observable(false);
     };
     
     SaleView.prototype.activate = function() {
@@ -21,6 +24,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     	self.customerOrderViewModel.customerOrderId(self.customerOrder.id);
     	self.customerOrderViewModel.customerOrderNumber(self.customerOrder.orderNumber);
     	self.customerOrderViewModel.formattedTotalAmount(self.customerOrder.formattedTotalAmount);
+    	self.customerOrderViewModel.formattedTotalDiscount(self.customerOrder.formattedTotalDiscountAmount);
+    	self.discounted(self.customerOrder.totalDiscountAmount > 0);
     	
     	self.currentPage(1);
     	self.currentPageSubscription = self.currentPage.subscribe(function() {

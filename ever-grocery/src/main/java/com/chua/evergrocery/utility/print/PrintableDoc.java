@@ -12,7 +12,9 @@ import java.awt.print.PrinterException;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,11 +29,14 @@ import org.apache.commons.lang3.StringUtils;
 public class PrintableDoc
 		implements Printable
 {	
-	private static final String TOTAL_AMOUNT = "Total Amount";
-	
-	private static final String CHANGE = "Change";
-	
-	private static final String ORDER = "Order #";
+	// Keywords for BOLD Lines
+	private static final List<String> BOLD_KEYWORDS = Arrays.asList(new String[] {
+			"Total Amount",
+			"Change",
+			"Order #",
+			"CLAIM",
+			"TAX"
+	});
 	
 	public final static double DEFAULT_MARGIN = 0.5 * 40.0; //points
 	
@@ -130,7 +135,7 @@ public class PrintableDoc
           	{
           		buildTextLayouts(frc, fontName, FONT_SIZE_13, split + " ", true, false);
           	}
-          	else if(split.contains(TOTAL_AMOUNT) || split.contains(CHANGE) || split.contains(ORDER))
+          	else if(BOLD_KEYWORDS.parallelStream().anyMatch(split::contains))
           	{
           		buildTextLayouts(frc, fontName, FONT_SIZE_11, split + " ", false, false);
           	}

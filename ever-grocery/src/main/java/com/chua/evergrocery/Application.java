@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @ImportResource({"classpath:META-INF/spring/hibernate.xml", "classpath:META-INF/spring/beans.xml"})
 public class Application {
-
+	
 	public static void main(String ... args) throws Exception {
 		SpringApplication.run(Application.class, args);
 	}

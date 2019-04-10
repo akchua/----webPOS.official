@@ -1,0 +1,23 @@
+## Template for X Reading
+## Has a maximum of 44 columns in a line
+${t.FormattedHeader}
+                 X-Reading
+                 
+Cashier              : ${t.FormattedCashier}
+Reading Date         : ${t.FormattedReadingDate}
+
+Beginning Balance    : ${t.FormattedBeginningBalance}
+Ending Balance       : ${t.FormattedEndingBalance}
+
+Net Sales            : ${t.FormattedNetSales}
+Details :
+Gross Sales          : ${t.FormattedGrossSales}
+Regular Discount     : ${t.FormattedRegularDiscountAmount}
+SC Discount          : ${t.FormattedSeniorDiscountAmount}
+PWD Discount         : ${t.FormattedPwdDiscountAmount}
+Refund               : ${t.FormattedTotalRefund}
+
+Payments
+Cash Payments        : ${t.FormattedTotalCashPayment}
+Check Payments       : ${t.FormattedTotalCheckPayment}
+Card Payments        : ${t.FormattedTotalCardPayments}

@@ -1,0 +1,1 @@
+package com.chua.evergrocery.database.service;import com.chua.evergrocery.database.entity.ZReading;import com.chua.evergrocery.database.prototype.ZReadingPrototype;/** * @author  Adrian Jasper K. Chua * @version 1.0 * @since   22 March 2019 */public interface ZReadingService extends Service<ZReading, Long>, ZReadingPrototype {		ZReading getLatestZReading();}

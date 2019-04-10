@@ -1,10 +1,13 @@
 package com.chua.evergrocery.rest.handler;
 
+import java.util.Date;
+
+import com.chua.evergrocery.beans.DiscountFormBean;
+import com.chua.evergrocery.beans.PaymentsFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
-import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.objects.ObjectList;
 
 public interface CustomerOrderHandler {
@@ -23,7 +26,7 @@ public interface CustomerOrderHandler {
 	
 	ResultBean removeCustomerOrder(Long customerOrderId);
 	
-	ResultBean applyDiscount(Long customerOrderId, DiscountType discountType, Float grossAmountLimit);
+	ResultBean applyDiscount(DiscountFormBean discountForm);
 	
 	ObjectList<CustomerOrderDetail> getCustomerOrderDetailList(Integer pageNumber, Long customerOrderId);
 	
@@ -39,11 +42,15 @@ public interface CustomerOrderHandler {
 	
 	ResultBean submitCustomerOrder(Long customerOrderId);
 	
-	ResultBean payCustomerOrder(Long customerOrderId, Float cash);
+	ResultBean payCustomerOrder(PaymentsFormBean paymentsForm);
 	
 	ResultBean printCustomerOrderCopy(Long customerOrderId);
 
 	ResultBean generateReport(SalesReportQueryBean salesReportQuery);
 	
-	void printReceipt(Long customerOrderId);
+	void printReceipt(Long customerOrderId, String footer, Boolean original);
+	
+	ResultBean printZReading(Date readingDate);
+	
+	void endOfShift();
 }

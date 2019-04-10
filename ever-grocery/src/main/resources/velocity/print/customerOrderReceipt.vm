@@ -1,40 +1,58 @@
 ## Template for Customer Order Receipt
 ## Has a maximum of 44 columns in a line
-        VPKC Grocery
-           Abadilla St., Brgy. 17
-          Laoag City, Ilocos Norte
-       VAT Reg. TIN: 102-198-471-000
-         SATURNINO O. CHUA - PROP.
-              SIN: ${t.FormattedSIN}
-${t.Date}
-
-Order #${t.OrderNumber}
+${t.FormattedHeader}
+${t.FormattedSIN}
+${t.FormattedRefundNumber}
+${t.FormattedTitle}
+${t.FormattedSubtitle}
+${t.FormattedOrderNumber}
 ${t.FormattedCustomerOrderItems}
-#if($t.Discounted)
-                   Sub Total ${t.FormattedGrossAmount}
-           Discount(${t.FormattedDiscountLabel}) ${t.FormattedTotalDiscountAmount}
+#if($t.NonZeroDiscount)
+     Discountable Amount ${t.FormattedDiscountableAmount}
+      Discount(${t.FormattedDiscountLabel}) ${t.FormattedTotalDiscountAmount}
+         Net of Discount ${t.FormattedNetOfDiscount}
 #end
 
-           Total Amount ${t.FormattedTotalAmount}
-                        Cash ${t.FormattedCash}
-                 Change ${t.FormattedChange}
+       Total Amount ${t.FormattedTotalAmount}
+                    Cash ${t.FormattedCash}
+#if($t.PaidWithCheck)
+${t.FormattedCheckAccountNumber}
+${t.FormattedCheckNumber} ${t.FormattedCheckAmount}
 
-                     VATable ${t.FormattedVatable}
-                  VAT-Exempt ${t.FormattedVatExSales}
-              VAT Zero-Rated ${t.FormattedZeroRatedSales}
-                         VAT ${t.FormattedVat}
+           Total Payment ${t.FormattedTotalPayment}
+#end
+             Change ${t.FormattedChange}
+
+           VATable Sales ${t.FormattedVatable}
+              VAT Amount ${t.FormattedVat}
+        VAT-Exempt Sales ${t.FormattedVatExSales}
+        Zero-Rated Sales ${t.FormattedZeroRatedSales}
   
 --------------------------------------------
-Cashier : ${t.FormattedCashier}
-
-Thank you, please come again
-This serves as an OFFICIAL RECEIPT
-Acc No: 
-Date Issued: 
-Valid Until: 
-This Receipt shall be Valid for FIVE(5)
-years from the date of the permit to use
 Cust. Name : ___________________________
 Address    : ___________________________
 TIN #      : ___________________________
+#if($t.Discounted)
+${t.FormattedIdNumber}
+Signature  : ___________________________
+#else
 Bus. Style : ___________________________
+#end
+
+Cashier : ${t.FormattedCashier}
+Thank you, please come again
+
+Saturnino O. Chua
+Abadilla St., Brgy. 17
+Laoag City, Ilocos Norte
+VAT Reg. TIN: 102-198-471-0000
+Acc No : 
+Date Issued : 
+Valid Until : 
+PTU No. : 
+Date Issued : 
+Valid Until : 
+#foreach( $disclaimer in $t.DisclaimerList)
+$disclaimer
+#end
+${t.FormattedFooter}

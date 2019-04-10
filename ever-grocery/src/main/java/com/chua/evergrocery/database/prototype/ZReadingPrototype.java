@@ -1,0 +1,1 @@
+package com.chua.evergrocery.database.prototype;import java.util.Date;import com.chua.evergrocery.database.entity.ZReading;/** * @author  Adrian Jasper K. Chua * @version 1.0 * @since   22 March 2019 */public interface ZReadingPrototype extends Prototype<ZReading, Long> {		ZReading findByReadingDate(Date readingDate);}

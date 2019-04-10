@@ -29,6 +29,8 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 	
 	private final Integer ITEM_NAME_MAX_LENGTH = 30;
 	
+	private final Integer MAX_LINE_SPLIT_ADJUST = 7;
+	
 	public CustomerOrderItemTemplate(CustomerOrderDetail customerOrderItem) {
 		this.customerOrderItem = customerOrderItem;
 		this.content = customerOrderItem.getProductDetail().getContent();
@@ -51,7 +53,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 	public String getFormattedName() {
 		String formattedName = customerOrderItem.getUnitType().getShorthand() + " ";
 		
-		NumberFormat nf = new DecimalFormat("##.##");
+		NumberFormat nf = new DecimalFormat("##.00");
 		
 		formattedName += customerOrderItem.getFormattedDisplayName();
 		if((customerOrderItem.getQuantity() % 1.0f == 0.5f
@@ -67,11 +69,29 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 		}
 		
 		int index = ITEM_NAME_MAX_LENGTH;
+		int splits = 1;
+		int firstSplitIndex = ITEM_NAME_MAX_LENGTH;
 		while (index < formattedName.length()) {
-			overflowList.add("    " + formattedName.substring(index, Math.min(index + ITEM_NAME_MAX_LENGTH, formattedName.length())));
-		    index += ITEM_NAME_MAX_LENGTH;
+			int adjustedIndex = index;
+			int i = 0;
+			// try to find a white space up to 'MAX_LINE_SPLIT_ADJUST' characters back
+			while(formattedName.charAt(adjustedIndex) != ' ' && i < MAX_LINE_SPLIT_ADJUST) {
+				adjustedIndex--;
+				i++;
+			}
+			// reset index if exceeded max line split and no white space found
+			if(i == MAX_LINE_SPLIT_ADJUST && formattedName.charAt(adjustedIndex) != ' ') adjustedIndex = index;
+			else adjustedIndex++;
+			
+			// record the first split
+			if(splits == 1) firstSplitIndex = adjustedIndex;
+			
+			// +1 to not include the space on the next line
+			overflowList.add("    " + formattedName.substring(adjustedIndex, Math.min(adjustedIndex + ITEM_NAME_MAX_LENGTH, formattedName.length())));
+		    index = adjustedIndex + ITEM_NAME_MAX_LENGTH;
+		    splits++;
 		}
-		formattedName = formattedName.substring(0, Math.min(ITEM_NAME_MAX_LENGTH, formattedName.length()));
+		formattedName = formattedName.substring(0, Math.min(firstSplitIndex, formattedName.length()));
 		
 		return String.format("%-" + ITEM_NAME_MAX_LENGTH + "s", formattedName);
 	}

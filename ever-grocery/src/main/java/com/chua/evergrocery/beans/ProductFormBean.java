@@ -20,6 +20,8 @@ public class ProductFormBean extends FormBean {
 	
 	private Boolean allowSeniorDiscount;
 	
+	private Boolean allowPWDDiscount;
+	
 	public String getName() {
 		return name;
 	}
@@ -82,5 +84,13 @@ public class ProductFormBean extends FormBean {
 
 	public void setAllowSeniorDiscount(Boolean allowSeniorDiscount) {
 		this.allowSeniorDiscount = allowSeniorDiscount;
+	}
+
+	public Boolean getAllowPWDDiscount() {
+		return allowPWDDiscount;
+	}
+
+	public void setAllowPWDDiscount(Boolean allowPWDDiscount) {
+		this.allowPWDDiscount = allowPWDDiscount;
 	}
 }

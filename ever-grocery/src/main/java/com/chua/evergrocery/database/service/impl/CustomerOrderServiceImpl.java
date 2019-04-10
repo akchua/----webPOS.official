@@ -9,6 +9,7 @@ import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chua.evergrocery.beans.BIRSalesSummaryBean;
 import com.chua.evergrocery.beans.DailySalesReportBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.dao.CustomerOrderDAO;
@@ -37,6 +38,17 @@ public class CustomerOrderServiceImpl
 	@Override
 	public List<CustomerOrder> findAllPaidByCashierAndDateFromToNow(Long cashierId, Date dateFrom) {
 		return dao.findAllByCashierStatusAndDatePaidWithOrder(cashierId, new Status[] { Status.PAID }, dateFrom, new Date(), null);
+	}
+	
+	@Override
+	public List<CustomerOrder> findAllDiscountedByDatePaid(Date datePaid) {
+		return dao.findAllByCashierStatusAndDatePaidWithOrder(null, new Status[] { Status.PAID }, DateUtil.floorDay(datePaid), DateUtil.ceilDay(datePaid), null);
+	}
+	
+	@Override
+	public List<CustomerOrder> findAllDiscountedByDatePaidAndCashier(Date datePaidStart, Date datePaidEnd,
+			Long cashierId) {
+		return dao.findAllByCashierStatusAndDatePaidWithOrder(cashierId, new Status[] { Status.PAID }, datePaidStart, datePaidEnd, null);
 	}
 	
 	@Override
@@ -83,5 +95,39 @@ public class CustomerOrderServiceImpl
 		}
 		
 		return dailySalesReports;
+	}
+
+	@Override
+	public BIRSalesSummaryBean getSalesSummaryByDatePaid(Date datePaid) {
+		return dao.getSalesSummaryByDatePaidAndCashier(DateUtil.floorDay(datePaid), DateUtil.ceilDay(datePaid), null, Boolean.FALSE, Boolean.FALSE);
+	}
+	
+	@Override
+	public BIRSalesSummaryBean getSalesSummaryByDatePaidAndCashier(Date datePaidStart, Date datePaidEnd,
+			Long cashierId) {
+		return dao.getSalesSummaryByDatePaidAndCashier(datePaidStart, datePaidEnd, cashierId, Boolean.FALSE, Boolean.FALSE);
+	}
+
+	@Override
+	public BIRSalesSummaryBean getSalesSummaryByDatePaidAndExceptCashier(Date datePaidStart, Date datePaidEnd,
+			Long exceptCashierId) {
+		return dao.getSalesSummaryByDatePaidAndCashier(datePaidStart, datePaidEnd, exceptCashierId, Boolean.TRUE, Boolean.FALSE);
+	}
+
+	@Override
+	public BIRSalesSummaryBean getRefundSummaryByDatePaid(Date datePaid) {
+		return dao.getSalesSummaryByDatePaidAndCashier(DateUtil.floorDay(datePaid), DateUtil.ceilDay(datePaid), null, Boolean.FALSE, Boolean.TRUE);
+	}
+
+	@Override
+	public BIRSalesSummaryBean getRefundSummaryByDatePaidAndCashier(Date datePaidStart, Date datePaidEnd,
+			Long cashierId) {
+		return dao.getSalesSummaryByDatePaidAndCashier(datePaidStart, datePaidEnd, cashierId, Boolean.FALSE, Boolean.TRUE);
+	}
+
+	@Override
+	public BIRSalesSummaryBean getRefundSummaryByDatePaidAndExceptCashier(Date datePaidStart, Date datePaidEnd,
+			Long exceptCashierId) {
+		return dao.getSalesSummaryByDatePaidAndCashier(datePaidStart, datePaidEnd, exceptCashierId, Boolean.TRUE, Boolean.TRUE);
 	}
 }

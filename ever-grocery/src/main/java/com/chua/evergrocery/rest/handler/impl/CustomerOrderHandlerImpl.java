@@ -11,18 +11,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.UserContextHolder;
+import com.chua.evergrocery.beans.DiscountFormBean;
+import com.chua.evergrocery.beans.PaymentsFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.beans.UserBean;
 import com.chua.evergrocery.constants.FileConstants;
+import com.chua.evergrocery.constants.PrintConstants;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.ProductDetail;
+import com.chua.evergrocery.database.entity.User;
+import com.chua.evergrocery.database.entity.XReading;
+import com.chua.evergrocery.database.entity.ZReading;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
 import com.chua.evergrocery.database.service.CustomerOrderService;
 import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.SystemVariableService;
 import com.chua.evergrocery.database.service.UserService;
+import com.chua.evergrocery.database.service.ZReadingService;
 import com.chua.evergrocery.enums.AuditLogType;
 import com.chua.evergrocery.enums.Color;
 import com.chua.evergrocery.enums.DiscountType;
@@ -36,15 +43,20 @@ import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
 import com.chua.evergrocery.rest.handler.InventoryHandler;
 import com.chua.evergrocery.rest.handler.ProductHandler;
 import com.chua.evergrocery.rest.handler.SalesReportHandler;
+import com.chua.evergrocery.rest.validator.DiscountFormValidator;
+import com.chua.evergrocery.rest.validator.PaymentsFormValidator;
 import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.EmailUtil;
 import com.chua.evergrocery.utility.Html;
 import com.chua.evergrocery.utility.TaxUtil;
 import com.chua.evergrocery.utility.TextWriter;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
+import com.chua.evergrocery.utility.format.DateFormatter;
 import com.chua.evergrocery.utility.print.Printer;
 import com.chua.evergrocery.utility.template.CustomerOrderCopyTemplate;
 import com.chua.evergrocery.utility.template.CustomerOrderReceiptTemplate;
+import com.chua.evergrocery.utility.template.XReadingTemplate;
+import com.chua.evergrocery.utility.template.ZReadingTemplate;
 
 @Transactional
 @Component
@@ -66,6 +78,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	private SystemVariableService systemVariableService;
 	
 	@Autowired
+	private ZReadingService zReadingService;
+	
+	@Autowired
 	private ProductHandler productHandler;
 	
 	@Autowired
@@ -76,6 +91,12 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Autowired
 	private SalesReportHandler salesReportHandler;
+	
+	@Autowired
+	private DiscountFormValidator discountFormValidator;
+	
+	@Autowired
+	private PaymentsFormValidator paymentsFormValidator;
 	
 	@Autowired
 	private FileConstants fileConstants;
@@ -122,12 +143,19 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = new CustomerOrder();
 		customerOrder.setPaidOn(DateUtil.getDefaultDate());
 		customerOrder.setSerialInvoiceNumber(0l);
+		customerOrder.setReferenceSerialInvoiceNumber(0l);
+		customerOrder.setRefundNumber(0l);
 		customerOrder.setVatSales(0.0f);
 		customerOrder.setVatExSales(0.0f);
 		customerOrder.setZeroRatedSales(0.0f);
 		customerOrder.setDiscountType(DiscountType.NO_DISCOUNT);
-		customerOrder.setTotalDiscountAmount(0.0f);
+		customerOrder.setVatDiscount(0.0f);
+		customerOrder.setVatExDiscount(0.0f);
+		customerOrder.setZeroRatedDiscount(0.0f);
+		customerOrder.setDiscountIdNumber("");
 		customerOrder.setTotalItems(0.0f);
+		customerOrder.setCash(0.0f);
+		customerOrder.setCheckAmount(0.0f);
 		
 		customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
 		customerOrder.setStatus(Status.LISTING);
@@ -177,99 +205,179 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	public ResultBean applyDiscount(Long customerOrderId, DiscountType discountType, Float grossAmountLimit) {
+	public ResultBean applyDiscount(DiscountFormBean discountForm) {
 		final ResultBean result;
-		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
+		final Map<String, String> errors = discountFormValidator.validate(discountForm);
 		
-		if(customerOrder != null) {
-			if(customerOrder.getTotalDiscountAmount().equals(0.0f) && customerOrder.getDiscountType().equals(DiscountType.NO_DISCOUNT)) {
-				if(discountType.equals(DiscountType.SENIOR_DISCOUNT)) {
-					// Apply hard cap to gross amount
-					grossAmountLimit = Math.min(grossAmountLimit, discountType.getGrossHardCap());
-					
-					final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrderId);
-					Float totalDiscounted = 0.0f;
-					
-					for(CustomerOrderDetail customerOrderDetail : customerOrderDetails) {
-						if(customerOrderDetail.getProductDetail().getProduct().getAllowSeniorDiscount() && customerOrderDetail.getTotalPrice() <= grossAmountLimit) {
-							grossAmountLimit -= customerOrderDetail.getTotalPrice();
-							customerOrderDetail.setTotalPrice(TaxUtil.convertTaxType(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), TaxType.ZERO_RATED));
-							customerOrderDetail.setTaxType(TaxType.ZERO_RATED);
-							
-							totalDiscounted += customerOrderDetail.getTotalPrice();
+		if(errors.isEmpty()) {
+			final CustomerOrder customerOrder = customerOrderService.find(discountForm.getCustomerOrderId());
+			
+			if(customerOrder != null) {
+				if(customerOrder.getTotalDiscountAmount().equals(0.0f) && customerOrder.getDiscountType().equals(DiscountType.NO_DISCOUNT)) {
+					final DiscountType discountType = discountForm.getDiscountType();
+					if(discountType.equals(DiscountType.SENIOR_DISCOUNT) || discountType.equals(DiscountType.PWD_DISCOUNT) || 
+							(discountType.equals(DiscountType.EMPLOYEE_DISCOUNT) && UserContextHolder.getUser().getUserType().getAuthority() <= 3)) {
+						// Apply hard cap to gross amount
+						Float grossAmountLimit = Math.min(discountForm.getGrossAmountLimit(), discountType.getGrossHardCap());
+						
+						final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrder.getId());
+						Float totalDiscountableWithVatAmount = 0.0f;
+						Float totalDiscountableVatExemptAmount = 0.0f;
+						Float totalDiscountableZeroRatedAmount = 0.0f;
+						
+						for(CustomerOrderDetail customerOrderDetail : customerOrderDetails) {
+							if((discountType.equals(DiscountType.EMPLOYEE_DISCOUNT) || 
+									(discountType.equals(DiscountType.SENIOR_DISCOUNT) && customerOrderDetail.getProductDetail().getProduct().getAllowSeniorDiscount()) ||
+									(discountType.equals(DiscountType.PWD_DISCOUNT) && customerOrderDetail.getProductDetail().getProduct().getAllowPWDDiscount())) && 
+									customerOrderDetail.getTotalPrice() <= grossAmountLimit) {
+								grossAmountLimit -= customerOrderDetail.getTotalPrice();
+								/*customerOrderDetail.setTotalPrice(TaxUtil.convertTaxType(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), TaxType.VAT_EXEMPT));
+								customerOrderDetail.setTaxType(TaxType.VAT_EXEMPT);*/
+								
+								switch(customerOrderDetail.getTaxType()) {
+									case VAT:
+										totalDiscountableWithVatAmount += customerOrderDetail.getTotalPrice();
+										break;
+									case VAT_EXEMPT:
+										totalDiscountableVatExemptAmount += customerOrderDetail.getTotalPrice();
+										break;
+									case ZERO_RATED:
+										totalDiscountableZeroRatedAmount += customerOrderDetail.getTotalPrice();
+										break;
+								}
+							}
 						}
-					}
-					
-					customerOrderDetailService.batchUpdate(customerOrderDetails);
-					customerOrder.setDiscountType(discountType);
-					customerOrder.setStatus(Status.DISCOUNTED);
-					customerOrder.setTotalDiscountAmount(totalDiscounted * (discountType.getPercentDiscount() / 100));
-					
-					result = new ResultBean();
-					
-					result.setSuccess(customerOrderService.update(customerOrder));
-					if(result.getSuccess()) {
-						result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " applied " + discountType.getDisplayName() + " to Customer Order #" + customerOrder.getOrderNumber() + "."));
+						
+						customerOrder.setVatDiscount(totalDiscountableWithVatAmount * (discountType.getPercentDiscount() / 100.0f));
+						customerOrder.setVatExDiscount(totalDiscountableVatExemptAmount * (discountType.getPercentDiscount() / 100.0f));
+						customerOrder.setZeroRatedDiscount(totalDiscountableZeroRatedAmount * (discountType.getPercentDiscount() / 100.0f));
+						
+						customerOrder.setDiscountType(discountType);
+						customerOrder.setDiscountIdNumber(discountForm.getDiscountIdNumber());
+						customerOrder.setStatus(Status.DISCOUNTED);
+						
+						result = new ResultBean();
+						
+						result.setSuccess(customerOrderService.update(customerOrder));
+						if(result.getSuccess()) {
+							result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " applied " + discountType.getDisplayName() + " to Customer Order #" + customerOrder.getOrderNumber() + "."));
+						} else {
+							result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+						}
+					} else if(discountType.equals(DiscountType.ZERO_RATED)) {
+						Float grossAmountLimit = Math.min(discountForm.getGrossAmountLimit(), discountType.getGrossHardCap());
+						
+						final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrder.getId());
+						
+						for(CustomerOrderDetail customerOrderDetail : customerOrderDetails) {
+							if(customerOrderDetail.getTotalPrice() <= grossAmountLimit) {
+								grossAmountLimit -= customerOrderDetail.getTotalPrice();
+								customerOrderDetail.setTotalPrice(TaxUtil.convertTaxType(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), TaxType.ZERO_RATED));
+								customerOrderDetail.setTaxType(TaxType.ZERO_RATED);
+							}
+						}
+						
+						customerOrder.setDiscountType(discountType);
+						customerOrder.setDiscountIdNumber(discountForm.getDiscountIdNumber());
+						customerOrder.setStatus(Status.DISCOUNTED);
+						
+						result = new ResultBean();
+						
+						result.setSuccess(customerOrderService.update(customerOrder));
+						if(result.getSuccess()) {
+							this.refreshCustomerOrder(customerOrder);
+							result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " applied " + discountType.getDisplayName() + " to Customer Order #" + customerOrder.getOrderNumber() + "."));
+						} else {
+							result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+						}
 					} else {
-						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+						result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Declined!") + " you are not authorized to give " + discountType.getDisplayName() + "."));
 					}
 				} else {
-					result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed!") + " please select a discount type."));
+					result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed!") + "Customer Order already discounted."));
 				}
-				
-				refreshCustomerOrder(customerOrder);
 			} else {
-				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed!") + "Customer Order already discounted."));
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed!") + "Customer Order no longer exists. Please reload the page."));
 			}
 		} else {
-			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed!") + "Customer Order no longer exists. Please reload the page."));
+			result = new ResultBean(Boolean.FALSE, "");
+			result.addToExtras("errors", errors);
 		}
 		
 		return result;
 	}
 	
 	@Override
-	public ResultBean payCustomerOrder(Long customerOrderId, Float cash) {
+	public ResultBean payCustomerOrder(PaymentsFormBean paymentsForm) {
 		final ResultBean result;
-		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
+		final Map<String, String> errors = paymentsFormValidator.validate(paymentsForm);
 		
-		if(customerOrder != null) {
-			if(customerOrder.getStatus().equals(Status.SUBMITTED) || customerOrder.getStatus().equals(Status.DISCOUNTED)) {
-				if(customerOrder.getTotalAmount() <= cash) {
-					Long SIN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag()));
-					
-					result = new ResultBean();
-					
-					customerOrder.setCashier(userService.find(UserContextHolder.getUser().getId()));
-					customerOrder.setStatus(Status.PAID);
-					customerOrder.setPaidOn(new Date());
-					customerOrder.setCash(cash);
-					customerOrder.setSerialInvoiceNumber(SIN);
-					
-					result.setSuccess(customerOrderService.update(customerOrder) && systemVariableService.updateByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag(), String.valueOf(SIN + 1)));
-					if(result.getSuccess()) {
-						// UPDATE INVENTORY if any item is sold at old price
-						inventoryHandler.checkForStockAdjustment(customerOrderId);
+		if(errors.isEmpty()) {
+			final CustomerOrder customerOrder = customerOrderService.find(paymentsForm.getCustomerOrderId());
+			
+			if(customerOrder != null) {
+				if(customerOrder.getStatus().equals(Status.SUBMITTED) || customerOrder.getStatus().equals(Status.DISCOUNTED)) {
+					if(customerOrder.getTotalAmount() <= paymentsForm.getTotalPayment()) {
+						result = new ResultBean();
+						if(customerOrder.getTotalAmount() < 0) {
+							if(paymentsForm.getRefSIN() != null && paymentsForm.getRefSIN()	> 0l) {
+								final CustomerOrder referenceCustomerOrder = customerOrderService.findBySerialInvoiceNumber(paymentsForm.getRefSIN());
+								if(referenceCustomerOrder != null && referenceCustomerOrder.getTotalAmount() > 0) {
+									Long RN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.REFUND_NUMBER.getTag()));
+									customerOrder.setRefundNumber(RN);
+									result.setSuccess(systemVariableService.updateByTag(SystemVariableTag.REFUND_NUMBER.getTag(), String.valueOf(RN + 1)));
+									
+									customerOrder.setReferenceSerialInvoiceNumber(paymentsForm.getRefSIN());
+								} else {
+									result.setSuccess(Boolean.FALSE);
+									result.setMessage("Invalid reference invoice number : " + paymentsForm.getRefSIN());
+								}
+							} else {
+								result.setSuccess(Boolean.FALSE);
+								result.setMessage("Refund requires reference invoice number");
+							}
+						} else {
+							Long SIN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag()));
+							customerOrder.setSerialInvoiceNumber(SIN);
+							result.setSuccess(systemVariableService.updateByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag(), String.valueOf(SIN + 1)));
+						}
 						
-						// UPDATE AUDIT LOG
-						auditLogHandler.addLog(UserContextHolder.getUser().getId(), AuditLogType.SALES, customerOrder.getTotalAmount());
-						
-						result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(cash - customerOrder.getTotalAmount())) +
-								Html.newLine + Html.newLine + Html.text("Cash          : " + CurrencyFormatter.pesoFormat(cash)) +
-								Html.newLine + Html.text("Amount Due    : " + CurrencyFormatter.pesoFormat(customerOrder.getTotalAmount()))));
+						if(result.getSuccess()) {
+							customerOrder.setCashier(userService.find(UserContextHolder.getUser().getId()));
+							customerOrder.setStatus(Status.PAID);
+							customerOrder.setPaidOn(new Date());
+							setCustomerOrderPayment(customerOrder, paymentsForm);
+							
+							result.setSuccess(customerOrderService.update(customerOrder));
+							if(result.getSuccess()) {
+								// UPDATE INVENTORY if any item is sold at old price
+								inventoryHandler.checkForStockAdjustment(paymentsForm.getCustomerOrderId());
+								
+								// UPDATE AUDIT LOG
+								auditLogHandler.addLog(UserContextHolder.getUser().getId(), AuditLogType.SALES, customerOrder.getTotalAmount());
+								
+								result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(customerOrder.getTotalPayment() - customerOrder.getTotalAmount())) +
+										Html.newLine + Html.newLine + Html.text("Cash          : " + customerOrder.getFormattedCash()) +
+										(customerOrder.getCheckAmount().equals(0.0f) ? "" : Html.newLine + Html.text("Check         : " + customerOrder.getFormattedCheckAmount())) + 
+										Html.newLine + Html.text("Amount Due    : " + customerOrder.getFormattedTotalAmount())));
+							} else {
+								result.setMessage("Failed to pay Customer order \"" + customerOrder.getOrderNumber() + "\".");
+							}
+						}
 					} else {
-						result.setMessage("Failed to pay Customer order \"" + customerOrder.getOrderNumber() + "\".");
+						result = new ResultBean(false, "Insufficient cash.");
 					}
+				} else if(customerOrder.getStatus().equals(Status.PAID)) {
+					result = new ResultBean(false, "Customer order already paid.");
 				} else {
-					result = new ResultBean(false, "Insufficient cash.");
+					result = new ResultBean(Boolean.FALSE, "Customer Order not yet completed.");
 				}
-			} else if(customerOrder.getStatus().equals(Status.PAID)) {
-				result = new ResultBean(false, "Customer order already paid.");
 			} else {
-				result = new ResultBean(Boolean.FALSE, "Customer Order not yet completed.");
+				result = new ResultBean(false, "Customer order not found.");
 			}
 		} else {
-			result = new ResultBean(false, "Customer order not found.");
+			result = new ResultBean(Boolean.FALSE, "");
+			result.addToExtras("errors", errors);
 		}
 		
 		return result;
@@ -288,10 +396,11 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(customerOrderDetail != null) {
 			final CustomerOrder customerOrder = customerOrderDetail.getCustomerOrder();
 			if(customerOrder != null) {
-				if(customerOrder.getStatus().equals(Status.LISTING)) {
+				if(customerOrder.getStatus().equals(Status.LISTING) || 
+						(customerOrder.getStatus().equals(Status.SUBMITTED) && UserContextHolder.getUser().getUserType().getAuthority() <= 3)) {
 					result = this.removeCustomerOrderDetail(customerOrderDetail);
 				} else {
-					result = new ResultBean(false, "Customer order cannot be edited right now.");
+					result = new ResultBean(false, "You do not have permission to deleted this order.");
 				}
 			} else {
 				result = new ResultBean(false, "Customer order not found.");
@@ -573,7 +682,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				
 				Printer printer = new Printer();
 				try {
-					printer.print(customerOrderCopy.merge(velocityEngine, DocType.PRINT), "Customer Order #" + customerOrder.getOrderNumber() + " (COPY)");
+					printer.print(customerOrderCopy.merge(velocityEngine, DocType.PRINT), "Customer Order #" + customerOrder.getOrderNumber() + " (COPY)", PrintConstants.EVER_CASHIER_PRINTER);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -602,21 +711,71 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	public void printReceipt(Long customerOrderId) {
+	public void printReceipt(Long customerOrderId, String footer, Boolean original) {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
 			final List<CustomerOrderDetail> customerOrderItems = customerOrderDetailService.findAllByCustomerOrderIdOrderByProductName(customerOrder.getId());
-			final CustomerOrderReceiptTemplate customerOrderReceipt = new CustomerOrderReceiptTemplate(customerOrder, customerOrderItems);
+			final CustomerOrderReceiptTemplate customerOrderReceipt = new CustomerOrderReceiptTemplate(customerOrder, customerOrderItems, customerOrder.getTotalAmount() < 0 ? "REFUND" : "Sales Invoice", original ? "" : "REPRINT", footer);
 			
 			Printer printer = new Printer();
 			try {
 				final String receipt = customerOrderReceipt.merge(velocityEngine, DocType.PRINT);
 				TextWriter.write(receipt, fileConstants.getReceiptHome() + customerOrder.getSerialInvoiceNumber() + ".txt");
-				printer.print(receipt, "Customer Order #" + customerOrder.getOrderNumber() + " (ORIG)");
+				printer.print(receipt, "Customer Order #" + customerOrder.getOrderNumber() + (original ? " (ORIG)" : " (COPY)"), PrintConstants.EVER_CASHIER_PRINTER);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	@Override
+	public ResultBean printZReading(Date readingDate) {
+		final ResultBean result;
+		
+		salesReportHandler.updateZReading();
+		
+		final ZReading zReading = zReadingService.findByReadingDate(readingDate);
+		
+		if(zReading != null) {
+			result = new ResultBean();
+			final ZReadingTemplate zReadingTemplate = new ZReadingTemplate(zReading);
+			
+			Printer printer = new Printer();
+			try {
+				
+				final String zReadingString = zReadingTemplate.merge(velocityEngine, DocType.PRINT);
+				TextWriter.write(zReadingString, fileConstants.getZReadingHome() + "z_reading_" + DateFormatter.prettyFormat(readingDate) + ".txt");
+				printer.print(zReadingString, "Z Reading " + DateFormatter.prettyFormat(readingDate), PrintConstants.EVER_ACCOUNTING_PRINTER);
+				result.setSuccess(Boolean.TRUE);
+				result.setMessage("");
+			} catch (Exception e) {
+				e.printStackTrace();
+				result.setSuccess(Boolean.FALSE);
+				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+			}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed!") + " Invalid reading date : " + DateFormatter.prettyFormat(readingDate)));
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public void endOfShift() {
+		final User cashier = UserContextHolder.getUser().getUserEntity();
+		final XReading xReading = salesReportHandler.getXReadingByCashier(cashier);
+		
+		final XReadingTemplate xReadingTemplate = new XReadingTemplate(xReading);
+		
+		Printer printer = new Printer();
+		try {
+			
+			final String xReadingString = xReadingTemplate.merge(velocityEngine, DocType.PRINT);
+			TextWriter.write(xReadingString, fileConstants.getXReadingHome() + "x_reading_" + cashier.getShortName() + "_" + DateFormatter.fileSafeFormat(new Date()) + ".txt");
+			printer.print(xReadingString, "X Reading " + cashier.getShortName(), PrintConstants.EVER_CASHIER_PRINTER);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -640,6 +799,15 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	private void setCustomerOrderDetailQuantity(CustomerOrderDetail customerOrderDetail, float quantity) {
 		customerOrderDetail.setQuantity(quantity);
 		customerOrderDetail.setTotalPrice(quantity * customerOrderDetail.getUnitPrice());
+	}
+	
+	private void setCustomerOrderPayment(CustomerOrder customerOrder, PaymentsFormBean paymentsForm) {
+		customerOrder.setCash(paymentsForm.getCash());
+		customerOrder.setCheckAccountNumber(paymentsForm.getCheckAccountNumber());
+		customerOrder.setCheckNumber(paymentsForm.getCheckNumber());
+		customerOrder.setCheckAmount(paymentsForm.getCheckAmount() != null ? paymentsForm.getCheckAmount() : 0.0f);
+		customerOrder.setCardTransactionNumber(paymentsForm.getCardTransactionNumber());
+		customerOrder.setCardAmount(paymentsForm.getCardAmount() != null ? paymentsForm.getCardAmount() : 0.0f);
 	}
 	
 	private void addAmountToOrder(Float amount, TaxType taxType, CustomerOrder customerOrder) {

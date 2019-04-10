@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.criterion.Order;
 
+import com.chua.evergrocery.beans.BIRSalesSummaryBean;
 import com.chua.evergrocery.beans.CashierSalesSummaryBean;
 import com.chua.evergrocery.beans.SINRangeBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
@@ -19,4 +20,14 @@ public interface CustomerOrderDAO extends DAO<CustomerOrder, Long>, CustomerOrde
 	List<CashierSalesSummaryBean> findAllCashierSalesSummaryByDatePaidAndDiscountType(Date dateFrom, Date dateTo, List<DiscountType> discountTypes, Boolean returnsOnly);
 	
 	SINRangeBean getSINRangeByDate(Date dateFrom, Date dateTo);
+	
+	/**
+	 * 
+	 * @param dateFrom
+	 * @param dateTo
+	 * @param cashierId
+	 * @param refundOnly true refund only, false except refund
+	 * @return
+	 */
+	BIRSalesSummaryBean getSalesSummaryByDatePaidAndCashier(Date dateFrom, Date dateTo, Long cashierId, Boolean exceptThisCashier, Boolean refundOnly);
 }

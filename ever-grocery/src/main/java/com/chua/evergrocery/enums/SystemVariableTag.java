@@ -10,7 +10,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum SystemVariableTag {
 
-	SERIAL_INVOICE_NUMBER("Serial Invoice Number", "SIN");
+	SERIAL_INVOICE_NUMBER("Serial Invoice Number", "SIN"),
+	
+	REFUND_NUMBER("Refund Number", "RN");
 	
 	private final String displayName;
 	
