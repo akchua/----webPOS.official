@@ -60,6 +60,8 @@ public class Product extends BaseObject {
 	
 	private Boolean allowSeniorDiscount;
 	
+	private Boolean allowPWDDiscount;
+	
 	private Float saleRate;
 	
 	private Float purchaseBudget;
@@ -169,6 +171,16 @@ public class Product extends BaseObject {
 
 	public void setAllowSeniorDiscount(Boolean allowSeniorDiscount) {
 		this.allowSeniorDiscount = allowSeniorDiscount;
+	}
+
+	@Basic
+	@Column(name = "allow_pwd_discount")
+	public Boolean getAllowPWDDiscount() {
+		return allowPWDDiscount;
+	}
+
+	public void setAllowPWDDiscount(Boolean allowPWDDiscount) {
+		this.allowPWDDiscount = allowPWDDiscount;
 	}
 
 	@Basic

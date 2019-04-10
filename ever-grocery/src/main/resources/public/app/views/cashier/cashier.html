@@ -12,6 +12,12 @@
 	<br />
 	 -->
 	<div class="row">
+		<div class="col-md-4 col-xs-4">
+			<button data-bind="click: endOfShift" type="button" class="btn btn-danger">End of Shift</button>
+		</div>	 
+	</div>
+	 
+	<div class="row">
 		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
 	</div>
 	
@@ -41,6 +47,9 @@
     						<div class="pull-right">
     							<button data-bind="click: function() { $parent.view(customerOrder.id) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm" title="View"><i class="fa fa-eye"></i></button>
     							<button data-bind="click: function() { $parent.pay(customerOrder.id) }, enable: $parent.enableButtons" type="button" class="btn btn-success btn-sm" title="Pay"><i class="fa fa-money"></i></button>
+    							<!-- ko if: $parent.allowedToDeleteOrder -->
+    							<button data-bind="click: function() { $parent.remove(customerOrder.id, customerOrder.orderNumber) }" type="button" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash"></i></button>
+    							<!-- /ko -->
     						</div>
     					</td>
     				</tr>

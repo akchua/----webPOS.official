@@ -11,8 +11,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public enum DiscountType {
 	
 	NO_DISCOUNT("No Discount", "ND", 0.0f, 9999999.0f),
+	
+	PWD_DISCOUNT("PWD Discount", "PWD", 5.0f, 650.0f),
 
-	SENIOR_DISCOUNT("Senior Citizen Discount", "SCD", 5.0f, 650.0f);
+	SENIOR_DISCOUNT("Senior Citizen Discount", "SCD", 5.0f, 650.0f),
+	
+	EMPLOYEE_DISCOUNT("Employee Discount", "EMP", 20.0f, 2000.0f),
+	
+	ZERO_RATED("Zero Rated", "ZER", 0.0f, 2000.0f);
 	
 	private final String displayName;
 	

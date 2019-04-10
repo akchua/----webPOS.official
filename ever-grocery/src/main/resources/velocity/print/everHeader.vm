@@ -1,0 +1,10 @@
+## Template for Ever Header
+## Has a maximum of 44 columns in a line
+        VPKC Grocery
+         SATURNINO O. CHUA - PROP.
+           Abadilla St., Brgy. 17
+          Laoag City, Ilocos Norte
+       VAT Reg. TIN: 102-198-471-0000
+         S/N : 
+         MIN : 
+${t.Date}

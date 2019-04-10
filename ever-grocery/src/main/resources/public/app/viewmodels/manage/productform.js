@@ -14,7 +14,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice'/*
         	companyId: ko.observable(),
         	
         	taxType: ko.observable(),
-        	allowSeniorDiscount: ko.observable(false)
+        	allowSeniorDiscount: ko.observable(false),
+        	allowPWDDiscount: ko.observable(false)
         };
         
         this.errors = {

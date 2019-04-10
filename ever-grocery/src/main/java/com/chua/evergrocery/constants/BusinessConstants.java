@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BusinessConstants {
 
-private final String businessName;
+	private final String businessName;
 	
 	private final String businessShortName;
 	
@@ -20,15 +20,31 @@ private final String businessName;
 	
 	private final String businessPrimaryContactNumber;
 	
+	private final String businessIncome;
+	
+	private final String businessOpeningHour;
+	
+	private final String businessCutoffHour;
+	
+	private final String zedMinutes;
+	
 	@Autowired
 	public BusinessConstants(@Value("${business.name}") String businessName,
 							@Value("${business.shortName}") String businessShortName,
 							@Value("${business.officialEmail}") String businessOfficialEmail,
-							@Value("${business.primaryContactNumber}") String businessPrimaryContactNumber) {
+							@Value("${business.primaryContactNumber}") String businessPrimaryContactNumber,
+							@Value("${business.income}") String businessIncome,
+							@Value("${business.openingHour}") String businessOpeningHour,
+							@Value("${business.cutoffHour}") String businessCutoffHour,
+							@Value("${business.zedMinutes}") String zedMinutes) {
 		this.businessName = businessName;
 		this.businessShortName = businessShortName;
 		this.businessOfficialEmail = businessOfficialEmail;
 		this.businessPrimaryContactNumber = businessPrimaryContactNumber;
+		this.businessIncome = businessIncome;
+		this.businessOpeningHour = businessOpeningHour;
+		this.businessCutoffHour = businessCutoffHour;
+		this.zedMinutes = zedMinutes;
 	}
 
 	public String getBusinessName() {
@@ -45,5 +61,21 @@ private final String businessName;
 
 	public String getBusinessPrimaryContactNumber() {
 		return businessPrimaryContactNumber;
+	}
+
+	public Float getBusinessIncome() {
+		return Float.parseFloat(businessIncome);
+	}
+	
+	public Integer getBusinessOpeningHour() {
+		return Integer.parseInt(businessOpeningHour);
+	}
+	
+	public Integer getBusinessCutoffHour() {
+		return Integer.parseInt(businessCutoffHour);
+	}
+	
+	public Integer getZedMinutes() {
+		return Integer.parseInt(zedMinutes);
 	}
 }

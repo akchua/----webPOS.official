@@ -35,9 +35,9 @@ public class ProductServiceImpl
 	}
 	
 	@Override
-	public ObjectList<Product> findAllWithPagingOrderByPurchaseValue(int pageNumber, int resultsPerPage,
+	public ObjectList<Product> findAllWithPagingOrderByProfit(int pageNumber, int resultsPerPage,
 			String searchKey, Long companyId) {
-		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, new Order[] { Order.desc("purchaseValuePercentage") });
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, new Order[] { Order.desc("profitPercentage") });
 	}
 	
 	@Override

@@ -15,4 +15,5 @@
 	<bean id="emailUtil" class="com.chua.evergrocery.utility.EmailUtil" scope="singleton"></bean>
 	<bean id="fileConstants" class="com.chua.evergrocery.constants.FileConstants" scope="singleton"></bean>
 	<bean id="systemConstants" class="com.chua.evergrocery.constants.SystemConstants" scope="singleton"></bean>
+	<bean id="businessConstants" class="com.chua.evergrocery.constants.BusinessConstants" scope="singleton"></bean>
 </beans>

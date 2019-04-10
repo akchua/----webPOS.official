@@ -25,4 +25,9 @@ public class NumberFormatter {
 		df.setMaximumFractionDigits(decimalPlaces);
 		return df.format(value);
 	}
+	
+	public static String SINFormat(Long SIN) {
+		DecimalFormat SIN_FORMAT = new DecimalFormat("0000000000000000");
+		return SIN_FORMAT.format(SIN);
+	}
 }

@@ -79,6 +79,9 @@
 				<value>com.chua.evergrocery.database.entity.DailySalesSummary</value>
 				<value>com.chua.evergrocery.database.entity.CompanyDailySalesSummary</value>
 				<value>com.chua.evergrocery.database.entity.ProductDailySalesSummary</value>
+				
+				<value>com.chua.evergrocery.database.entity.ZReading</value>
+				<value>com.chua.evergrocery.database.entity.XReading</value>
 			</list>
 		</property>
 	</bean>

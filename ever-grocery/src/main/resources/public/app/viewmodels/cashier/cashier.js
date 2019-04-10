@@ -10,6 +10,7 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
 		
+		this.allowedToDeleteOrder = ko.observable(app.user.userType.authority <= 3);
 		this.enableButtons = ko.observable(true);
 	};
 	
@@ -28,6 +29,24 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 		});
 		
 		self.refreshCustomerOrderList();
+	};
+	
+	Cashier.prototype.endOfShift = function() {
+		var self = this;
+		
+		app.showMessage('Confirm End of Shift',
+				'Confirm EOS',
+				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+				customerOrderService.endOfShift().done(function() {
+					securityService.logout().done(function() {
+			    		location.href = '/';
+			    	});
+				});
+			}
+		})
+		
 	};
 	
 	Cashier.prototype.refreshCustomerOrderList = function() {
@@ -61,6 +80,22 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 				self.enableButtons(true);
 			});
 		});
+	};
+	
+	Cashier.prototype.remove = function(customerOrderId, customerOrderNumber) {
+		var self = this;
+		
+		app.showMessage('Are you sure you want to cancel Customer Order #' + customerOrderNumber + '?',
+				'Confirm Remove',
+				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+				customerOrderService.removeCustomerOrder(customerOrderId).done(function(result) {
+					self.refreshCustomerOrderList();
+					app.showMessage(result.message);
+				});
+			}
+		})
 	};
 	
 	Cashier.prototype.search = function() {

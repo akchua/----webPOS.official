@@ -1,6 +1,8 @@
 package com.chua.evergrocery.rest.endpoint;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -12,11 +14,12 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.chua.evergrocery.beans.DiscountFormBean;
+import com.chua.evergrocery.beans.PaymentsFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
-import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -84,17 +87,15 @@ public class CustomerOrderEndpoint {
 	@POST
 	@Path("/applydiscount")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean applyDiscount(@FormParam("customerOrderId") Long customerOrderId, 
-				@FormParam("discountType") DiscountType discountType,
-				@FormParam("grossAmountLimit") Float grossAmountLimit) {
-		return customerOrderHandler.applyDiscount(customerOrderId, discountType, grossAmountLimit);
+	public ResultBean applyDiscount(@FormParam("discountFormData") String discountFormData) throws IOException {
+		return customerOrderHandler.applyDiscount(new ObjectMapper().readValue(discountFormData, DiscountFormBean.class));
 	}
 	
 	@POST
 	@Path("/paycustomerorder")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean payCustomerOrder(@FormParam("customerOrderId") Long customerOrderId, @FormParam("cash") Float cash) {
-		return customerOrderHandler.payCustomerOrder(customerOrderId, cash);
+	public ResultBean payCustomerOrder(@FormParam("paymentsFormData") String paymentsFormData) throws IOException {
+		return customerOrderHandler.payCustomerOrder(new ObjectMapper().readValue(paymentsFormData, PaymentsFormBean.class));
 	}
 	
 	@POST
@@ -156,10 +157,32 @@ public class CustomerOrderEndpoint {
 	}
 	
 	@POST
-	@Path("/printreceipt")
+	@Path("/printoriginalreceipt")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public void printReceipt(@FormParam("customerOrderId") Long customerOrderId) {
-		customerOrderHandler.printReceipt(customerOrderId);
+	public void printOriginalReceipt(@FormParam("customerOrderId") Long customerOrderId,
+					@FormParam("footer") String footer) {
+		customerOrderHandler.printReceipt(customerOrderId, footer, Boolean.TRUE);
+	}
+	
+	@POST
+	@Path("/printreceiptcopy")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public void printReceiptCopy(@FormParam("customerOrderId") Long customerOrderId) {
+		customerOrderHandler.printReceipt(customerOrderId, "", Boolean.FALSE);
+	}
+	
+	@POST
+	@Path("/printzreading")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean printZReading(@FormParam("readingDate") String readingDateData) throws ParseException {
+		return customerOrderHandler.printZReading(new SimpleDateFormat("yyyy-MM-dd").parse(readingDateData));
+	}
+	
+	@POST
+	@Path("/endofshift")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public void endOfShift() {
+		customerOrderHandler.endOfShift();
 	}
 	
 	@POST

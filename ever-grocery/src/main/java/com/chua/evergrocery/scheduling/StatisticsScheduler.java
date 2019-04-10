@@ -57,7 +57,7 @@ public class StatisticsScheduler {
 	
 	/**
 	 * Daily Sales Statistics Update
-	 * fires at 6:45PM every day
+	 * fires at 6:55PM every day
 	 */
 	@Scheduled(cron = "0 55 18 * * ?")
 	public void dailySalesStatisticsUpdate() {

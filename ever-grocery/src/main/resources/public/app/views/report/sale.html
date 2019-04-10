@@ -1,7 +1,10 @@
 <section>
 	<div class="row">
-		<div class="col-md-4 col-xs-4">
+		<!-- <div class="col-md-4 col-xs-4">
 			<button data-bind="click: generateReport" type="button" class="btn btn-success">Generate Report</button>
+		</div> -->
+		<div class="col-md-4 col-xs-4">
+			<button data-bind="click: zReading" type="button" class="btn btn-success">Z-Reading</button>
 		</div>
 		
 		<form role="search" class="form-inline">
@@ -27,7 +30,8 @@
     		<table class="table table-responsive table-hover">
     			<thead>
     				<tr>
-    					<th>SIN</th>
+    					<th>SI No.</th>
+    					<th>Refund No.</th>
     					<th>Date</th>
     					<th>Creator</th>
     					<th>Cashier</th>
@@ -38,7 +42,8 @@
     		
     			<tbody data-bind="foreach: { data: customerOrderList, as: 'customerOrder' }">
     				<tr>
-    					<td data-bind="text: customerOrder.formattedSIN"></td>
+    					<td data-bind="text: customerOrder.serialInvoiceNumber"></td>
+    					<td data-bind="text: customerOrder.refundNumber"></td>
     					<td data-bind="text: customerOrder.formattedPaidOn"></td>
     					<td>
     						<span data-bind="if: customerOrder.creator">
@@ -55,7 +60,9 @@
     					<td>
     						<div class="pull-right">
     							<button data-bind="click: function() { $parent.view(customerOrder.id) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm">View</button>
-    							<button data-bind="click: function() { $parent.print(customerOrder.id, customerOrder.name) }, enable: $parent.enableButtons" type="button" class="btn btn-primary btn-sm">Print</button>
+    							<!-- ko if: customerOrder.status.name === 'PAID' -->
+    							<button data-bind="click: function() { $parent.print(customerOrder.id, customerOrder.orderNumber) }, enable: $parent.enableButtons" type="button" class="btn btn-primary btn-sm">Print</button>
+    							<!-- /ko -->
     						</div>
     					</td>
     				</tr>

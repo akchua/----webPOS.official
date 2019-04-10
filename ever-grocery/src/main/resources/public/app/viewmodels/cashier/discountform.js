@@ -5,17 +5,26 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		
 		this.discountTypeList = ko.observable();
 		
-		this.discountType = ko.observable();
-		this.grossAmountLimit = ko.observable();
+		this.discountFormModel = {
+			customerOrderId : ko.observable(),
+			discountType : ko.observable(),
+			grossAmountLimit : ko.observable(),
+			discountIdNumber : ko.observable()
+		};
 		
-		this.customerOrderId = null;
+		this.errors = {
+			discountType : ko.observable(),
+			grossAmountLimit : ko.observable(),
+			discountIdNumber : ko.observable()
+		};
+		
 		this.customerOrderNumber = null;
 	};
 	
 	DiscountForm.prototype.activate = function() {
 		var self = this;
 		
-		self.customerOrderId = self.customerOrder.id;
+		self.discountFormModel.customerOrderId(self.customerOrder.id);
 		self.customerOrderNumber = self.customerOrder.orderNumber;
 		
 		constantsService.getDiscountTypeList().done(function(discountTypeList) {
@@ -30,17 +39,20 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 	DiscountForm.prototype.apply = function() {
 		var self = this;
 		
-		app.showMessage('Applying Discount : <strong>' + self.discountType() + '</strong>' + ' to order#' + self.customerOrderNumber,
+		app.showMessage('Applying Discount : <strong>' + self.discountFormModel.discountType() + '</strong>' + ' to order#' + self.customerOrderNumber,
 				'Confirm',
 				[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
 		.then(function(confirm) {
 			if(confirm) {
-				customerOrderService.applyDiscount(self.customerOrderId, self.discountType(), self.grossAmountLimit()).done(function(result) {
+				customerOrderService.applyDiscount(ko.toJSON(self.discountFormModel)).done(function(result) {
 					if(result.success) {
 		        		dialog.close(self);
-		        	} else {
-		        		app.showMessage(result.message);
+		        	} else if(result.extras && result.extras.errors) {
+		        		self.errors.discountType(result.extras.errors.discountType);
+		        		self.errors.grossAmountLimit(result.extras.errors.grossAmountLimit);
+		        		self.errors.discountIdNumber(result.extras.errors.discountIdNumber);
 		        	}
+					if(result.message) app.showMessage(result.message);
 				});
 			}
 		})

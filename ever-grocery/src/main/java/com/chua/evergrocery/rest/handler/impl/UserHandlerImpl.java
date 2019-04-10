@@ -371,7 +371,7 @@ public class UserHandlerImpl implements UserHandler {
 		user.setLastName(userForm.getLastName().trim());
 		user.setEmailAddress(userForm.getEmailAddress().trim());
 		user.setContactNumber(userForm.getContactNumber().trim());
-		user.setUserType(userForm.getUserType() != null ? userForm.getUserType() : UserType.ADMINISTRATOR);
+		user.setUserType(userForm.getUserType() != null ? userForm.getUserType() : UserType.STAFF);
 	}
 	
 	private void setSettings(User user, UserFormBean userFormBean) {

@@ -67,25 +67,22 @@ define(['jquery'], function ($) {
     		});
     	},
     	
-    	applyDiscount: function(customerOrderId, discountType, grossAmountLimit) {
+    	applyDiscount: function(discountFormData) {
     		return $.ajax({
     			url: '/services/customerorder/applydiscount',
     			method: 'POST',
     			data: {
-    				customerOrderId: customerOrderId,
-    				discountType: discountType,
-    				grossAmountLimit: grossAmountLimit
+    				discountFormData: discountFormData
     			}
     		});
     	},
     	
-    	payCustomerOrder: function(customerOrderId, cash) {
+    	payCustomerOrder: function(paymentsFormData) {
     		return $.ajax({
     			url: '/services/customerorder/paycustomerorder',
     			method: 'POST',
     			data: {
-    				customerOrderId: customerOrderId,
-    				cash: cash
+    				paymentsFormData: paymentsFormData
     			}
     		});
     	},
@@ -175,13 +172,41 @@ define(['jquery'], function ($) {
     		});
     	},
     	
-    	printReceipt: function(customerOrderId) {
+    	printOriginalReceipt: function(customerOrderId, footer) {
     		return $.ajax({
-    			url: '/services/customerorder/printreceipt',
+    			url: '/services/customerorder/printoriginalreceipt',
+    			method: 'POST',
+    			data: {
+    				customerOrderId: customerOrderId,
+    				footer: footer
+    			}
+    		});
+    	},
+    	
+    	printReceiptCopy: function(customerOrderId) {
+    		return $.ajax({
+    			url: '/services/customerorder/printreceiptcopy',
     			method: 'POST',
     			data: {
     				customerOrderId: customerOrderId
     			}
+    		});
+    	},
+    	
+    	printZReading: function(readingDate) {
+    		return $.ajax({
+    			url: '/services/customerorder/printzreading',
+    			method: 'POST',
+    			data: {
+    				readingDate: readingDate
+    			}
+    		});
+    	},
+    	
+    	endOfShift: function() {
+    		return $.ajax({
+    			url: '/services/customerorder/endofshift',
+    			method: 'POST'
     		});
     	},
     	

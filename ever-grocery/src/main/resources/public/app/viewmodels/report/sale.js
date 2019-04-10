@@ -1,5 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/report/salereport', 'viewmodels/report/saleview'], 
-		function (app, ko, customerOrderService, SaleReport, SaleView) {
+define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/report/salereport', 'viewmodels/report/zreading', 'viewmodels/report/saleview'], 
+		function (app, ko, customerOrderService, SaleReport, ZReading, SaleView) {
 	var CustomerOrder = function() {
 		this.customerOrderList = ko.observable();
 		
@@ -63,6 +63,10 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/
 	CustomerOrder.prototype.generateReport = function() {
     	SaleReport.show()
     };
+    
+    CustomerOrder.prototype.zReading = function() {
+    	ZReading.show()
+    };
 	
 	CustomerOrder.prototype.view = function(customerOrderId) {
 		var self = this;
@@ -76,16 +80,16 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/
 		});
 	};
 	
-	CustomerOrder.prototype.print = function(customerOrderId, customerOrderName) {
+	CustomerOrder.prototype.print = function(customerOrderId, customerOrderNumber) {
 		var self = this;
 		self.enableButtons(false);
 		
-		app.showMessage('Are you sure you want to print Customer Order "' + customerOrderName + '"?',
+		app.showMessage('Are you sure you want to print Customer Order #' + customerOrderNumber + '?',
 				'Confirm Print',
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {
 			if(confirm) {
-				customerOrderService.printCustomerOrderCopy(customerOrderId).done(function(result) {
+				customerOrderService.printReceiptCopy(customerOrderId).done(function(result) {
 					self.refreshCustomerOrderList();
 					app.showMessage(result.message);
 				});

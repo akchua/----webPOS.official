@@ -9,6 +9,11 @@
 			<span class="col-xs-4">Order <span class="text-md-red-elite">#<span data-bind="text: customerOrderViewModel.customerOrderNumber"></span></span></span>
 			<span class="col-xs-offset-2 col-xs-6 text-center">TOTAL: <span class="text-lg-green-neuton">&#8369; <span data-bind="text: customerOrderViewModel.formattedTotalAmount" ></span></span></span>
 		</h3>
+		<!-- ko if: discounted -->
+		<h3>
+			<span class="col-xs-offset-6 col-xs-6 text-center">DISC: <span class="text-md-red-elite">&#8369; <span data-bind="text: customerOrderViewModel.formattedTotalDiscount" ></span></span></span>
+		</h3>
+		<!-- /ko -->
 		<div class="row">
 			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
 		</div>

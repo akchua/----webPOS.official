@@ -97,7 +97,7 @@ public class ProductHandlerImpl implements ProductHandler {
 			productList.setTotal(products.size());
 			return productList;
 		} else {
-			return productService.findAllWithPagingOrderByPurchaseValue(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, companyId);
+			return productService.findAllWithPagingOrderByProfit(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, companyId);
 		}
 	}
 	
@@ -265,6 +265,7 @@ public class ProductHandlerImpl implements ProductHandler {
 		product.setCompany(companyService.find(productForm.getCompanyId()));
 		product.setTaxType(productForm.getTaxType() != null ? productForm.getTaxType() : TaxType.VAT);
 		product.setAllowSeniorDiscount(productForm.getAllowSeniorDiscount() != null ? productForm.getAllowSeniorDiscount() : false);
+		product.setAllowPWDDiscount(productForm.getAllowPWDDiscount() != null ? productForm.getAllowPWDDiscount() : false);
 	}
 	
 	private void setProductDetail(ProductDetail productDetail, ProductDetailsFormBean productDetailsForm) {

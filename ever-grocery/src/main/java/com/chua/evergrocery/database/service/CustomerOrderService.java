@@ -3,6 +3,7 @@ package com.chua.evergrocery.database.service;
 import java.util.Date;
 import java.util.List;
 
+import com.chua.evergrocery.beans.BIRSalesSummaryBean;
 import com.chua.evergrocery.beans.DailySalesReportBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
@@ -14,6 +15,10 @@ public interface CustomerOrderService
 	
 	List<CustomerOrder> findAllPaidByCashierAndDateFromToNow(Long cashierId, Date dateFrom);
 	
+	List<CustomerOrder> findAllDiscountedByDatePaid(Date datePaid);
+	
+	List<CustomerOrder> findAllDiscountedByDatePaidAndCashier(Date datePaidStart, Date datePaidEnd, Long cashierId);
+	
 	Integer getPaidCountToday();
 	
 	List<CustomerOrder> findAllBySalesReportQueryBean(SalesReportQueryBean salesReportQuery);
@@ -21,4 +26,16 @@ public interface CustomerOrderService
 	List<DailySalesReportBean> getDailySalesReportByDateRange(Date startDate, Date endDate);
 	
 	List<DailySalesReportBean> getDailySalesReportByDateRangeAndDiscountType(Date startDate, Date endDate, List<DiscountType> discountType, Boolean returnsOnly);
+	
+	BIRSalesSummaryBean getSalesSummaryByDatePaid(Date datePaid);
+	
+	BIRSalesSummaryBean getSalesSummaryByDatePaidAndCashier(Date datePaidStart, Date datePaidEnd, Long cashierId);
+	
+	BIRSalesSummaryBean getSalesSummaryByDatePaidAndExceptCashier(Date datePaidStart, Date datePaidEnd, Long exceptCashierId);
+	
+	BIRSalesSummaryBean getRefundSummaryByDatePaid(Date datePaid);
+	
+	BIRSalesSummaryBean getRefundSummaryByDatePaidAndCashier(Date datePaidStart, Date datePaidEnd, Long cashierId);
+	
+	BIRSalesSummaryBean getRefundSummaryByDatePaidAndExceptCashier(Date datePaidStart, Date datePaidEnd, Long exceptCashierId);
 }

@@ -1,31 +1,127 @@
-<div id="divPayModal" class="modal-content modal-sm">
+<div id="divPayModal" class="modal-content modal-lg">
     <div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
-        <h2 align="center">Total: Php<span data-bind="text: formattedTotalAmount"></span></h2>
+        <h2 align="center"><span data-bind="text: title"></span> : <span class="text-lg-green-neuton text-center">Php <span data-bind="text: formattedTotalAmount"></span></span></h2>
     </div>
     
     <div class="modal-body">
-    	<div class="row">
-	    	<button data-bind="click: payThousand, enable: enableButtons" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedThousand"></span></button>
-	    	<button data-bind="click: payFiveHundred, enable: enableButtons" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedFiveHundred"></span></button>
-	    	<button data-bind="click: payHundred, enable: enableButtons" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedHundred"></span></button>
-	    	<button data-bind="click: payExact, enable: enableButtons" class="btn btn-success col-xs-6" type="button"><span data-bind="text: formattedExact"></span></button>
-	    </div>
-	    <br>
-	    <div class="row">
-	        <form class="form-inline">
-		        <div class="input-group col-xs-12 text-center">
-					<input data-bind="value: cash" type="text" class="form-control autofocus" id="inputCash" placeholder="Cash Php ...">
-					<span class="input-group-btn">
-			        	<button class="btn btn-primary" type="submit" data-bind="click: payAmount, enable: enableButtons"><i class="fa fa-money"></i></button>
-			        </span>
+		<div class="tabbable">
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#regular" data-toggle="tab">Regular</a></li>
+				<!-- ko if: enableQuickPay -->
+				<li><a href="#others" data-toggle="tab">Others</a></li>
+				<!-- /ko -->
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="regular">
+			    	<div class="row">
+				    	<!-- ko if: enableQuickPay -->
+						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+							<span>TEMP</span>
+							<br><br><br><br><br><br><br><br><br><br><br><br>
+						</div>
+						<!-- /ko -->
+						<!-- ko ifnot: enableQuickPay -->
+				        <div class="col-lg-offset-7 col-md-offset-5 col-sm-offset-5"></div>
+						<!-- /ko -->
+				    	<div class="col-lg-offset-2 col-lg-5 col-md-offset-2 col-md-5 col-sm-offset-2 col-sm-5 col-xs-12">
+				    		<span class="text-md-black-elite">Cash : </span>
+					    	<div class="row">
+					    		<!-- ko if: enableQuickPay -->
+						    	<button data-bind="click: payThousand, enable: enableButtons" class="btn btn-success col-xs-6" type="button">&#8369; <span data-bind="text: formattedThousand"></span></button>
+						    	<button data-bind="click: payFiveHundred, enable: enableButtons" class="btn btn-success col-xs-6" type="button">&#8369; <span data-bind="text: formattedFiveHundred"></span></button>
+						    	<button data-bind="click: payHundred, enable: enableButtons" class="btn btn-success col-xs-6" type="button">&#8369; <span data-bind="text: formattedHundred"></span></button>
+						    	<!-- /ko -->
+						    	<button data-bind="click: payExact, enable: enableButtons" class="btn btn-success col-xs-6" type="button">&#8369; <span data-bind="text: formattedExact"></span></button>
+						    </div>
+						    <br>
+						    <div class="row">
+						    	<!-- ko if: enableQuickPay -->
+						        <form class="form-inline">
+							        <div class="input-group col-xs-12 text-center">
+										<input data-bind="value: paymentsForm.cash" type="number" class="form-control autofocus" id="inputCash" placeholder="Cash Php ...">
+										<span class="input-group-btn">
+								        	<button class="btn btn-primary" type="submit" data-bind="click: pay, enable: enableButtons"><i class="fa fa-money"></i></button>
+								        </span>
+									</div>
+									<p data-bind="text: errors.cash" class="text-danger"></p>
+								</form>
+								<!-- /ko -->
+								<!-- ko ifnot: enableQuickPay -->
+								<label class="control-label" for="inputCheckNumber">Reference SI No.</label>
+								<div class="controls">
+									<input data-bind="value: paymentsForm.refSIN" type="text" class="form-control" id="inputRefSIN" placeholder="">
+								</div>
+								<!-- /ko -->
+							</div>
+						</div>
+					</div>
 				</div>
-			</form>
+				
+				<div class="tab-pane" id="others">
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				    		<span class="text-md-black-elite">Check : </span>
+					    	
+					    	<div class="control-group">
+								<label class="control-label" for="inputCheckAccountNumber">Check Account Number</label>
+								<div class="controls">
+									<input data-bind="value: paymentsForm.checkAccountNumber" type="text" class="form-control" id="inputCheckAccountNumber" placeholder="Check Account #">
+									<p data-bind="text: errors.checkAccountNumber" class="text-danger"></p>
+								</div>
+								<label class="control-label" for="inputCheckNumber">Check Number</label>
+								<div class="controls">
+									<input data-bind="value: paymentsForm.checkNumber" type="text" class="form-control" id="inputCheckNumber" placeholder="Check #">
+									<p data-bind="text: errors.checkNumber" class="text-danger"></p>
+								</div>
+								<label class="control-label" for="inputCheckAmount">Check Amount</label>
+								<form class="form-inline">
+									<div class="input-group col-xs-12 text-center">
+										<input data-bind="value: paymentsForm.checkAmount" type="number" class="form-control" id="inputCheckAmount" placeholder="Php ...">
+										<span class="input-group-btn">
+								        	<button class="btn btn-primary" type="submit" data-bind="click: pay, enable: enableButtons"><i class="fa fa-money"></i></button>
+								        </span>
+									</div>
+									<p data-bind="text: errors.checkAmount" class="text-danger"></p>
+								</form>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				    		<span class="text-md-black-elite">Card : </span>
+					    	
+					    	<div class="control-group">
+								<label class="control-label" for="inputTransactionNumber">Transaction Number</label>
+								<div class="controls">
+									<input data-bind="value: paymentsForm.cardTransactionNumber" type="text" class="form-control" id="inputTransactionNumber" placeholder="Transaction #">
+									<p data-bind="text: errors.cardTransactionNumber" class="text-danger"></p>
+								</div>
+								<label class="control-label" for="inputCardAmount">Amount</label>
+								<form class="form-inline">
+									<div class="input-group col-xs-12 text-center">
+										<input data-bind="value: paymentsForm.cardAmount" type="number" class="form-control" id="inputCardAmount" placeholder="Php ...">
+										<span class="input-group-btn">
+								        	<button class="btn btn-primary" type="submit" data-bind="click: pay, enable: enableButtons"><i class="fa fa-money"></i></button>
+								        </span>
+									</div>
+									<p data-bind="text: errors.cardAmount" class="text-danger"></p>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-    </div>
+   	</div>
     
     <div class="modal-footer">
+    	<!-- ko if: enableQuickPay -->
+    	<!-- ko ifnot: discounted -->
     	<button class="btn btn-success pull-left" data-bind="click: discount, enable: enableButtons">Discount</button>
+    	<!-- /ko -->
+    	<!-- ko if: discounted -->
+    	<button class="btn btn-success pull-left" disabled>Discounted</button>
+    	<!-- /ko -->
+    	<!-- /ko -->
         <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
     </div>
 </div>
