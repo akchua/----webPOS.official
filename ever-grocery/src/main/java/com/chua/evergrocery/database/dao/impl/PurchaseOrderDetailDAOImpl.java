@@ -27,11 +27,17 @@ public class PurchaseOrderDetailDAOImpl
 
 	@Override
 	public ObjectList<PurchaseOrderDetail> findAllWithPaging(int pageNumber, int resultsPerPage, long purchaseOrderId) {
+		return findAllWithPagingAndOrder(pageNumber, resultsPerPage, purchaseOrderId, null);
+	}
+	
+	@Override
+	public ObjectList<PurchaseOrderDetail> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage,
+			long purchaseOrderId, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.eq("purchaseOrder.id", purchaseOrderId));
 		
-		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
 	}
 	
 	@Override

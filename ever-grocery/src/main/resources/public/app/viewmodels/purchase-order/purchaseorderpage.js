@@ -22,11 +22,14 @@ define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/purchaseord
 			receiptType: ko.observable(),
 			status: ko.observable()
 		};
+		
+		this.boMode = ko.observable(false);
     };
     
     PurchaseOrderPage.prototype.activate = function(purchaseOrderId) {
     	var self = this;
     	
+    	self.boMode(false);
     	self.purchaseOrderPageModel.purchaseOrderId(purchaseOrderId);
     	
     	self.currentPage(1);
@@ -55,6 +58,7 @@ define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/purchaseord
     	if(self.barcodeKey() === 'p') {
     		self.printCopy();
     	} else {
+    		if(self.boMode()) self.barcodeKey('-1*' + self.barcodeKey());
 	    	purchaseOrderService.addItemByBarcode(self.barcodeKey(), self.purchaseOrderPageModel.purchaseOrderId()).done(function(result) {	
 	    		if(result.success) {
 	    			self.currentPage(1);

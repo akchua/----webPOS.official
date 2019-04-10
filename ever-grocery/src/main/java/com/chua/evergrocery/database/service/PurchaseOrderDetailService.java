@@ -7,9 +7,12 @@ import com.chua.evergrocery.beans.ProductPurchaseSummaryBean;
 import com.chua.evergrocery.beans.PurchaseSummaryBean;
 import com.chua.evergrocery.database.entity.PurchaseOrderDetail;
 import com.chua.evergrocery.database.prototype.PurchaseOrderDetailPrototype;
+import com.chua.evergrocery.objects.ObjectList;
 
 public interface PurchaseOrderDetailService
 	extends Service<PurchaseOrderDetail, Long>, PurchaseOrderDetailPrototype{
+	
+	ObjectList<PurchaseOrderDetail> findAllWithPagingOrderByLastUpdate(int pageNumber, int resultsPerPage, long purchaseOrderId);
 
 	List<PurchaseOrderDetail> findAllByCompanyAndMonthId(long companyId, int monthId);
 	

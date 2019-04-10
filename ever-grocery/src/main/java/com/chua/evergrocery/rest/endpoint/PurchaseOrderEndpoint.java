@@ -91,7 +91,8 @@ public class PurchaseOrderEndpoint {
 	@POST
 	@Path("/additembybarcode")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean addItemByBarcode(@FormParam("barcode") String barcode, @FormParam("purchaseOrderId") Long purchaseOrderId) {
+	public ResultBean addItemByBarcode(@FormParam("barcode") String barcode, 
+				@FormParam("purchaseOrderId") Long purchaseOrderId) {
 		return purchaseOrderHandler.addItemByBarcode(barcode, purchaseOrderId);
 	}
 	
