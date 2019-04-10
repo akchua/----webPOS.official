@@ -15,6 +15,7 @@ import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.beans.UserBean;
 import com.chua.evergrocery.constants.FileConstants;
+import com.chua.evergrocery.constants.PrintConstants;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.ProductDetail;
@@ -328,7 +329,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		
 		if(barcode != null && barcode.length() > 4) {
 			final ProductDetail productDetail;
-			String[] temp = barcode.split("\\*");
+			String[] temp = barcode.split("\\*|;");
 			if(temp.length == 2) {
 				productDetail = productDetailService.findByBarcode(temp[1]);
 			} else if(temp.length == 1) {
@@ -573,7 +574,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				
 				Printer printer = new Printer();
 				try {
-					printer.print(customerOrderCopy.merge(velocityEngine, DocType.PRINT), "Customer Order #" + customerOrder.getOrderNumber() + " (COPY)");
+					printer.print(customerOrderCopy.merge(velocityEngine, DocType.PRINT), "Customer Order #" + customerOrder.getOrderNumber() + " (COPY)", PrintConstants.EVER_CASHIER_PRINTER);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -613,7 +614,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			try {
 				final String receipt = customerOrderReceipt.merge(velocityEngine, DocType.PRINT);
 				TextWriter.write(receipt, fileConstants.getReceiptHome() + customerOrder.getSerialInvoiceNumber() + ".txt");
-				printer.print(receipt, "Customer Order #" + customerOrder.getOrderNumber() + " (ORIG)");
+				printer.print(receipt, "Customer Order #" + customerOrder.getOrderNumber() + " (ORIG)", PrintConstants.EVER_CASHIER_PRINTER);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
