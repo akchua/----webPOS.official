@@ -12,6 +12,7 @@
 	<context:property-placeholder location="classpath:project.properties" ignore-unresolvable="true" />
 	<context:property-placeholder location="classpath:config.properties" ignore-unresolvable="true" />
 	
+	<bean id="methodAuthenticationAspect" class="com.chua.evergrocery.aspects.MethodAuthenticationAspect" />
 	<bean id="emailUtil" class="com.chua.evergrocery.utility.EmailUtil" scope="singleton"></bean>
 	<bean id="fileConstants" class="com.chua.evergrocery.constants.FileConstants" scope="singleton"></bean>
 	<bean id="systemConstants" class="com.chua.evergrocery.constants.SystemConstants" scope="singleton"></bean>
