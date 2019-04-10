@@ -208,13 +208,17 @@ public class ProductHandlerImpl implements ProductHandler {
 		
 		final Product product = productService.find(productId);
 		if(product != null) {
-			result = new ResultBean();
-			
-			result.setSuccess(productService.delete(product));
-			if(result.getSuccess()) {
-				result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed Product " + Html.text(Color.BLUE, product.getName()) + "."));
+			if(UserContextHolder.getUser().getUserType().getAuthority() <= 2) {
+				result = new ResultBean();
+				
+				result.setSuccess(productService.delete(product));
+				if(result.getSuccess()) {
+					result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed Product " + Html.text(Color.BLUE, product.getName()) + "."));
+				} else {
+					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+				}
 			} else {
-				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Access Denied!") + " You are not authorized to delete a product."));
 			}
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load product. Please refresh the page."));

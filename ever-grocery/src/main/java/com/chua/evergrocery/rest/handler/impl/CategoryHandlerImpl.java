@@ -87,6 +87,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 		
 		final Category category = categoryService.find(categoryId);
 		if(category != null) {
+			
 			result = new ResultBean();
 			
 			result.setSuccess(categoryService.delete(category));
