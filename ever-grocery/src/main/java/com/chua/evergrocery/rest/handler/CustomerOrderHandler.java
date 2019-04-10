@@ -42,6 +42,8 @@ public interface CustomerOrderHandler {
 	
 	ResultBean submitCustomerOrder(Long customerOrderId);
 	
+	ResultBean returnCustomerOrder(Long customerOrderId);
+	
 	ResultBean payCustomerOrder(PaymentsFormBean paymentsForm);
 	
 	ResultBean printCustomerOrderCopy(Long customerOrderId);

@@ -31,4 +31,6 @@ public interface PurchaseOrderHandler {
 	ResultBean changePurchaseOrderDetailQuantity(Long purchaseOrderDetailId, Integer quantity);
 	
 	ResultBean checkPurchaseOrder(Long purchaseOrderId);
+	
+	ResultBean printPurchaseOrderCopy(Long purchaseOrderId);
 }

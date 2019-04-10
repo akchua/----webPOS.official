@@ -150,6 +150,13 @@ public class CustomerOrderEndpoint {
 	}
 	
 	@POST
+	@Path("/return")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean returnCustomerOrder(@FormParam("customerOrderId") Long customerOrderId) {
+		return customerOrderHandler.returnCustomerOrder(customerOrderId);
+	}
+	
+	@POST
 	@Path("/printordercopy")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ResultBean printCustomerOrderCopy(@FormParam("customerOrderId") Long customerOrderId) {

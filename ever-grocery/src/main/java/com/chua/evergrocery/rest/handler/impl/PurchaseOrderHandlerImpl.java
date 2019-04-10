@@ -21,7 +21,9 @@ import com.chua.evergrocery.beans.GeneratedProductPOBean;
 import com.chua.evergrocery.beans.InventoryBean;
 import com.chua.evergrocery.beans.PurchaseOrderFormBean;
 import com.chua.evergrocery.beans.ResultBean;
+import com.chua.evergrocery.beans.UserBean;
 import com.chua.evergrocery.constants.FileConstants;
+import com.chua.evergrocery.constants.PrintConstants;
 import com.chua.evergrocery.database.entity.Company;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.entity.ProductDetail;
@@ -34,6 +36,7 @@ import com.chua.evergrocery.database.service.PurchaseOrderDetailService;
 import com.chua.evergrocery.database.service.PurchaseOrderService;
 import com.chua.evergrocery.database.service.UserService;
 import com.chua.evergrocery.enums.Color;
+import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.InventoryHandler;
@@ -44,7 +47,9 @@ import com.chua.evergrocery.utility.Html;
 import com.chua.evergrocery.utility.SimplePdfWriter;
 import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.format.DateFormatter;
+import com.chua.evergrocery.utility.print.Printer;
 import com.chua.evergrocery.utility.template.GeneratedPurchaseTemplate;
+import com.chua.evergrocery.utility.template.PurchaseOrderCopyTemplate;
 
 /**
  * All 0.999 values found in this class are correction factors used only for computations and does not affect actual stored data
@@ -410,7 +415,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		
 		if(barcode != null && barcode.length() > 4) {
 			final ProductDetail productDetail;
-			String[] temp = barcode.split("\\*");
+			String[] temp = barcode.split("\\*|;");
 			if(temp.length == 2) {
 				productDetail = productDetailService.findByBarcode(temp[1]);
 			} else if(temp.length == 1) {
@@ -572,6 +577,36 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 				}
 			} else {
 				result = new ResultBean(false, "Purchase order already checked or cancelled.");
+			}
+		} else {
+			result = new ResultBean(false, "Purchase order not found.");
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public ResultBean printPurchaseOrderCopy(Long purchaseOrderId) {
+		final ResultBean result;
+		final PurchaseOrder purchaseOrder = purchaseOrderService.find(purchaseOrderId);
+		
+		if(purchaseOrder != null) {
+			final UserBean currentUser = UserContextHolder.getUser();
+			
+			if(purchaseOrder.getStatus().equals(Status.LISTING) || currentUser.getUserType().getAuthority() <= 3) {
+				final List<PurchaseOrderDetail> purchaseOrderItems = purchaseOrderDetailService.findAllByPurchaseOrderIdOrderByProductName(purchaseOrder.getId());
+				final PurchaseOrderCopyTemplate purchaseOrderCopy = new PurchaseOrderCopyTemplate(purchaseOrder, purchaseOrderItems);
+				
+				Printer printer = new Printer();
+				try {
+					printer.print(purchaseOrderCopy.merge(velocityEngine, DocType.PRINT), "Purchase Order #" + purchaseOrder.getId() + " (COPY)", PrintConstants.EVER_CASHIER_PRINTER);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				result = new ResultBean(Boolean.TRUE, "Successfully printed Purchase order \"" + purchaseOrder.getId() + "\".");
+			} else {
+				result = new ResultBean(false, "You are not authorized to print a copy.");
 			}
 		} else {
 			result = new ResultBean(false, "Purchase order not found.");

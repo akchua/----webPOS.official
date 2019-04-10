@@ -115,4 +115,11 @@ public class PurchaseOrderEndpoint {
 	public ResultBean checkPurchaserOrder(@FormParam("purchaseOrderId") Long purchaseOrderId) {
 		return purchaseOrderHandler.checkPurchaseOrder(purchaseOrderId);
 	}
+	
+	@POST
+	@Path("/printordercopy")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean printPurchaseOrderCopy(@FormParam("purchaseOrderId") Long purchaseOrderId) {
+		return purchaseOrderHandler.printPurchaseOrderCopy(purchaseOrderId);
+	}
 }

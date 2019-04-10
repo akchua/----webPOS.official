@@ -30,8 +30,8 @@
     		<table class="table table-responsive table-hover">
     			<thead>
     				<tr>
-    					<th>SI No.</th>
-    					<th>Refund No.</th>
+    					<th>Order No.</th>
+    					<th>SI/Refund No.</th>
     					<th>Date</th>
     					<th>Creator</th>
     					<th>Cashier</th>
@@ -42,8 +42,11 @@
     		
     			<tbody data-bind="foreach: { data: customerOrderList, as: 'customerOrder' }">
     				<tr>
-    					<td data-bind="text: customerOrder.serialInvoiceNumber"></td>
-    					<td data-bind="text: customerOrder.refundNumber"></td>
+    					<td data-bind="text: customerOrder.orderNumber"></td>
+    					<td>
+    						<span data-bind="text: customerOrder.serialInvoiceNumber"></span>/
+    						<span data-bind="text: customerOrder.refundNumber"></span>
+    					</td>
     					<td data-bind="text: customerOrder.formattedPaidOn"></td>
     					<td>
     						<span data-bind="if: customerOrder.creator">

@@ -437,7 +437,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		
 		if(barcode != null && barcode.length() > 4) {
 			final ProductDetail productDetail;
-			String[] temp = barcode.split("\\*");
+			String[] temp = barcode.split("\\*|;");
 			if(temp.length == 2) {
 				productDetail = productDetailService.findByBarcode(temp[1]);
 			} else if(temp.length == 1) {
@@ -651,15 +651,46 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			result = new ResultBean();
-			
-			customerOrder.setStatus(Status.SUBMITTED);
-			result.setSuccess(customerOrderService.update(customerOrder));
-			
-			if(result.getSuccess()) {
-				result.setMessage(Html.line(Color.GREEN, "Successfully") + " submitted customer order #" + customerOrder.getOrderNumber());
+			if(customerOrder.getStatus().equals(Status.LISTING)) {
+				result = new ResultBean();
+				
+				customerOrder.setStatus(Status.SUBMITTED);
+				result.setSuccess(customerOrderService.update(customerOrder));
+				
+				if(result.getSuccess()) {
+					result.setMessage(Html.line(Color.GREEN, "Successfully") + " forwarded customer order #" + customerOrder.getOrderNumber() + " to cashier.");
+				} else {
+					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+				}
 			} else {
-				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Error!") + " Please refresh the page."));
+			}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load customer order. Please refresh the page."));
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public ResultBean returnCustomerOrder(Long customerOrderId) {
+		final ResultBean result;
+		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
+		
+		if(customerOrder != null) {
+			if(customerOrder.getStatus().equals(Status.SUBMITTED)) {
+				result = new ResultBean();
+				
+				customerOrder.setStatus(Status.LISTING);
+				result.setSuccess(customerOrderService.update(customerOrder));
+				
+				if(result.getSuccess()) {
+					result.setMessage(Html.line(Color.GREEN, "Successfully") + " returned customer order #" + customerOrder.getOrderNumber() + " to server " + customerOrder.getCreator().getFormattedName() + ".");
+				} else {
+					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+				}
+			} else {
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Error!") + " Please refresh the page."));
 			}
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load customer order. Please refresh the page."));

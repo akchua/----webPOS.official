@@ -162,6 +162,16 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	returnCustomerOrder: function(customerOrderId) {
+    		return $.ajax({
+    			url: '/services/customerorder/return',
+    			method: 'POST',
+    			data: {
+    				customerOrderId: customerOrderId
+    			}
+    		});
+    	},
+    	
     	printCustomerOrderCopy: function(customerOrderId) {
     		return $.ajax({
     			url: '/services/customerorder/printordercopy',

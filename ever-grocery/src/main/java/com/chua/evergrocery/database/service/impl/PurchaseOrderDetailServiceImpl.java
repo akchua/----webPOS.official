@@ -3,6 +3,7 @@ package com.chua.evergrocery.database.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,11 @@ public class PurchaseOrderDetailServiceImpl
 	public List<PurchaseOrderDetail> findAllByProductAndDeliveryDate(long productId, Date deliveryStart,
 			Date deliveryEnd) {
 		return dao.findAllByProductAndDeliveryDate(productId, deliveryStart, deliveryEnd);
+	}
+	
+	@Override
+	public List<PurchaseOrderDetail> findAllByPurchaseOrderIdOrderByProductName(Long purchaseOrderId) {
+		return dao.findAllByPurchaseOrderIdWithOrder(purchaseOrderId, new Order[] { Order.asc("productName") });
 	}
 
 	@Override

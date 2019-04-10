@@ -124,6 +124,16 @@ define(['jquery'], function ($) {
     				purchaseOrderId: purchaseOrderId
     			}
     		});
+    	},
+    	
+    	printPurchaseOrderCopy: function(purchaseOrderId) {
+    		return $.ajax({
+    			url: '/services/purchaseorder/printordercopy',
+    			method: 'POST',
+    			data: {
+    				purchaseOrderId: purchaseOrderId
+    			}
+    		});
     	}
 	};
 });

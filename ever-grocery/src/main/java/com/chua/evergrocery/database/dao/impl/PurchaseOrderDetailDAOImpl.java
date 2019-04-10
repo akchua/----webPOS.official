@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Junction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -50,6 +51,15 @@ public class PurchaseOrderDetailDAOImpl
 		conjunction.add(Restrictions.eq("purchaseOrder.id", purchaseOrderId));
 		
 		return findAllByCriterionList(null, null, null, null, conjunction);
+	}
+	
+	@Override
+	public List<PurchaseOrderDetail> findAllByPurchaseOrderIdWithOrder(Long purchaseOrderId, Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("purchaseOrder.id", purchaseOrderId));
+		
+		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}
 	
 	@Override

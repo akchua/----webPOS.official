@@ -13,6 +13,8 @@ public interface PurchaseOrderDetailService
 
 	List<PurchaseOrderDetail> findAllByCompanyAndMonthId(long companyId, int monthId);
 	
+	List<PurchaseOrderDetail> findAllByPurchaseOrderIdOrderByProductName(Long purchaseOrderId);
+	
 	List<PurchaseOrderDetail> findAllByProductAndDeliveryDate(long productId, Date deliveryStart, Date deliveryEnd);
 	
 	PurchaseSummaryBean getPurchaseSummaryByProductAndDeliveryDate(long productId, Date deliveryStart, Date deliveryEnd);

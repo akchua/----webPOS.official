@@ -82,6 +82,41 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 		});
 	};
 	
+	Cashier.prototype.returnToServer = function(customerOrderId, customerOrderNumber, creatorName) {
+    	var self = this;
+    	
+    	app.showMessage('<p>Return order #<span class="text-primary">' + customerOrderNumber + '</span>?<br>' +
+				'Make sure to ask the customer to return to Mr./Ms. ' + creatorName + ' for adjustments or clarifications.' + '</span><br><br>' +
+				'By clicking confirm, you will be returning the order to Mr./Ms. ' + creatorName + '</p>',
+				'Return Order',
+		[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+				customerOrderService.submitCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(result) {
+					if(result.success) {
+						if(createNew) {
+							customerOrderService.createCustomerOrder().done(function(result) {
+				            	if(result.success) {
+				            		router.navigate('#customerorderpage/' + result.extras.customerOrderId);
+				            	} else {
+				            		app.showMessage(result.message);
+				            	}
+				            });
+						} else {
+							router.navigate('#customerorder');
+						}
+					} else {
+						app.showMessage(result.message).done(function() {
+							self.barcodeFocus(true);
+						});
+					}
+				});
+			} else {
+				self.barcodeFocus(true);
+			}
+		})
+    };
+	
 	Cashier.prototype.remove = function(customerOrderId, customerOrderNumber) {
 		var self = this;
 		

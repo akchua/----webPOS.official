@@ -52,20 +52,44 @@ define(['durandal/app', 'knockout', 'modules/soundutility', 'modules/purchaseord
     PurchaseOrderPage.prototype.addItemByBarcode = function() {
     	var self = this;
     		
-    	purchaseOrderService.addItemByBarcode(self.barcodeKey(), self.purchaseOrderPageModel.purchaseOrderId()).done(function(result) {	
-    		if(result.success) {
-    			self.currentPage(1);
-    			self.refreshPurchaseOrderDetailList();
-    		} else {
-    			soundUtil.beep();
-    			app.showMessage(result.message).done(function() {
-    				self.barcodeFocus(true);
-    			});
-    		}
-    	});
+    	if(self.barcodeKey() === 'p') {
+    		self.printCopy();
+    	} else {
+	    	purchaseOrderService.addItemByBarcode(self.barcodeKey(), self.purchaseOrderPageModel.purchaseOrderId()).done(function(result) {	
+	    		if(result.success) {
+	    			self.currentPage(1);
+	    			self.refreshPurchaseOrderDetailList();
+	    		} else {
+	    			soundUtil.beep();
+	    			app.showMessage(result.message).done(function() {
+	    				self.barcodeFocus(true);
+	    			});
+	    		}
+	    	});
+    	}
     	
     	self.barcodeKey("");
     };
+    
+    PurchaseOrderPage.prototype.printCopy = function() {
+		var self = this;
+		
+		app.showMessage('<p>Confirm print copy of Order <span class="text-danger">#' + self.purchaseOrderPageModel.purchaseOrderId() + '</span>',
+				'Print Order Copy',
+				[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+				purchaseOrderService.printPurchaseOrderCopy(self.purchaseOrderPageModel.purchaseOrderId()).done(function(result) {
+					if(!result.success) {
+						app.showMessage(result.message);
+					}
+					self.barcodeFocus(true);
+				});
+			} else {
+				self.barcodeFocus(true);
+			}
+		})
+	};
     
     PurchaseOrderPage.prototype.refreshPurchaseOrderDetailList = function() {
     	var self = this;
