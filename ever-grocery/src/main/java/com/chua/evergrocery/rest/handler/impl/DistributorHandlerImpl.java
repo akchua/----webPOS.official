@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chua.evergrocery.UserContextHolder;
+import com.chua.evergrocery.annotations.CheckAuthority;
 import com.chua.evergrocery.beans.DistributorFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.database.entity.Distributor;
@@ -34,6 +35,7 @@ public class DistributorHandlerImpl implements DistributorHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 3)
 	public ResultBean createDistributor(DistributorFormBean distributorForm) {
 		final ResultBean result;
 		
@@ -56,6 +58,7 @@ public class DistributorHandlerImpl implements DistributorHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 3)
 	public ResultBean updateDistributor(DistributorFormBean distributorForm) {
 		final ResultBean result;
 		
@@ -83,6 +86,7 @@ public class DistributorHandlerImpl implements DistributorHandler {
 	}
 
 	@Override
+	@CheckAuthority(minimumAuthority = 2)
 	public ResultBean removeDistributor(Long distributorId) {
 		final ResultBean result;
 		

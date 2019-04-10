@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chua.evergrocery.UserContextHolder;
+import com.chua.evergrocery.annotations.CheckAuthority;
 import com.chua.evergrocery.beans.CompanyFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.database.entity.Company;
@@ -47,6 +48,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 3)
 	public ResultBean createCompany(CompanyFormBean companyForm) {
 		final ResultBean result;
 		
@@ -74,6 +76,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 3)
 	public ResultBean updateCompany(CompanyFormBean companyForm) {
 		final ResultBean result;
 		
@@ -101,6 +104,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 	}
 
 	@Override
+	@CheckAuthority(minimumAuthority = 2)
 	public ResultBean removeCompany(Long companyId) {
 		final ResultBean result;
 		

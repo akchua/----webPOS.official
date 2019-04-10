@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.UserContextHolder;
+import com.chua.evergrocery.annotations.CheckAuthority;
 import com.chua.evergrocery.beans.GeneratedProductPOBean;
 import com.chua.evergrocery.beans.InventoryBean;
 import com.chua.evergrocery.beans.PurchaseOrderFormBean;
@@ -111,6 +112,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	}
 
 	@Override
+	@CheckAuthority(minimumAuthority = 3)
 	public ResultBean createPurchaseOrder(PurchaseOrderFormBean purchaseOrderForm) {
 		final ResultBean result;
 		Map<String, String> errors = purchaseOrderFormValidator.validate(purchaseOrderForm);
@@ -157,6 +159,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 3)
 	public ResultBean generatePurchaseOrder(Long companyId, Float daysToBook) {
 		// Storing start time of this method
 		final Date generateStartTime = new Date();
@@ -297,6 +300,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	}
 
 	@Override
+	@CheckAuthority(minimumAuthority = 3)
 	public ResultBean removePurchaseOrder(Long purchaseOrderId) {
 		final ResultBean result;
 		

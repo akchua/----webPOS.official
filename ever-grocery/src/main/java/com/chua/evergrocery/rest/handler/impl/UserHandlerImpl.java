@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.UserContextHolder;
+import com.chua.evergrocery.annotations.CheckAuthority;
 import com.chua.evergrocery.beans.PasswordFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SettingsFormBean;
@@ -87,6 +88,7 @@ public class UserHandlerImpl implements UserHandler {
 	}
 
 	@Override
+	@CheckAuthority(minimumAuthority = 1)
 	public ResultBean createUser(UserFormBean userForm) {
 		final ResultBean result;
 		final Map<String, String> errors = userFormValidator.validate(userForm);
@@ -219,6 +221,7 @@ public class UserHandlerImpl implements UserHandler {
 	}
 
 	@Override
+	@CheckAuthority(minimumAuthority = 1)
 	public ResultBean removeUser(Long userId) {
 		final ResultBean result;
 		
@@ -311,6 +314,7 @@ public class UserHandlerImpl implements UserHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 1)
 	public ResultBean resetPassword(Long userId) {
 		final ResultBean result;
 		final User user = userService.find(userId);

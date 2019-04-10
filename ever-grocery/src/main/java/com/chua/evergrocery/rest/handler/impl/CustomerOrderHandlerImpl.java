@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.UserContextHolder;
+import com.chua.evergrocery.annotations.CheckAuthority;
 import com.chua.evergrocery.beans.DiscountFormBean;
 import com.chua.evergrocery.beans.PaymentsFormBean;
 import com.chua.evergrocery.beans.ResultBean;
@@ -137,6 +138,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 10)
 	public ResultBean createCustomerOrder() {
 		final ResultBean result;
 		
@@ -177,6 +179,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 10)
 	public ResultBean removeCustomerOrder(Long customerOrderId) {
 		final ResultBean result;
 		
@@ -206,6 +209,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 5)
 	public ResultBean applyDiscount(DiscountFormBean discountForm) {
 		final ResultBean result;
 		final Map<String, String> errors = discountFormValidator.validate(discountForm);
@@ -309,6 +313,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 5)
 	public ResultBean payCustomerOrder(PaymentsFormBean paymentsForm) {
 		final ResultBean result;
 		final Map<String, String> errors = paymentsFormValidator.validate(paymentsForm);

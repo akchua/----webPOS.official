@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.UserContextHolder;
+import com.chua.evergrocery.annotations.CheckAuthority;
 import com.chua.evergrocery.beans.CategoryFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.database.entity.Category;
@@ -33,6 +34,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 3)
 	public ResultBean createCategory(CategoryFormBean categoryForm) {
 		final ResultBean result;
 		
@@ -55,6 +57,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 	}
 	
 	@Override
+	@CheckAuthority(minimumAuthority = 3)
 	public ResultBean updateCategory(CategoryFormBean categoryForm) {
 		final ResultBean result;
 		
@@ -82,6 +85,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 	}
 
 	@Override
+	@CheckAuthority(minimumAuthority = 2)
 	public ResultBean removeCategory(Long categoryId) {
 		final ResultBean result;
 		
