@@ -48,4 +48,12 @@ public class CustomerDAOImpl
 		
 		return findUniqueResult(null, null, null, conjunction);
 	}
+
+	@Override
+	public Customer findByCardId(String cardId) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("cardId", cardId));
+		
+		return findUniqueResult(null, null, null, conjunction);
+	}
 }

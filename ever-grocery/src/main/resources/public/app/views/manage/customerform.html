@@ -6,14 +6,50 @@
 	    </div>
 	    
 	    <div class="modal-body">
-	        <div class="form-inline">
-				<input data-bind="value: customerFormModel.firstName" type="text" class="form-control autofocus" id="inputFirstName" placeholder="First Name">
-				<input data-bind="value: customerFormModel.lastName" type="text" class="form-control" id="inputLastName" placeholder="Last Name">
-			</div>
-			<br/>
-			<div class="form-group">
-				<label for="inputAddress" class="control-label">Address</label>
-				<input data-bind="value: customerFormModel.address" type="text" class="form-control" id="inputAddress" placeholder="Address">
+	    	<div class="row">
+		      	<div class="control-group">
+					<label class="control-label" for="firstName">First Name</label>
+					<div class="controls">
+						<input data-bind="textInput: customerFormModel.firstName" type="text" id="firstName" name="firstName" placeholder="" class="form-control input-lg autofocus">
+						<p data-bind="text: errors.firstName" class="text-danger"></p>
+					</div>
+					<label class="control-label" for="lastName">Last Name</label>
+					<div class="controls">
+						<input data-bind="textInput: customerFormModel.lastName" type="text" id="lastName" name="lastName" placeholder="" class="form-control input-lg">
+						<p data-bind="text: errors.lastName" class="text-danger"></p>
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="contactNumber">Contact Number</label>
+					<div class="controls">
+						<input data-bind="textInput: customerFormModel.contactNumber" type="text" id="contactNumber" name="contactNumber" placeholder="" class="form-control input-lg">
+						<p>
+							<span data-bind="text: errors.contactNumber" class="text-danger"></span>
+							<span class="help-block">Mobile[09xx-xxx-xxxx] / Landline[(xx)xxx-xx-xx]</span>
+						</p>
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="address">Address</label>
+					<div class="controls">
+						<input data-bind="textInput: customerFormModel.address" type="text" id="address" name="address" placeholder="" class="form-control input-lg">
+						<p>
+							<span data-bind="text: errors.address" class="text-danger"></span>
+						</p>
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="cardId">Card ID</label>
+					<div class="controls">
+						<input data-bind="textInput: customerFormModel.cardId" type="text" id="cardId" name="cardId" placeholder="" class="form-control input-lg">
+						<p>
+							<span data-bind="text: errors.cardId" class="text-danger"></span>
+						</p>
+					</div>
+				</div>
 			</div>
 	    </div>
 	    

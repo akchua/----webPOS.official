@@ -19,6 +19,7 @@ import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.beans.UserBean;
 import com.chua.evergrocery.constants.FileConstants;
 import com.chua.evergrocery.constants.PrintConstants;
+import com.chua.evergrocery.database.entity.Customer;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.ProductDetail;
@@ -27,6 +28,7 @@ import com.chua.evergrocery.database.entity.XReading;
 import com.chua.evergrocery.database.entity.ZReading;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
 import com.chua.evergrocery.database.service.CustomerOrderService;
+import com.chua.evergrocery.database.service.CustomerService;
 import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.SystemVariableService;
 import com.chua.evergrocery.database.service.UserService;
@@ -65,6 +67,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private CustomerService customerService;
 	
 	@Autowired
 	private CustomerOrderService customerOrderService;
@@ -159,6 +164,8 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrder.setCash(0.0f);
 		customerOrder.setCheckAmount(0.0f);
 		customerOrder.setCardAmount(0.0f);
+		customerOrder.setPointsAmount(0.0f);
+		customerOrder.setPointsEarned(0.0f);
 		
 		customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
 		customerOrder.setStatus(Status.LISTING);
@@ -203,6 +210,58 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			}
 		} else {
 			result = new ResultBean(false, "Customer order not found.");
+		}
+		
+		return result;
+	}
+	
+	@Override
+	@CheckAuthority(minimumAuthority = 5)
+	public ResultBean setCustomer(Long customerOrderId, String customerCardId) {
+		final ResultBean result;
+		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
+		
+		if(customerOrder != null) {
+			final Customer customer = customerService.findByCardId(customerCardId);
+			
+			if(customer != null) {
+				result = new ResultBean();
+				
+				customerOrder.setCustomer(customer);
+				result.setSuccess(customerOrderService.update(customerOrder));
+				if(result.getSuccess()) {
+					result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " set Mr./Mrs. " + customer.getFormattedName() + " as the customer for this transaction."));
+				} else {
+					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+				}
+			} else {
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Invalid ") + " customer card."));
+			}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load sales order. Please refresh the page."));
+		}
+		
+		return result;
+	}
+
+	@Override
+	@CheckAuthority(minimumAuthority = 5)
+	public ResultBean removeCustomer(Long customerOrderId) {
+		final ResultBean result;
+		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
+		
+		if(customerOrder != null) {
+			result = new ResultBean();
+			
+			customerOrder.setCustomer(null);
+			result.setSuccess(customerOrderService.update(customerOrder));
+			if(result.getSuccess()) {
+				result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed the customer for this transaction."));
+			} else {
+				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+			}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load sales order. Please refresh the page."));
 		}
 		
 		return result;
@@ -295,6 +354,36 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 						} else {
 							result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 						}
+					} else if(discountType.equals(DiscountType.PWD_MEDICINE_DISCOUNT) || discountType.equals(DiscountType.SENIOR_MEDICINE_DISCOUNT)) {
+						Float grossAmountLimit = Math.min(discountForm.getGrossAmountLimit(), discountType.getGrossHardCap());
+						
+						final List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrder.getId());
+						float discountableAmount = 0.0f;
+						
+						for(CustomerOrderDetail customerOrderDetail : customerOrderDetails) {
+							if(customerOrderDetail.getTotalPrice() <= grossAmountLimit && customerOrderDetail.getProduct().getCategory().getName().equals("Medicine")) {
+								grossAmountLimit -= customerOrderDetail.getTotalPrice();
+								customerOrderDetail.setTotalPrice(TaxUtil.convertTaxType(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), TaxType.VAT_EXEMPT));
+								customerOrderDetail.setTaxType(TaxType.VAT_EXEMPT);
+								discountableAmount += customerOrderDetail.getTotalPrice();
+							}
+						}
+						
+						customerOrder.setVatExDiscount(discountableAmount * (discountType.getPercentDiscount() / 100.0f));
+						
+						customerOrder.setDiscountType(discountType);
+						customerOrder.setDiscountIdNumber(discountForm.getDiscountIdNumber());
+						customerOrder.setStatus(Status.DISCOUNTED);
+						
+						result = new ResultBean();
+						
+						result.setSuccess(customerOrderService.update(customerOrder));
+						if(result.getSuccess()) {
+							this.refreshCustomerOrder(customerOrder);
+							result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " applied " + discountType.getDisplayName() + " to Customer Order #" + customerOrder.getOrderNumber() + "."));
+						} else {
+							result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+						}
 					} else {
 						result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Declined!") + " you are not authorized to give " + discountType.getDisplayName() + "."));
 					}
@@ -323,55 +412,79 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			
 			if(customerOrder != null) {
 				if(customerOrder.getStatus().equals(Status.SUBMITTED) || customerOrder.getStatus().equals(Status.DISCOUNTED)) {
-					if(customerOrder.getTotalAmount() <= paymentsForm.getTotalPayment()) {
-						result = new ResultBean();
-						if(customerOrder.getTotalAmount() < 0) {
-							if(paymentsForm.getRefSIN() != null && paymentsForm.getRefSIN()	> 0l) {
-								final CustomerOrder referenceCustomerOrder = customerOrderService.findBySerialInvoiceNumber(paymentsForm.getRefSIN());
-								if(referenceCustomerOrder != null && referenceCustomerOrder.getTotalAmount() > 0) {
-									Long RN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.REFUND_NUMBER.getTag()));
-									customerOrder.setRefundNumber(RN);
-									result.setSuccess(systemVariableService.updateByTag(SystemVariableTag.REFUND_NUMBER.getTag(), String.valueOf(RN + 1)));
-									
-									customerOrder.setReferenceSerialInvoiceNumber(paymentsForm.getRefSIN());
+					if(paymentsForm.getCardAmount() + paymentsForm.getPointsAmount() > customerOrder.getTotalAmount()) {
+						errors.put("cardAmount", "Card + Points amount must be less than the total payable.");
+						errors.put("pointsAmount", "Card + Points amount must be less than the total payable");
+					}
+					
+					if(customerOrder.getCustomer() != null && paymentsForm.getPointsAmount() > customerOrder.getCustomer().getAvailablePoints()) {
+						errors.put("pointsAmount", "Insufficient points");
+					}
+					
+					if(errors.isEmpty()) {
+						if(customerOrder.getTotalAmount() <= paymentsForm.getTotalPayment()) {
+							result = new ResultBean();
+							if(customerOrder.getTotalAmount() < 0) {
+								if(paymentsForm.getRefSIN() != null && paymentsForm.getRefSIN()	> 0l) {
+									final CustomerOrder referenceCustomerOrder = customerOrderService.findBySerialInvoiceNumber(paymentsForm.getRefSIN());
+									if(referenceCustomerOrder != null && referenceCustomerOrder.getTotalAmount() > 0) {
+										Long RN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.REFUND_NUMBER.getTag()));
+										customerOrder.setRefundNumber(RN);
+										result.setSuccess(systemVariableService.updateByTag(SystemVariableTag.REFUND_NUMBER.getTag(), String.valueOf(RN + 1)));
+										
+										customerOrder.setReferenceSerialInvoiceNumber(paymentsForm.getRefSIN());
+									} else {
+										result.setSuccess(Boolean.FALSE);
+										result.setMessage("Invalid reference invoice number : " + paymentsForm.getRefSIN());
+									}
 								} else {
 									result.setSuccess(Boolean.FALSE);
-									result.setMessage("Invalid reference invoice number : " + paymentsForm.getRefSIN());
+									result.setMessage("Refund requires reference invoice number");
 								}
 							} else {
-								result.setSuccess(Boolean.FALSE);
-								result.setMessage("Refund requires reference invoice number");
+								Long SIN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag()));
+								customerOrder.setSerialInvoiceNumber(SIN);
+								result.setSuccess(systemVariableService.updateByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag(), String.valueOf(SIN + 1)));
+							}
+							
+							if(result.getSuccess()) {
+								customerOrder.setCashier(userService.find(UserContextHolder.getUser().getId()));
+								customerOrder.setStatus(Status.PAID);
+								customerOrder.setPaidOn(new Date());
+								setCustomerOrderPayment(customerOrder, paymentsForm);
+								
+								if(customerOrder.getCustomer() != null) {
+									setEarnedPoints(customerOrder);
+									final Customer customer = customerOrder.getCustomer();
+									customer.setTotalPoints(customer.getTotalPoints() + customerOrder.getPointsEarned());
+									
+									// add used points if any
+									customer.setUsedPoints(customer.getUsedPoints() + customerOrder.getPointsAmount());
+									customerService.update(customer);
+								}
+								
+								result.setSuccess(customerOrderService.update(customerOrder));
+								if(result.getSuccess()) {
+									// UPDATE INVENTORY if any item is sold at old price
+									inventoryHandler.checkForStockAdjustment(paymentsForm.getCustomerOrderId());
+									
+									// UPDATE AUDIT LOG
+									auditLogHandler.addLog(UserContextHolder.getUser().getId(), AuditLogType.SALES, customerOrder.getTotalAmount());
+									
+									result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(customerOrder.getTotalPayment() - customerOrder.getTotalAmount())) +
+											Html.newLine + Html.newLine + Html.text("Cash          : " + customerOrder.getFormattedCash()) +
+											(customerOrder.getCheckAmount().equals(0.0f) ? "" : Html.newLine + Html.text("Check         : " + customerOrder.getFormattedCheckAmount())) + 
+											Html.newLine + Html.text("Amount Due    : " + customerOrder.getFormattedTotalAmount())));
+								} else {
+									result.setMessage("Failed to pay Customer order \"" + customerOrder.getOrderNumber() + "\".");
+								}
 							}
 						} else {
-							Long SIN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag()));
-							customerOrder.setSerialInvoiceNumber(SIN);
-							result.setSuccess(systemVariableService.updateByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag(), String.valueOf(SIN + 1)));
-						}
-						
-						if(result.getSuccess()) {
-							customerOrder.setCashier(userService.find(UserContextHolder.getUser().getId()));
-							customerOrder.setStatus(Status.PAID);
-							customerOrder.setPaidOn(new Date());
-							setCustomerOrderPayment(customerOrder, paymentsForm);
-							
-							result.setSuccess(customerOrderService.update(customerOrder));
-							if(result.getSuccess()) {
-								// UPDATE INVENTORY if any item is sold at old price
-								inventoryHandler.checkForStockAdjustment(paymentsForm.getCustomerOrderId());
-								
-								// UPDATE AUDIT LOG
-								auditLogHandler.addLog(UserContextHolder.getUser().getId(), AuditLogType.SALES, customerOrder.getTotalAmount());
-								
-								result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(customerOrder.getTotalPayment() - customerOrder.getTotalAmount())) +
-										Html.newLine + Html.newLine + Html.text("Cash          : " + customerOrder.getFormattedCash()) +
-										(customerOrder.getCheckAmount().equals(0.0f) ? "" : Html.newLine + Html.text("Check         : " + customerOrder.getFormattedCheckAmount())) + 
-										Html.newLine + Html.text("Amount Due    : " + customerOrder.getFormattedTotalAmount())));
-							} else {
-								result.setMessage("Failed to pay Customer order \"" + customerOrder.getOrderNumber() + "\".");
-							}
+							result = new ResultBean(false, "Insufficient cash.");
 						}
 					} else {
-						result = new ResultBean(false, "Insufficient cash.");
+						result = new ResultBean(Boolean.FALSE, "");
+						result.addToExtras("errors", errors);
 					}
 				} else if(customerOrder.getStatus().equals(Status.PAID)) {
 					result = new ResultBean(false, "Customer order already paid.");
@@ -748,6 +861,11 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
+	public ResultBean generateBackendReport(Date dateFrom, Date dateTo) {
+		return salesReportHandler.generateBackendReport(dateFrom, dateTo);
+	}
+	
+	@Override
 	public void printReceipt(Long customerOrderId, String footer, Boolean original) {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
@@ -845,6 +963,19 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrder.setCheckAmount(paymentsForm.getCheckAmount() != null ? paymentsForm.getCheckAmount() : 0.0f);
 		customerOrder.setCardTransactionNumber(paymentsForm.getCardTransactionNumber());
 		customerOrder.setCardAmount(paymentsForm.getCardAmount() != null ? paymentsForm.getCardAmount() : 0.0f);
+		customerOrder.setPointsAmount(paymentsForm.getPointsAmount() != null ? paymentsForm.getPointsAmount() : 0.0f);
+	}
+	
+	private void setEarnedPoints(CustomerOrder customerOrder) {
+		final List<CustomerOrderDetail> orderItems = customerOrderDetailService.findAllByCustomerOrderId(customerOrder.getId());
+		Float totalProfit = 0.0f;
+		for(CustomerOrderDetail cod : orderItems) {
+			totalProfit += cod.getTotalPrice() - (cod.getUnitPrice() / (1 + (cod.getMargin() / 100)) * cod.getQuantity());
+		}
+		
+		// set points earned to the lower amount between (10% of total profit AND .5% of total amount)
+		// points are eligible to earn points (200 points used = 1 new point) (40k worth = 201 points)
+		customerOrder.setPointsEarned(Math.round(Math.min(totalProfit * .10f, customerOrder.getTotalAmount() * .005f) * 100.0f) / 100.0f);
 	}
 	
 	private void addAmountToOrder(Float amount, TaxType taxType, CustomerOrder customerOrder) {

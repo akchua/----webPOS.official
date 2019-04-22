@@ -102,11 +102,11 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedVatExSales() {
-		return String.format("%16s", "Php " + customerOrder.getFormattedNetVatExSales());
+		return String.format("%16s", "Php " + customerOrder.getFormattedVatExSales());
 	}
 	
 	public String getFormattedZeroRatedSales() {
-		return String.format("%16s", "Php " + customerOrder.getFormattedNetZeroRatedSales());
+		return String.format("%16s", "Php " + customerOrder.getFormattedZeroRatedSales());
 	}
 	
 	public String getFormattedVat() {
@@ -162,12 +162,65 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 		return String.format("%16s", "Php " + customerOrder.getFormattedCheckAmount());
 	}
 	
+	public Boolean isPaidWithCard() {
+		return customerOrder.getCardAmount() > 0;
+	}
+	
+	public String getFormattedTransactionNumber() {
+		return String.format("%24s", "TXN #" + customerOrder.getCardTransactionNumber());
+	}
+	
+	public String getFormattedCardAmount() {
+		return String.format("%16s", "Php " + customerOrder.getFormattedCardAmount());
+	}
+	
+	public Boolean isPaidWithPoints() {
+		return customerOrder.getPointsAmount() > 0;
+	}
+	
+	public String getFormattedCustomerName() {
+		return StringHelper.center(customerOrder.getCustomer() != null ? customerOrder.getCustomer().getFormattedName() : "", 44);
+	}
+	
+	public String getFormattedCustomerCardId() {
+		return String.format("%24s", customerOrder.getCustomer() != null ? customerOrder.getCustomer().getFormattedCardId() : "");
+	}
+	
+	public String getFormattedPointsAmount() {
+		return String.format("%16s", customerOrder.getFormattedPointsAmount());
+	}
+	
+	public Boolean isPaidWithNonCash() {
+		return customerOrder.getCheckAmount() + customerOrder.getCardAmount() + customerOrder.getPointsAmount() > 0;
+	}
+	
 	public String getFormattedTotalPayment() {
 		return String.format("%16s", "Php " + customerOrder.getFormattedTotalPayment());
 	}
 	
 	public String getFormattedChange() {
 		return String.format("%14s", "Php " + CurrencyFormatter.pesoFormat(customerOrder.getTotalPayment() - customerOrder.getTotalAmount()));
+	}
+	
+	public Boolean isCustomer() {
+		return customerOrder.getCustomer() != null;
+	}
+	
+	public String getFormattedTotalPoints() {
+		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getFormattedAvailablePoints() : "0.00";
+	}
+	
+	public String getFormattedPointsUsed() {
+		return customerOrder.getFormattedPointsAmount();
+	}
+	
+	public String getFormattedPointsEarned() {
+		return customerOrder.getFormattedPointsEarned();
+	}
+	
+	public String getFormattedPreviousPoints() {
+		final Float previousPoints = (customerOrder.getCustomer() != null) ? customerOrder.getCustomer().getAvailablePoints() + customerOrder.getPointsAmount() - customerOrder.getPointsEarned() : 0.0f;
+		return CurrencyFormatter.pesoFormat(previousPoints);
 	}
 	
 	public String getFormattedIdNumber() {

@@ -5,15 +5,65 @@
 	</div>
 	
 	<div class="modal-body">
-		<h3>
-			<span class="col-xs-4">Order <span class="text-md-red-elite">#<span data-bind="text: customerOrderViewModel.customerOrderNumber"></span></span></span>
-			<span class="col-xs-offset-2 col-xs-6 text-center">TOTAL: <span class="text-lg-green-neuton">&#8369; <span data-bind="text: customerOrderViewModel.formattedTotalAmount" ></span></span></span>
-		</h3>
-		<!-- ko if: discounted -->
-		<h3>
-			<span class="col-xs-offset-6 col-xs-6 text-center">DISC: <span class="text-md-red-elite">&#8369; <span data-bind="text: customerOrderViewModel.formattedTotalDiscount" ></span></span></span>
-		</h3>
-		<!-- /ko -->
+		<div class="row">
+			<div class="panel panel-info col-lg-6">
+				<div class="panel-body">
+					<dl class="dl-horizontal">
+						<dt>SI/Refund/Ref. No.:</dt>
+						<dd>
+							<span data-bind="text: customerOrderViewModel.serialInvoiceNumber"></span>/
+							<span data-bind="text: customerOrderViewModel.refundNumber"></span>/
+							<span data-bind="text: customerOrderViewModel.referenceSerialInvoiceNumber"></span>
+						</dd>
+						<dt>Customer Name:</dt>
+						<dd>
+							<span data-bind="text: customer.formattedName"></span>
+						</dd>
+						<dt>Customer Card:</dt>
+						<dd>
+							<span data-bind="text: customer.formattedCardId"></span>
+						</dd>
+						<dt>Earned Points:</dt>
+						<dd data-bind="text: customerOrderViewModel.formattedPointsEarned"></dd>
+						<dt>Total Items:</dt>
+						<dd data-bind="text: customerOrderViewModel.totalItems"></dd>
+						<dt>Date Paid:</dt>
+						<dd data-bind="text: customerOrderViewModel.formattedPaidOn"></dd>
+			    	</dl>
+				</div>
+			</div>
+			<div class="panel panel-success col-lg-6">
+				<div class="panel-body">
+					<dl class="dl-horizontal">
+						<dt>Cash :</dt>
+						<dd data-bind="text: customerOrderViewModel.formattedCash"></dd>
+						<dt>Check Amount:</dt>
+						<dd data-bind="text: customerOrderViewModel.formattedCheckAmount"></dd>
+						<dt>Card Amount:</dt>
+						<dd data-bind="text: customerOrderViewModel.formattedCardAmount"></dd>
+						<dt>Points Amount:</dt>
+						<dd data-bind="text: customerOrderViewModel.formattedPointsAmount"></dd>
+						<dt>Gross Amount:</dt>
+						<dd data-bind="text: customerOrderViewModel.formattedGrossAmount"></dd>
+						<dt>Total Discount:</dt>
+						<dd>
+							(<span data-bind="text: customerOrderViewModel.discountShorthand"></span>)
+							<span data-bind="text: customerOrderViewModel.formattedTotalDiscount"></span>
+						</dd>
+			    	</dl>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<h3>
+				<span class="col-xs-4">Order <span class="text-md-red-elite">#<span data-bind="text: customerOrderViewModel.customerOrderNumber"></span></span></span>
+				<span class="col-xs-offset-2 col-xs-6 text-center">TOTAL: <span class="text-lg-green-neuton">&#8369; <span data-bind="text: customerOrderViewModel.formattedTotalAmount" ></span></span></span>
+			</h3>
+		</div>
+		
+		<br>
+		
 		<div class="row">
 			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
 		</div>

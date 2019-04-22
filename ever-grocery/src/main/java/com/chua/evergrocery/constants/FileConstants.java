@@ -24,6 +24,8 @@ public class FileConstants {
 	
 	private final String xReadingHome;
 	
+	private final String backendReportHome;
+	
 	private final String generatePurchasesHome;
 	
 	private final String inventoryHome;
@@ -39,6 +41,7 @@ public class FileConstants {
 		this.receiptHome = fileHome + "files/receipt/";
 		this.zReadingHome = fileHome + "files/z_reading/";
 		this.xReadingHome = fileHome + "files/x_reading/";
+		this.backendReportHome = fileHome + "files/backend_report/";
 		this.generatePurchasesHome = fileHome + "files/generate_purchase/";
 		this.inventoryHome = fileHome + "files/inventory/";
 		this.imageDefaultFileName = imageDefaultFileName;
@@ -66,6 +69,10 @@ public class FileConstants {
 
 	public String getXReadingHome() {
 		return xReadingHome;
+	}
+	
+	public String getBackendReportHome() {
+		return backendReportHome;
 	}
 
 	public String getGeneratePurchasesHome() {

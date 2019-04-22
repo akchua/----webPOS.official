@@ -11,10 +11,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.constants.FileConstants;
+import com.chua.evergrocery.database.entity.Category;
 import com.chua.evergrocery.database.entity.SystemVariable;
 import com.chua.evergrocery.database.entity.User;
 import com.chua.evergrocery.database.entity.XReading;
 import com.chua.evergrocery.database.entity.ZReading;
+import com.chua.evergrocery.database.service.CategoryService;
 import com.chua.evergrocery.database.service.SystemVariableService;
 import com.chua.evergrocery.database.service.UserService;
 import com.chua.evergrocery.database.service.XReadingService;
@@ -43,6 +45,9 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 	private SystemVariableService systemVariableService;
 	
 	@Autowired
+	private CategoryService categoryService;
+	
+	@Autowired
 	private ZReadingService zReadingService;
 	
 	@Autowired
@@ -63,12 +68,13 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 	private void initializeDatabase() {
 		this.initializeUser();
 		this.initializeSystemVariables();
+		this.initializeCategory();
 		this.initializeZReading();
 		this.initializeXReading();
 	}
 	
 	private void initializeUser() {
-		final User rootUser = userService.find(1l);
+		final User rootUser = userService.findByUsernameAndPassword("root", EncryptionUtil.getMd5("root"));
 		if(rootUser == null) {
 			final User newRootUser = new User();
 			newRootUser.setUsername("root");
@@ -113,13 +119,44 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 		}
 	}
 	
+	private void initializeCategory() {
+		if(!categoryService.isExistsByName("Cigarette")) {
+			final Category category = new Category();
+			category.setName("Cigarette");
+			categoryService.insert(category);
+			LOG.info("Created Cigarette category");
+		} else {
+			LOG.info("Cigarette category exists");
+		}
+		
+		if(!categoryService.isExistsByName("Counter Item")) {
+			final Category category = new Category();
+			category.setName("Counter Item");
+			categoryService.insert(category);
+			LOG.info("Created Counter Item category");
+		} else {
+			LOG.info("Counter Item category exists");
+		}
+		
+		if(!categoryService.isExistsByName("Medicine")) {
+			final Category category = new Category();
+			category.setName("Medicine");
+			categoryService.insert(category);
+			LOG.info("Created Medicine category");
+		} else {
+			LOG.info("Medicine category exists");
+		}
+	}
+	
 	private void initializeZReading() {
 		final Boolean zReadingExists = zReadingService.findAllList().size() > 0;
 		if(zReadingExists) {
 			LOG.info("Z Reading Exists");
 		} else {
 			final ZReading zReading = new ZReading();
-			zReading.setReadingDate(DateUtil.floorDay(new Date()));
+			final Calendar yesterday = Calendar.getInstance();
+			yesterday.add(Calendar.DAY_OF_MONTH, -1);
+			zReading.setReadingDate(DateUtil.floorDay(yesterday.getTime()));
 			zReading.setCounter(0l);
 			zReading.setBeginningSIN(0l);
 			zReading.setEndingSIN(0l);
@@ -138,6 +175,8 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 			zReading.setBeginningRefundAmount(0.0f);
 			zReading.setRefundAmount(0.0f);
 			zReading.setTotalCheckPayment(0.0f);
+			zReading.setTotalCardPayment(0.0f);
+			zReading.setTotalPointsPayment(0.0f);
 			zReadingService.insert(zReading);
 			LOG.info("Created 0th Z Reading");
 		}
@@ -161,6 +200,8 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 			xReading.setPwdDiscountAmount(0.0f);
 			xReading.setRefundAmount(0.0f);
 			xReading.setTotalCheckPayment(0.0f);
+			xReading.setTotalCardPayment(0.0f);
+			xReading.setTotalPointsPayment(0.0f);
 			xReadingService.insert(xReading);
 			LOG.info("Created 0th X Reading");
 		}

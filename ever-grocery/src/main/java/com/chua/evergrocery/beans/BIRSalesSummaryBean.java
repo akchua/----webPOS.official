@@ -21,6 +21,8 @@ public class BIRSalesSummaryBean {
 	
 	private Float zeroRatedSales;
 	
+	private Float vatAdjustment;
+	
 	private Float vatDiscount;
 	
 	private Float vatExDiscount;
@@ -30,6 +32,8 @@ public class BIRSalesSummaryBean {
 	private Float checkAmount;
 	
 	private Float cardAmount;
+	
+	private Float pointsAmount;
 	
 	public Long getBeginningSIN() {
 		return beginningSIN;
@@ -85,6 +89,14 @@ public class BIRSalesSummaryBean {
 
 	public void setZeroRatedSales(Float zeroRatedSales) {
 		this.zeroRatedSales = zeroRatedSales;
+	}
+
+	public Float getVatAdjustment() {
+		return vatAdjustment;
+	}
+
+	public void setVatAdjustment(Float vatAdjustment) {
+		this.vatAdjustment = vatAdjustment;
 	}
 
 	public Float getVatDiscount() {
@@ -144,5 +156,13 @@ public class BIRSalesSummaryBean {
 
 	public void setCardAmount(Float cardAmount) {
 		this.cardAmount = cardAmount;
+	}
+
+	public Float getPointsAmount() {
+		return pointsAmount;
+	}
+
+	public void setPointsAmount(Float pointsAmount) {
+		this.pointsAmount = pointsAmount;
 	}
 }

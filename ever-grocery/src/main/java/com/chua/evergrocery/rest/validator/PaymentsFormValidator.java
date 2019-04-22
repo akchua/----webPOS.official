@@ -40,6 +40,8 @@ public class PaymentsFormValidator extends AbstractFormValidator<PaymentsFormBea
 			temp = notNull(paymentsForm.getCardTransactionNumber());
 			if(!temp.isEmpty()) errors.put("cardTransactionNumber", temp);
 		}
+		temp = validateFloat(paymentsForm.getPointsAmount(), 0, 999999);
+		if(!temp.isEmpty()) errors.put("pointsAmount", temp);
 		
 		return errors;
 	}

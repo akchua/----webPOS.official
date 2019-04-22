@@ -25,14 +25,33 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 			cardTransactionNumber : ko.observable(),
 			cardAmount : ko.observable(0),
 			
+			pointsAmount : ko.observable(0),
+			
 			refSIN : ko.observable(0)
+		};
+		
+		this.cardId = ko.observable();
+		this.hasCustomer = ko.observable(false);
+		this.hasPoints = ko.observable(false);
+		
+		this.customer = {
+			id : ko.observable(),
+			
+			formattedName : ko.observable(),
+			formattedCardId : ko.observable(),
+			availablePoints : ko.observable()
 		};
 		
 		this.errors = {
 			cash : ko.observable(),
 			checkAccountNumber : ko.observable(),
 			checkNumber : ko.observable(),
-			checkAmount : ko.observable()
+			checkAmount : ko.observable(),
+			
+			cardTransactionNumber : ko.observable(),
+			cardAmount : ko.observable(),
+			
+			pointsAmount : ko.observable()
 		};
 		
 		this.discounted = ko.observable();
@@ -48,6 +67,40 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 	
 	PayForm.show = function(customerOrderId) {
 		return dialog.show(new PayForm(customerOrderId));
+	};
+	
+	PayForm.prototype.setCustomer = function() {
+		var self = this;
+		self.enableButtons(false);
+		
+		customerOrderService.setCustomer(self.paymentsForm.customerOrderId(), self.cardId()).done(function(result) {
+			self.cardId('');
+			if(result.success) {
+				self.refreshCustomerOrder();
+			} else {
+				app.showMessage(result.message);
+			}
+			self.enableButtons(true);
+		});
+	};
+	
+	PayForm.prototype.removeCustomer = function() {
+		var self = this;
+		self.enableButtons(false);
+		
+		app.showMessage('<p>Are you sure you want to remove/change the customer for this transaction?</p>',
+				'<p class="text-danger">Confirm Remove</p>',
+				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+				self.paymentsForm.pointsAmount(0);
+				customerOrderService.removeCustomer(self.paymentsForm.customerOrderId()).done(function(result) {
+					self.refreshCustomerOrder();
+					app.showMessage(result.message);
+				});
+			}
+			self.enableButtons(true);
+		})
 	};
 	
 	PayForm.prototype.refreshCustomerOrder = function() {
@@ -90,6 +143,21 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 			} else {
 				self.enableQuickPay(true);
 			}
+			
+			if(customerOrder.customer) {
+				self.hasCustomer(true);
+				self.customer.formattedName(customerOrder.customer.formattedName);
+				self.customer.formattedCardId(customerOrder.customer.formattedCardId);
+				self.customer.availablePoints(customerOrder.customer.availablePoints);
+				if(self.customer.availablePoints() > 0) self.hasPoints(true);
+				else self.hasPoints(false);
+			} else {
+				self.hasCustomer(false);
+				self.hasPoints(false);
+				self.customer.formattedName('');
+				self.customer.formattedCardId('');
+				self.customer.availablePoints('');
+			}
 		});
 	};
 	
@@ -103,10 +171,18 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		var formattedCheckAmount = utility.roundToCent(self.paymentsForm.checkAmount()).toLocaleString(
 				undefined,
 				{ minimumFractionDigits: 2 });
+		var formattedCardAmount = utility.roundToCent(self.paymentsForm.cardAmount()).toLocaleString(
+				undefined,
+				{ minimumFractionDigits: 2 });
+		var formattedPointsAmount = utility.roundToCent(self.paymentsForm.pointsAmount()).toLocaleString(
+				undefined,
+				{ minimumFractionDigits: 2 });
 		
 		app.showMessage('Confirm Received Amount : <br>' + 
-						'Cash : <strong>&#8369; ' + formattedCash + '</strong><br>' +
-						'Check: <strong>&#8369; ' + formattedCheckAmount + '</strong><br>' ,
+						'Cash   : <strong>&#8369; ' + formattedCash + '</strong><br>' +
+						'Check  : <strong>&#8369; ' + formattedCheckAmount + '</strong><br>' +
+						'Card   : <strong>&#8369; ' + formattedCardAmount + '</strong><br>' + 
+						'Points : <strong>&#8369; ' + formattedPointsAmount + '</strong><br>',
 				'Confirm',
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {
@@ -127,6 +203,15 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		        		self.errors.checkAmount(result.extras.errors.checkAmount);
 		        		self.errors.cardTransactionNumber(result.extras.errors.cardTransactionNumber);
 		        		self.errors.cardAmount(result.extras.errors.cardAmount);
+		        		self.errors.pointsAmount(result.extras.errors.pointsAmount);
+		        	} else {
+		        		self.errors.cash('');
+		        		self.errors.checkAccountNumber('');
+		        		self.errors.checkNumber('');
+		        		self.errors.checkAmount('');
+		        		self.errors.cardTransactionNumber('');
+		        		self.errors.cardAmount('');
+		        		self.errors.pointsAmount('');
 		        	}
 					if(result.message) app.showMessage(result.message);
 				});

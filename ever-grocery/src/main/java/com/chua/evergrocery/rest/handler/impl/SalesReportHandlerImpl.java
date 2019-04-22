@@ -36,6 +36,7 @@ import com.chua.evergrocery.utility.SimplePdfWriter;
 import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.format.DateFormatter;
 import com.chua.evergrocery.utility.template.SalesReportTemplate;
+import com.chua.evergrocery.utility.template.excel.BIRBackendReport;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -88,6 +89,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			
 			// salesSummary does not include refunds
 			final BIRSalesSummaryBean salesSummary = customerOrderService.getSalesSummaryByDatePaid(currentReadingDate.getTime());
+			ensureBIRSalesSummaryBeanNotNull(salesSummary);
 			zReading.setBeginningSIN(
 					(salesSummary.getBeginningSIN() == null || salesSummary.getBeginningSIN().equals(0l))
 							? latestZReading.getEndingSIN() 
@@ -98,6 +100,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 							: salesSummary.getEndingSIN());
 			
 			final BIRSalesSummaryBean refundSummary = customerOrderService.getRefundSummaryByDatePaid(currentReadingDate.getTime());
+			ensureBIRSalesSummaryBeanNotNull(refundSummary);
 			zReading.setBeginningRefundNumber(
 					(refundSummary.getBeginningRefundNumber() == null || refundSummary.getBeginningRefundNumber().equals(0l))
 							? latestZReading.getEndingRefundNumber() 
@@ -126,9 +129,11 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 				case NO_DISCOUNT:
 					break;
 				case SENIOR_DISCOUNT:
+				case SENIOR_MEDICINE_DISCOUNT:
 					seniorDiscountAmount += dco.getTotalDiscountAmount();
 					break;
 				case PWD_DISCOUNT:
+				case PWD_MEDICINE_DISCOUNT:
 					pwdDiscountAmount += dco.getTotalDiscountAmount();
 					break;
 				default:
@@ -145,6 +150,8 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 							(refundSummary.getCheckAmount() != null ? refundSummary.getCheckAmount() : 0.0f));
 			zReading.setTotalCardPayment((salesSummary.getCardAmount() != null ? salesSummary.getCardAmount() : 0.0f) + 
 					(refundSummary.getCardAmount() != null ? refundSummary.getCardAmount() : 0.0f));
+			zReading.setTotalPointsPayment((salesSummary.getPointsAmount() != null ? salesSummary.getPointsAmount() : 0.0f) + 
+					(refundSummary.getPointsAmount() != null ? refundSummary.getPointsAmount() : 0.0f));
 			
 			zReadingService.insert(zReading);
 			LOG.info("Completed z reading update of : " + DateFormatter.prettyFormat(currentReadingDate.getTime()));
@@ -200,9 +207,11 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 				case NO_DISCOUNT:
 					break;
 				case SENIOR_DISCOUNT:
+				case SENIOR_MEDICINE_DISCOUNT:
 					seniorDiscountAmount += dco.getTotalDiscountAmount();
 					break;
 				case PWD_DISCOUNT:
+				case PWD_MEDICINE_DISCOUNT:
 					pwdDiscountAmount += dco.getTotalDiscountAmount();
 					break;
 				default:
@@ -282,5 +291,33 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public ResultBean generateBackendReport(Date dateFrom, Date dateTo) {
+		final ResultBean result = new ResultBean(Boolean.TRUE, "");
+		
+		final List<ZReading> zReadingList = zReadingService.findAllZReadingByDateRangeOrderByReadingDate(dateFrom, dateTo);
+		final BIRBackendReport birBackendReport = new BIRBackendReport(zReadingList);
+		
+		final String fileName = "Backend Report " + DateFormatter.fileSafeFormat(dateFrom) + "_-_" + DateFormatter.fileSafeFormat(dateTo) + ".xlsx";
+		final String filePath = fileConstants.getBackendReportHome() + fileName;
+		birBackendReport.write(filePath);
+		
+		final Map<String, Object> extras = new HashMap<String, Object>();
+		extras.put("fileName", fileName);
+		result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created backend report."));
+		result.setExtras(extras);
+		
+		return result;
+	}
+	
+	private void ensureBIRSalesSummaryBeanNotNull(BIRSalesSummaryBean birSalesSummary) {
+		if(birSalesSummary.getVatSales() == null) birSalesSummary.setVatSales(0.0f);
+		if(birSalesSummary.getVatExSales() == null) birSalesSummary.setVatExSales(0.0f);
+		if(birSalesSummary.getZeroRatedSales() == null) birSalesSummary.setZeroRatedSales(0.0f);
+		if(birSalesSummary.getVatDiscount() == null) birSalesSummary.setVatDiscount(0.0f);
+		if(birSalesSummary.getVatExDiscount() == null) birSalesSummary.setVatExDiscount(0.0f);
+		if(birSalesSummary.getZeroRatedDiscount() == null) birSalesSummary.setZeroRatedDiscount(0.0f);
 	}
 }

@@ -1,5 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/report/salereport', 'viewmodels/report/zreading', 'viewmodels/report/saleview'], 
-		function (app, ko, customerOrderService, SaleReport, ZReading, SaleView) {
+define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/report/salereport', 'viewmodels/report/backendreport', 'viewmodels/report/zreading', 'viewmodels/report/saleview'], 
+		function (app, ko, customerOrderService, SaleReport, BackendReport, ZReading, SaleView) {
 	var CustomerOrder = function() {
 		this.customerOrderList = ko.observable();
 		
@@ -62,6 +62,10 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/
 	
 	CustomerOrder.prototype.generateReport = function() {
     	SaleReport.show()
+    };
+    
+    CustomerOrder.prototype.backendReport = function() {
+    	BackendReport.show()
     };
     
     CustomerOrder.prototype.zReading = function() {

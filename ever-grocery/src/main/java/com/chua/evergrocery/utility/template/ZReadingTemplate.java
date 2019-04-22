@@ -135,6 +135,10 @@ public class ZReadingTemplate extends AbstractTemplate {
 		return String.format("%21s", "Php " + zReading.getFormattedTotalCardPayment());
 	}
 	
+	public String getFormattedTotalPointsPayment() {
+		return String.format("%21s", "Php " + zReading.getFormattedTotalPointsPayment());
+	}
+	
 	public String getFormattedGrandTotal() {
 		return String.format("%18s", "Php " + zReading.getFormattedEndingBalance());
 	}

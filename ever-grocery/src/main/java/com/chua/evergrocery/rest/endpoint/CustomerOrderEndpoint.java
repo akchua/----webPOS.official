@@ -85,6 +85,21 @@ public class CustomerOrderEndpoint {
 	}
 	
 	@POST
+	@Path("/setcustomer")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean setCustomer(@FormParam("customerOrderId") Long customerOrderId,
+				@FormParam("customerCardId") String customerCardId) {
+		return customerOrderHandler.setCustomer(customerOrderId, customerCardId);
+	}
+	
+	@POST
+	@Path("/removecustomer")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean removeCustomer(@FormParam("customerOrderId") Long customerOrderId) {
+		return customerOrderHandler.removeCustomer(customerOrderId);
+	}
+	
+	@POST
 	@Path("/applydiscount")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ResultBean applyDiscount(@FormParam("discountFormData") String discountFormData) throws IOException {
@@ -197,5 +212,14 @@ public class CustomerOrderEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ResultBean generateReport(@FormParam("salesReportQueryData") String salesReportQueryData) throws IOException {
 		return customerOrderHandler.generateReport(new ObjectMapper().readValue(salesReportQueryData, SalesReportQueryBean.class));
+	}
+	
+	@POST
+	@Path("/backendreport")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean generateBackendReport(@FormParam("dateFrom") String dateFrom,
+				@FormParam("dateTo") String dateTo) throws ParseException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return customerOrderHandler.generateBackendReport(sdf.parse(dateFrom), sdf.parse(dateTo));
 	}
 }

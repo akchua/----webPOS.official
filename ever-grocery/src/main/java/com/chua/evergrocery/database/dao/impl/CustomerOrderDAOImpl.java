@@ -184,6 +184,7 @@ public class CustomerOrderDAOImpl
 		pList.add(Projections.sqlProjection("sum(zero_rated_discount) as zeroRatedDiscount", new String[] { "zeroRatedDiscount" }, new FloatType[] { new FloatType() }), "zeroRatedDiscount");
 		pList.add(Projections.sqlProjection("sum(check_amount) as checkAmount", new String[] { "checkAmount" }, new FloatType[] { new FloatType() }), "checkAmount");
 		pList.add(Projections.sqlProjection("sum(card_amount) as cardAmount", new String[] { "cardAmount" }, new FloatType[] { new FloatType() }), "cardAmount");
+		pList.add(Projections.sqlProjection("sum(points_amount) as pointsAmount", new String[] { "pointsAmount" }, new FloatType[] { new FloatType() }), "pointsAmount");
 		
 		List<BIRSalesSummaryBean> temp = findAllByCriterionProjection(BIRSalesSummaryBean.class, null, null, null, pList, Transformers.aliasToBean(BIRSalesSummaryBean.class), conjunction);
 		return (temp != null && !temp.isEmpty()) ? temp.get(0) : new BIRSalesSummaryBean();

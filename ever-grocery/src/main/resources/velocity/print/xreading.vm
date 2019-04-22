@@ -21,3 +21,4 @@ Payments
 Cash Payments        : ${t.FormattedTotalCashPayment}
 Check Payments       : ${t.FormattedTotalCheckPayment}
 Card Payments        : ${t.FormattedTotalCardPayments}
+Points Payments      : ${t.FormattedTotalPointsPayment}

@@ -10,11 +10,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DiscountType {
 	
-	NO_DISCOUNT("No Discount", "ND", 0.0f, 9999999.0f),
+	NO_DISCOUNT("No Discount", "ND", 0.0f, Float.MAX_VALUE),
 	
 	PWD_DISCOUNT("PWD Discount", "PWD", 5.0f, 650.0f),
-
+	
+	PWD_MEDICINE_DISCOUNT("PWD Medicine Discount", "MPD", 20.0f, 1300.0f),
+	
 	SENIOR_DISCOUNT("Senior Citizen Discount", "SCD", 5.0f, 650.0f),
+	
+	SENIOR_MEDICINE_DISCOUNT("Senior Medicine Discount", "MSC", 20.0f, 1300.0f),
 	
 	EMPLOYEE_DISCOUNT("Employee Discount", "EMP", 20.0f, 2000.0f),
 	

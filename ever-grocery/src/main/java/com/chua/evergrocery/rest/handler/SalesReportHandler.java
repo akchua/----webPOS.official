@@ -1,5 +1,7 @@
 package com.chua.evergrocery.rest.handler;
 
+import java.util.Date;
+
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.User;
@@ -17,4 +19,6 @@ public interface SalesReportHandler {
 	XReading getXReadingByCashier(User cashier);
 	
 	ResultBean generateReport(SalesReportQueryBean salesReportQuery);
+	
+	ResultBean generateBackendReport(Date dateFrom, Date dateTo);
 }

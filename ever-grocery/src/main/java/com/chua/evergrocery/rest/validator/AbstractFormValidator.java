@@ -29,6 +29,8 @@ public abstract class AbstractFormValidator<T extends FormBean>
 	protected String validateString(String s, int min, int max) {
 		String ret = notNull(s);
 		if(!ret.isEmpty()) return ret;
+		if(s.isEmpty()) ret = "This field cannot be empty.";
+		if(!ret.isEmpty()) return ret;
 		
 		return validateStringNull(s, min, max);
 	}
@@ -44,7 +46,7 @@ public abstract class AbstractFormValidator<T extends FormBean>
 			ret = s.trim().length() >= min ? "" : "This field must be at least " + min + " characters long.";
 		} else {
 			ret = s.trim().length() >= min && s.trim().length() <= max 
-					? "" : "This field requires " + min + " to " + max + " characters.";
+					? "" : (min == max) ? "This field requires exactly " + min + " characters." : "This field requires " + min + " to " + max + " characters.";
 		}
 		
 		return ret;

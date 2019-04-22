@@ -36,4 +36,14 @@ public class CustomerServiceImpl
 	public Boolean isExistsByFullName(String firstName, String lastName) {
 		return dao.findByFullName(StringUtils.trimToEmpty(firstName), StringUtils.trimToEmpty(lastName)) != null;
 	}
+
+	@Override
+	public Customer findByCardId(String cardId) {
+		return dao.findByCardId(StringUtils.trimToEmpty(cardId));
+	}
+
+	@Override
+	public Boolean isExistsByCardId(String cardId) {
+		return dao.findByCardId(StringUtils.trimToEmpty(cardId)) != null;
+	}
 }

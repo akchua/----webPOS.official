@@ -22,6 +22,12 @@ define(['jquery'], function ($) {
     			url: '/services/security/logout',
     			method: 'POST'
     		});
+    	},
+    	
+    	ipAuth: function() {
+    		return $.ajax({
+				url: '/services/security/ipauth'
+			});
     	}
     };
 });

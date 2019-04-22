@@ -1,4 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/customerservice', 'viewmodels/manage/customerform'], function (app, ko, customerService, CustomerForm) {
+define(['durandal/app', 'knockout', 'modules/customerservice', 'viewmodels/manage/customerform'], 
+		function (app, ko, customerService, CustomerForm) {
 	var Customer = function() {
 		this.customerList = ko.observable();
 		
@@ -8,6 +9,8 @@ define(['durandal/app', 'knockout', 'modules/customerservice', 'viewmodels/manag
 		this.totalItems = ko.observable();
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
+		
+		this.enableButtons = ko.observable(true);
 	};
 	
 	Customer.prototype.activate = function() {
@@ -45,26 +48,43 @@ define(['durandal/app', 'knockout', 'modules/customerservice', 'viewmodels/manag
 	
 	Customer.prototype.create = function() {
 		var self = this;
+		self.enableButtons(false);
 		
 		CustomerForm.show('Create', new Object()).then(function() {
 			self.refreshCustomerList();
+			self.enableButtons(true);
 		});
 	};
 	
+	Customer.prototype.view = function(customerId) {
+    	var self = this;
+    	self.enableButtons(false);
+    	
+    	customerService.getCustomer(customerId).done(function(customer) {
+    		alert('here');
+    		/*CustomerView.show(customer).then(function() {
+    			self.enableButtons(true);
+    		});*/
+    	});
+    };
+	
 	Customer.prototype.edit = function(customerId) {
 		var self = this;
+		self.enableButtons(false);
 		
 		customerService.getCustomer(customerId).done(function(data) {
 			CustomerForm.show('Update', data).then(function() {
 				self.refreshCustomerList();
+				self.enableButtons(true);
 			});
 		});
 	};
 	
-	Customer.prototype.remove = function(customerId, customerFirstName, customerLastName) {
+	Customer.prototype.remove = function(customerId, customerFormattedName) {
 		var self = this;
+		self.enableButtons(false);
 		
-		app.showMessage('Are you sure you want to remove Customer "' + customerLastName + ", " + customerFirstName + '"?',
+		app.showMessage('Are you sure you want to remove Customer "' + customerFormattedName + '"?',
 				'Confirm Remove',
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {
@@ -74,6 +94,7 @@ define(['durandal/app', 'knockout', 'modules/customerservice', 'viewmodels/manag
 					app.showMessage(result.message);
 				});
 			}
+			self.enableButtons(true);
 		})
 	};
 	

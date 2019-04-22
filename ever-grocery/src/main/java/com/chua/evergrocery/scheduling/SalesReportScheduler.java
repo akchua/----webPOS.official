@@ -26,10 +26,10 @@ public class SalesReportScheduler {
 		salesReportHandler.updateZReading();
 	}
 	
-	/*@Scheduled(cron = "40 41 * * * ?")
+	/*@Scheduled(cron = "0/15 * * * * ?")
 	public void temp() {
-		Calendar temp = Calendar.getInstance();
-		temp.add(Calendar.DAY_OF_MONTH, -2);
-		salesReportHandler.printZReading(temp.getTime());
+		System.out.println("testing ..........");
+		BIRBackendReport test = new BIRBackendReport(new ArrayList<ZReading>());
+		test.write(fileConstants.getBackendReportHome() + "test.xlsx");
 	}*/
 }

@@ -16,7 +16,7 @@ import com.chua.evergrocery.rest.handler.SecurityHandler;
 
 @Path("/security")
 public class SecurityEndpoint {
-
+	
 	@Autowired
 	private SecurityHandler securityHandler;
 	
@@ -31,5 +31,12 @@ public class SecurityEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public UserBean getUser() {
 		return securityHandler.getUser();
+	}
+	
+	@GET
+	@Path("/ipauth")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Boolean ipAuth(@Context HttpServletRequest request) {
+		return securityHandler.ipAuth(request);
 	}
 }

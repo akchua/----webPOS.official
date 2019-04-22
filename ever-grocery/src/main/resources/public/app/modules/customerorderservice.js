@@ -67,6 +67,27 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	setCustomer: function(customerOrderId, customerCardId) {
+    		return $.ajax({
+    			url: '/services/customerorder/setcustomer',
+    			method: 'POST',
+    			data: {
+    				customerOrderId: customerOrderId,
+    				customerCardId: customerCardId
+    			}
+    		});
+    	},
+    	
+    	removeCustomer: function(customerOrderId) {
+    		return $.ajax({
+    			url: '/services/customerorder/removecustomer',
+    			method: 'POST',
+    			data: {
+    				customerOrderId: customerOrderId
+    			}
+    		});
+    	},
+    	
     	applyDiscount: function(discountFormData) {
     		return $.ajax({
     			url: '/services/customerorder/applydiscount',
@@ -226,6 +247,17 @@ define(['jquery'], function ($) {
     			method: 'POST',
     			data: {
     				salesReportQueryData: salesReportQueryData
+    			}
+    		});
+    	},
+    	
+    	generateBackendReport: function(dateFrom, dateTo) {
+    		return $.ajax({
+    			url: '/services/customerorder/backendreport',
+    			method: 'POST',
+    			data: {
+    				dateFrom: dateFrom,
+    				dateTo: dateTo
     			}
     		});
     	}

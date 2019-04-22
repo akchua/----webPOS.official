@@ -10,4 +10,6 @@ public interface SecurityHandler {
 	void logout(HttpServletRequest request, HttpServletResponse response);
 	
 	UserBean getUser();
+	
+	Boolean ipAuth(HttpServletRequest request);
 }

@@ -15,4 +15,6 @@ public interface CustomerService
 	List<Customer> findAllOrderByLastName();
 	
 	Boolean isExistsByFullName(String firstName, String lastName);
+	
+	Boolean isExistsByCardId(String cardId);
 }

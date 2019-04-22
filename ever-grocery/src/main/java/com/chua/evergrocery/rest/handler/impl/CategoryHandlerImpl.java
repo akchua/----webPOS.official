@@ -113,6 +113,6 @@ public class CategoryHandlerImpl implements CategoryHandler {
 	}
 	
 	private void setCategory(Category category, CategoryFormBean categoryForm) {
-		category.setName(categoryForm.getName());
+		category.setName(categoryForm.getName().trim());
 	}
 }

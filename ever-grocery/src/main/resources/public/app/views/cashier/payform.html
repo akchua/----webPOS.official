@@ -16,10 +16,47 @@
 				<div class="tab-pane active" id="regular">
 			    	<div class="row">
 				    	<!-- ko if: enableQuickPay -->
+				    	<!-- ko ifnot: hasCustomer -->
 						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
-							<span>TEMP</span>
-							<br><br><br><br><br><br><br><br><br><br><br><br>
+							<br><br><br><br>
+							<label class="control-label" for="inputCustomerCard">Customer Card</label>
+							<form class="form-inline">
+								<div class="input-group col-xs-12 text-center">
+									<input data-bind="value: cardId" type="text" class="form-control" id="inputCustomerCard" placeholder="">
+									<span class="input-group-btn">
+							        	<button class="btn btn-primary" type="submit" data-bind="click: setCustomer, enable: enableButtons"><i class="fa fa-arrow-right"></i></button>
+							        </span>
+								</div>
+							</form>
+							<br><br><br><br>
 						</div>
+						<!-- /ko -->
+						<!-- ko if: hasCustomer -->
+						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+							<br>
+							<button class="btn btn-sm btn-danger" data-bind="click: removeCustomer, enable: enableButtons">Change Customer</button>
+							<br>
+							<br>
+							<span data-bind="text: customer.formattedName" class="text-md-black-elite"></span><br>
+							<span data-bind="text: customer.formattedCardId" class="text-md-black-elite"></span><br>
+							<br>
+							<span><span data-bind="text: customer.availablePoints" class="text-info"></span> available points</span><br>
+							<br>
+							<!-- ko if: hasPoints -->
+							<label class="control-label" for="inputPointsAmount">Use Points</label>
+							<form class="form-inline">
+								<div class="input-group col-xs-12 text-center">
+									<input data-bind="value: paymentsForm.pointsAmount" type="number" class="form-control" id="inputPointsAmount" placeholder="">
+									<span class="input-group-btn">
+							        	<button class="btn btn-primary" type="submit" data-bind="click: pay, enable: enableButtons"><i class="fa fa-money"></i></button>
+							        </span>
+								</div>
+								<p data-bind="text: errors.pointsAmount" class="text-danger"></p>
+							</form>
+							<!-- /ko -->
+							<br><br>
+						</div>
+						<!-- /ko -->
 						<!-- /ko -->
 						<!-- ko ifnot: enableQuickPay -->
 				        <div class="col-lg-offset-7 col-md-offset-5 col-sm-offset-5"></div>

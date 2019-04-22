@@ -14,4 +14,6 @@ public interface FileHandler {
 	File findInventoryByFileName(String fileName);
 	
 	File findSalesReportByFileName(String fileName);
+	
+	File findBackendReportByFileName(String fileName);
 }

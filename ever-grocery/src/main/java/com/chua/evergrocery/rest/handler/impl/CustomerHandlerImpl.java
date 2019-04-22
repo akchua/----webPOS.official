@@ -1,6 +1,7 @@
 package com.chua.evergrocery.rest.handler.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import com.chua.evergrocery.database.entity.Customer;
 import com.chua.evergrocery.database.service.CustomerService;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.CustomerHandler;
+import com.chua.evergrocery.rest.validator.CustomerFormValidator;
+import com.chua.evergrocery.utility.DateUtil;
 
 @Transactional
 @Component
@@ -21,6 +24,9 @@ public class CustomerHandlerImpl implements CustomerHandler {
 
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private CustomerFormValidator customerFormValidator;
 
 	@Override
 	public ObjectList<Customer> getCustomerObjectList(Integer pageNumber, String searchKey) {
@@ -35,20 +41,29 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	@Override
 	public ResultBean createCustomer(CustomerFormBean customerForm) {
 		final ResultBean result;
+		final Map<String, String> errors = customerFormValidator.validate(customerForm);
 		
-		if(!customerService.isExistsByFullName(customerForm.getFirstName(), customerForm.getLastName())) {
-			final Customer customer = new Customer();
-			setCustomer(customer, customerForm);
-			
-			result = new ResultBean();
-			result.setSuccess(customerService.insert(customer) != null);
-			if(result.getSuccess()) {
-				result.setMessage("Customer successfully created.");
+		if(errors.isEmpty()) {
+			if(!customerService.isExistsByCardId(customerForm.getCardId())) {
+				final Customer customer = new Customer();
+				setCustomer(customer, customerForm);
+				customer.setTotalPoints(0.0f);
+				customer.setUsedPoints(0.0f);
+				customer.setLastPurchase(DateUtil.getDefaultDate());
+				
+				result = new ResultBean();
+				result.setSuccess(customerService.insert(customer) != null);
+				if(result.getSuccess()) {
+					result.setMessage("Customer successfully created.");
+				} else {
+					result.setMessage("Failed to create customer.");
+				}
 			} else {
-				result.setMessage("Failed to create customer.");
+				result = new ResultBean(false, "Customer \"" + customerForm.getLastName() + ", " + customerForm.getFirstName() + "\" already exists!");
 			}
 		} else {
-			result = new ResultBean(false, "Customer \"" + customerForm.getLastName() + ", " + customerForm.getFirstName() + "\" already exists!");
+			result = new ResultBean(Boolean.FALSE, "");
+			result.addToExtras("errors", errors);
 		}
 		
 		return result;
@@ -60,20 +75,27 @@ public class CustomerHandlerImpl implements CustomerHandler {
 		
 		final Customer customer = customerService.find(customerForm.getId());
 		if(customer != null) {
-			if(!(StringUtils.trimToEmpty(customer.getFirstName()).equalsIgnoreCase(customerForm.getFirstName()) &&
-					StringUtils.trimToEmpty(customer.getLastName()).equalsIgnoreCase(customerForm.getLastName())) &&
-					customerService.isExistsByFullName(customerForm.getFirstName(), customerForm.getLastName())) {
-				result = new ResultBean(false, "Customer \"" + customerForm.getLastName() + ", " + customerForm.getFirstName() + "\" already exists!");
-			} else {
-				setCustomer(customer, customerForm);
-				
-				result = new ResultBean();
-				result.setSuccess(customerService.update(customer));
-				if(result.getSuccess()) {
-					result.setMessage("Customer successfully updated.");
+			final Map<String, String> errors = customerFormValidator.validate(customerForm);
+			
+			if(errors.isEmpty()) {
+				if(!(StringUtils.trimToEmpty(customer.getFirstName()).equalsIgnoreCase(customerForm.getFirstName()) &&
+						StringUtils.trimToEmpty(customer.getLastName()).equalsIgnoreCase(customerForm.getLastName())) &&
+						customerService.isExistsByFullName(customerForm.getFirstName(), customerForm.getLastName())) {
+					result = new ResultBean(false, "Customer \"" + customerForm.getLastName() + ", " + customerForm.getFirstName() + "\" already exists!");
 				} else {
-					result.setMessage("Failed to update customer.");
+					setCustomer(customer, customerForm);
+					
+					result = new ResultBean();
+					result.setSuccess(customerService.update(customer));
+					if(result.getSuccess()) {
+						result.setMessage("Customer successfully updated.");
+					} else {
+						result.setMessage("Failed to update customer.");
+					}
 				}
+			} else {
+				result = new ResultBean(Boolean.FALSE, "");
+				result.addToExtras("errors", errors);
 			}
 		} else {
 			result = new ResultBean(false, "Customer not found.");
@@ -109,8 +131,10 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	}
 	
 	private void setCustomer(Customer customer, CustomerFormBean customerForm) {
-		customer.setFirstName(customerForm.getFirstName());
-		customer.setLastName(customerForm.getLastName());
-		customer.setAddress(customerForm.getAddress());
+		customer.setFirstName(customerForm.getFirstName().trim());
+		customer.setLastName(customerForm.getLastName().trim());
+		customer.setContactNumber(customerForm.getContactNumber().trim());
+		customer.setAddress(customerForm.getAddress().trim());
+		customer.setCardId(customerForm.getCardId().trim());
 	}
 }

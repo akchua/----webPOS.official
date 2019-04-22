@@ -33,10 +33,12 @@ public abstract class Reading extends BaseObject {
 	private Float pwdDiscountAmount;
 
 	private Float refundAmount;
-
+	
 	private Float totalCheckPayment;
 	
 	private Float totalCardPayment;
+	
+	private Float totalPointsPayment;
 
 	@Transient
 	public abstract Float getNetSales();
@@ -64,7 +66,7 @@ public abstract class Reading extends BaseObject {
 	
 	@Transient
 	public Float getEndingBalance() {
-		return getBeginningBalance() + getNetSales();
+		return getBeginningBalance() + getGrossSales();
 	}
 	
 	@Transient
@@ -111,6 +113,16 @@ public abstract class Reading extends BaseObject {
 	public Float getPwdDiscountAmount() {
 		return pwdDiscountAmount;
 	}
+	
+	@Transient
+	public Float getTotalSpecialDiscountAmount() {
+		return seniorDiscountAmount + pwdDiscountAmount;
+	}
+	
+	@Transient
+	public String getFormattedTotalSpecialDiscountAmount() {
+		return CurrencyFormatter.pesoFormat(getTotalSpecialDiscountAmount());
+	}
 
 	@Transient
 	public String getFormattedPwdDiscountAmount() {
@@ -129,7 +141,7 @@ public abstract class Reading extends BaseObject {
 
 	@Transient
 	public Float getGrossSales() {
-		return getNetSales() + getTotalDiscountAmount();
+		return getNetSales() + getTotalDiscountAmount() - getRefundAmount();
 	}
 
 	@Transient
@@ -151,11 +163,21 @@ public abstract class Reading extends BaseObject {
 	public String getFormattedRefundAmount() {
 		return CurrencyFormatter.pesoFormat(getRefundAmount());
 	}
+	
+	@Transient
+	public Float getTotalDeductions() {
+		return getTotalDiscountAmount() - getRefundAmount();
+	}
+	
+	@Transient
+	public String getFormattedTotalDeductions() {
+		return CurrencyFormatter.pesoFormat(getTotalDeductions());
+	}
 
 	public void setRefundAmount(Float refundAmount) {
 		this.refundAmount = refundAmount;
 	}
-
+	
 	@Basic
 	@Column(name = "total_check_payment")
 	public Float getTotalCheckPayment() {
@@ -182,9 +204,24 @@ public abstract class Reading extends BaseObject {
 		return CurrencyFormatter.pesoFormat(getTotalCardPayment());
 	}
 	
+	public void setTotalCardPayment(Float totalCardPayment) {
+		this.totalCardPayment = totalCardPayment;
+	}
+
+	@Basic
+	@Column(name = "total_points_payment")
+	public Float getTotalPointsPayment() {
+		return totalPointsPayment;
+	}
+	
+	@Transient
+	public String getFormattedTotalPointsPayment() {
+		return CurrencyFormatter.pesoFormat(getTotalPointsPayment());
+	}
+	
 	@Transient
 	public Float getTotalCashPayment() {
-		return getNetSales() - getTotalCheckPayment() - getTotalCardPayment();
+		return getNetSales() - getTotalCheckPayment() - getTotalCardPayment() - getTotalPointsPayment();
 	}
 
 	@Transient
@@ -192,7 +229,7 @@ public abstract class Reading extends BaseObject {
 		return CurrencyFormatter.pesoFormat(getTotalCashPayment());
 	}
 
-	public void setTotalCardPayment(Float totalCardPayment) {
-		this.totalCardPayment = totalCardPayment;
+	public void setTotalPointsPayment(Float totalPointsPayment) {
+		this.totalPointsPayment = totalPointsPayment;
 	}
 }

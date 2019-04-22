@@ -15,4 +15,6 @@ public interface CustomerPrototype extends Prototype<Customer, Long> {
 	 * @return the object list of customer
 	 */
 	ObjectList<Customer> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey);
+	
+	Customer findByCardId(String cardId);
 }

@@ -90,6 +90,10 @@ public class CustomerOrder extends BaseObject {
 	
 	private Float cardAmount;
 	
+	private Float pointsAmount;
+	
+	private Float pointsEarned;
+	
 	@Transient
 	public String getOrderNumber() {
 		return String.valueOf(this.getId() % 1000);
@@ -226,6 +230,11 @@ public class CustomerOrder extends BaseObject {
 	}
 	
 	@Transient
+	public String getFormattedVatExSales() {
+		return CurrencyFormatter.pesoFormat(getVatExSales());
+	}
+	
+	@Transient
 	public Float getNetVatExSales() {
 		return vatExSales - vatExDiscount;
 	}
@@ -243,6 +252,11 @@ public class CustomerOrder extends BaseObject {
 	@Column(name = "zero_rated_sales")
 	public Float getZeroRatedSales() {
 		return zeroRatedSales;
+	}
+	
+	@Transient
+	public String getFormattedZeroRatedSales() {
+		return CurrencyFormatter.pesoFormat(getZeroRatedSales());
 	}
 	
 	@Transient
@@ -463,9 +477,24 @@ public class CustomerOrder extends BaseObject {
 		return CurrencyFormatter.pesoFormat(getCardAmount());
 	}
 	
+	public void setCardAmount(Float cardAmount) {
+		this.cardAmount = cardAmount;
+	}
+
+	@Basic
+	@Column(name = "points_amount")
+	public Float getPointsAmount() {
+		return pointsAmount;
+	}
+	
+	@Transient
+	public String getFormattedPointsAmount() {
+		return CurrencyFormatter.pesoFormat(getPointsAmount());
+	}
+	
 	@Transient
 	public Float getTotalPayment() {
-		return getCash() + getCheckAmount() + getCardAmount();
+		return getCash() + getCheckAmount() + getCardAmount() + getPointsAmount();
 	}
 	
 	@Transient
@@ -473,7 +502,22 @@ public class CustomerOrder extends BaseObject {
 		return CurrencyFormatter.pesoFormat(getTotalPayment());
 	}
 
-	public void setCardAmount(Float cardAmount) {
-		this.cardAmount = cardAmount;
+	public void setPointsAmount(Float pointsAmount) {
+		this.pointsAmount = pointsAmount;
+	}
+
+	@Basic
+	@Column(name = "points_earned")
+	public Float getPointsEarned() {
+		return pointsEarned;
+	}
+	
+	@Transient
+	public String getFormattedPointsEarned() {
+		return CurrencyFormatter.pesoFormat(getPointsEarned());
+	}
+
+	public void setPointsEarned(Float pointsEarned) {
+		this.pointsEarned = pointsEarned;
 	}
 }

@@ -12,12 +12,7 @@ Ending SI No.        : ${t.FormattedEndingSIN}
 Beginning Balance    : ${t.FormattedBeginningBalance}
 Ending Balance       : ${t.FormattedEndingBalance}
 
-Net Sales            : ${t.FormattedNetSales}
-Details :
 Gross Sales          : ${t.FormattedGrossSales}
-Regular Discount     : ${t.FormattedRegularDiscountAmount}
-SC Discount          : ${t.FormattedSeniorDiscountAmount}
-PWD Discount         : ${t.FormattedPwdDiscountAmount}
 
 Tax Details :
 VATable Sales        : ${t.FormattedVatableSales}
@@ -25,16 +20,24 @@ VAT Amount           : ${t.FormattedVatAmount}
 VAT Exempt Sales     : ${t.FormattedVatExSales}
 Zero Rated Sales     : ${t.FormattedZeroRatedSales}
 
-Total Refund         : ${t.FormattedTotalRefund}
-Details :
+Deductions :
+Regular Discount     : ${t.FormattedRegularDiscountAmount}
+SC Discount          : ${t.FormattedSeniorDiscountAmount}
+PWD Discount         : ${t.FormattedPwdDiscountAmount}
+Refund               : ${t.FormattedTotalRefund}
+
+Refund Details :
 Beginning Refund No. : ${t.FormattedBeginningRefundNumber}
 Ending Refund No.    : ${t.FormattedEndingRefundNumber}
 Beg. Refund Amount   : ${t.FormattedBeginningRefundAmount}
 End Refund Amount    : ${t.FormattedEndingRefundAmount}
 
-Payments
+Payments :
 Cash Payments        : ${t.FormattedTotalCashPayment}
 Check Payments       : ${t.FormattedTotalCheckPayment}
 Card Payments        : ${t.FormattedTotalCardPayment}
+Points Payments      : ${t.FormattedTotalPointsPayment}
+
+Net Sales            : ${t.FormattedNetSales}
 
 Accumulated Grand Total : ${t.FormattedGrandTotal}

@@ -18,7 +18,16 @@ ${t.FormattedCustomerOrderItems}
 #if($t.PaidWithCheck)
 ${t.FormattedCheckAccountNumber}
 ${t.FormattedCheckNumber} ${t.FormattedCheckAmount}
-
+#end
+#if($t.PaidWithCard)
+                    Card
+${t.FormattedTransactionNumber} ${t.FormattedCardAmount}
+#end
+#if($t.PaidWithPoints)
+${t.FormattedCustomerName}
+${t.FormattedCustomerCardId} ${t.FormattedPointsAmount}
+#end
+#if($t.PaidWithNonCash)
            Total Payment ${t.FormattedTotalPayment}
 #end
              Change ${t.FormattedChange}
@@ -29,6 +38,16 @@ ${t.FormattedCheckNumber} ${t.FormattedCheckAmount}
         Zero-Rated Sales ${t.FormattedZeroRatedSales}
   
 --------------------------------------------
+#if($t.Customer)
+${t.FormattedCustomerName}
+${t.FormattedCustomerCardId}
+
+Previous Points : ${t.FormattedPreviousPoints}
+Points Earned   : ${t.FormattedPointsEarned}
+Points Used     : ${t.FormattedPointsUsed}
+Total Points    : ${t.FormattedTotalPoints}
+--------------------------------------------
+#end
 Cust. Name : ___________________________
 Address    : ___________________________
 TIN #      : ___________________________

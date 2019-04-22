@@ -1,0 +1,29 @@
+<div class="modal-content modal-md">
+  	<form>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+			<h3 align="center">Generate Backend Report</h3>
+		</div>
+
+		<div class="modal-body">
+			<div class="row">	
+				<div class="control-group col-xs-12">
+					<label class="control-label col-xs-12">Included Dates:</label>
+					<div class="controls col-xs-6">
+						<input data-bind="value: dateFrom" type="date" class="form-control" />
+						<p class="text-center">Start</p>
+					</div>
+					<div class="controls col-xs-6">
+						<input data-bind="value: dateTo" type="date" class="form-control" />
+						<p class="text-center">End</p>
+					</div>
+				</div>
+			</div>
+		</div>
+  
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="submit" data-bind="click: generateBackendReport, enable: enableGenerateButton">Generate</button>
+	        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
+		</div>
+  	</form>
+</div>

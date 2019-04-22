@@ -26,6 +26,10 @@ public interface CustomerOrderHandler {
 	
 	ResultBean removeCustomerOrder(Long customerOrderId);
 	
+	ResultBean setCustomer(Long customerOrderId, String customerCardId);
+	
+	ResultBean removeCustomer(Long customerOrderId);
+	
 	ResultBean applyDiscount(DiscountFormBean discountForm);
 	
 	ObjectList<CustomerOrderDetail> getCustomerOrderDetailList(Integer pageNumber, Long customerOrderId);
@@ -49,6 +53,8 @@ public interface CustomerOrderHandler {
 	ResultBean printCustomerOrderCopy(Long customerOrderId);
 
 	ResultBean generateReport(SalesReportQueryBean salesReportQuery);
+	
+	ResultBean generateBackendReport(Date dateFrom, Date dateTo);
 	
 	void printReceipt(Long customerOrderId, String footer, Boolean original);
 	

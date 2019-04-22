@@ -21,6 +21,8 @@ public class PaymentsFormBean extends FormBean {
 	
 	private Float cardAmount;
 	
+	private Float pointsAmount;
+	
 	private Long refSIN;
 
 	public Long getCustomerOrderId() {
@@ -75,12 +77,20 @@ public class PaymentsFormBean extends FormBean {
 		return cardAmount;
 	}
 	
-	public Float getTotalPayment() {
-		return getCash() + getCheckAmount() + getCardAmount();
-	}
-
 	public void setCardAmount(Float cardAmount) {
 		this.cardAmount = cardAmount;
+	}
+
+	public Float getPointsAmount() {
+		return pointsAmount;
+	}
+	
+	public Float getTotalPayment() {
+		return getCash() + getCheckAmount() + getCardAmount() + getPointsAmount();
+	}
+
+	public void setPointsAmount(Float pointsAmount) {
+		this.pointsAmount = pointsAmount;
 	}
 
 	public Long getRefSIN() {

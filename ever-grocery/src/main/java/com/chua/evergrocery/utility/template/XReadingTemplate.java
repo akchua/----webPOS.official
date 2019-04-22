@@ -91,4 +91,8 @@ public class XReadingTemplate extends AbstractTemplate {
 	public String getFormattedTotalCardPayment() {
 		return String.format("%21s", "Php " + xReading.getFormattedTotalCardPayment());
 	}
+	
+	public String getFormattedTotalPointsPayment() {
+		return String.format("%21s", "Php " + xReading.getFormattedTotalPointsPayment());
+	}
 }
