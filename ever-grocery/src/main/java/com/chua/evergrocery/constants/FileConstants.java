@@ -30,6 +30,8 @@ public class FileConstants {
 	
 	private final String inventoryHome;
 	
+	private final String activityLogHome;
+	
 	private final String imageDefaultFileName;
 	
 	@Autowired
@@ -44,6 +46,7 @@ public class FileConstants {
 		this.backendReportHome = fileHome + "files/backend_report/";
 		this.generatePurchasesHome = fileHome + "files/generate_purchase/";
 		this.inventoryHome = fileHome + "files/inventory/";
+		this.activityLogHome = fileHome + "files/activity_log/";
 		this.imageDefaultFileName = imageDefaultFileName;
 	}
 
@@ -81,6 +84,10 @@ public class FileConstants {
 	
 	public String getInventoryHome() {
 		return inventoryHome;
+	}
+	
+	public String getActivityLogHome() {
+		return activityLogHome;
 	}
 	
 	public String getImageDefaultFileName() {

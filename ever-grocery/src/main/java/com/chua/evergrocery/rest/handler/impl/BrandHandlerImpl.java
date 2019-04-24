@@ -14,6 +14,7 @@ import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.database.entity.Brand;
 import com.chua.evergrocery.database.service.BrandService;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.rest.handler.ActivityLogHandler;
 import com.chua.evergrocery.rest.handler.BrandHandler;
 
 @Transactional
@@ -22,6 +23,9 @@ public class BrandHandlerImpl implements BrandHandler {
 
 	@Autowired
 	private BrandService brandService;
+	
+	@Autowired
+	private ActivityLogHandler activityLogHandler;
 
 	@Override
 	public ObjectList<Brand> getBrandObjectList(Integer pageNumber, String searchKey) {
@@ -46,6 +50,7 @@ public class BrandHandlerImpl implements BrandHandler {
 			result.setSuccess(brandService.insert(brand) != null);
 			if(result.getSuccess()) {
 				result.setMessage("Brand successfully created.");
+				activityLogHandler.myLog("created a brand : " + brand.getId() + " - " + brand.getName());
 			} else {
 				result.setMessage("Failed to create brand.");
 			}
@@ -73,6 +78,7 @@ public class BrandHandlerImpl implements BrandHandler {
 				result.setSuccess(brandService.update(brand));
 				if(result.getSuccess()) {
 					result.setMessage("Brand successfully updated.");
+					activityLogHandler.myLog("updated a brand : " + brand.getId() + " - " + brand.getName());
 				} else {
 					result.setMessage("Failed to update brand.");
 				}
@@ -96,6 +102,7 @@ public class BrandHandlerImpl implements BrandHandler {
 			result.setSuccess(brandService.delete(brand));
 			if(result.getSuccess()) {
 				result.setMessage("Successfully removed Brand \"" + brand.getName() + "\".");
+				activityLogHandler.myLog("removed a brand : " + brand.getId() + " - " + brand.getName());
 			} else {
 				result.setMessage("Failed to remove Brand \"" + brand.getName() + "\".");
 			}

@@ -30,6 +30,7 @@ import com.chua.evergrocery.database.service.UserService;
 import com.chua.evergrocery.enums.Color;
 import com.chua.evergrocery.enums.UserType;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.rest.handler.ActivityLogHandler;
 import com.chua.evergrocery.rest.handler.UserHandler;
 import com.chua.evergrocery.rest.validator.PasswordFormValidator;
 import com.chua.evergrocery.rest.validator.UserFormValidator;
@@ -49,6 +50,9 @@ public class UserHandlerImpl implements UserHandler {
 	
 	@Autowired
 	private UserImageService userImageService;
+	
+	@Autowired
+	private ActivityLogHandler activityLogHandler;
 	
 	@Autowired
 	private EmailUtil emailUtil;
@@ -113,6 +117,7 @@ public class UserHandlerImpl implements UserHandler {
 				result.setSuccess(userService.insert(user) != null);
 				if(result.getSuccess()) {
 					result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created account of Mr./Ms. " + Html.text(Color.BLUE, user.getFirstName() + " " + user.getLastName()) + ". Thank you."));
+					activityLogHandler.myLog("created a user : " + user.getId() + " - " + user.getFormattedName());
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -182,6 +187,7 @@ public class UserHandlerImpl implements UserHandler {
 						// refresh if updated current user
 						if(UserContextHolder.getUser().getId().equals(user.getId())) UserContextHolder.refreshUser(user);
 						result.setMessage(Html.line("Your profile has been " + Html.text(Color.GREEN, "updated") + "."));
+						activityLogHandler.myLog("updated a user : " + user.getId() + " - " + user.getFormattedName());
 					} else {
 						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 					}
@@ -237,6 +243,7 @@ public class UserHandlerImpl implements UserHandler {
 					result.setSuccess(userService.delete(userId));
 					if(result.getSuccess()) {
 						result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed the account of Mr./Ms. " + Html.text(Color.BLUE, user.getFirstName() + " " + user.getLastName()) + "."));
+						activityLogHandler.myLog("removed a user : " + user.getId() + " - " + user.getFormattedName());
 					} else {
 						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 					}

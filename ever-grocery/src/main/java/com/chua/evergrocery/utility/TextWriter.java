@@ -28,11 +28,15 @@ public class TextWriter {
 	 * @param path The path where the file will be created
 	 */
 	public static void write(String message, String path) {
+		TextWriter.write(message, path, false);
+	}
+	
+	public static void write(String message, String path, Boolean append) {
 		try {
 			File file = new File(path);
 			if(file.getParentFile() != null) file.getParentFile().mkdirs();
 			
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file, append));
 			
 			String[] tokens = message.split("\n");
 			for(String s : tokens) {

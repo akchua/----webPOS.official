@@ -34,6 +34,7 @@ import com.chua.evergrocery.enums.PriceHistoryType;
 import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.rest.handler.ActivityLogHandler;
 import com.chua.evergrocery.rest.handler.InventoryHandler;
 import com.chua.evergrocery.rest.handler.ProductHandler;
 import com.chua.evergrocery.rest.validator.ProductFormValidator;
@@ -64,6 +65,9 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	@Autowired
 	private InventoryHandler inventoryHandler;
+	
+	@Autowired
+	private ActivityLogHandler activityLogHandler;
 	
 	@Autowired
 	private ProductFormValidator productFormValidator;
@@ -150,6 +154,7 @@ public class ProductHandlerImpl implements ProductHandler {
 					result.setExtras(extras);
 					
 					result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created Product " + Html.text(Color.BLUE, product.getDisplayName()) + "."));
+					activityLogHandler.myLog("created a product : " + product.getId() + " - " + product.getName());
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -191,6 +196,7 @@ public class ProductHandlerImpl implements ProductHandler {
 				result.setSuccess(productService.update(product));
 				if(result.getSuccess()) {
 					result.setMessage(Html.line("Product " + Html.text(Color.BLUE, product.getDisplayName()) + " has been successfully " + Html.text(Color.GREEN, "updated") + "."));
+					activityLogHandler.myLog("updated a product : " + product.getId() + " - " + product.getName());
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -217,6 +223,7 @@ public class ProductHandlerImpl implements ProductHandler {
 			result.setSuccess(productService.delete(product));
 			if(result.getSuccess()) {
 				result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed Product " + Html.text(Color.BLUE, product.getName()) + "."));
+				activityLogHandler.myLog("removed a product : " + product.getId() + " - " + product.getName());
 			} else {
 				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 			}
@@ -253,6 +260,7 @@ public class ProductHandlerImpl implements ProductHandler {
 			
 			if(result.getSuccess()) {
 				result.setMessage("Product details successfully saved.");
+				activityLogHandler.myLog("updated pricing of product : " + product.getId() + " - " + product.getName());
 			}
 		} else {
 			result = new ResultBean(false, "Product not found.");

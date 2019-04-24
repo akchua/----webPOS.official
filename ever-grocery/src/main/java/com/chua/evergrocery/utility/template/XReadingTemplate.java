@@ -40,7 +40,7 @@ public class XReadingTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedCashier() {
-		return xReading.getCashier().getFormattedName() + "";
+		return xReading.getCashier().getShortName() + "";
 	}
 	
 	public String getFormattedReadingDate() {

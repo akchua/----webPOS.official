@@ -56,7 +56,7 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedServer() {
-		return customerOrder.getCreator().getFormattedName();
+		return customerOrder.getCreator().getShortName();
 	}
 
 	public String getFormattedCustomerOrderItems() {

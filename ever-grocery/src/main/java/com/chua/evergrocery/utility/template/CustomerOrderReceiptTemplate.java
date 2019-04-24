@@ -227,8 +227,12 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 		return String.format("%-11s", customerOrder.getDiscountType().getShortHand() + " ID No.") + ": " + customerOrder.getDiscountIdNumber();
 	}
 	
+	public String getFormattedServer() {
+		return customerOrder.getCreator().getShortName();
+	}
+	
 	public String getFormattedCashier() {
-		return customerOrder.getCashier().getFormattedName();
+		return customerOrder.getCashier().getShortName();
 	}
 
 	public String getFormattedCustomerOrderItems() {

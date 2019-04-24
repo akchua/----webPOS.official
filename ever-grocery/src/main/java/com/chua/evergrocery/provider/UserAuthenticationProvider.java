@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chua.evergrocery.beans.UserBean;
 import com.chua.evergrocery.database.entity.User;
 import com.chua.evergrocery.database.service.UserService;
+import com.chua.evergrocery.rest.handler.ActivityLogHandler;
 import com.chua.evergrocery.utility.EncryptionUtil;
 
 @Transactional
@@ -25,6 +26,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private ActivityLogHandler activityLogHandler;
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -35,6 +39,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         if(user != null) {
         	user.setLastSuccessfulLogin(new Date());
         	userService.insert(user);
+        	activityLogHandler.log(user.getShortName(), "logged in");
         	
         	final List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority(user.getUserType().name()));

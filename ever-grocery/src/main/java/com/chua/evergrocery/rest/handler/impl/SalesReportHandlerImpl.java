@@ -29,6 +29,7 @@ import com.chua.evergrocery.database.service.XReadingService;
 import com.chua.evergrocery.database.service.ZReadingService;
 import com.chua.evergrocery.enums.Color;
 import com.chua.evergrocery.enums.DiscountType;
+import com.chua.evergrocery.rest.handler.ActivityLogHandler;
 import com.chua.evergrocery.rest.handler.SalesReportHandler;
 import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.Html;
@@ -57,6 +58,9 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 	
 	@Autowired
 	private XReadingService xReadingService;
+	
+	@Autowired
+	private ActivityLogHandler activityLogHandler;
 	
 	@Autowired
 	private FileConstants fileConstants;
@@ -283,6 +287,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 				extras.put("fileName", fileName);
 				result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created sales report."));
 				result.setExtras(extras);
+				
 			} else {
 				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 			}
@@ -308,6 +313,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 		extras.put("fileName", fileName);
 		result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created backend report."));
 		result.setExtras(extras);
+		activityLogHandler.myLog("generated backend report : " + dateFrom + " - " + dateTo);
 		
 		return result;
 	}

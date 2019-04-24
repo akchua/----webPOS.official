@@ -285,7 +285,7 @@ public class CustomerOrder extends BaseObject {
 
 	@Transient
 	public Float getGrossAmount() {
-		return getNetVatSales() + getNetVatExSales() + getNetZeroRatedSales();
+		return getVatSales() + getVatExSales() + getZeroRatedSales();
 	}
 	
 	@Transient
@@ -354,7 +354,7 @@ public class CustomerOrder extends BaseObject {
 
 	@Transient
 	public Float getTotalAmount() {
-		return getGrossAmount();
+		return getGrossAmount() - getTotalDiscountAmount();
 	}
 	
 	@Transient

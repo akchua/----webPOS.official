@@ -41,6 +41,7 @@ import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.SystemVariableTag;
 import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.rest.handler.ActivityLogHandler;
 import com.chua.evergrocery.rest.handler.AuditLogHandler;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
 import com.chua.evergrocery.rest.handler.InventoryHandler;
@@ -97,6 +98,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Autowired
 	private SalesReportHandler salesReportHandler;
+	
+	@Autowired
+	private ActivityLogHandler activityLogHandler;
 	
 	@Autowired
 	private DiscountFormValidator discountFormValidator;
@@ -178,6 +182,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			result.setExtras(extras);
 			
 			result.setMessage("Customer order successfully created.");
+			activityLogHandler.myLog("created a sales order : " + customerOrder.getId());
 		} else {
 			result.setMessage("Failed to create customer order.");
 		}
@@ -202,6 +207,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				result.setSuccess(customerOrderService.delete(customerOrder));
 				if(result.getSuccess()) {
 					result.setMessage("Successfully removed Customer order \"" + customerOrder.getOrderNumber() + "\".");
+					activityLogHandler.myLog("removed a sales order : " + customerOrder.getId());
 				} else {
 					result.setMessage("Failed to remove Customer order \"" + customerOrder.getOrderNumber() + "\".");
 				}
@@ -231,6 +237,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				result.setSuccess(customerOrderService.update(customerOrder));
 				if(result.getSuccess()) {
 					result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " set Mr./Mrs. " + customer.getFormattedName() + " as the customer for this transaction."));
+					activityLogHandler.myLog("set customer on a sales order : " + customer.getId() + " - " + customer.getFormattedName() + " to " + customerOrder.getId());
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -252,11 +259,13 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		
 		if(customerOrder != null) {
 			result = new ResultBean();
+			final Customer customer = customerOrder.getCustomer();
 			
 			customerOrder.setCustomer(null);
 			result.setSuccess(customerOrderService.update(customerOrder));
 			if(result.getSuccess()) {
 				result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed the customer for this transaction."));
+				activityLogHandler.myLog("removed customer from a sales order : " + customer.getId() + " - " + customer.getFormattedName() + " to " + customerOrder.getId());
 			} else {
 				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 			}
@@ -381,6 +390,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 						if(result.getSuccess()) {
 							this.refreshCustomerOrder(customerOrder);
 							result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " applied " + discountType.getDisplayName() + " to Customer Order #" + customerOrder.getOrderNumber() + "."));
+							activityLogHandler.myLog("applied discount on sales order : " + customerOrder.getId());
 						} else {
 							result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 						}
@@ -475,6 +485,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 											Html.newLine + Html.newLine + Html.text("Cash          : " + customerOrder.getFormattedCash()) +
 											(customerOrder.getCheckAmount().equals(0.0f) ? "" : Html.newLine + Html.text("Check         : " + customerOrder.getFormattedCheckAmount())) + 
 											Html.newLine + Html.text("Amount Due    : " + customerOrder.getFormattedTotalAmount())));
+									activityLogHandler.myLog("paid sales order : " + customerOrder.getId() + " with amount due : Php" + customerOrder.getFormattedTotalAmount() + ", received total payment of : Php" + CurrencyFormatter.pesoFormat(paymentsForm.getTotalPayment()));
 								} else {
 									result.setMessage("Failed to pay Customer order \"" + customerOrder.getOrderNumber() + "\".");
 								}
@@ -778,6 +789,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				
 				if(result.getSuccess()) {
 					result.setMessage(Html.line(Color.GREEN, "Successfully") + " forwarded customer order #" + customerOrder.getOrderNumber() + " to cashier.");
+					activityLogHandler.myLog("submitted sales order : " + customerOrder.getId());
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -805,6 +817,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				
 				if(result.getSuccess()) {
 					result.setMessage(Html.line(Color.GREEN, "Successfully") + " returned customer order #" + customerOrder.getOrderNumber() + " to server " + customerOrder.getCreator().getFormattedName() + ".");
+					activityLogHandler.myLog("returned sales order : " + customerOrder.getId());
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -874,10 +887,12 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			final CustomerOrderReceiptTemplate customerOrderReceipt = new CustomerOrderReceiptTemplate(customerOrder, customerOrderItems, customerOrder.getTotalAmount() < 0 ? "REFUND" : "Sales Invoice", original ? "" : "REPRINT", footer);
 			
 			Printer printer = new Printer();
+			
 			try {
 				final String receipt = customerOrderReceipt.merge(velocityEngine, DocType.PRINT);
 				TextWriter.write(receipt, fileConstants.getReceiptHome() + customerOrder.getSerialInvoiceNumber() + ".txt");
 				printer.print(receipt, "Customer Order #" + customerOrder.getOrderNumber() + (original ? " (ORIG)" : " (COPY)"), PrintConstants.EVER_CASHIER_PRINTER);
+				activityLogHandler.myLog("printed a receipt for sales order : " + customerOrder.getId());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -904,6 +919,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				printer.print(zReadingString, "Z Reading " + DateFormatter.prettyFormat(readingDate), PrintConstants.EVER_ACCOUNTING_PRINTER);
 				result.setSuccess(Boolean.TRUE);
 				result.setMessage("");
+				activityLogHandler.myLog("printed z-reading");
 			} catch (Exception e) {
 				e.printStackTrace();
 				result.setSuccess(Boolean.FALSE);
@@ -929,6 +945,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			final String xReadingString = xReadingTemplate.merge(velocityEngine, DocType.PRINT);
 			TextWriter.write(xReadingString, fileConstants.getXReadingHome() + "x_reading_" + cashier.getShortName() + "_" + DateFormatter.fileSafeFormat(new Date()) + ".txt");
 			printer.print(xReadingString, "X Reading " + cashier.getShortName(), PrintConstants.EVER_CASHIER_PRINTER);
+			activityLogHandler.myLog("end of shift");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

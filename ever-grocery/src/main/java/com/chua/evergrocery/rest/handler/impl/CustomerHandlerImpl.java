@@ -13,10 +13,13 @@ import com.chua.evergrocery.beans.CustomerFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.database.entity.Customer;
 import com.chua.evergrocery.database.service.CustomerService;
+import com.chua.evergrocery.enums.Color;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.rest.handler.ActivityLogHandler;
 import com.chua.evergrocery.rest.handler.CustomerHandler;
 import com.chua.evergrocery.rest.validator.CustomerFormValidator;
 import com.chua.evergrocery.utility.DateUtil;
+import com.chua.evergrocery.utility.Html;
 
 @Transactional
 @Component
@@ -26,8 +29,11 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	private CustomerService customerService;
 	
 	@Autowired
+	private ActivityLogHandler activityLogHandler;
+	
+	@Autowired
 	private CustomerFormValidator customerFormValidator;
-
+	
 	@Override
 	public ObjectList<Customer> getCustomerObjectList(Integer pageNumber, String searchKey) {
 		return customerService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey);
@@ -55,6 +61,7 @@ public class CustomerHandlerImpl implements CustomerHandler {
 				result.setSuccess(customerService.insert(customer) != null);
 				if(result.getSuccess()) {
 					result.setMessage("Customer successfully created.");
+					activityLogHandler.myLog("created a customer  : " + customer.getId() + " - " + customer.getFormattedName());
 				} else {
 					result.setMessage("Failed to create customer.");
 				}
@@ -89,6 +96,7 @@ public class CustomerHandlerImpl implements CustomerHandler {
 					result.setSuccess(customerService.update(customer));
 					if(result.getSuccess()) {
 						result.setMessage("Customer successfully updated.");
+						activityLogHandler.myLog("updated a customer : " + customer.getId() + " - " + customer.getFormattedName());
 					} else {
 						result.setMessage("Failed to update customer.");
 					}
@@ -110,13 +118,19 @@ public class CustomerHandlerImpl implements CustomerHandler {
 		
 		final Customer customer = customerService.find(customerId);
 		if(customer != null) {
-			result = new ResultBean();
-			
-			result.setSuccess(customerService.delete(customer));
-			if(result.getSuccess()) {
-				result.setMessage("Successfully removed Customer \"" + customer.getLastName() + ", " + customer.getFirstName() + "\".");
+			if(customer.getAvailablePoints().equals(0.0f)) {
+				result = new ResultBean();
+				
+				result.setSuccess(customerService.delete(customer));
+				if(result.getSuccess()) {
+					result.setMessage("Successfully removed Customer \"" + customer.getFormattedName() + "\".");
+					activityLogHandler.myLog("removed a customer : " + customer.getId() + " - " + customer.getFormattedName());
+				} else {
+					result.setMessage("Failed to remove Customer \"" + customer.getLastName() + ", " + customer.getFirstName() + "\".");
+				}
 			} else {
-				result.setMessage("Failed to remove Customer \"" + customer.getLastName() + ", " + customer.getFirstName() + "\".");
+				result = new ResultBean(Boolean.FALSE, Html.line("You are " + Html.text(Color.RED, "NOT ALLOWED") + " to delete a customer account with rewards points remaining.")
+						+ Html.line("Please contact your database administrator for assistance."));
 			}
 		} else {
 			result = new ResultBean(false, "Customer not found.");

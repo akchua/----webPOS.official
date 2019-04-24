@@ -19,6 +19,7 @@ import com.chua.evergrocery.database.service.CompanyService;
 import com.chua.evergrocery.database.service.DistributorService;
 import com.chua.evergrocery.enums.ReceiptType;
 import com.chua.evergrocery.objects.ObjectList;
+import com.chua.evergrocery.rest.handler.ActivityLogHandler;
 import com.chua.evergrocery.rest.handler.CompanyHandler;
 import com.chua.evergrocery.utility.DateUtil;
 
@@ -31,6 +32,9 @@ public class CompanyHandlerImpl implements CompanyHandler {
 	
 	@Autowired
 	private DistributorService distributorService;
+	
+	@Autowired
+	private ActivityLogHandler activityLogHandler;
 
 	@Override
 	public ObjectList<Company> getCompanyObjectList(Integer pageNumber, String searchKey) {
@@ -65,6 +69,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 			result.setSuccess(companyService.insert(company) != null);
 			if(result.getSuccess()) {
 				result.setMessage("Company successfully created.");
+				activityLogHandler.myLog("created a company : " + company.getId() + " - " + company.getName());
 			} else {
 				result.setMessage("Failed to create company.");
 			}
@@ -92,6 +97,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 				result.setSuccess(companyService.update(company));
 				if(result.getSuccess()) {
 					result.setMessage("Company successfully updated.");
+					activityLogHandler.myLog("updated a company : " + company.getId() + " - " + company.getName());
 				} else {
 					result.setMessage("Failed to update company.");
 				}
@@ -115,6 +121,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 			result.setSuccess(companyService.delete(company));
 			if(result.getSuccess()) {
 				result.setMessage("Successfully removed Company \"" + company.getName() + "\".");
+				activityLogHandler.myLog("removed a company : " + company.getId() + " - " + company.getName());
 			} else {
 				result.setMessage("Failed to remove Company \"" + company.getName() + "\".");
 			}

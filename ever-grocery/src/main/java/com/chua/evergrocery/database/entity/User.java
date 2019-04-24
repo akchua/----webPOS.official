@@ -85,7 +85,7 @@ public class User extends BaseObject {
 	
 	@Transient
 	public String getShortName() {
-		return Character.toUpperCase(firstName.charAt(0)) + "." + lastName;
+		return getId() + " " + Character.toUpperCase(firstName.charAt(0)) + "." + lastName;
 	}
 
 	public void setLastName(String lastName) {

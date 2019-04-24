@@ -58,6 +58,7 @@ Signature  : ___________________________
 Bus. Style : ___________________________
 #end
 
+Server  : ${t.FormattedServer}
 Cashier : ${t.FormattedCashier}
 Thank you, please come again
 

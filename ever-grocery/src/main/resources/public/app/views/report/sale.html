@@ -33,8 +33,8 @@
     				<tr>
     					<th>Order No.</th>
     					<th>SI/Refund No.</th>
-    					<th>Date</th>
-    					<th>Creator</th>
+    					<th>Date Paid</th>
+    					<th>Server</th>
     					<th>Cashier</th>
     					<th class="text-right">Total Amount</th>
     					<th class="text-center">Status</th>
@@ -51,12 +51,12 @@
     					<td data-bind="text: customerOrder.formattedPaidOn"></td>
     					<td>
     						<span data-bind="if: customerOrder.creator">
-    							<span data-bind="text: customerOrder.creator.lastName"></span><span>, </span><span data-bind="text: customerOrder.creator.firstName"></span>
+    							<span data-bind="text: customerOrder.creator.shortName"></span>
     						</span>
     					</td>
     					<td>
     						<span data-bind="if: customerOrder.cashier">
-    							<span data-bind="text: customerOrder.cashier.lastName"></span><span>, </span><span data-bind="text: customerOrder.cashier.firstName"></span>
+    							<span data-bind="text: customerOrder.cashier.shortName"></span>
     						</span>
     					</td>
     					<td class="text-right"><span data-bind="text: customerOrder.formattedTotalAmount"></span></td>

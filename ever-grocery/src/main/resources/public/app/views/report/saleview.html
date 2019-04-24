@@ -9,7 +9,7 @@
 			<div class="panel panel-info col-lg-6">
 				<div class="panel-body">
 					<dl class="dl-horizontal">
-						<dt>SI/Refund/Ref. No.:</dt>
+						<dt>SI/Refund/Ref. #:</dt>
 						<dd>
 							<span data-bind="text: customerOrderViewModel.serialInvoiceNumber"></span>/
 							<span data-bind="text: customerOrderViewModel.refundNumber"></span>/
@@ -25,6 +25,7 @@
 						</dd>
 						<dt>Earned Points:</dt>
 						<dd data-bind="text: customerOrderViewModel.formattedPointsEarned"></dd>
+						<br>
 						<dt>Total Items:</dt>
 						<dd data-bind="text: customerOrderViewModel.totalItems"></dd>
 						<dt>Date Paid:</dt>
@@ -43,7 +44,8 @@
 						<dd data-bind="text: customerOrderViewModel.formattedCardAmount"></dd>
 						<dt>Points Amount:</dt>
 						<dd data-bind="text: customerOrderViewModel.formattedPointsAmount"></dd>
-						<dt>Gross Amount:</dt>
+						<br>
+						<dt>Gross Total:</dt>
 						<dd data-bind="text: customerOrderViewModel.formattedGrossAmount"></dd>
 						<dt>Total Discount:</dt>
 						<dd>

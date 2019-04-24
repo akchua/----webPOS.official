@@ -59,7 +59,9 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     	self.customerOrderViewModel.formattedPointsAmount(self.customerOrder.formattedPointsAmount);
     	self.customerOrderViewModel.formattedGrossAmount(self.customerOrder.formattedGrossAmount);
     	
-    	if(self.customerOrder.discountType) self.customerOrderViewModel.discountShorthand(self.customerOrder.discountType.shorthand)
+    	if(self.customerOrder.discountType) {
+    		self.customerOrderViewModel.discountShorthand(self.customerOrder.discountType.shortHand + ' ' + self.customerOrder.discountType.percentDiscount + '%');
+    	}
     	self.customerOrderViewModel.formattedTotalDiscount(self.customerOrder.formattedTotalDiscountAmount);
     	self.customerOrderViewModel.formattedTotalAmount(self.customerOrder.formattedTotalAmount);
     	self.discounted(self.customerOrder.totalDiscountAmount > 0);

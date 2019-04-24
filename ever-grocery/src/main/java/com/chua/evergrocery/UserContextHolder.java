@@ -24,6 +24,10 @@ public class UserContextHolder {
 		return getUser().getItemsPerPage();
 	}
 	
+	public static final String getShortName() {
+		return getUser().getUserEntity().getShortName();
+	}
+	
 	public static final void refreshUser(User user) {
 		getUser().setUser(user);
 	}
