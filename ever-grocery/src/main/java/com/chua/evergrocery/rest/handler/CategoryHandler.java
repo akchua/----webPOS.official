@@ -13,11 +13,11 @@ public interface CategoryHandler {
 	
 	Category getCategory(Long categoryId);
 	
-	ResultBean createCategory(CategoryFormBean categoryForm);
+	ResultBean createCategory(CategoryFormBean categoryForm, String ip);
 	
-	ResultBean updateCategory(CategoryFormBean categoryForm);
+	ResultBean updateCategory(CategoryFormBean categoryForm, String ip);
 	
-	ResultBean removeCategory(Long categoryId);
+	ResultBean removeCategory(Long categoryId, String ip);
 	
 	List<Category> getCategoryList();
 }

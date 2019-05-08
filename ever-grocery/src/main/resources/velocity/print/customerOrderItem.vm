@@ -1,6 +1,6 @@
 ## Template for Customer Order Item
 ## Has a maximum of 44 columns in a line
-${t.FormattedQuantity}${t.FormattedName}${t.FormattedTotalPrice}#if(${t.Overflow})
+${t.FormattedQuantity}${t.FormattedName}#if(${t.showPrice})${t.FormattedTotalPrice}#end#if(${t.Overflow})
 #foreach( $overflow in $t.OverflowList)
 
 $overflow#end

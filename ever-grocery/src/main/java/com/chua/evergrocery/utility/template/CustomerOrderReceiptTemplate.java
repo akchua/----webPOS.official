@@ -14,6 +14,7 @@ import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
+import com.chua.evergrocery.utility.format.DateFormatter;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -51,7 +52,7 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	@Override
 	public String merge(VelocityEngine velocityEngine, DocType docType) {
 		formattedHeader = new EverHeaderTemplate().merge(velocityEngine, docType);
-		formattedCustomerOrderItems = new CustomerOrderItemListTemplate(customerOrderItems).merge(velocityEngine, docType);
+		formattedCustomerOrderItems = new CustomerOrderItemListTemplate(customerOrderItems, Boolean.TRUE).merge(velocityEngine, docType);
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("t", this);
@@ -60,6 +61,10 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	
 	public String getFormattedHeader() {
 		return this.formattedHeader;
+	}
+	
+	public String getFormattedPaidOn() {
+		return StringHelper.center(DateFormatter.longFormat(customerOrder.getPaidOn()), 44);
 	}
 	
 	public String getFormattedSIN() {
@@ -90,7 +95,8 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedSubtitle() {
-		return StringHelper.center(subtitle, 44);
+		String temp = (subtitle == null || subtitle.isEmpty()) ? footer : subtitle;
+		return StringHelper.center(temp, 44);
 	}
 	
 	public String getFormattedOrderNumber() {
@@ -116,6 +122,18 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	
 	public Boolean isDiscounted() {
 		return !customerOrder.getDiscountType().equals(DiscountType.NO_DISCOUNT);
+	}
+	
+	public Boolean isTaxAdjusted() {
+		return !customerOrder.getTaxAdjustment().equals(0.0f);
+	}
+	
+	public String getFormattedTaxAdjustableAmount() {
+		return String.format("%16s", "Php " + CurrencyFormatter.pesoFormat(customerOrder.getGrossAmount() - customerOrder.getTaxAdjustment()));
+	}
+	
+	public String getFormattedTaxAdjustment() {
+		return String.format("%16s", "Php " + CurrencyFormatter.pesoFormat(customerOrder.getTaxAdjustment()));
 	}
 	
 	public Boolean isNonZeroDiscount() {
@@ -223,8 +241,20 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 		return CurrencyFormatter.pesoFormat(previousPoints);
 	}
 	
+	public String getFormattedDiscountName() {
+		return String.format("%-14s", "Customer Name") + ": " + customerOrder.getDiscountName();
+	}
+	
+	public String getFormattedDiscountAddress() {
+		return String.format("%-14s", "Address") + ": " + customerOrder.getDiscountAddress();
+	}
+	
+	public String getFormattedDiscountTin() {
+		return String.format("%-14s", "TIN") + ": " + customerOrder.getDiscountTin();
+	}
+	
 	public String getFormattedIdNumber() {
-		return String.format("%-11s", customerOrder.getDiscountType().getShortHand() + " ID No.") + ": " + customerOrder.getDiscountIdNumber();
+		return String.format("%-14s", "SC/PWD ID No.") + ": " + customerOrder.getDiscountIdNumber();
 	}
 	
 	public String getFormattedServer() {

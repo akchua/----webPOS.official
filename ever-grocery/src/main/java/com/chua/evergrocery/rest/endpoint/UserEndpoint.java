@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -14,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -84,14 +86,15 @@ public class UserEndpoint {
 	@POST
 	@Path("/save")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean saveUser(@FormParam("userFormData") String userFormData) throws IOException {
+	public ResultBean saveUser(@FormParam("userFormData") String userFormData,
+				@Context HttpServletRequest request) throws IOException {
 		final ResultBean result;
 
 		final UserFormBean userForm = new ObjectMapper().readValue(userFormData, UserFormBean.class);
 		if(userForm.getId() != null) {
-			result = userHandler.updateUser(userForm);
+			result = userHandler.updateUser(userForm, request.getRemoteAddr());
 		} else {
-			result = userHandler.createUser(userForm);
+			result = userHandler.createUser(userForm, request.getRemoteAddr());
 		}
 		
 		return result;
@@ -117,8 +120,9 @@ public class UserEndpoint {
 	@POST
 	@Path("/remove")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean removeUser(@FormParam("userId") Long userId) {
-		return userHandler.removeUser(userId);
+	public ResultBean removeUser(@FormParam("userId") Long userId,
+				@Context HttpServletRequest request) {
+		return userHandler.removeUser(userId, request.getRemoteAddr());
 	}
 	
 	@POST

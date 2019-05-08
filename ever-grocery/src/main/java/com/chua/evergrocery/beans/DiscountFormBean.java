@@ -11,6 +11,12 @@ public class DiscountFormBean extends FormBean {
 
 	private Long customerOrderId;
 	
+	private String name;
+	
+	private String address;
+	
+	private String tin;
+	
 	private DiscountType discountType;
 	
 	private Float grossAmountLimit;
@@ -23,6 +29,30 @@ public class DiscountFormBean extends FormBean {
 
 	public void setCustomerOrderId(Long customerOrderId) {
 		this.customerOrderId = customerOrderId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getTin() {
+		return tin;
+	}
+
+	public void setTin(String tin) {
+		this.tin = tin;
 	}
 
 	public DiscountType getDiscountType() {

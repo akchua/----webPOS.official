@@ -23,13 +23,13 @@ public interface ProductHandler {
 	
 	List<ProductDetail> getProductDetailList(Long productId);
 	
-	ResultBean createProduct(ProductFormBean productForm);
+	ResultBean createProduct(ProductFormBean productForm, String ip);
 	
-	ResultBean updateProduct(ProductFormBean productForm);
+	ResultBean updateProduct(ProductFormBean productForm, String ip);
 	
-	ResultBean removeProduct(Long productId);
+	ResultBean removeProduct(Long productId, String ip);
 	
-	ResultBean saveProductDetails(Long productId, List<ProductDetailsFormBean> productDetailsFormList);
+	ResultBean saveProductDetails(Long productId, List<ProductDetailsFormBean> productDetailsFormList, String ip);
 	
 	ProductDetail getUpperProductDetail(Long productDetailId);
 	

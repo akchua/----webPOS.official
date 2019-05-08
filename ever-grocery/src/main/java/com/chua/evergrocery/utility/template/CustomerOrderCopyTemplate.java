@@ -35,7 +35,7 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 	
 	@Override
 	public String merge(VelocityEngine velocityEngine, DocType docType) {
-		formattedCustomerOrderItems = new CustomerOrderItemListTemplate(customerOrderItems).merge(velocityEngine, docType);
+		formattedCustomerOrderItems = new CustomerOrderItemListTemplate(customerOrderItems, Boolean.FALSE).merge(velocityEngine, docType);
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("t", this);

@@ -55,6 +55,10 @@ public class CustomerOrderDetail extends BaseObject {
 	private Float margin;
 	
 	private TaxType taxType;
+	
+	private Float taxAdjustment;
+	
+	private TaxType origTaxType;
 
 	@ManyToOne(targetEntity = CustomerOrder.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_order_id")
@@ -205,6 +209,11 @@ public class CustomerOrderDetail extends BaseObject {
 	public String getFormattedTotalPrice() {
 		return CurrencyFormatter.pesoFormat(getTotalPrice()) + taxType.getSymbol();
 	}
+	
+	@Transient
+	public String getFormattedBeforeTaxAdjustmentPrice() {
+		return CurrencyFormatter.pesoFormat(getTotalPrice() - getTaxAdjustment()) + origTaxType.getSymbol();
+	}
 
 	public void setTotalPrice(Float totalPrice) {
 		this.totalPrice = totalPrice;
@@ -228,5 +237,25 @@ public class CustomerOrderDetail extends BaseObject {
 
 	public void setTaxType(TaxType taxType) {
 		this.taxType = taxType;
+	}
+
+	@Basic
+	@Column(name = "tax_adjustment")
+	public Float getTaxAdjustment() {
+		return taxAdjustment;
+	}
+
+	public void setTaxAdjustment(Float taxAdjustment) {
+		this.taxAdjustment = taxAdjustment;
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "orig_tax_type")
+	public TaxType getOrigTaxType() {
+		return origTaxType;
+	}
+
+	public void setOrigTaxType(TaxType origTaxType) {
+		this.origTaxType = origTaxType;
 	}
 }

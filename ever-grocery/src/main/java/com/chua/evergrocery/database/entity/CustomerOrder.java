@@ -62,6 +62,8 @@ public class CustomerOrder extends BaseObject {
 	
 	private Float zeroRatedSales;
 	
+	private Float taxAdjustment;
+	
 	private DiscountType discountType;
 	
 	private Float vatDiscount;
@@ -71,6 +73,12 @@ public class CustomerOrder extends BaseObject {
 	private Float zeroRatedDiscount;
 	
 	private String discountIdNumber;
+	
+	private String discountName;
+	
+	private String discountAddress;
+	
+	private String discountTin;
 	
 	private Float totalItems;
 	
@@ -273,6 +281,16 @@ public class CustomerOrder extends BaseObject {
 		this.zeroRatedSales = zeroRatedSales;
 	}
 
+	@Basic
+	@Column(name = "tax_adjustment")
+	public Float getTaxAdjustment() {
+		return taxAdjustment;
+	}
+
+	public void setTaxAdjustment(Float taxAdjustment) {
+		this.taxAdjustment = taxAdjustment;
+	}
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "discount_type", length = 50)
 	public DiscountType getDiscountType() {
@@ -350,6 +368,36 @@ public class CustomerOrder extends BaseObject {
 
 	public void setDiscountIdNumber(String discountIdNumber) {
 		this.discountIdNumber = discountIdNumber;
+	}
+
+	@Basic
+	@Column(name = "discount_name")
+	public String getDiscountName() {
+		return discountName;
+	}
+
+	public void setDiscountName(String discountName) {
+		this.discountName = discountName;
+	}
+
+	@Basic
+	@Column(name = "discount_address")
+	public String getDiscountAddress() {
+		return discountAddress;
+	}
+
+	public void setDiscountAddress(String discountAddress) {
+		this.discountAddress = discountAddress;
+	}
+
+	@Basic
+	@Column(name = "discount_tin")
+	public String getDiscountTin() {
+		return discountTin;
+	}
+
+	public void setDiscountTin(String discountTin) {
+		this.discountTin = discountTin;
 	}
 
 	@Transient

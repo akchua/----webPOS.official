@@ -39,7 +39,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         if(user != null) {
         	user.setLastSuccessfulLogin(new Date());
         	userService.insert(user);
-        	activityLogHandler.log(user.getShortName(), "logged in");
+        	activityLogHandler.log(user.getShortName(), "logged in", "n/a");
         	
         	final List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority(user.getUserType().name()));

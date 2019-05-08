@@ -39,7 +39,7 @@ public class BrandHandlerImpl implements BrandHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 3)
-	public ResultBean createBrand(BrandFormBean brandForm) {
+	public ResultBean createBrand(BrandFormBean brandForm, String ip) {
 		final ResultBean result;
 		
 		if(!brandService.isExistsByName(brandForm.getName())) {
@@ -50,7 +50,7 @@ public class BrandHandlerImpl implements BrandHandler {
 			result.setSuccess(brandService.insert(brand) != null);
 			if(result.getSuccess()) {
 				result.setMessage("Brand successfully created.");
-				activityLogHandler.myLog("created a brand : " + brand.getId() + " - " + brand.getName());
+				activityLogHandler.myLog("created a brand : " + brand.getId() + " - " + brand.getName(), ip);
 			} else {
 				result.setMessage("Failed to create brand.");
 			}
@@ -63,7 +63,7 @@ public class BrandHandlerImpl implements BrandHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 3)
-	public ResultBean updateBrand(BrandFormBean brandForm) {
+	public ResultBean updateBrand(BrandFormBean brandForm, String ip) {
 		final ResultBean result;
 		
 		final Brand brand = brandService.find(brandForm.getId());
@@ -78,7 +78,7 @@ public class BrandHandlerImpl implements BrandHandler {
 				result.setSuccess(brandService.update(brand));
 				if(result.getSuccess()) {
 					result.setMessage("Brand successfully updated.");
-					activityLogHandler.myLog("updated a brand : " + brand.getId() + " - " + brand.getName());
+					activityLogHandler.myLog("updated a brand : " + brand.getId() + " - " + brand.getName(), ip);
 				} else {
 					result.setMessage("Failed to update brand.");
 				}
@@ -92,7 +92,7 @@ public class BrandHandlerImpl implements BrandHandler {
 
 	@Override
 	@CheckAuthority(minimumAuthority = 2)
-	public ResultBean removeBrand(Long brandId) {
+	public ResultBean removeBrand(Long brandId, String ip) {
 		final ResultBean result;
 		
 		final Brand brand = brandService.find(brandId);
@@ -102,7 +102,7 @@ public class BrandHandlerImpl implements BrandHandler {
 			result.setSuccess(brandService.delete(brand));
 			if(result.getSuccess()) {
 				result.setMessage("Successfully removed Brand \"" + brand.getName() + "\".");
-				activityLogHandler.myLog("removed a brand : " + brand.getId() + " - " + brand.getName());
+				activityLogHandler.myLog("removed a brand : " + brand.getId() + " - " + brand.getName(), ip);
 			} else {
 				result.setMessage("Failed to remove Brand \"" + brand.getName() + "\".");
 			}

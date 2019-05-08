@@ -45,7 +45,7 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	}
 	
 	@Override
-	public ResultBean createCustomer(CustomerFormBean customerForm) {
+	public ResultBean createCustomer(CustomerFormBean customerForm, String ip) {
 		final ResultBean result;
 		final Map<String, String> errors = customerFormValidator.validate(customerForm);
 		
@@ -61,7 +61,7 @@ public class CustomerHandlerImpl implements CustomerHandler {
 				result.setSuccess(customerService.insert(customer) != null);
 				if(result.getSuccess()) {
 					result.setMessage("Customer successfully created.");
-					activityLogHandler.myLog("created a customer  : " + customer.getId() + " - " + customer.getFormattedName());
+					activityLogHandler.myLog("created a customer  : " + customer.getId() + " - " + customer.getFormattedName(), ip);
 				} else {
 					result.setMessage("Failed to create customer.");
 				}
@@ -77,7 +77,7 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	}
 	
 	@Override
-	public ResultBean updateCustomer(CustomerFormBean customerForm) {
+	public ResultBean updateCustomer(CustomerFormBean customerForm, String ip) {
 		final ResultBean result;
 		
 		final Customer customer = customerService.find(customerForm.getId());
@@ -96,7 +96,7 @@ public class CustomerHandlerImpl implements CustomerHandler {
 					result.setSuccess(customerService.update(customer));
 					if(result.getSuccess()) {
 						result.setMessage("Customer successfully updated.");
-						activityLogHandler.myLog("updated a customer : " + customer.getId() + " - " + customer.getFormattedName());
+						activityLogHandler.myLog("updated a customer : " + customer.getId() + " - " + customer.getFormattedName(), ip);
 					} else {
 						result.setMessage("Failed to update customer.");
 					}
@@ -113,7 +113,7 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	}
 
 	@Override
-	public ResultBean removeCustomer(Long customerId) {
+	public ResultBean removeCustomer(Long customerId, String ip) {
 		final ResultBean result;
 		
 		final Customer customer = customerService.find(customerId);
@@ -124,7 +124,7 @@ public class CustomerHandlerImpl implements CustomerHandler {
 				result.setSuccess(customerService.delete(customer));
 				if(result.getSuccess()) {
 					result.setMessage("Successfully removed Customer \"" + customer.getFormattedName() + "\".");
-					activityLogHandler.myLog("removed a customer : " + customer.getId() + " - " + customer.getFormattedName());
+					activityLogHandler.myLog("removed a customer : " + customer.getId() + " - " + customer.getFormattedName(), ip);
 				} else {
 					result.setMessage("Failed to remove Customer \"" + customer.getLastName() + ", " + customer.getFirstName() + "\".");
 				}

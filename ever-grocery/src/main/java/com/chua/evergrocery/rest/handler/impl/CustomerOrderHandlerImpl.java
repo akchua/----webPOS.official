@@ -148,7 +148,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 10)
-	public ResultBean createCustomerOrder() {
+	public ResultBean createCustomerOrder(String ip) {
 		final ResultBean result;
 		
 		final CustomerOrder customerOrder = new CustomerOrder();
@@ -170,6 +170,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrder.setCardAmount(0.0f);
 		customerOrder.setPointsAmount(0.0f);
 		customerOrder.setPointsEarned(0.0f);
+		customerOrder.setTaxAdjustment(0.0f);
 		
 		customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
 		customerOrder.setStatus(Status.LISTING);
@@ -182,7 +183,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			result.setExtras(extras);
 			
 			result.setMessage("Customer order successfully created.");
-			activityLogHandler.myLog("created a sales order : " + customerOrder.getId());
+			activityLogHandler.myLog("created a sales order : " + customerOrder.getId(), ip);
 		} else {
 			result.setMessage("Failed to create customer order.");
 		}
@@ -192,7 +193,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 10)
-	public ResultBean removeCustomerOrder(Long customerOrderId) {
+	public ResultBean removeCustomerOrder(Long customerOrderId, String ip) {
 		final ResultBean result;
 		
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
@@ -207,7 +208,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				result.setSuccess(customerOrderService.delete(customerOrder));
 				if(result.getSuccess()) {
 					result.setMessage("Successfully removed Customer order \"" + customerOrder.getOrderNumber() + "\".");
-					activityLogHandler.myLog("removed a sales order : " + customerOrder.getId());
+					activityLogHandler.myLog("removed a sales order : " + customerOrder.getId(), ip);
 				} else {
 					result.setMessage("Failed to remove Customer order \"" + customerOrder.getOrderNumber() + "\".");
 				}
@@ -223,7 +224,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 5)
-	public ResultBean setCustomer(Long customerOrderId, String customerCardId) {
+	public ResultBean setCustomer(Long customerOrderId, String customerCardId, String ip) {
 		final ResultBean result;
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
@@ -237,7 +238,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				result.setSuccess(customerOrderService.update(customerOrder));
 				if(result.getSuccess()) {
 					result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " set Mr./Mrs. " + customer.getFormattedName() + " as the customer for this transaction."));
-					activityLogHandler.myLog("set customer on a sales order : " + customer.getId() + " - " + customer.getFormattedName() + " to " + customerOrder.getId());
+					activityLogHandler.myLog("set customer on a sales order : " + customer.getId() + " - " + customer.getFormattedName() + " to " + customerOrder.getId(), ip);
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -253,7 +254,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 
 	@Override
 	@CheckAuthority(minimumAuthority = 5)
-	public ResultBean removeCustomer(Long customerOrderId) {
+	public ResultBean removeCustomer(Long customerOrderId, String ip) {
 		final ResultBean result;
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
@@ -265,7 +266,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			result.setSuccess(customerOrderService.update(customerOrder));
 			if(result.getSuccess()) {
 				result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed the customer for this transaction."));
-				activityLogHandler.myLog("removed customer from a sales order : " + customer.getId() + " - " + customer.getFormattedName() + " to " + customerOrder.getId());
+				activityLogHandler.myLog("removed customer from a sales order : " + customer.getId() + " - " + customer.getFormattedName() + " to " + customerOrder.getId(), ip);
 			} else {
 				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 			}
@@ -278,7 +279,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 5)
-	public ResultBean applyDiscount(DiscountFormBean discountForm) {
+	public ResultBean applyDiscount(DiscountFormBean discountForm, String ip) {
 		final ResultBean result;
 		final Map<String, String> errors = discountFormValidator.validate(discountForm);
 		
@@ -326,7 +327,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 						customerOrder.setZeroRatedDiscount(totalDiscountableZeroRatedAmount * (discountType.getPercentDiscount() / 100.0f));
 						
 						customerOrder.setDiscountType(discountType);
-						customerOrder.setDiscountIdNumber(discountForm.getDiscountIdNumber());
+						setDiscount(customerOrder, discountForm);
 						customerOrder.setStatus(Status.DISCOUNTED);
 						
 						result = new ResultBean();
@@ -345,13 +346,18 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 						for(CustomerOrderDetail customerOrderDetail : customerOrderDetails) {
 							if(customerOrderDetail.getTotalPrice() <= grossAmountLimit) {
 								grossAmountLimit -= customerOrderDetail.getTotalPrice();
+								final Float oldTotalPrice = customerOrderDetail.getTotalPrice();
+								
 								customerOrderDetail.setTotalPrice(TaxUtil.convertTaxType(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), TaxType.ZERO_RATED));
 								customerOrderDetail.setTaxType(TaxType.ZERO_RATED);
+								
+								customerOrderDetail.setTaxAdjustment(customerOrderDetail.getTotalPrice() - oldTotalPrice);
+								customerOrder.setTaxAdjustment(customerOrder.getTaxAdjustment() + customerOrderDetail.getTaxAdjustment());
 							}
 						}
 						
 						customerOrder.setDiscountType(discountType);
-						customerOrder.setDiscountIdNumber(discountForm.getDiscountIdNumber());
+						setDiscount(customerOrder, discountForm);
 						customerOrder.setStatus(Status.DISCOUNTED);
 						
 						result = new ResultBean();
@@ -372,16 +378,21 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 						for(CustomerOrderDetail customerOrderDetail : customerOrderDetails) {
 							if(customerOrderDetail.getTotalPrice() <= grossAmountLimit && customerOrderDetail.getProduct().getCategory().getName().equals("Medicine")) {
 								grossAmountLimit -= customerOrderDetail.getTotalPrice();
+								final Float oldTotalPrice = customerOrderDetail.getTotalPrice();
+								
 								customerOrderDetail.setTotalPrice(TaxUtil.convertTaxType(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), TaxType.VAT_EXEMPT));
 								customerOrderDetail.setTaxType(TaxType.VAT_EXEMPT);
 								discountableAmount += customerOrderDetail.getTotalPrice();
+								
+								customerOrderDetail.setTaxAdjustment(customerOrderDetail.getTotalPrice() - oldTotalPrice);
+								customerOrder.setTaxAdjustment(customerOrder.getTaxAdjustment() + customerOrderDetail.getTaxAdjustment());
 							}
 						}
 						
 						customerOrder.setVatExDiscount(discountableAmount * (discountType.getPercentDiscount() / 100.0f));
 						
 						customerOrder.setDiscountType(discountType);
-						customerOrder.setDiscountIdNumber(discountForm.getDiscountIdNumber());
+						setDiscount(customerOrder, discountForm);
 						customerOrder.setStatus(Status.DISCOUNTED);
 						
 						result = new ResultBean();
@@ -390,7 +401,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 						if(result.getSuccess()) {
 							this.refreshCustomerOrder(customerOrder);
 							result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " applied " + discountType.getDisplayName() + " to Customer Order #" + customerOrder.getOrderNumber() + "."));
-							activityLogHandler.myLog("applied discount on sales order : " + customerOrder.getId());
+							activityLogHandler.myLog("applied discount on sales order : " + customerOrder.getId(), ip);
 						} else {
 							result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 						}
@@ -413,7 +424,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 5)
-	public ResultBean payCustomerOrder(PaymentsFormBean paymentsForm) {
+	public ResultBean payCustomerOrder(PaymentsFormBean paymentsForm, String ip) {
 		final ResultBean result;
 		final Map<String, String> errors = paymentsFormValidator.validate(paymentsForm);
 		
@@ -421,86 +432,91 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			final CustomerOrder customerOrder = customerOrderService.find(paymentsForm.getCustomerOrderId());
 			
 			if(customerOrder != null) {
-				if(customerOrder.getStatus().equals(Status.SUBMITTED) || customerOrder.getStatus().equals(Status.DISCOUNTED)) {
-					if(paymentsForm.getCardAmount() + paymentsForm.getPointsAmount() > customerOrder.getTotalAmount()) {
-						errors.put("cardAmount", "Card + Points amount must be less than the total payable.");
-						errors.put("pointsAmount", "Card + Points amount must be less than the total payable");
-					}
-					
-					if(customerOrder.getCustomer() != null && paymentsForm.getPointsAmount() > customerOrder.getCustomer().getAvailablePoints()) {
-						errors.put("pointsAmount", "Insufficient points");
-					}
-					
-					if(errors.isEmpty()) {
-						if(customerOrder.getTotalAmount() <= paymentsForm.getTotalPayment()) {
-							result = new ResultBean();
-							if(customerOrder.getTotalAmount() < 0) {
-								if(paymentsForm.getRefSIN() != null && paymentsForm.getRefSIN()	> 0l) {
-									final CustomerOrder referenceCustomerOrder = customerOrderService.findBySerialInvoiceNumber(paymentsForm.getRefSIN());
-									if(referenceCustomerOrder != null && referenceCustomerOrder.getTotalAmount() > 0) {
-										Long RN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.REFUND_NUMBER.getTag()));
-										customerOrder.setRefundNumber(RN);
-										result.setSuccess(systemVariableService.updateByTag(SystemVariableTag.REFUND_NUMBER.getTag(), String.valueOf(RN + 1)));
-										
-										customerOrder.setReferenceSerialInvoiceNumber(paymentsForm.getRefSIN());
+				if(DateUtil.isToday(zReadingService.getLatestZReading().getReadingDate())) {
+					result = new ResultBean(false, "Cannot transact after end of day");
+				} else {
+					if(customerOrder.getStatus().equals(Status.SUBMITTED) || customerOrder.getStatus().equals(Status.DISCOUNTED)) {
+						if(customerOrder.getTotalAmount() > 0 &&
+								(paymentsForm.getCardAmount() + paymentsForm.getPointsAmount() > customerOrder.getTotalAmount() + 0.01f)) {
+							errors.put("cardAmount", "Card + Points amount must be less than the total payable.");
+							errors.put("pointsAmount", "Card + Points amount must be less than the total payable");
+						}
+						
+						if(customerOrder.getCustomer() != null && paymentsForm.getPointsAmount() > customerOrder.getCustomer().getAvailablePoints()) {
+							errors.put("pointsAmount", "Insufficient points");
+						}
+						
+						if(errors.isEmpty()) {
+							if(customerOrder.getTotalAmount() <= paymentsForm.getTotalPayment()) {
+								result = new ResultBean();
+								if(customerOrder.getTotalAmount() < 0) {
+									if(paymentsForm.getRefSIN() != null && paymentsForm.getRefSIN()	> 0l) {
+										final CustomerOrder referenceCustomerOrder = customerOrderService.findBySerialInvoiceNumber(paymentsForm.getRefSIN());
+										if(referenceCustomerOrder != null && referenceCustomerOrder.getTotalAmount() > 0) {
+											Long RN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.REFUND_NUMBER.getTag()));
+											customerOrder.setRefundNumber(RN);
+											result.setSuccess(systemVariableService.updateByTag(SystemVariableTag.REFUND_NUMBER.getTag(), String.valueOf(RN + 1)));
+											
+											customerOrder.setReferenceSerialInvoiceNumber(paymentsForm.getRefSIN());
+										} else {
+											result.setSuccess(Boolean.FALSE);
+											result.setMessage("Invalid reference invoice number : " + paymentsForm.getRefSIN());
+										}
 									} else {
 										result.setSuccess(Boolean.FALSE);
-										result.setMessage("Invalid reference invoice number : " + paymentsForm.getRefSIN());
+										result.setMessage("Refund requires reference invoice number");
 									}
 								} else {
-									result.setSuccess(Boolean.FALSE);
-									result.setMessage("Refund requires reference invoice number");
+									Long SIN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag()));
+									customerOrder.setSerialInvoiceNumber(SIN);
+									result.setSuccess(systemVariableService.updateByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag(), String.valueOf(SIN + 1)));
+								}
+								
+								if(result.getSuccess()) {
+									customerOrder.setCashier(userService.find(UserContextHolder.getUser().getId()));
+									customerOrder.setStatus(Status.PAID);
+									customerOrder.setPaidOn(new Date());
+									setCustomerOrderPayment(customerOrder, paymentsForm);
+									
+									if(customerOrder.getCustomer() != null) {
+										setEarnedPoints(customerOrder);
+										final Customer customer = customerOrder.getCustomer();
+										customer.setTotalPoints(customer.getTotalPoints() + customerOrder.getPointsEarned());
+										
+										// add used points if any
+										customer.setUsedPoints(customer.getUsedPoints() + customerOrder.getPointsAmount());
+										customerService.update(customer);
+									}
+									
+									result.setSuccess(customerOrderService.update(customerOrder));
+									if(result.getSuccess()) {
+										// UPDATE INVENTORY if any item is sold at old price
+										inventoryHandler.checkForStockAdjustment(paymentsForm.getCustomerOrderId());
+										
+										// UPDATE AUDIT LOG
+										auditLogHandler.addLog(UserContextHolder.getUser().getId(), AuditLogType.SALES, customerOrder.getTotalAmount());
+										
+										result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(customerOrder.getTotalPayment() - customerOrder.getTotalAmount())) +
+												Html.newLine + Html.newLine + Html.text("Cash          : " + customerOrder.getFormattedCash()) +
+												(customerOrder.getCheckAmount().equals(0.0f) ? "" : Html.newLine + Html.text("Check         : " + customerOrder.getFormattedCheckAmount())) + 
+												Html.newLine + Html.text("Amount Due    : " + customerOrder.getFormattedTotalAmount())));
+										activityLogHandler.myLog("paid sales order : " + customerOrder.getId() + " with amount due : Php" + customerOrder.getFormattedTotalAmount() + ", received total payment of : Php" + CurrencyFormatter.pesoFormat(paymentsForm.getTotalPayment()), ip);
+									} else {
+										result.setMessage("Failed to pay Customer order \"" + customerOrder.getOrderNumber() + "\".");
+									}
 								}
 							} else {
-								Long SIN = Long.valueOf(systemVariableService.findByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag()));
-								customerOrder.setSerialInvoiceNumber(SIN);
-								result.setSuccess(systemVariableService.updateByTag(SystemVariableTag.SERIAL_INVOICE_NUMBER.getTag(), String.valueOf(SIN + 1)));
-							}
-							
-							if(result.getSuccess()) {
-								customerOrder.setCashier(userService.find(UserContextHolder.getUser().getId()));
-								customerOrder.setStatus(Status.PAID);
-								customerOrder.setPaidOn(new Date());
-								setCustomerOrderPayment(customerOrder, paymentsForm);
-								
-								if(customerOrder.getCustomer() != null) {
-									setEarnedPoints(customerOrder);
-									final Customer customer = customerOrder.getCustomer();
-									customer.setTotalPoints(customer.getTotalPoints() + customerOrder.getPointsEarned());
-									
-									// add used points if any
-									customer.setUsedPoints(customer.getUsedPoints() + customerOrder.getPointsAmount());
-									customerService.update(customer);
-								}
-								
-								result.setSuccess(customerOrderService.update(customerOrder));
-								if(result.getSuccess()) {
-									// UPDATE INVENTORY if any item is sold at old price
-									inventoryHandler.checkForStockAdjustment(paymentsForm.getCustomerOrderId());
-									
-									// UPDATE AUDIT LOG
-									auditLogHandler.addLog(UserContextHolder.getUser().getId(), AuditLogType.SALES, customerOrder.getTotalAmount());
-									
-									result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(customerOrder.getTotalPayment() - customerOrder.getTotalAmount())) +
-											Html.newLine + Html.newLine + Html.text("Cash          : " + customerOrder.getFormattedCash()) +
-											(customerOrder.getCheckAmount().equals(0.0f) ? "" : Html.newLine + Html.text("Check         : " + customerOrder.getFormattedCheckAmount())) + 
-											Html.newLine + Html.text("Amount Due    : " + customerOrder.getFormattedTotalAmount())));
-									activityLogHandler.myLog("paid sales order : " + customerOrder.getId() + " with amount due : Php" + customerOrder.getFormattedTotalAmount() + ", received total payment of : Php" + CurrencyFormatter.pesoFormat(paymentsForm.getTotalPayment()));
-								} else {
-									result.setMessage("Failed to pay Customer order \"" + customerOrder.getOrderNumber() + "\".");
-								}
+								result = new ResultBean(false, "Insufficient cash.");
 							}
 						} else {
-							result = new ResultBean(false, "Insufficient cash.");
+							result = new ResultBean(Boolean.FALSE, "");
+							result.addToExtras("errors", errors);
 						}
+					} else if(customerOrder.getStatus().equals(Status.PAID)) {
+						result = new ResultBean(false, "Customer order already paid.");
 					} else {
-						result = new ResultBean(Boolean.FALSE, "");
-						result.addToExtras("errors", errors);
+						result = new ResultBean(Boolean.FALSE, "Customer Order not yet completed.");
 					}
-				} else if(customerOrder.getStatus().equals(Status.PAID)) {
-					result = new ResultBean(false, "Customer order already paid.");
-				} else {
-					result = new ResultBean(Boolean.FALSE, "Customer Order not yet completed.");
 				}
 			} else {
 				result = new ResultBean(false, "Customer order not found.");
@@ -776,7 +792,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	public ResultBean submitCustomerOrder(Long customerOrderId) {
+	public ResultBean submitCustomerOrder(Long customerOrderId, String ip) {
 		final ResultBean result;
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
@@ -789,7 +805,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				
 				if(result.getSuccess()) {
 					result.setMessage(Html.line(Color.GREEN, "Successfully") + " forwarded customer order #" + customerOrder.getOrderNumber() + " to cashier.");
-					activityLogHandler.myLog("submitted sales order : " + customerOrder.getId());
+					activityLogHandler.myLog("submitted sales order : " + customerOrder.getId(), ip);
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -804,7 +820,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	public ResultBean returnCustomerOrder(Long customerOrderId) {
+	public ResultBean returnCustomerOrder(Long customerOrderId, String ip) {
 		final ResultBean result;
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
@@ -817,7 +833,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				
 				if(result.getSuccess()) {
 					result.setMessage(Html.line(Color.GREEN, "Successfully") + " returned customer order #" + customerOrder.getOrderNumber() + " to server " + customerOrder.getCreator().getFormattedName() + ".");
-					activityLogHandler.myLog("returned sales order : " + customerOrder.getId());
+					activityLogHandler.myLog("returned sales order : " + customerOrder.getId(), ip);
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -874,12 +890,12 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	public ResultBean generateBackendReport(Date dateFrom, Date dateTo) {
-		return salesReportHandler.generateBackendReport(dateFrom, dateTo);
+	public ResultBean generateBackendReport(Date dateFrom, Date dateTo, String ip) {
+		return salesReportHandler.generateBackendReport(dateFrom, dateTo, ip);
 	}
 	
 	@Override
-	public void printReceipt(Long customerOrderId, String footer, Boolean original) {
+	public void printReceipt(Long customerOrderId, String footer, Boolean original, String ip) {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
@@ -890,9 +906,10 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			
 			try {
 				final String receipt = customerOrderReceipt.merge(velocityEngine, DocType.PRINT);
-				TextWriter.write(receipt, fileConstants.getReceiptHome() + customerOrder.getSerialInvoiceNumber() + ".txt");
+				TextWriter.write(receipt, fileConstants.getJournalFile(), Boolean.TRUE);
 				printer.print(receipt, "Customer Order #" + customerOrder.getOrderNumber() + (original ? " (ORIG)" : " (COPY)"), PrintConstants.EVER_CASHIER_PRINTER);
-				activityLogHandler.myLog("printed a receipt for sales order : " + customerOrder.getId());
+				if(original) activityLogHandler.myLog("printed a receipt for sales order : " + customerOrder.getId(), ip);
+				else activityLogHandler.myLog("printed a receipt copy for sales order : " + customerOrder.getId(), ip);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -900,7 +917,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	public ResultBean printZReading(Date readingDate) {
+	public ResultBean printZReading(Date readingDate, String ip) {
 		final ResultBean result;
 		
 		salesReportHandler.updateZReading();
@@ -915,11 +932,11 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			try {
 				
 				final String zReadingString = zReadingTemplate.merge(velocityEngine, DocType.PRINT);
-				TextWriter.write(zReadingString, fileConstants.getZReadingHome() + "z_reading_" + DateFormatter.prettyFormat(readingDate) + ".txt");
+				TextWriter.write(zReadingString, fileConstants.getJournalFile(), Boolean.TRUE);
 				printer.print(zReadingString, "Z Reading " + DateFormatter.prettyFormat(readingDate), PrintConstants.EVER_ACCOUNTING_PRINTER);
 				result.setSuccess(Boolean.TRUE);
 				result.setMessage("");
-				activityLogHandler.myLog("printed z-reading");
+				activityLogHandler.myLog("printed z-reading", ip);
 			} catch (Exception e) {
 				e.printStackTrace();
 				result.setSuccess(Boolean.FALSE);
@@ -933,7 +950,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	public void endOfShift() {
+	public void endOfShift(String ip) {
 		final User cashier = UserContextHolder.getUser().getUserEntity();
 		final XReading xReading = salesReportHandler.getXReadingByCashier(cashier);
 		
@@ -943,9 +960,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		try {
 			
 			final String xReadingString = xReadingTemplate.merge(velocityEngine, DocType.PRINT);
-			TextWriter.write(xReadingString, fileConstants.getXReadingHome() + "x_reading_" + cashier.getShortName() + "_" + DateFormatter.fileSafeFormat(new Date()) + ".txt");
+			TextWriter.write(xReadingString, fileConstants.getJournalFile(), Boolean.TRUE);
 			printer.print(xReadingString, "X Reading " + cashier.getShortName(), PrintConstants.EVER_CASHIER_PRINTER);
-			activityLogHandler.myLog("end of shift");
+			activityLogHandler.myLog("end of shift", ip);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -966,6 +983,8 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrderDetail.setTotalPrice(0.0f);
 		customerOrderDetail.setMargin(productDetail.getActualPercentProfit());
 		customerOrderDetail.setTaxType(productDetail.getProduct().getTaxType());
+		customerOrderDetail.setTaxAdjustment(0.0f);
+		customerOrderDetail.setOrigTaxType(productDetail.getProduct().getTaxType());
 	}
 	
 	private void setCustomerOrderDetailQuantity(CustomerOrderDetail customerOrderDetail, float quantity) {
@@ -993,6 +1012,13 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		// set points earned to the lower amount between (10% of total profit AND .5% of total amount)
 		// points are eligible to earn points (200 points used = 1 new point) (40k worth = 201 points)
 		customerOrder.setPointsEarned(Math.round(Math.min(totalProfit * .10f, customerOrder.getTotalAmount() * .005f) * 100.0f) / 100.0f);
+	}
+	
+	private void setDiscount(CustomerOrder customerOrder, DiscountFormBean discountForm) {
+		customerOrder.setDiscountIdNumber(discountForm.getDiscountIdNumber());
+		customerOrder.setDiscountName(discountForm.getName());
+		customerOrder.setDiscountAddress(discountForm.getAddress());
+		customerOrder.setDiscountTin(discountForm.getTin());
 	}
 	
 	private void addAmountToOrder(Float amount, TaxType taxType, CustomerOrder customerOrder) {

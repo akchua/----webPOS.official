@@ -93,7 +93,7 @@ public class UserHandlerImpl implements UserHandler {
 
 	@Override
 	@CheckAuthority(minimumAuthority = 1)
-	public ResultBean createUser(UserFormBean userForm) {
+	public ResultBean createUser(UserFormBean userForm, String ip) {
 		final ResultBean result;
 		final Map<String, String> errors = userFormValidator.validate(userForm);
 		errors.putAll(passwordFormValidator.validate(new PasswordFormBean("", userForm.getPassword(), userForm.getConfirmPassword())));
@@ -117,7 +117,7 @@ public class UserHandlerImpl implements UserHandler {
 				result.setSuccess(userService.insert(user) != null);
 				if(result.getSuccess()) {
 					result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created account of Mr./Ms. " + Html.text(Color.BLUE, user.getFirstName() + " " + user.getLastName()) + ". Thank you."));
-					activityLogHandler.myLog("created a user : " + user.getId() + " - " + user.getFormattedName());
+					activityLogHandler.myLog("created a user : " + user.getId() + " - " + user.getFormattedName(), ip);
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -166,7 +166,7 @@ public class UserHandlerImpl implements UserHandler {
 	}
 
 	@Override
-	public ResultBean updateUser(UserFormBean userForm) {
+	public ResultBean updateUser(UserFormBean userForm, String ip) {
 		final ResultBean result;
 		final User user = userService.find(userForm.getId());
 		
@@ -187,7 +187,7 @@ public class UserHandlerImpl implements UserHandler {
 						// refresh if updated current user
 						if(UserContextHolder.getUser().getId().equals(user.getId())) UserContextHolder.refreshUser(user);
 						result.setMessage(Html.line("Your profile has been " + Html.text(Color.GREEN, "updated") + "."));
-						activityLogHandler.myLog("updated a user : " + user.getId() + " - " + user.getFormattedName());
+						activityLogHandler.myLog("updated a user : " + user.getId() + " - " + user.getFormattedName(), ip);
 					} else {
 						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 					}
@@ -228,7 +228,7 @@ public class UserHandlerImpl implements UserHandler {
 
 	@Override
 	@CheckAuthority(minimumAuthority = 1)
-	public ResultBean removeUser(Long userId) {
+	public ResultBean removeUser(Long userId, String ip) {
 		final ResultBean result;
 		
 		if(userId != UserContextHolder.getUser().getId()) {
@@ -243,7 +243,7 @@ public class UserHandlerImpl implements UserHandler {
 					result.setSuccess(userService.delete(userId));
 					if(result.getSuccess()) {
 						result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed the account of Mr./Ms. " + Html.text(Color.BLUE, user.getFirstName() + " " + user.getLastName()) + "."));
-						activityLogHandler.myLog("removed a user : " + user.getId() + " - " + user.getFormattedName());
+						activityLogHandler.myLog("removed a user : " + user.getId() + " - " + user.getFormattedName(), ip);
 					} else {
 						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 					}

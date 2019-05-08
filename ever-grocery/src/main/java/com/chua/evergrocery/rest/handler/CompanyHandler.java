@@ -16,11 +16,11 @@ public interface CompanyHandler {
 	
 	Company getCompany(Long companyId);
 	
-	ResultBean createCompany(CompanyFormBean companyForm);
+	ResultBean createCompany(CompanyFormBean companyForm, String ip);
 	
-	ResultBean updateCompany(CompanyFormBean companyForm);
+	ResultBean updateCompany(CompanyFormBean companyForm, String ip);
 	
-	ResultBean removeCompany(Long companyId);
+	ResultBean removeCompany(Long companyId, String ip);
 	
 	List<Company> getCompanyList();
 	

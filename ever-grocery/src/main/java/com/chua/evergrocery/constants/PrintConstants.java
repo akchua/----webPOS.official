@@ -15,7 +15,7 @@ public class PrintConstants
 	
 	public static final String EVER_CASHIER_PRINTER = /*"\\\\LAPTOP-HRU02081\\Ever Cashier Printer";*/ "EPSON TM-U220 Receipt";
 	
-	public static final String EVER_ACCOUNTING_PRINTER = "\\\\LAPTOP-HRU02081\\Ever Cashier Printer"; /*"EPSON TM-U220 Receipt"*/;
+	public static final String EVER_ACCOUNTING_PRINTER = /*"\\\\LAPTOP-HRU02081\\Ever Cashier Printer";*/ "EPSON TM-U220 Receipt";
 	
 	public static final byte [] CUTTER_CODE = {27, 105};
 	

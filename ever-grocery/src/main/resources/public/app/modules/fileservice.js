@@ -18,6 +18,11 @@ define(['jquery', 'fileDownload'], function ($, fd) {
     	downloadBackendReportByFileName: function(fileName) {
 			fd.fileDownload('/services/file/backendreport/' + fileName)
 			return false;
+    	},
+    	
+    	downloadJournal: function() {
+			fd.fileDownload('/services/file/journal')
+			return false;
     	}
 	};
 });

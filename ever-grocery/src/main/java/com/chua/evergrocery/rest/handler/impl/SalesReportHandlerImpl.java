@@ -77,6 +77,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 		
 		final Calendar today = Calendar.getInstance();
 		today.setTime(DateUtil.floorDay(new Date()));
+		today.add(Calendar.DAY_OF_MONTH, 1);
 		
 		final Calendar currentReadingDate = Calendar.getInstance();
 		currentReadingDate.setTime(latestZReading.getReadingDate());
@@ -231,6 +232,8 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 					(refundSummary.getCheckAmount() != null ? refundSummary.getCheckAmount() : 0.0f));
 			xReading.setTotalCardPayment((salesSummary.getCardAmount() != null ? salesSummary.getCardAmount() : 0.0f) + 
 					(refundSummary.getCardAmount() != null ? refundSummary.getCardAmount() : 0.0f));
+			xReading.setTotalPointsPayment((salesSummary.getPointsAmount() != null ? salesSummary.getPointsAmount() : 0.0f) + 
+					(refundSummary.getPointsAmount() != null ? refundSummary.getPointsAmount() : 0.0f));
 			
 			xReadingService.insert(xReading);
 		}
@@ -299,7 +302,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 	}
 	
 	@Override
-	public ResultBean generateBackendReport(Date dateFrom, Date dateTo) {
+	public ResultBean generateBackendReport(Date dateFrom, Date dateTo, String ip) {
 		final ResultBean result = new ResultBean(Boolean.TRUE, "");
 		
 		final List<ZReading> zReadingList = zReadingService.findAllZReadingByDateRangeOrderByReadingDate(dateFrom, dateTo);
@@ -313,7 +316,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 		extras.put("fileName", fileName);
 		result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created backend report."));
 		result.setExtras(extras);
-		activityLogHandler.myLog("generated backend report : " + dateFrom + " - " + dateTo);
+		activityLogHandler.myLog("generated backend report : " + dateFrom + " - " + dateTo, ip);
 		
 		return result;
 	}

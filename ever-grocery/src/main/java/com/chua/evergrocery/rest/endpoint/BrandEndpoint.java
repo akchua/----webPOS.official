@@ -3,12 +3,14 @@ package com.chua.evergrocery.rest.endpoint;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,14 +45,15 @@ public class BrandEndpoint {
 	@POST
 	@Path("/save")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean saveBrand(@FormParam("brandFormData") String brandFormData) throws IOException {
+	public ResultBean saveBrand(@FormParam("brandFormData") String brandFormData,
+				@Context HttpServletRequest request) throws IOException {
 		final ResultBean result;
 		
 		final BrandFormBean brandForm = new ObjectMapper().readValue(brandFormData, BrandFormBean.class);
 		if(brandForm.getId() != null) {
-			result = brandHandler.updateBrand(brandForm);
+			result = brandHandler.updateBrand(brandForm, request.getRemoteAddr());
 		} else {
-			result = brandHandler.createBrand(brandForm);
+			result = brandHandler.createBrand(brandForm, request.getRemoteAddr());
 		}
 		
 		return result;
@@ -59,8 +62,9 @@ public class BrandEndpoint {
 	@POST
 	@Path("/remove")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean removeBrand(@FormParam("brandId") Long brandId) {
-		return brandHandler.removeBrand(brandId);
+	public ResultBean removeBrand(@FormParam("brandId") Long brandId,
+				@Context HttpServletRequest request) {
+		return brandHandler.removeBrand(brandId, request.getRemoteAddr());
 	}
 	
 	@GET

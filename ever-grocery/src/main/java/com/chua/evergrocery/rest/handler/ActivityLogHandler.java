@@ -7,7 +7,7 @@ package com.chua.evergrocery.rest.handler;
  */
 public interface ActivityLogHandler {
 
-	void log(String userShortName, String message);
+	void log(String userShortName, String message, String ip);
 	
-	void myLog(String message);
+	void myLog(String message, String ip);
 }

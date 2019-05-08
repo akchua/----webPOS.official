@@ -1,5 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/report/salereport', 'viewmodels/report/backendreport', 'viewmodels/report/zreading', 'viewmodels/report/saleview'], 
-		function (app, ko, customerOrderService, SaleReport, BackendReport, ZReading, SaleView) {
+define(['durandal/app', 'knockout', 'modules/customerorderservice', 'modules/fileservice', 'viewmodels/report/salereport', 'viewmodels/report/backendreport', 'viewmodels/report/zreading', 'viewmodels/report/saleview'], 
+		function (app, ko, customerOrderService, fileService, SaleReport, BackendReport, ZReading, SaleView) {
 	var CustomerOrder = function() {
 		this.customerOrderList = ko.observable();
 		
@@ -66,6 +66,21 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'viewmodels/
     
     CustomerOrder.prototype.backendReport = function() {
     	BackendReport.show()
+    };
+    
+    CustomerOrder.prototype.journal = function() {
+    	var self = this;
+		self.enableButtons(false);
+    	
+    	app.showMessage('Are you sure you want to download journal?',
+				'Confirm Download',
+				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+				fileService.downloadJournal();
+			}
+			self.enableButtons(true);
+		});
     };
     
     CustomerOrder.prototype.zReading = function() {

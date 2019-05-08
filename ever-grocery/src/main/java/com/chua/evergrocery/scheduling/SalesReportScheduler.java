@@ -22,6 +22,7 @@ public class SalesReportScheduler {
 	 * fires at 7:10PM every day
 	 */
 	@Scheduled(cron = "0 10 19 * * ?")
+	//@Scheduled(cron = "0/30 * * * * ?")
 	public void updateZReading() {
 		salesReportHandler.updateZReading();
 	}

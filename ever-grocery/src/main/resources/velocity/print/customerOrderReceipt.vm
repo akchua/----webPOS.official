@@ -1,12 +1,17 @@
 ## Template for Customer Order Receipt
 ## Has a maximum of 44 columns in a line
 ${t.FormattedHeader}
+${t.FormattedPaidOn}
 ${t.FormattedSIN}
 ${t.FormattedRefundNumber}
 ${t.FormattedTitle}
 ${t.FormattedSubtitle}
 ${t.FormattedOrderNumber}
 ${t.FormattedCustomerOrderItems}
+#if($t.taxAdjusted)
+           Amount w/ VAT ${t.FormattedTaxAdjustableAmount}
+                Less VAT ${t.FormattedTaxAdjustment}
+#end
 #if($t.NonZeroDiscount)
      Discountable Amount ${t.FormattedDiscountableAmount}
       Discount(${t.FormattedDiscountLabel}) ${t.FormattedTotalDiscountAmount}
@@ -48,13 +53,16 @@ Points Used     : ${t.FormattedPointsUsed}
 Total Points    : ${t.FormattedTotalPoints}
 --------------------------------------------
 #end
+#if($t.Discounted)
+${t.FormattedDiscountName}
+${t.FormattedDiscountAddress}
+${t.FormattedDiscountTin}
+${t.FormattedIdNumber}
+Signature     : ___________________________
+#else
 Cust. Name : ___________________________
 Address    : ___________________________
 TIN #      : ___________________________
-#if($t.Discounted)
-${t.FormattedIdNumber}
-Signature  : ___________________________
-#else
 Bus. Style : ___________________________
 #end
 
@@ -75,4 +83,3 @@ Valid Until :
 #foreach( $disclaimer in $t.DisclaimerList)
 $disclaimer
 #end
-${t.FormattedFooter}

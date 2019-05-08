@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,14 +73,15 @@ public class ProductEndpoint {
 	@POST
 	@Path("/save")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean saveProduct(@FormParam("productFormData") String productFormData) throws IOException {
+	public ResultBean saveProduct(@FormParam("productFormData") String productFormData,
+				@Context HttpServletRequest request) throws IOException {
 		final ResultBean result;
 		
 		final ProductFormBean productForm = new ObjectMapper().readValue(productFormData, ProductFormBean.class);
 		if(productForm.getId() != null) {
-			result = productHandler.updateProduct(productForm);
+			result = productHandler.updateProduct(productForm, request.getRemoteAddr());
 		} else {
-			result = productHandler.createProduct(productForm);
+			result = productHandler.createProduct(productForm, request.getRemoteAddr());
 		}
 		
 		return result;
@@ -87,8 +90,9 @@ public class ProductEndpoint {
 	@POST
 	@Path("/remove")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean removeProduct(@FormParam("productId") Long productId) {
-		return productHandler.removeProduct(productId);
+	public ResultBean removeProduct(@FormParam("productId") Long productId,
+				@Context HttpServletRequest request) {
+		return productHandler.removeProduct(productId, request.getRemoteAddr());
 	}
 	
 	@POST
@@ -99,7 +103,8 @@ public class ProductEndpoint {
 			@FormParam("productDetailsWholeFormData") String productDetailsWholeFormData,
 			@FormParam("productDetailsPieceFormData") String productDetailsPieceFormData,
 			@FormParam("productDetailsInnerPieceFormData") String productDetailsInnerPieceFormData,
-			@FormParam("productDetailsSecondInnerPieceFormData") String productDetailsSecondInnerPieceFormData) throws IOException {
+			@FormParam("productDetailsSecondInnerPieceFormData") String productDetailsSecondInnerPieceFormData,
+			@Context HttpServletRequest request) throws IOException {
 		final List<ProductDetailsFormBean> productDetailsFormList = new ArrayList<>();
 		final ObjectMapper objectMapper = new ObjectMapper();
 		productDetailsFormList.add(objectMapper.readValue(productDetailsWholeFormData, ProductDetailsFormBean.class));
@@ -107,7 +112,7 @@ public class ProductEndpoint {
 		productDetailsFormList.add(objectMapper.readValue(productDetailsInnerPieceFormData, ProductDetailsFormBean.class));
 		productDetailsFormList.add(objectMapper.readValue(productDetailsSecondInnerPieceFormData, ProductDetailsFormBean.class));
 		
-		return productHandler.saveProductDetails(productId, productDetailsFormList);
+		return productHandler.saveProductDetails(productId, productDetailsFormList, request.getRemoteAddr());
 	}
 	
 	@GET

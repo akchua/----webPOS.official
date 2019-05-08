@@ -181,7 +181,7 @@
 	
 	Shell.prototype.logout = function() {
 		securityService.logout().done(function() {
-    		location.href = '/';
+			location.href = '/';
     	});
 	};
 	

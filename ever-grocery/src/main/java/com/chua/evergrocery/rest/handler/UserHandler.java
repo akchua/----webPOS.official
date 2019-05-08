@@ -27,15 +27,15 @@ public interface UserHandler {
 	
 	User getUserByUsernameOrEmail(String username, String emailAddress);
 	
-	ResultBean createUser(UserFormBean userForm);
+	ResultBean createUser(UserFormBean userForm, String ip);
 	
 	ResultBean saveUserImage(Long userId, InputStream in, FormDataContentDisposition info) throws IOException;
 	
-	ResultBean updateUser(UserFormBean userForm);
+	ResultBean updateUser(UserFormBean userForm, String ip);
 	
 	ResultBean setUserImageAsThumbnail(Long userImageId);
 	
-	ResultBean removeUser(Long userId);
+	ResultBean removeUser(Long userId, String ip);
 	
 	ResultBean removeUserImage(Long userImageId);
 	

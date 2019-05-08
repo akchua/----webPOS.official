@@ -72,4 +72,16 @@ public class FileEndpoint {
 				.build();
 		else return null;
 	}
+	
+	@GET
+	@Path("/journal")
+	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
+	public Response getJournal() throws IOException {
+		File journal = fileHandler.getJournal();
+		if(journal.exists())
+			return Response.ok(journal, MediaType.APPLICATION_OCTET_STREAM)
+				.header("Content-Disposition", "attachment; filename=\"" + journal.getName() + "\"" )
+				.build();
+		else return null;
+	}
 }

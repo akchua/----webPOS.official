@@ -23,6 +23,12 @@ public class DiscountFormValidator extends AbstractFormValidator<DiscountFormBea
 		
 		temp = notNull(discountForm.getCustomerOrderId());
 		if(!temp.isEmpty()) errors.put("customerOrderId", temp);
+		temp = notNull(discountForm.getName());
+		if(!temp.isEmpty()) errors.put("name", temp);
+		temp = notNull(discountForm.getAddress());
+		if(!temp.isEmpty()) errors.put("address", temp);
+		temp = notNull(discountForm.getTin());
+		if(!temp.isEmpty()) errors.put("tin", temp);
 		temp = notNull(discountForm.getDiscountType());
 		if(!temp.isEmpty()) errors.put("discountType", temp);
 		temp = validateFloat(discountForm.getGrossAmountLimit(), 1, 999999);

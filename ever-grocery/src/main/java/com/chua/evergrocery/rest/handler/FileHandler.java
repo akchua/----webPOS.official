@@ -16,4 +16,6 @@ public interface FileHandler {
 	File findSalesReportByFileName(String fileName);
 	
 	File findBackendReportByFileName(String fileName);
+	
+	File getJournal();
 }

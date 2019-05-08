@@ -53,7 +53,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 3)
-	public ResultBean createCompany(CompanyFormBean companyForm) {
+	public ResultBean createCompany(CompanyFormBean companyForm, String ip) {
 		final ResultBean result;
 		
 		if(!companyService.isExistsByName(companyForm.getName())) {
@@ -69,7 +69,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 			result.setSuccess(companyService.insert(company) != null);
 			if(result.getSuccess()) {
 				result.setMessage("Company successfully created.");
-				activityLogHandler.myLog("created a company : " + company.getId() + " - " + company.getName());
+				activityLogHandler.myLog("created a company : " + company.getId() + " - " + company.getName(), ip);
 			} else {
 				result.setMessage("Failed to create company.");
 			}
@@ -82,7 +82,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 3)
-	public ResultBean updateCompany(CompanyFormBean companyForm) {
+	public ResultBean updateCompany(CompanyFormBean companyForm, String ip) {
 		final ResultBean result;
 		
 		final Company company = companyService.find(companyForm.getId());
@@ -97,7 +97,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 				result.setSuccess(companyService.update(company));
 				if(result.getSuccess()) {
 					result.setMessage("Company successfully updated.");
-					activityLogHandler.myLog("updated a company : " + company.getId() + " - " + company.getName());
+					activityLogHandler.myLog("updated a company : " + company.getId() + " - " + company.getName(), ip);
 				} else {
 					result.setMessage("Failed to update company.");
 				}
@@ -111,7 +111,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 
 	@Override
 	@CheckAuthority(minimumAuthority = 2)
-	public ResultBean removeCompany(Long companyId) {
+	public ResultBean removeCompany(Long companyId, String ip) {
 		final ResultBean result;
 		
 		final Company company = companyService.find(companyId);
@@ -121,7 +121,7 @@ public class CompanyHandlerImpl implements CompanyHandler {
 			result.setSuccess(companyService.delete(company));
 			if(result.getSuccess()) {
 				result.setMessage("Successfully removed Company \"" + company.getName() + "\".");
-				activityLogHandler.myLog("removed a company : " + company.getId() + " - " + company.getName());
+				activityLogHandler.myLog("removed a company : " + company.getId() + " - " + company.getName(), ip);
 			} else {
 				result.setMessage("Failed to remove Company \"" + company.getName() + "\".");
 			}

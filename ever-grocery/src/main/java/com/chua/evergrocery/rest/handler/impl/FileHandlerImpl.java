@@ -38,4 +38,9 @@ public class FileHandlerImpl implements FileHandler {
 	public File findBackendReportByFileName(String fileName) {
 		return new File(fileConstants.getBackendReportHome() + fileName);
 	}
+
+	@Override
+	public File getJournal() {
+		return new File(fileConstants.getJournalFile());
+	}
 }

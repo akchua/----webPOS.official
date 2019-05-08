@@ -20,5 +20,5 @@ Refund               : ${t.FormattedTotalRefund}
 Payments
 Cash Payments        : ${t.FormattedTotalCashPayment}
 Check Payments       : ${t.FormattedTotalCheckPayment}
-Card Payments        : ${t.FormattedTotalCardPayments}
+Card Payments        : ${t.FormattedTotalCardPayment}
 Points Payments      : ${t.FormattedTotalPointsPayment}

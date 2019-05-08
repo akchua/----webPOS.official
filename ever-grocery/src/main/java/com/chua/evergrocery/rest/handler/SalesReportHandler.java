@@ -20,5 +20,5 @@ public interface SalesReportHandler {
 	
 	ResultBean generateReport(SalesReportQueryBean salesReportQuery);
 	
-	ResultBean generateBackendReport(Date dateFrom, Date dateTo);
+	ResultBean generateBackendReport(Date dateFrom, Date dateTo, String ip);
 }

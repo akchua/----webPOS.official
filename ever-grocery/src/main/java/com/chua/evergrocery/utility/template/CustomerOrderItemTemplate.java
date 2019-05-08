@@ -25,15 +25,18 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 	
 	private Integer content;
 	
+	private Boolean showPrice;
+	
 	private List<String> overflowList;
 	
 	private final Integer ITEM_NAME_MAX_LENGTH = 30;
 	
 	private final Integer MAX_LINE_SPLIT_ADJUST = 7;
 	
-	public CustomerOrderItemTemplate(CustomerOrderDetail customerOrderItem) {
+	public CustomerOrderItemTemplate(CustomerOrderDetail customerOrderItem, Boolean showPrice) {
 		this.customerOrderItem = customerOrderItem;
 		this.content = customerOrderItem.getProductDetail().getContent();
+		this.showPrice = showPrice;
 		
 		this.overflowList = new ArrayList<String>();
 	}
@@ -48,6 +51,10 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 	public String getFormattedQuantity() {
 		NumberFormat nf = new DecimalFormat("##.#");
 		return String.format("%-4s", nf.format(customerOrderItem.getQuantity()));
+	}
+	
+	public Boolean isShowPrice() {
+		return showPrice;
 	}
 	
 	public String getFormattedName() {
@@ -97,7 +104,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedTotalPrice() {
-		return String.format("%10s", customerOrderItem.getFormattedTotalPrice());
+		return String.format("%10s", customerOrderItem.getFormattedBeforeTaxAdjustmentPrice());
 	}
 	
 	public Boolean isOverflow() {

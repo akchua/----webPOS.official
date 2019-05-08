@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,44 +75,49 @@ public class CustomerOrderEndpoint {
 	@POST
 	@Path("/create")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean newCustomerOrder() {
-		return customerOrderHandler.createCustomerOrder();
+	public ResultBean newCustomerOrder(@Context HttpServletRequest request) {
+		return customerOrderHandler.createCustomerOrder(request.getRemoteAddr());
 	}
 	
 	@POST
 	@Path("/remove")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean removeCustomerOrder(@FormParam("customerOrderId") Long customerOrderId) {
-		return customerOrderHandler.removeCustomerOrder(customerOrderId);
+	public ResultBean removeCustomerOrder(@FormParam("customerOrderId") Long customerOrderId,
+				@Context HttpServletRequest request) {
+		return customerOrderHandler.removeCustomerOrder(customerOrderId, request.getRemoteAddr());
 	}
 	
 	@POST
 	@Path("/setcustomer")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ResultBean setCustomer(@FormParam("customerOrderId") Long customerOrderId,
-				@FormParam("customerCardId") String customerCardId) {
-		return customerOrderHandler.setCustomer(customerOrderId, customerCardId);
+				@FormParam("customerCardId") String customerCardId,
+				@Context HttpServletRequest request) {
+		return customerOrderHandler.setCustomer(customerOrderId, customerCardId, request.getRemoteAddr());
 	}
 	
 	@POST
 	@Path("/removecustomer")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean removeCustomer(@FormParam("customerOrderId") Long customerOrderId) {
-		return customerOrderHandler.removeCustomer(customerOrderId);
+	public ResultBean removeCustomer(@FormParam("customerOrderId") Long customerOrderId,
+				@Context HttpServletRequest request) {
+		return customerOrderHandler.removeCustomer(customerOrderId, request.getRemoteAddr());
 	}
 	
 	@POST
 	@Path("/applydiscount")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean applyDiscount(@FormParam("discountFormData") String discountFormData) throws IOException {
-		return customerOrderHandler.applyDiscount(new ObjectMapper().readValue(discountFormData, DiscountFormBean.class));
+	public ResultBean applyDiscount(@FormParam("discountFormData") String discountFormData,
+				@Context HttpServletRequest request) throws IOException {
+		return customerOrderHandler.applyDiscount(new ObjectMapper().readValue(discountFormData, DiscountFormBean.class), request.getRemoteAddr());
 	}
 	
 	@POST
 	@Path("/paycustomerorder")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean payCustomerOrder(@FormParam("paymentsFormData") String paymentsFormData) throws IOException {
-		return customerOrderHandler.payCustomerOrder(new ObjectMapper().readValue(paymentsFormData, PaymentsFormBean.class));
+	public ResultBean payCustomerOrder(@FormParam("paymentsFormData") String paymentsFormData,
+				@Context HttpServletRequest request) throws IOException {
+		return customerOrderHandler.payCustomerOrder(new ObjectMapper().readValue(paymentsFormData, PaymentsFormBean.class), request.getRemoteAddr());
 	}
 	
 	@POST
@@ -160,15 +167,17 @@ public class CustomerOrderEndpoint {
 	@POST
 	@Path("/submit")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean submitCustomerOrder(@FormParam("customerOrderId") Long customerOrderId) {
-		return customerOrderHandler.submitCustomerOrder(customerOrderId);
+	public ResultBean submitCustomerOrder(@FormParam("customerOrderId") Long customerOrderId,
+				@Context HttpServletRequest request) {
+		return customerOrderHandler.submitCustomerOrder(customerOrderId, request.getRemoteAddr());
 	}
 	
 	@POST
 	@Path("/return")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean returnCustomerOrder(@FormParam("customerOrderId") Long customerOrderId) {
-		return customerOrderHandler.returnCustomerOrder(customerOrderId);
+	public ResultBean returnCustomerOrder(@FormParam("customerOrderId") Long customerOrderId,
+				@Context HttpServletRequest request) {
+		return customerOrderHandler.returnCustomerOrder(customerOrderId, request.getRemoteAddr());
 	}
 	
 	@POST
@@ -182,29 +191,32 @@ public class CustomerOrderEndpoint {
 	@Path("/printoriginalreceipt")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public void printOriginalReceipt(@FormParam("customerOrderId") Long customerOrderId,
-					@FormParam("footer") String footer) {
-		customerOrderHandler.printReceipt(customerOrderId, footer, Boolean.TRUE);
+					@FormParam("footer") String footer,
+					@Context HttpServletRequest request) {
+		customerOrderHandler.printReceipt(customerOrderId, footer, Boolean.TRUE, request.getRemoteAddr());
 	}
 	
 	@POST
 	@Path("/printreceiptcopy")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public void printReceiptCopy(@FormParam("customerOrderId") Long customerOrderId) {
-		customerOrderHandler.printReceipt(customerOrderId, "", Boolean.FALSE);
+	public void printReceiptCopy(@FormParam("customerOrderId") Long customerOrderId,
+				@Context HttpServletRequest request) {
+		customerOrderHandler.printReceipt(customerOrderId, "", Boolean.FALSE, request.getRemoteAddr());
 	}
 	
 	@POST
 	@Path("/printzreading")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean printZReading(@FormParam("readingDate") String readingDateData) throws ParseException {
-		return customerOrderHandler.printZReading(new SimpleDateFormat("yyyy-MM-dd").parse(readingDateData));
+	public ResultBean printZReading(@FormParam("readingDate") String readingDateData,
+				@Context HttpServletRequest request) throws ParseException {
+		return customerOrderHandler.printZReading(new SimpleDateFormat("yyyy-MM-dd").parse(readingDateData), request.getRemoteAddr());
 	}
 	
 	@POST
 	@Path("/endofshift")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public void endOfShift() {
-		customerOrderHandler.endOfShift();
+	public void endOfShift(@Context HttpServletRequest request) {
+		customerOrderHandler.endOfShift(request.getRemoteAddr());
 	}
 	
 	@POST
@@ -218,8 +230,9 @@ public class CustomerOrderEndpoint {
 	@Path("/backendreport")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ResultBean generateBackendReport(@FormParam("dateFrom") String dateFrom,
-				@FormParam("dateTo") String dateTo) throws ParseException {
+				@FormParam("dateTo") String dateTo,
+				@Context HttpServletRequest request) throws ParseException {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		return customerOrderHandler.generateBackendReport(sdf.parse(dateFrom), sdf.parse(dateTo));
+		return customerOrderHandler.generateBackendReport(sdf.parse(dateFrom), sdf.parse(dateTo), request.getRemoteAddr());
 	}
 }

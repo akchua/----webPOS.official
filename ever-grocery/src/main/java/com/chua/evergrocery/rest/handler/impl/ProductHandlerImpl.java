@@ -123,7 +123,7 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 3)
-	public ResultBean createProduct(ProductFormBean productForm) {
+	public ResultBean createProduct(ProductFormBean productForm, String ip) {
 		final ResultBean result;
 		final Map<String, String> errors = productFormValidator.validate(productForm);
 
@@ -154,7 +154,7 @@ public class ProductHandlerImpl implements ProductHandler {
 					result.setExtras(extras);
 					
 					result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " created Product " + Html.text(Color.BLUE, product.getDisplayName()) + "."));
-					activityLogHandler.myLog("created a product : " + product.getId() + " - " + product.getName());
+					activityLogHandler.myLog("created a product : " + product.getId() + " - " + product.getName(), ip);
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -172,7 +172,7 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 3)
-	public ResultBean updateProduct(ProductFormBean productForm) {
+	public ResultBean updateProduct(ProductFormBean productForm, String ip) {
 		final ResultBean result;
 		
 		final Product product = productService.find(productForm.getId());
@@ -196,7 +196,7 @@ public class ProductHandlerImpl implements ProductHandler {
 				result.setSuccess(productService.update(product));
 				if(result.getSuccess()) {
 					result.setMessage(Html.line("Product " + Html.text(Color.BLUE, product.getDisplayName()) + " has been successfully " + Html.text(Color.GREEN, "updated") + "."));
-					activityLogHandler.myLog("updated a product : " + product.getId() + " - " + product.getName());
+					activityLogHandler.myLog("updated a product : " + product.getId() + " - " + product.getName(), ip);
 				} else {
 					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 				}
@@ -213,7 +213,7 @@ public class ProductHandlerImpl implements ProductHandler {
 
 	@Override
 	@CheckAuthority(minimumAuthority = 2)
-	public ResultBean removeProduct(Long productId) {
+	public ResultBean removeProduct(Long productId, String ip) {
 		final ResultBean result;
 		
 		final Product product = productService.find(productId);
@@ -223,7 +223,7 @@ public class ProductHandlerImpl implements ProductHandler {
 			result.setSuccess(productService.delete(product));
 			if(result.getSuccess()) {
 				result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed Product " + Html.text(Color.BLUE, product.getName()) + "."));
-				activityLogHandler.myLog("removed a product : " + product.getId() + " - " + product.getName());
+				activityLogHandler.myLog("removed a product : " + product.getId() + " - " + product.getName(), ip);
 			} else {
 				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 			}
@@ -236,7 +236,7 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 3)
-	public ResultBean saveProductDetails(Long productId, List<ProductDetailsFormBean> productDetailsFormList) {
+	public ResultBean saveProductDetails(Long productId, List<ProductDetailsFormBean> productDetailsFormList, String ip) {
 		final ResultBean result;
 		
 		final Product product = productService.find(productId);
@@ -260,7 +260,7 @@ public class ProductHandlerImpl implements ProductHandler {
 			
 			if(result.getSuccess()) {
 				result.setMessage("Product details successfully saved.");
-				activityLogHandler.myLog("updated pricing of product : " + product.getId() + " - " + product.getName());
+				activityLogHandler.myLog("updated pricing of product : " + product.getId() + " - " + product.getName(), ip);
 			}
 		} else {
 			result = new ResultBean(false, "Product not found.");

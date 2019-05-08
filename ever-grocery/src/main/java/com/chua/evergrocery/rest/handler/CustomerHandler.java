@@ -13,11 +13,11 @@ public interface CustomerHandler {
 	
 	Customer getCustomer(Long customerId);
 	
-	ResultBean createCustomer(CustomerFormBean customerForm);
+	ResultBean createCustomer(CustomerFormBean customerForm, String ip);
 	
-	ResultBean updateCustomer(CustomerFormBean customerForm);
+	ResultBean updateCustomer(CustomerFormBean customerForm, String ip);
 	
-	ResultBean removeCustomer(Long customerId);
+	ResultBean removeCustomer(Long customerId, String ip);
 	
 	List<Customer> getCustomerList();
 }

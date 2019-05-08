@@ -31,7 +31,10 @@ public class CustomerOrderItemListTemplate extends AbstractTemplate {
 	
 	private List<String> formattedOtherItems;
 	
-	public CustomerOrderItemListTemplate(List<CustomerOrderDetail> customerOrderItems) {
+	private Boolean showPrice;
+	
+	public CustomerOrderItemListTemplate(List<CustomerOrderDetail> customerOrderItems, Boolean showPrice) {
+		this.showPrice = showPrice;
 		this.wholeItems = new ArrayList<CustomerOrderDetail>();
 		this.counterItems = new ArrayList<CustomerOrderDetail>();
 		this.otherItems = new ArrayList<CustomerOrderDetail>();
@@ -56,17 +59,17 @@ public class CustomerOrderItemListTemplate extends AbstractTemplate {
 	@Override
 	public String merge(VelocityEngine velocityEngine, DocType docType) {
 		for(CustomerOrderDetail wholeItem : wholeItems) {
-			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(wholeItem);
+			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(wholeItem, showPrice);
 			formattedWholeItems.add(customerOrderItemTemplate.merge(velocityEngine, docType));
 		}
 		
 		for(CustomerOrderDetail counterItem : counterItems) {
-			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(counterItem);
+			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(counterItem, showPrice);
 			formattedCounterItems.add(customerOrderItemTemplate.merge(velocityEngine, docType));
 		}
 		
 		for(CustomerOrderDetail otherItem : otherItems) {
-			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(otherItem);
+			final CustomerOrderItemTemplate customerOrderItemTemplate = new CustomerOrderItemTemplate(otherItem, showPrice);
 			formattedOtherItems.add(customerOrderItemTemplate.merge(velocityEngine, docType));
 		}
 		

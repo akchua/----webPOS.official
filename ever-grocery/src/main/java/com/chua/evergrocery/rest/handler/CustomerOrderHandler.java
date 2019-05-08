@@ -22,15 +22,15 @@ public interface CustomerOrderHandler {
 	
 	CustomerOrder getCustomerOrderBySIN(Long serialInvoiceNumber);
 	
-	ResultBean createCustomerOrder();
+	ResultBean createCustomerOrder(String ip);
 	
-	ResultBean removeCustomerOrder(Long customerOrderId);
+	ResultBean removeCustomerOrder(Long customerOrderId, String ip);
 	
-	ResultBean setCustomer(Long customerOrderId, String customerCardId);
+	ResultBean setCustomer(Long customerOrderId, String customerCardId, String ip);
 	
-	ResultBean removeCustomer(Long customerOrderId);
+	ResultBean removeCustomer(Long customerOrderId, String ip);
 	
-	ResultBean applyDiscount(DiscountFormBean discountForm);
+	ResultBean applyDiscount(DiscountFormBean discountForm, String ip);
 	
 	ObjectList<CustomerOrderDetail> getCustomerOrderDetailList(Integer pageNumber, Long customerOrderId);
 	
@@ -44,21 +44,21 @@ public interface CustomerOrderHandler {
 	
 	void refreshCustomerOrder(Long customerOrderId);
 	
-	ResultBean submitCustomerOrder(Long customerOrderId);
+	ResultBean submitCustomerOrder(Long customerOrderId, String ip);
 	
-	ResultBean returnCustomerOrder(Long customerOrderId);
+	ResultBean returnCustomerOrder(Long customerOrderId, String ip);
 	
-	ResultBean payCustomerOrder(PaymentsFormBean paymentsForm);
+	ResultBean payCustomerOrder(PaymentsFormBean paymentsForm, String ip);
 	
 	ResultBean printCustomerOrderCopy(Long customerOrderId);
 
 	ResultBean generateReport(SalesReportQueryBean salesReportQuery);
 	
-	ResultBean generateBackendReport(Date dateFrom, Date dateTo);
+	ResultBean generateBackendReport(Date dateFrom, Date dateTo, String ip);
 	
-	void printReceipt(Long customerOrderId, String footer, Boolean original);
+	void printReceipt(Long customerOrderId, String footer, Boolean original, String ip);
 	
-	ResultBean printZReading(Date readingDate);
+	ResultBean printZReading(Date readingDate, String ip);
 	
-	void endOfShift();
+	void endOfShift(String ip);
 }

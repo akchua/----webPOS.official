@@ -39,7 +39,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 3)
-	public ResultBean createCategory(CategoryFormBean categoryForm) {
+	public ResultBean createCategory(CategoryFormBean categoryForm, String ip) {
 		final ResultBean result;
 		
 		if(!categoryService.isExistsByName(categoryForm.getName())) {
@@ -50,7 +50,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 			result.setSuccess(categoryService.insert(category) != null);
 			if(result.getSuccess()) {
 				result.setMessage("Category successfully created.");
-				activityLogHandler.myLog("created a category : " + category.getId() + " - " + category.getName());
+				activityLogHandler.myLog("created a category : " + category.getId() + " - " + category.getName(), ip);
 			} else {
 				result.setMessage("Failed to create category.");
 			}
@@ -63,7 +63,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 	
 	@Override
 	@CheckAuthority(minimumAuthority = 3)
-	public ResultBean updateCategory(CategoryFormBean categoryForm) {
+	public ResultBean updateCategory(CategoryFormBean categoryForm, String ip) {
 		final ResultBean result;
 		
 		final Category category = categoryService.find(categoryForm.getId());
@@ -78,7 +78,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 				result.setSuccess(categoryService.update(category));
 				if(result.getSuccess()) {
 					result.setMessage("Category successfully updated.");
-					activityLogHandler.myLog("updated a category : " + category.getId() + " - " + category.getName());
+					activityLogHandler.myLog("updated a category : " + category.getId() + " - " + category.getName(), ip);
 				} else {
 					result.setMessage("Failed to update category.");
 				}
@@ -92,7 +92,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 
 	@Override
 	@CheckAuthority(minimumAuthority = 2)
-	public ResultBean removeCategory(Long categoryId) {
+	public ResultBean removeCategory(Long categoryId, String ip) {
 		final ResultBean result;
 		
 		final Category category = categoryService.find(categoryId);
@@ -103,7 +103,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 			result.setSuccess(categoryService.delete(category));
 			if(result.getSuccess()) {
 				result.setMessage("Successfully removed Category \"" + category.getName() + "\".");
-				activityLogHandler.myLog("removed a category : " + category.getId() + " - " + category.getName());
+				activityLogHandler.myLog("removed a category : " + category.getId() + " - " + category.getName(), ip);
 			} else {
 				result.setMessage("Failed to remove Category \"" + category.getName() + "\".");
 			}

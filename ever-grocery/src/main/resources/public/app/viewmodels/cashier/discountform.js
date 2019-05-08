@@ -9,13 +9,21 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 			customerOrderId : ko.observable(),
 			discountType : ko.observable(),
 			grossAmountLimit : ko.observable(),
-			discountIdNumber : ko.observable()
+			
+			discountIdNumber : ko.observable(),
+			name : ko.observable(),
+			address : ko.observable(),
+			tin : ko.observable()
 		};
 		
 		this.errors = {
 			discountType : ko.observable(),
 			grossAmountLimit : ko.observable(),
-			discountIdNumber : ko.observable()
+			
+			discountIdNumber : ko.observable(),
+			name : ko.observable(),
+			address : ko.observable(),
+			tin : ko.observable()
 		};
 		
 		this.customerOrderNumber = null;
@@ -51,6 +59,9 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		        		self.errors.discountType(result.extras.errors.discountType);
 		        		self.errors.grossAmountLimit(result.extras.errors.grossAmountLimit);
 		        		self.errors.discountIdNumber(result.extras.errors.discountIdNumber);
+		        		self.errors.name(result.extras.errors.name);
+		        		self.errors.address(result.extras.errors.address);
+		        		self.errors.tin(result.extras.errors.tin);
 		        	}
 					if(result.message) app.showMessage(result.message);
 				});

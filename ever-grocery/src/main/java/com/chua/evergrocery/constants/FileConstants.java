@@ -18,12 +18,6 @@ public class FileConstants {
 	
 	private final String salesHome;
 	
-	private final String receiptHome;
-	
-	private final String zReadingHome;
-	
-	private final String xReadingHome;
-	
 	private final String backendReportHome;
 	
 	private final String generatePurchasesHome;
@@ -31,6 +25,8 @@ public class FileConstants {
 	private final String inventoryHome;
 	
 	private final String activityLogHome;
+	
+	private final String journalFile;
 	
 	private final String imageDefaultFileName;
 	
@@ -40,9 +36,7 @@ public class FileConstants {
 		this.fileHome = fileHome;
 		this.userImageHome = fileHome + "program_data/user_image/";
 		this.salesHome = fileHome + "files/sales_report/";
-		this.receiptHome = fileHome + "files/receipt/";
-		this.zReadingHome = fileHome + "files/z_reading/";
-		this.xReadingHome = fileHome + "files/x_reading/";
+		this.journalFile = fileHome + "files/journal/journal.txt";
 		this.backendReportHome = fileHome + "files/backend_report/";
 		this.generatePurchasesHome = fileHome + "files/generate_purchase/";
 		this.inventoryHome = fileHome + "files/inventory/";
@@ -62,18 +56,6 @@ public class FileConstants {
 		return salesHome;
 	}
 
-	public String getReceiptHome() {
-		return receiptHome;
-	}
-
-	public String getZReadingHome() {
-		return zReadingHome;
-	}
-
-	public String getXReadingHome() {
-		return xReadingHome;
-	}
-	
 	public String getBackendReportHome() {
 		return backendReportHome;
 	}
@@ -90,6 +72,10 @@ public class FileConstants {
 		return activityLogHome;
 	}
 	
+	public String getJournalFile() {
+		return journalFile;
+	}
+
 	public String getImageDefaultFileName() {
 		return imageDefaultFileName;
 	}

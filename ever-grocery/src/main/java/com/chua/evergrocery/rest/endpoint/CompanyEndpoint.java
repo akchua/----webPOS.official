@@ -3,12 +3,14 @@ package com.chua.evergrocery.rest.endpoint;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +54,15 @@ public class CompanyEndpoint {
 	@POST
 	@Path("/save")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean saveCompany(@FormParam("companyFormData") String companyFormData) throws IOException {
+	public ResultBean saveCompany(@FormParam("companyFormData") String companyFormData,
+				@Context HttpServletRequest request) throws IOException {
 		final ResultBean result;
 		
 		final CompanyFormBean companyForm = new ObjectMapper().readValue(companyFormData, CompanyFormBean.class);
 		if(companyForm.getId() != null) {
-			result = companyHandler.updateCompany(companyForm);
+			result = companyHandler.updateCompany(companyForm, request.getRemoteAddr());
 		} else {
-			result = companyHandler.createCompany(companyForm);
+			result = companyHandler.createCompany(companyForm, request.getRemoteAddr());
 		}
 		
 		return result;
@@ -68,8 +71,9 @@ public class CompanyEndpoint {
 	@POST
 	@Path("/remove")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean removeCompany(@FormParam("companyId") Long companyId) {
-		return companyHandler.removeCompany(companyId);
+	public ResultBean removeCompany(@FormParam("companyId") Long companyId,
+				@Context HttpServletRequest request) {
+		return companyHandler.removeCompany(companyId, request.getRemoteAddr());
 	}
 	
 	@GET

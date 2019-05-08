@@ -3,12 +3,14 @@ package com.chua.evergrocery.rest.endpoint;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,14 +45,15 @@ public class CategoryEndpoint {
 	@POST
 	@Path("/save")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean saveCategory(@FormParam("categoryFormData") String categoryFormData) throws IOException {
+	public ResultBean saveCategory(@FormParam("categoryFormData") String categoryFormData,
+				@Context HttpServletRequest request) throws IOException {
 		final ResultBean result;
 		
 		final CategoryFormBean categoryForm = new ObjectMapper().readValue(categoryFormData, CategoryFormBean.class);
 		if(categoryForm.getId() != null) {
-			result = categoryHandler.updateCategory(categoryForm);
+			result = categoryHandler.updateCategory(categoryForm, request.getRemoteAddr());
 		} else {
-			result = categoryHandler.createCategory(categoryForm);
+			result = categoryHandler.createCategory(categoryForm, request.getRemoteAddr());
 		}
 		
 		return result;
@@ -59,8 +62,9 @@ public class CategoryEndpoint {
 	@POST
 	@Path("/remove")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean removeCategory(@FormParam("categoryId") Long categoryId) {
-		return categoryHandler.removeCategory(categoryId);
+	public ResultBean removeCategory(@FormParam("categoryId") Long categoryId,
+				@Context HttpServletRequest request) {
+		return categoryHandler.removeCategory(categoryId, request.getRemoteAddr());
 	}
 	
 	@GET

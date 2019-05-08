@@ -31,6 +31,21 @@
 						<p><span class="help-block">SC/PWD Id No. for SCD or PWD Discount</span></p>
 						<p data-bind="text: errors.discountIdNumber" class="text-danger"></p>
 					</div>
+					<label class="control-label" for="discountName">Discount Recipient Name</label>
+					<div class="controls">
+						<input data-bind="value: discountFormModel.name" type="text" id="discountName" name="discountName" placeholder="" class="form-control input-lg">
+						<p data-bind="text: errors.name" class="text-danger"></p>
+					</div>
+					<label class="control-label" for="discountAddress">Discount Recipient Address</label>
+					<div class="controls">
+						<input data-bind="value: discountFormModel.address" type="text" id="discountAddress" name="discountAddress" placeholder="" class="form-control input-lg">
+						<p data-bind="text: errors.address" class="text-danger"></p>
+					</div>
+					<label class="control-label" for="discountTin">Discount Recipient TIN</label>
+					<div class="controls">
+						<input data-bind="value: discountFormModel.tin" type="text" id="discountTin" name="discountTin" placeholder="" class="form-control input-lg">
+						<p data-bind="text: errors.tin" class="text-danger"></p>
+					</div>
 				</div>
 			</div>
 	    </div>

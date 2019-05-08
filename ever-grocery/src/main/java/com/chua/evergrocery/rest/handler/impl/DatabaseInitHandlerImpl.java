@@ -155,7 +155,7 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 		} else {
 			final ZReading zReading = new ZReading();
 			final Calendar yesterday = Calendar.getInstance();
-			yesterday.add(Calendar.DAY_OF_MONTH, -1);
+			yesterday.add(Calendar.DAY_OF_MONTH, -3);
 			zReading.setReadingDate(DateUtil.floorDay(yesterday.getTime()));
 			zReading.setCounter(0l);
 			zReading.setBeginningSIN(0l);

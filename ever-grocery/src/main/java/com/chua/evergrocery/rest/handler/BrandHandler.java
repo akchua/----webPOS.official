@@ -13,11 +13,11 @@ public interface BrandHandler {
 	
 	Brand getBrand(Long brandId);
 	
-	ResultBean createBrand(BrandFormBean brandForm);
+	ResultBean createBrand(BrandFormBean brandForm, String ip);
 	
-	ResultBean updateBrand(BrandFormBean brandForm);
+	ResultBean updateBrand(BrandFormBean brandForm, String ip);
 	
-	ResultBean removeBrand(Long brandId);
+	ResultBean removeBrand(Long brandId, String ip);
 	
 	List<Brand> getBrandList();
 }
