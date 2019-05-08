@@ -49,7 +49,7 @@ public class SecurityHandlerImpl implements SecurityHandler {
 		
 		List<String> allowedIp = new ArrayList<String>();
 		allowedIp.add("0:0:0:0:0:0:0:1");
-		for(int i = 2; i < 99; i++) allowedIp.add("192.168.0." + i);
+		for(int i = 2; i <= 99; i++) allowedIp.add("192.168.0." + i); //2.25.99
 		
 		success = allowedIp.contains(request.getRemoteAddr());
 		
