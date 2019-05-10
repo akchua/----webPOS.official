@@ -66,7 +66,8 @@ define(['durandal/app', 'knockout', 'modules/userservice', 'viewmodels/user/user
     User.prototype.showAllowedIp = function() {
     	app.showMessage('Allowed ip :<br>' +
     					'0:0:0:0:0:0:0:0 - server (localhost)' + '<br>' +
-    					'192.168.0.3 - server' + '<br>');
+    					'192.168.0.3 - server' + '<br>' +
+    					'192.168.0.4 - cashier 1' + '<br>');
     };
     
     User.prototype.resetPassword = function(userId, formattedName) {

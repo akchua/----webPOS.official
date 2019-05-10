@@ -2,6 +2,7 @@
 ## Has a maximum of 44 columns in a line
 Order #${t.OrderNumber}
 ${t.FormattedCustomerOrderItems}
+           Sub Total    ${t.FormattedGrossAmount}
 
 Items  : ${t.TotalItems}
 Server : ${t.FormattedServer}

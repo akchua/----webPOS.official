@@ -200,7 +200,7 @@ public class Printer
 		try {
 			pj.setPrintService(getPrintService(printerName));
 		} catch (PrinterException ex) {
-		    throw new RuntimeException("Unable to set printer to \"" + pj.getPrintService().toString() + "\" because " + ex.getMessage());
+		    throw new RuntimeException("Unable to set printer to \"" + printerName + "\" because " + ex.getMessage());
 		}
 		
 		double margin = doc.getMargin(), pageWidth = doc.getPageWidth(), pageHeight = doc.getPageHeight();        

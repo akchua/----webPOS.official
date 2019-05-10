@@ -26,7 +26,6 @@ public class ActivityLogHandlerImpl implements ActivityLogHandler {
 	@Override
 	public void log(String userShortName, String message, String ip) {
 		List<String> allowedIp = new ArrayList<String>();
-		allowedIp.add("n/a");
 		allowedIp.add("0:0:0:0:0:0:0:1");
 		for(int i = 2; i <= 25; i++) allowedIp.add("192.168.0." + i);
 		

@@ -37,9 +37,12 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         
         final User user = userService.findByUsernameAndPassword(username, EncryptionUtil.getMd5(password));
         if(user != null) {
+        	String temp = authentication.getDetails().toString().split(" ")[2];
+        	String remoteIp = temp.substring(0, temp.length() - 1);
+        	
         	user.setLastSuccessfulLogin(new Date());
         	userService.insert(user);
-        	activityLogHandler.log(user.getShortName(), "logged in", "n/a");
+        	activityLogHandler.log(user.getShortName(), "logged in", remoteIp);
         	
         	final List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority(user.getUserType().name()));

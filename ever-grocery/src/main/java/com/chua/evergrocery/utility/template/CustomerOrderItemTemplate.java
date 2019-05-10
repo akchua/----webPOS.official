@@ -100,7 +100,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 		}
 		formattedName = formattedName.substring(0, Math.min(firstSplitIndex, formattedName.length()));
 		
-		return String.format("%-" + ITEM_NAME_MAX_LENGTH + "s", formattedName);
+		return String.format("%-" + ITEM_NAME_MAX_LENGTH + "s", formattedName.trim());
 	}
 	
 	public String getFormattedTotalPrice() {
