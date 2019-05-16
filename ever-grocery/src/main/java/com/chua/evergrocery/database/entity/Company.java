@@ -44,6 +44,13 @@ public class Company extends BaseObject {
 	
 	private ReceiptType receiptType;
 	
+	@JsonSerialize(using = DistributorSerializer.class)
+	private Distributor distributor;
+	
+	private Integer minTerms;
+	
+	private Integer maxTerms;
+	
 	private Float daysBooked;
 	
 	private Date lastPurchaseOrderDate;
@@ -56,9 +63,6 @@ public class Company extends BaseObject {
 	private Float saleValuePercentage;
 	
 	private Float profitPercentage;
-	
-	@JsonSerialize(using = DistributorSerializer.class)
-	private Distributor distributor;
 	
 	@Basic
 	@Column(name = "name")
@@ -109,6 +113,38 @@ public class Company extends BaseObject {
 	public void setReceiptType(ReceiptType receiptType) {
 		this.receiptType = receiptType;
 	}
+	
+	@ManyToOne(targetEntity = Distributor.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "distributor_id")
+	@Where(clause = "valid = 1")
+	@NotFound(action = NotFoundAction.IGNORE)
+	public Distributor getDistributor() {
+		return distributor;
+	}
+	
+	public void setDistributor(Distributor distributor) {
+		this.distributor = distributor;
+	}
+
+	@Basic
+	@Column(name = "min_terms")
+	public Integer getMinTerms() {
+		return minTerms;
+	}
+
+	public void setMinTerms(Integer minTerms) {
+		this.minTerms = minTerms;
+	}
+
+	@Basic
+	@Column(name = "max_terms")
+	public Integer getMaxTerms() {
+		return maxTerms;
+	}
+
+	public void setMaxTerms(Integer maxTerms) {
+		this.maxTerms = maxTerms;
+	}
 
 	@Basic
 	@Column(name = "days_booked")
@@ -140,18 +176,6 @@ public class Company extends BaseObject {
 		this.lastPurchaseOrderDate = lastPurchaseOrderDate;
 	}
 	
-	@ManyToOne(targetEntity = Distributor.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "distributor_id")
-	@Where(clause = "valid = 1")
-	@NotFound(action = NotFoundAction.IGNORE)
-	public Distributor getDistributor() {
-		return distributor;
-	}
-	
-	public void setDistributor(Distributor distributor) {
-		this.distributor = distributor;
-	}
-
 	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "last_statistics_update")
 	public Date getLastStatisticsUpdate() {

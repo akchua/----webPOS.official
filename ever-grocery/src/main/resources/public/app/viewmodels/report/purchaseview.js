@@ -18,7 +18,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 			formattedTotalAmount: ko.observable(),
 			companyName: ko.observable(),
 			receiptType: ko.observable(),
-			status: ko.observable()
+			status: ko.observable(),
+			formattedTerms : ko.observable()
 		};
     };
     
@@ -30,6 +31,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 		self.purchaseOrderViewModel.companyName(self.purchaseOrder.company.name);
 		self.purchaseOrderViewModel.receiptType(self.purchaseOrder.company.receiptType.name);
 		self.purchaseOrderViewModel.status(self.purchaseOrder.status.displayName);
+		self.purchaseOrderViewModel.formattedTerms(self.purchaseOrder.formattedTerms);
 
 		switch(self.purchaseOrderViewModel.receiptType()) {
 	    	case 'BEFORE_VAT_AND_DISCOUNT':
@@ -75,7 +77,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 		
 		app.showMessage('<div class="container-fluid"><dl class="dl-horizontal"><dt>Purchase ID  :</dt><dd>' + self.purchaseOrderViewModel.purchaseOrderId() + '</dd>' +
 						'<dt>Company Name :</dt><dd>' + self.purchaseOrderViewModel.companyName() + '</dd>' +
-						'<dt>Total Amount :</dt><dd>Php ' + self.purchaseOrderViewModel.formattedTotalAmount() + '</dd></div>',
+						'<dt>Total Amount :</dt><dd>Php ' + self.purchaseOrderViewModel.formattedTotalAmount() + '</dd><br>' +
+						'<dt>Check Date :</dt><dd>' + self.purchaseOrderViewModel.formattedTerms + '</dd></div>',
 				'Confirm Check',
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {

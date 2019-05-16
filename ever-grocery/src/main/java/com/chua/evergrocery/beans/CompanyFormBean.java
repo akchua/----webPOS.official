@@ -16,6 +16,10 @@ public class CompanyFormBean extends FormBean {
 	
 	private Long distributorId;
 	
+	private Integer minTerms;
+	
+	private Integer maxTerms;
+	
 	public String getName() {
 		return name;
 	}
@@ -62,5 +66,21 @@ public class CompanyFormBean extends FormBean {
 
 	public void setDistributorId(Long distributorId) {
 		this.distributorId = distributorId;
+	}
+
+	public Integer getMinTerms() {
+		return minTerms;
+	}
+
+	public void setMinTerms(Integer minTerms) {
+		this.minTerms = minTerms;
+	}
+
+	public Integer getMaxTerms() {
+		return maxTerms;
+	}
+
+	public void setMaxTerms(Integer maxTerms) {
+		this.maxTerms = maxTerms;
 	}
 }

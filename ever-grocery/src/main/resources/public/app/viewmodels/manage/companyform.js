@@ -14,7 +14,9 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/companyservice', 
         	agent: ko.observable(),
         	phoneNumber: ko.observable(),
         	receiptType: ko.observable(),
-        	distributorId: ko.observable()
+        	distributorId: ko.observable(),
+        	minTerms : ko.observable(),
+        	maxTerms : ko.observable()
         };
     };
     

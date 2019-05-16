@@ -144,6 +144,12 @@ public class CompanyHandlerImpl implements CompanyHandler {
 		company.setPhoneNumber(companyForm.getPhoneNumber());
 		company.setReceiptType(companyForm.getReceiptType() != null ? companyForm.getReceiptType() : ReceiptType.AFTER_VAT_AND_DISCOUNT);
 		company.setDistributor(distributorService.find(companyForm.getDistributorId()));
+		// set min = 0 if min < 0
+		companyForm.setMinTerms(Math.max(companyForm.getMinTerms(), 0));
+		company.setMinTerms(companyForm.getMinTerms() != null ? companyForm.getMinTerms() : 0);
+		// set max = min if max < min
+		companyForm.setMaxTerms(Math.max(companyForm.getMinTerms(), companyForm.getMaxTerms()));
+		company.setMaxTerms(companyForm.getMaxTerms() != null ? companyForm.getMaxTerms() : 0);
 	}
 	
 	@Override

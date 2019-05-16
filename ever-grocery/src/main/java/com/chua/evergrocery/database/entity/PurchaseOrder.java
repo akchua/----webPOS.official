@@ -152,6 +152,36 @@ public class PurchaseOrder extends BaseObject {
 		}
 		return formattedDeliveredOn;
 	}
+	
+	@Transient
+	public String getFormattedTerms() {
+		final String formattedTerms;
+		Calendar min = Calendar.getInstance();
+		min.setTime(deliveredOn);
+		
+		min.add(Calendar.DAY_OF_MONTH, company.getMinTerms());
+		
+		Calendar max = Calendar.getInstance();
+		max.setTime(deliveredOn);
+		
+		max.add(Calendar.DAY_OF_MONTH, company.getMaxTerms());
+		
+		formattedTerms = DateFormatter.prettyFormat(min.getTime()) + " - " + DateFormatter.prettyFormat(max.getTime());
+		
+		return formattedTerms;
+	}
+	
+	@Transient
+	public String getFormattedMaxPaymentDate() {
+		final String formattedMaxPaymentDate;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(deliveredOn);
+		
+		cal.add(Calendar.DAY_OF_MONTH, company.getMaxTerms());
+		formattedMaxPaymentDate = DateFormatter.prettyFormat(cal.getTime());
+		
+		return formattedMaxPaymentDate;
+	}
 
 	public void setDeliveredOn(Date deliveredOn) {
 		this.deliveredOn = deliveredOn;

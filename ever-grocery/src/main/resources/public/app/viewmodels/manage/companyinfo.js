@@ -9,6 +9,10 @@ define(['knockout', 'modules/companyservice'],
     		agent: ko.observable(),
     		phoneNumber: ko.observable(),
     		receiptType: ko.observable(),
+    		
+    		minTerms : ko.observable(),
+    		maxTerms : ko.observable(),
+    		
     		formattedLastPurchaseOrderDate: ko.observable(),
     		formattedPurchaseValuePercentage: ko.observable(),
     		formattedSaleValuePercentage: ko.observable(),
@@ -30,6 +34,8 @@ define(['knockout', 'modules/companyservice'],
     		if(company.phoneNumber) self.company.phoneNumber(company.phoneNumber);
     		else self.company.phoneNumber('-');
     		self.company.receiptType(company.receiptType.displayName);
+    		self.company.minTerms(company.minTerms);
+    		self.company.maxTerms(company.maxTerms);
     		self.company.formattedLastPurchaseOrderDate(company.formattedLastPurchaseOrderDate);
     		self.company.formattedPurchaseValuePercentage(company.formattedPurchaseValuePercentage);
     		self.company.formattedSaleValuePercentage(company.formattedSaleValuePercentage);
