@@ -29,6 +29,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/companyservice', 
     	self.companyFormModel.agent(self.company.agent);
     	self.companyFormModel.phoneNumber(self.company.phoneNumber);
     	if(self.company.receiptType) self.companyFormModel.receiptType(self.company.receiptType.name);
+    	self.companyFormModel.minTerms(self.company.minTerms);
+    	self.companyFormModel.maxTerms(self.company.maxTerms);
     	
     	companyService.getReceiptTypeList().done(function(receiptTypeList) {
     		self.receiptTypeList(receiptTypeList);
