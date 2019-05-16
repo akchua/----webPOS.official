@@ -78,7 +78,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 		app.showMessage('<div class="container-fluid"><dl class="dl-horizontal"><dt>Purchase ID  :</dt><dd>' + self.purchaseOrderViewModel.purchaseOrderId() + '</dd>' +
 						'<dt>Company Name :</dt><dd>' + self.purchaseOrderViewModel.companyName() + '</dd>' +
 						'<dt>Total Amount :</dt><dd>Php ' + self.purchaseOrderViewModel.formattedTotalAmount() + '</dd><br>' +
-						'<dt>Check Date :</dt><dd>' + self.purchaseOrderViewModel.formattedTerms + '</dd></div>',
+						'<dt>Check Date :</dt><dd>' + self.purchaseOrderViewModel.formattedTerms() + '</dd></div>',
 				'Confirm Check',
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {
