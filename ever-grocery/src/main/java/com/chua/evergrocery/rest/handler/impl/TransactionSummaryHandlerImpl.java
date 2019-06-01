@@ -133,7 +133,18 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	public List<DailySalesSummary> getDailySalesSummaryList(int daysAgo) {
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, -daysAgo);
-		return dailySalesSummaryService.findByRangeOrderBySalesDate(cal.getTime(), new Date());
+		final Calendar yesterday = Calendar.getInstance();
+		yesterday.add(Calendar.DAY_OF_MONTH, -1);
+		return dailySalesSummaryService.findByRangeOrderBySalesDate(cal.getTime(), yesterday.getTime());
+	}
+	
+	@Override
+	public List<ProductDailySalesSummary> getProductDailySalesSummaryList(Long productId, int daysAgo) {
+		final Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_MONTH, -daysAgo);
+		final Calendar yesterday = Calendar.getInstance();
+		yesterday.add(Calendar.DAY_OF_MONTH, -1);
+		return productDailySalesSummaryService.findByRangeOrderBySalesDate(productId, cal.getTime(), yesterday.getTime());
 	}
 	
 	@Override

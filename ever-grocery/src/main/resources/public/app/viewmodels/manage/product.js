@@ -1,5 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyservice', 'viewmodels/manage/productform', 'viewmodels/manage/productdetailsform'], 
-		function (app, ko, productService, companyService, ProductForm, ProductDetailsForm) {
+define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyservice', 'viewmodels/manage/productview', 'viewmodels/manage/productform', 'viewmodels/manage/productdetailsform'], 
+		function (app, ko, productService, companyService, ProductView, ProductForm, ProductDetailsForm) {
 	var Product = function() {
 		this.productList = ko.observable();
 		this.companyList = ko.observable();
@@ -13,6 +13,7 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyse
 		this.currentPageSubscription = null;
 		
 		this.enableButtons = ko.observable(true);
+		this.allowStats = app.user.userType.authority < 3;
 	};
 	
 	Product.prototype.activate = function() {
@@ -61,6 +62,14 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyse
 			self.enableButtons(true);
 		});
 	};
+	
+	Product.prototype.view = function(productId) {
+    	var self = this;
+    	
+    	productService.getProduct(productId).done(function(product) {
+    		ProductView.show(product);
+    	});
+    };
 	
 	Product.prototype.edit = function(productId) {
 		var self = this;

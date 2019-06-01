@@ -1,5 +1,6 @@
 package com.chua.evergrocery.database.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.chua.evergrocery.beans.ProductSalesSummaryBean;
@@ -15,4 +16,6 @@ public interface ProductDailySalesSummaryService extends Service<ProductDailySal
 
 	List<ProductSalesSummaryBean> getAllProductSalesSummaryByCompanyAndMonthId(long companyId,
 			int monthId);
+	
+	List<ProductDailySalesSummary> findByRangeOrderBySalesDate(Long productId, Date startDate, Date endDate);
 }

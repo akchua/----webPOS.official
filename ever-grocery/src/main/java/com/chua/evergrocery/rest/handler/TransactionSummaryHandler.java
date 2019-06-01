@@ -8,6 +8,7 @@ import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
 import com.chua.evergrocery.database.entity.DailySalesSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.MTDSalesSummary;
+import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -29,6 +30,8 @@ public interface TransactionSummaryHandler {
 	List<CompanyMTDSalesSummary> getCompanyMTDSalesSummaryList(Long companyId);
 	
 	List<DailySalesSummary> getDailySalesSummaryList(int daysAgo);
+	
+	List<ProductDailySalesSummary> getProductDailySalesSummaryList(Long productId, int daysAgo);
 	
 	SalesSummaryBean getLiveSalesSummary();
 	

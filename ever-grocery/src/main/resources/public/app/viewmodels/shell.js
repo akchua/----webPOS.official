@@ -36,6 +36,15 @@
 	  	}
 	];
 	
+	var assistmanageroute = [
+	  	{ route: 'manage', moduleRootId: 'viewmodels/manage', title: '', nav: true, hash: '#manage',
+	  		childRoutes: [
+	      		{ route: 'product', moduleId: 'product', title: 'Products', nav: true, hash: 'product' },
+	      		{ route: 'customer', moduleId: 'customer', title: 'Customers', nav: true, hash: 'customer' }
+	  		]
+	  	}
+	];
+	
 	var customerorderroute = [
 	    { route: 'customerorder', moduleId: 'viewmodels/customer-order/customerorder', title: 'Sales Order', nav: true, hash: '#customerorder' },
 	    { route: 'customerorderpage/:id', moduleId: 'viewmodels/customer-order/customerorderpage', title: 'Customer Order Page', nav: false, hash: '#customerorderpage' }
@@ -98,8 +107,14 @@
 	        		self.routes = self.routes.concat(userroute);
 	        	case 'MANAGER':
 	        		self.routes = self.routes.concat(reportroute);
-	        	case 'ASSISTANT_MANAGER':
 	        		self.routes = self.routes.concat(manageroute);
+	        		self.routes = self.routes.concat(cashierroute);
+	        		self.routes = self.routes.concat(cashtransferroute);
+	        		self.routes = self.routes.concat(purchaseorderroute);
+	        		self.routes = self.routes.concat(customerorderroute);
+	        		break;
+	        	case 'ASSISTANT_MANAGER':
+	        		self.routes = self.routes.concat(assistmanageroute);
 	        		self.routes = self.routes.concat(cashierroute);
 	        		self.routes = self.routes.concat(cashtransferroute);
 	        	case 'SENIOR_STAFF':

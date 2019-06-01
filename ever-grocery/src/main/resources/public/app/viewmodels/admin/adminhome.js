@@ -27,6 +27,8 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		this.dx = null;
 		this.dailyNetSales = null;
 		this.dailyProfit = null;
+		this.averageNetSales = ko.observable(0.0);
+		this.averageProfit = ko.observable(0.0);
 		
 		this.completedSales = ko.observable();
 		this.totalSales = ko.observable();
@@ -83,6 +85,9 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		self.clearDailySalesGraph();
 		
 		transactionSummaryService.getDailySalesSummaryList(self.daysAgo()).done(function(dailySalesList) {
+			var tempAverageNetSales = 0;
+			var tempAverageProfit = 0;
+			
 			self.dx = ['x'];
 			self.dailyNetSales = ['Daily Net Sales'];
 			self.dailyProfit = ['Daily Profit'];
@@ -91,7 +96,24 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 				self.dx[i + 1] = dailySalesList[i].formattedSalesDate;
 				self.dailyNetSales[i + 1] = dailySalesList[i].netTotal;
 				self.dailyProfit[i + 1] = dailySalesList[i].profit;
+				
+				tempAverageNetSales += dailySalesList[i].netTotal;
+				tempAverageProfit += dailySalesList[i].profit;
 			}
+			
+			tempAverageNetSales /= self.daysAgo();
+			tempAverageProfit /= self.daysAgo();
+			
+			self.averageNetSales(tempAverageNetSales.toLocaleString(
+					undefined,
+					{ minimumFractionDigits: 2,
+						maximumFractionDigits: 2 }
+				));
+			self.averageProfit(tempAverageProfit.toLocaleString(
+					undefined,
+					{ minimumFractionDigits: 2,
+						maximumFractionDigits: 2 }
+				));
 				
 			self.dailyChart = c3.generate({
 			    bindto: '#dailyChart',

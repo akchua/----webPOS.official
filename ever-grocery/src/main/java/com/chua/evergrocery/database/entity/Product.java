@@ -228,6 +228,16 @@ public class Product extends BaseObject {
 	public String getFormattedPurchaseValuePercentage() {
 		return NumberFormatter.toPercent(purchaseValuePercentage);
 	}
+	
+	@Transient
+	public Float getOverallPurchaseValuePercentage() {
+		return purchaseValuePercentage * company.getPurchaseValuePercentage() / 100.0f;
+	}
+	
+	@Transient 
+	public String getFormattedOverallPurchaseValuePercentage() {
+		return NumberFormatter.toPercent(getOverallPurchaseValuePercentage());
+	}
 
 	public void setPurchaseValuePercentage(Float purchaseValuePercentage) {
 		this.purchaseValuePercentage = purchaseValuePercentage;
@@ -243,6 +253,16 @@ public class Product extends BaseObject {
 	public String getFormattedSaleValuePercentage() {
 		return NumberFormatter.toPercent(saleValuePercentage);
 	}
+	
+	@Transient
+	public Float getOverallSaleValuePercentage() {
+		return saleValuePercentage * company.getSaleValuePercentage() / 100.0f;
+	}
+	
+	@Transient 
+	public String getFormattedOverallSaleValuePercentage() {
+		return NumberFormatter.toPercent(getOverallSaleValuePercentage());
+	}
 
 	public void setSaleValuePercentage(Float saleValuePercentage) {
 		this.saleValuePercentage = saleValuePercentage;
@@ -257,6 +277,16 @@ public class Product extends BaseObject {
 	@Transient 
 	public String getFormattedProfitPercentage() {
 		return NumberFormatter.toPercent(profitPercentage);
+	}
+	
+	@Transient
+	public Float getOverallProfitPercentage() {
+		return profitPercentage * company.getProfitPercentage() / 100.0f;
+	}
+	
+	@Transient 
+	public String getFormattedOverallProfitPercentage() {
+		return NumberFormatter.toPercent(getOverallProfitPercentage());
 	}
 
 	public void setProfitPercentage(Float profitPercentage) {

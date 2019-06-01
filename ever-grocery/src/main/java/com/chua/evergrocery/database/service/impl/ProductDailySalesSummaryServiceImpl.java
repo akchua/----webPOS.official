@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,11 @@ public class ProductDailySalesSummaryServiceImpl
 	@Override
 	public ProductDailySalesSummary findByProductAndSalesDate(long productId, Date salesDate) {
 		return dao.findByProductAndSalesDate(productId, DateUtil.floorDay(salesDate));
+	}
+	
+	@Override
+	public List<ProductDailySalesSummary> findByRangeOrderBySalesDate(Long productId, Date startDate, Date endDate) {
+		return dao.findByRangeWithOrder(productId, DateUtil.floorDay(startDate), DateUtil.floorDay(endDate), new Order[] { Order.asc("salesDate") });
 	}
 	
 	@Override

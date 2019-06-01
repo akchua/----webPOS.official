@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Junction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -34,6 +35,16 @@ public class ProductDailySalesSummaryDAOImpl
 		conjunction.add(Restrictions.eq("salesDate", salesDate));
 		
 		return findUniqueResult(null, null, null, conjunction);
+	}
+	
+	@Override
+	public List<ProductDailySalesSummary> findByRangeWithOrder(Long productId, Date startDate, Date endDate, Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("product.id", productId));
+		conjunction.add(Restrictions.between("salesDate", startDate, endDate));
+		
+		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}
 	
 	@Override

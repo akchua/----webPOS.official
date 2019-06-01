@@ -34,7 +34,7 @@ public class DailySalesSummaryServiceImpl
 
 	@Override
 	public List<DailySalesSummary> findByRangeOrderBySalesDate(Date startDate, Date endDate) {
-		return dao.findByRangeWithOrder(startDate, endDate, new Order[] { Order.asc("salesDate") });
+		return dao.findByRangeWithOrder(DateUtil.floorDay(startDate), DateUtil.floorDay(endDate), new Order[] { Order.asc("salesDate") });
 	}
 
 	@Override

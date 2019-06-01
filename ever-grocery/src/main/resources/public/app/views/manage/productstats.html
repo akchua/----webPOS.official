@@ -1,0 +1,25 @@
+<br>
+<div class="row">
+	<div class="panel panel-info col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10 col-xs-offset-1 col-xs-10">
+		<div class="panel-body">
+			<form>
+				<div class="row">
+					<div class="col-xs-5">
+						<div class="form-group">
+							<label for="inputDaysAgo" class="control-label">Included Days Ago</label>
+							<input data-bind="value: daysAgo" type="number" class="form-control" id="inputDaysAgo" placeholder="">
+						</div>
+					</div>
+					<div class="col-xs-7">
+						<span><span data-bind="text: daysAgo"></span> Days Average Sales : <span class="text-info pull-right" >&#8369; <span data-bind="text: averageNetSales"></span></span></span><br>
+						<span><span data-bind="text: daysAgo"></span> Days Average Profit : <span class="text-info pull-right">&#8369; <span data-bind="text: averageProfit"></span></span></span>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div id="dailyChart"></div>
+</div>

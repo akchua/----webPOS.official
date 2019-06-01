@@ -16,6 +16,7 @@ import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
 import com.chua.evergrocery.database.entity.DailySalesSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.MTDSalesSummary;
+import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
 import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
 
 /**
@@ -76,6 +77,14 @@ public class TransactionSummaryEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<DailySalesSummary> getDailySalesSummaryList(@QueryParam("daysAgo") Integer daysAgo) {
 		return transactionSummaryHandler.getDailySalesSummaryList(daysAgo);
+	}
+	
+	@GET
+	@Path("/productdailysaleslist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<ProductDailySalesSummary> getProductDailySalesSummaryList(@QueryParam("productId") Long productId,
+				@QueryParam("daysAgo") Integer daysAgo) {
+		return transactionSummaryHandler.getProductDailySalesSummaryList(productId, daysAgo);
 	}
 	
 	@GET

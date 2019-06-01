@@ -57,6 +57,16 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getProductDailySalesSummaryList: function(productId, daysAgo) {
+    		return $.ajax({
+    			url: '/services/transactionsummary/productdailysaleslist',
+    			data: {
+    				productId: productId,
+    				daysAgo: daysAgo
+    			}
+    		});
+    	},
+    	
     	getLiveSalesSummary: function() {
     		return $.ajax({
     			url: '/services/transactionsummary/livesales'
