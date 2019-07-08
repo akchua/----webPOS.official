@@ -31,6 +31,7 @@ public class PrintableDoc
 {	
 	// Keywords for BOLD Lines
 	private static final List<String> BOLD_KEYWORDS = Arrays.asList(new String[] {
+			"Sub Total",
 			"Total Amount",
 			"Change",
 			"Order #",
