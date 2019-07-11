@@ -2,7 +2,7 @@
 ## Has a maximum of 44 columns in a line
 P.O. ID #${t.Id}
 ${t.FormattedPurchaseOrderItems}
-                   Sub Total ${t.FormattedTotalAmount}
+          Sub Total ${t.FormattedTotalAmount}
 
 Items  : ${t.TotalItems}
 Server : ${t.FormattedServer}
