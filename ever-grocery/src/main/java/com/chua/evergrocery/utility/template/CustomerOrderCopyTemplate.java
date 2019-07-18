@@ -2,6 +2,7 @@ package com.chua.evergrocery.utility.template;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.enums.DocType;
+import com.chua.evergrocery.utility.format.DateFormatter;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -61,5 +63,9 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 
 	public String getFormattedCustomerOrderItems() {
 		return formattedCustomerOrderItems;
+	}
+	
+	public String getFormattedDate() {
+		return DateFormatter.encryptedDayFormat(new Date());
 	}
 }
