@@ -8,6 +8,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
 		this.productName = productName;
 		
 		this.quantity = ko.observable();
+		this.quantityFocus = ko.observable(true);
 		
 		this.enableButtons = ko.observable(true);
 	};
@@ -27,7 +28,9 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/purchaseorderserv
     		if(result.success) {
         		dialog.close(self);
         	}  else {
-        		app.showMessage(result.message);
+        		app.showMessage(result.message).done(function() {
+					self.quantityFocus(true);
+				});
         	}
     		self.enableButtons(true);
     	});
