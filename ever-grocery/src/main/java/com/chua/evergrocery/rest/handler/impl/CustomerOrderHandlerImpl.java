@@ -621,15 +621,19 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			if(customerOrder.getStatus().equals(Status.LISTING) 
 					|| (customerOrder.getStatus().equals(Status.SUBMITTED) && UserContextHolder.getUser().getUserType().getAuthority() <= 3)) {
 				if(productDetail != null) {
-					result = this.addItem(productDetail, customerOrder, quantity);
+					if(quantity != null) {
+						result = this.addItem(productDetail, customerOrder, quantity);
+					} else {
+						result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Invalid Quantity.")));
+					}
 				} else {
-					result = new ResultBean(false, "Product not found.");
+					result = new ResultBean(Boolean.FALSE, Html.line("Product not found."));
 				}
 			} else {
 				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Declined!") + " You are not authorized to make changes on a submitted order."));
 			}
 		} else {
-			result = new ResultBean(false, "Customer order not found.");
+			result = new ResultBean(Boolean.FALSE, Html.line("Customer Order not found."));
 		}
 		
 		return result;
@@ -798,16 +802,20 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		
 		if(customerOrder != null) {
 			if(customerOrder.getStatus().equals(Status.LISTING)) {
-				result = new ResultBean();
-				
-				customerOrder.setStatus(Status.SUBMITTED);
-				result.setSuccess(customerOrderService.update(customerOrder));
-				
-				if(result.getSuccess()) {
-					result.setMessage(Html.line(Color.GREEN, "Successfully") + " forwarded customer order #" + customerOrder.getOrderNumber() + " to cashier.");
-					activityLogHandler.myLog("submitted sales order : " + customerOrder.getId(), ip);
+				if(customerOrder.getTotalAmount().equals(0.0f)) {
+					result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Empty Order!")));
 				} else {
-					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+					result = new ResultBean();
+					
+					customerOrder.setStatus(Status.SUBMITTED);
+					result.setSuccess(customerOrderService.update(customerOrder));
+					
+					if(result.getSuccess()) {
+						result.setMessage(Html.line(Color.GREEN, "Successfully") + " forwarded customer order #" + customerOrder.getOrderNumber() + " to cashier.");
+						activityLogHandler.myLog("submitted sales order : " + customerOrder.getId(), ip);
+					} else {
+						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+					}
 				}
 			} else {
 				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Error!") + " Please refresh the page."));
