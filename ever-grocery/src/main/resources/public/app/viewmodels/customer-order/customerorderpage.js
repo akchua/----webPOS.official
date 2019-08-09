@@ -1,5 +1,5 @@
-define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'modules/customerorderservice', 'modules/customerservice', 'viewmodels/customer-order/search'], 
-		function (router, app, ko, soundUtil, customerOrderService, customerService, Search) {
+define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'modules/customerorderservice', 'modules/customerservice', 'viewmodels/customer-order/search', 'viewmodels/customer-order/invalidbarcode'], 
+		function (router, app, ko, soundUtil, customerOrderService, customerService, Search, InvalidBarcode) {
     var CustomerOrderPage = function() {
     	this.customerOrderDetailList = ko.observable();
     	
@@ -85,8 +85,10 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     		self.submit(false);
     	} else if(self.barcodeKey() === 'p') {
     		self.printCopy();
+    		self.barcodeKey("");
     	} else if(self.barcodeKey() === 's') {
     		self.search();
+    		self.barcodeKey("");
     	} else if(self.barcodeKey() === 'n') {
     		self.submit(true);
     	}  else {
@@ -94,16 +96,16 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
         		if(result.success) {
         			self.currentPage(1);
         			self.refreshCustomerOrderDetailList();
+        			self.barcodeKey("");
         		} else {
         			soundUtil.beep();
-        			app.showMessage(result.message).done(function() {
+        			InvalidBarcode.show(self.barcodeKey()).done(function() {
         				self.barcodeFocus(true);
+        				self.barcodeKey("");
         			});
         		}
         	});
     	}
-    	
-    	self.barcodeKey("");
     };
     
     CustomerOrderPage.prototype.changeQuantity = function(customerOrderDetailId, quantity) {
