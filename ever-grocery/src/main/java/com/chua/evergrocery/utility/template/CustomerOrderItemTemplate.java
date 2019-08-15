@@ -67,6 +67,7 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 				|| customerOrderItem.getUnitType().equals(UnitType.CASE)
 				|| customerOrderItem.getUnitType().equals(UnitType.BUNDLE)
 				|| customerOrderItem.getUnitType().equals(UnitType.SACK))
+				&& content != null
 				&& !content.equals(0)) {
 			formattedName += "x" + content;
 		}
