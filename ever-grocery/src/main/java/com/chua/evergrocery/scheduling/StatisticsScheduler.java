@@ -44,6 +44,7 @@ public class StatisticsScheduler {
 	 * fires at 7:05PM every first day of the month
 	 */
 	@Scheduled(cron = "0 5 19 1 * ?")
+	//@Scheduled(cron = "0 15 23 * * ?")
 	public void monthlySalesStatisticsUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting monthly sales statistics update");
@@ -64,7 +65,7 @@ public class StatisticsScheduler {
 		final Date start = new Date();
 		LOG.info("Starting daily sales statistics update");
 		
-		transactionSummaryHandler.updateDailySalesSummaries(3);
+		transactionSummaryHandler.updateDailySalesSummaries(90);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;

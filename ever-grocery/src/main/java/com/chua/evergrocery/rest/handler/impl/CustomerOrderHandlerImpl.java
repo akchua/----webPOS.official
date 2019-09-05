@@ -432,9 +432,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			final CustomerOrder customerOrder = customerOrderService.find(paymentsForm.getCustomerOrderId());
 			
 			if(customerOrder != null) {
-				if(DateUtil.isToday(zReadingService.getLatestZReading().getReadingDate())) {
-					result = new ResultBean(false, "Cannot transact after end of day");
-				} else {
+				//if(DateUtil.isToday(zReadingService.getLatestZReading().getReadingDate())) {
+					//result = new ResultBean(false, "Cannot transact after end of day");
+				//} else {
 					if(customerOrder.getStatus().equals(Status.SUBMITTED) || customerOrder.getStatus().equals(Status.DISCOUNTED)) {
 						if(customerOrder.getTotalAmount() > 0 &&
 								(paymentsForm.getCardAmount() + paymentsForm.getPointsAmount() > customerOrder.getTotalAmount() + 0.01f)) {
@@ -517,7 +517,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					} else {
 						result = new ResultBean(Boolean.FALSE, "Customer Order not yet completed.");
 					}
-				}
+				//}
 			} else {
 				result = new ResultBean(false, "Customer order not found.");
 			}
@@ -811,6 +811,15 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					result.setSuccess(customerOrderService.update(customerOrder));
 					
 					if(result.getSuccess()) {
+						// TEMPORARY
+						PaymentsFormBean paymentsForm = new PaymentsFormBean();
+						paymentsForm.setCustomerOrderId(customerOrderId);
+						paymentsForm.setCash(customerOrder.getTotalAmount());
+						paymentsForm.setCardAmount(0.0f);
+						paymentsForm.setCheckAmount(0.0f);
+						paymentsForm.setPointsAmount(0.0f);
+						this.payCustomerOrder(paymentsForm, "192.168.0.2");
+						//
 						result.setMessage(Html.line(Color.GREEN, "Successfully") + " forwarded customer order #" + customerOrder.getOrderNumber() + " to cashier.");
 						activityLogHandler.myLog("submitted sales order : " + customerOrder.getId(), ip);
 					} else {
