@@ -65,7 +65,7 @@ public class StatisticsScheduler {
 		final Date start = new Date();
 		LOG.info("Starting daily sales statistics update");
 		
-		transactionSummaryHandler.updateDailySalesSummaries(90);
+		transactionSummaryHandler.updateDailySalesSummaries(3);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
