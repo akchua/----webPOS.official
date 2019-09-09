@@ -77,6 +77,16 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getProductWholeDetail: function(productId, async) {
+    		return $.ajax({
+    			url: '/services/product/getwholedetail',
+    			async: async,
+    			data: {
+    				productId: productId
+    			}
+    		});
+    	},
+    	
     	getProductDetailList: function(productId, async) {
     		return $.ajax({
     			url: '/services/product/getdetails',

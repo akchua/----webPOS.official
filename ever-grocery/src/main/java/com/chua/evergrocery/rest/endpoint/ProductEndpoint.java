@@ -64,6 +64,13 @@ public class ProductEndpoint {
 	}
 	
 	@GET
+	@Path("/getwholedetail")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ProductDetail getProductWholeDetail(@QueryParam("productId") Long productId) {
+		return productHandler.getProductWholeDetail(productId);
+	}
+	
+	@GET
 	@Path("/getdetails")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<ProductDetail> getProductDetailList(@QueryParam("productId") Long productId) {

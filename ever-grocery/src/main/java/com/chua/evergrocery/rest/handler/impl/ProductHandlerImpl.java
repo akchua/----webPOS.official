@@ -117,6 +117,11 @@ public class ProductHandlerImpl implements ProductHandler {
 	}
 	
 	@Override
+	public ProductDetail getProductWholeDetail(Long productId) {
+		return productDetailService.findByProductIdAndTitle(productId, "Whole");
+	}
+	
+	@Override
 	public List<ProductDetail> getProductDetailList(Long productId) {
 		return productDetailService.findAllByProductId(productId);
 	}

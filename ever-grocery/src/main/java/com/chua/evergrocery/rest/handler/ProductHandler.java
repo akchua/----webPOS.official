@@ -21,6 +21,8 @@ public interface ProductHandler {
 	
 	Product getProduct(Long productId);
 	
+	ProductDetail getProductWholeDetail(Long productId);
+	
 	List<ProductDetail> getProductDetailList(Long productId);
 	
 	ResultBean createProduct(ProductFormBean productForm, String ip);

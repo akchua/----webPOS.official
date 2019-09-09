@@ -1,7 +1,10 @@
-define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummaryservice', 'modules/c3utility'], 
-		function ($, c3, app, ko, transactionSummaryService, c3Utility) {
+define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/productservice', 'modules/transactionsummaryservice', 'modules/c3utility'], 
+		function ($, c3, app, ko, productService, transactionSummaryService, c3Utility) {
 	var ProductStats = function() {
 		this.productId = ko.observable();
+		
+		this.productCostPerWhole = null;
+		this.productWholeUnit = ko.observable();
 		
 		this.daysAgo = ko.observable(90);
 		
@@ -11,12 +14,18 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		this.dailyProfit = null;
 		this.averageNetSales = ko.observable(0.0);
 		this.averageProfit = ko.observable(0.0);
+		this.averageWholePerDay = ko.observable(0.0);
 	};
 	
 	ProductStats.prototype.activate = function(activationData) {
 		var self = this;
 		
 		self.productId = activationData.productId;
+		
+		productService.getProductWholeDetail(self.productId).done(function(wholeDetail) {
+			self.productCostPerWhole = wholeDetail.netPrice;
+			self.productWholeUnit(wholeDetail.unitType.displayName);
+		});
 	};
 	
 	ProductStats.prototype.attached = function() {
@@ -63,6 +72,9 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 			tempAverageNetSales /= self.daysAgo();
 			tempAverageProfit /= self.daysAgo();
 			
+			var tempAverageWholePerDay = tempAverageNetSales - tempAverageProfit;
+			tempAverageWholePerDay /= self.productCostPerWhole;
+			
 			self.averageNetSales(tempAverageNetSales.toLocaleString(
 					undefined,
 					{ minimumFractionDigits: 2,
@@ -73,6 +85,8 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 					{ minimumFractionDigits: 2,
 						maximumFractionDigits: 2 }
 				));
+			
+			self.averageWholePerDay(tempAverageWholePerDay.toFixed(2));
 				
 			self.dailyChart = c3.generate({
 			    bindto: '#dailyChart',
