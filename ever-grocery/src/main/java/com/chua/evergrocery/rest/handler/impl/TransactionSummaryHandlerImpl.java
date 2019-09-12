@@ -318,7 +318,7 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 					for(ProductSalesSummaryBean pss : productSalesSummaries) {
 						final Product product = productService.find(pss.getProductId());
 						product.setSaleValuePercentage(companySalesSummary.getNetTotal().equals(0.0f) ? 0.0f : pss.getNetTotal() / companySalesSummary.getNetTotal() * 100.0f);
-						product.setProfitPercentage(companySalesSummary.getBaseTotal().equals(0.0f) ? 0.0f : pss.getBaseTotal() / companySalesSummary.getBaseTotal() * 100.0f);
+						product.setProfitPercentage(companySalesSummary.getTotalProfit().equals(0.0f) ? 0.0f : pss.getTotalProfit() / companySalesSummary.getTotalProfit() * 100.0f);
 						productService.update(product);
 					}
 				}
@@ -358,7 +358,7 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 				for(CompanySalesSummaryBean css : companySalesSummaries) {
 					final Company company = companyService.find(css.getCompanyId());
 					company.setSaleValuePercentage(totalSalesSummary.getNetTotal().equals(0.0f) ? 0.0f : css.getNetTotal() / totalSalesSummary.getNetTotal() * 100.0f);
-					company.setProfitPercentage(totalSalesSummary.getBaseTotal().equals(0.0f) ? 0.0f : css.getBaseTotal() / totalSalesSummary.getBaseTotal() * 100.0f);
+					company.setProfitPercentage(totalSalesSummary.getTotalProfit().equals(0.0f) ? 0.0f : css.getTotalProfit() / totalSalesSummary.getTotalProfit() * 100.0f);
 					companyService.update(company);
 				}
 			}
