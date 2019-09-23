@@ -28,6 +28,7 @@ public class StatisticsScheduler {
 	 * fires at 7:00PM every first day of the month
 	 */
 	@Scheduled(cron = "0 0 19 1 * ?")
+	//@Scheduled(cron = "0 29 15 * * ?")
 	public void monthlyPurchaseStatisticsUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting monthly purchase statistics update");
@@ -44,7 +45,7 @@ public class StatisticsScheduler {
 	 * fires at 7:05PM every first day of the month
 	 */
 	@Scheduled(cron = "0 5 19 1 * ?")
-	//@Scheduled(cron = "0 14 00 * * ?")
+	//@Scheduled(cron = "0 26 15 * * ?")
 	public void monthlySalesStatisticsUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting monthly sales statistics update");

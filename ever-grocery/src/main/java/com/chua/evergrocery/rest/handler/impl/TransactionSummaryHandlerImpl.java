@@ -161,6 +161,9 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	public void updateAllPurchaseSummaries(int includedMonthsAgo) {
 		final List<Company> companies = companyService.findAllList();
 		
+		// Remove previous purchase value percentage
+		this.clearAllPurchaseValuePercentage();
+		
 		final int lastMonthId = DateUtil.getMonthId(new Date()) - 1;
 		
 		for(int monthId = lastMonthId; monthId > lastMonthId - includedMonthsAgo; monthId--) {
@@ -273,6 +276,9 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	@Override
 	public void updateMonthlySalesSummaries(int includedMonthsAgo) {
 		final List<Company> companies = companyService.findAllList();
+		
+		// Remove previous sales and profit value percentages
+		this.clearAllSalesAndProfitValuePercentage();
 		
 		final int lastMonthId = DateUtil.getMonthId(new Date()) - 1;
 		
@@ -481,5 +487,39 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 			
 			currentDay.add(Calendar.DAY_OF_MONTH, -1);
 		}
+	}
+	
+	private void clearAllPurchaseValuePercentage() {
+		LOG.info("Cleaning up purchase value percentages .... ");
+		
+		final List<Product> allProducts = productService.findAllList();
+		for(Product product : allProducts) product.setPurchaseValuePercentage(0.0f);
+		productService.batchUpdate(allProducts);
+		
+		final List<Company> allCompanies = companyService.findAllList();
+		for(Company company : allCompanies) company.setPurchaseValuePercentage(0.0f);
+		companyService.batchUpdate(allCompanies);
+		
+		LOG.info("Clean up complete .... ");
+	}
+	
+	private void clearAllSalesAndProfitValuePercentage() {
+		LOG.info("Cleaning up sales and profit value percentages .... ");
+		
+		final List<Product> allProducts = productService.findAllList();
+		for(Product product : allProducts) {
+			product.setSaleValuePercentage(0.0f);
+			product.setProfitPercentage(0.0f);
+		}
+		productService.batchUpdate(allProducts);
+		
+		final List<Company> allCompanies = companyService.findAllList();
+		for(Company company : allCompanies) {
+			company.setSaleValuePercentage(0.0f);
+			company.setProfitPercentage(0.0f);
+		}
+		companyService.batchUpdate(allCompanies);
+		
+		LOG.info("Clean up complete .... ");
 	}
 }
