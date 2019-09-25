@@ -308,7 +308,7 @@ public class ProductHandlerImpl implements ProductHandler {
 	private void setPriceHistory(PriceHistory priceHistory, Product product, ProductDetail productDetail, ProductDetailsFormBean productDetailsForm, PriceHistoryType priceHistoryType) {
 		priceHistory.setProduct(product);
 		priceHistory.setTitle(productDetailsForm.getTitle());
-		priceHistory.setUnitType(productDetailsForm.getUnitType());
+		priceHistory.setUnitType(productDetailsForm.getUnitType() != null ? productDetailsForm.getUnitType() : UnitType.DEFAULT);
 		priceHistory.setPriceHistoryType(priceHistoryType);
 		switch(priceHistoryType) {
 			case SALE:
