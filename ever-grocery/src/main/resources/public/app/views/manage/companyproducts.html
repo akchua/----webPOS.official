@@ -25,6 +25,7 @@
     					<th class="text-right">Purchases (%)</th>
     					<th class="text-right">Sales (%)</th>
     					<th class="text-right">Profit (%)</th>
+    					<th></th>
     				</tr>
     			</thead>
     		
@@ -35,6 +36,11 @@
     					<td class="text-right" data-bind="text: product.formattedPurchaseValuePercentage"></td>
     					<td class="text-right" data-bind="text: product.formattedSaleValuePercentage"></td>
     					<td class="text-right" data-bind="text: product.formattedProfitPercentage"></td>
+    					<td>
+    						<div class="pull-right">
+    							<button data-bind="click: function() { $parent.removeProduct(product.id, product.name) }, enable: $parent.enableButtons" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
+    						</div>
+    					</td>
     				</tr>
     			</tbody>
     		</table>
