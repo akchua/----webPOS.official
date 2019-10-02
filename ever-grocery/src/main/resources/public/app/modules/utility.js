@@ -5,7 +5,8 @@ define(['knockout'], function (ko) {
     	},
     	
     	computeSellingPrice: function(base, percentProfit) {
-    		return this.round(base + (base * percentProfit / 100));
+    		if(base > 15) return this.round(base + (base * percentProfit / 100));
+    		else return this.roundTo5(base + (base * percentProfit / 100));
     	},
     	
     	computeNetProfit: function(base, selling) {
@@ -14,6 +15,10 @@ define(['knockout'], function (ko) {
     	
     	round: function(number) {
     		return (Math.ceil(number * 4)) / 4;
+    	},
+    	
+    	roundTo5: function(number) {
+    		return (Math.ceil(number * 20)) / 20;
     	},
     	
     	roundToCent: function(number) {
