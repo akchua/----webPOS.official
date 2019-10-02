@@ -75,6 +75,11 @@ public class Product extends BaseObject {
 	
 	private Float profitPercentage;
 	
+	// Monthly profit ranking
+	private Integer currentProfitRank;
+	
+	private Integer previousProfitRank;
+	
 	@ManyToOne(targetEntity = Brand.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "brand_id")
 	@Where(clause = "valid = 1")
@@ -291,5 +296,46 @@ public class Product extends BaseObject {
 
 	public void setProfitPercentage(Float profitPercentage) {
 		this.profitPercentage = profitPercentage;
+	}
+
+	@Basic
+	@Column(name = "current_profit_rank")
+	public Integer getCurrentProfitRank() {
+		return currentProfitRank;
+	}
+	
+	@Transient
+	public Integer getRankDeviation() {
+		if(previousProfitRank == 0) return 0;
+		else return Math.abs(this.currentProfitRank - this.previousProfitRank);
+	}
+	
+	@Transient
+	public Boolean isRankIncrease() {
+		return previousProfitRank == 0 ? Boolean.FALSE : currentProfitRank < previousProfitRank;
+	}
+	
+	@Transient
+	public Boolean isRankDecrease() {
+		return previousProfitRank == 0 ? Boolean.FALSE : currentProfitRank > previousProfitRank;
+	}
+	
+	@Transient
+	public Boolean isRankSame() {
+		return getRankDeviation() == 0;
+	}
+
+	public void setCurrentProfitRank(Integer currentProfitRank) {
+		this.currentProfitRank = currentProfitRank;
+	}
+
+	@Basic
+	@Column(name = "previous_profit_rank")
+	public Integer getPreviousProfitRank() {
+		return previousProfitRank;
+	}
+
+	public void setPreviousProfitRank(Integer previousProfitRank) {
+		this.previousProfitRank = previousProfitRank;
 	}
 }

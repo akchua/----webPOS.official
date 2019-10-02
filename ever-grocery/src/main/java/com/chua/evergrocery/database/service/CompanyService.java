@@ -15,6 +15,8 @@ public interface CompanyService
 	 */
 	List<Company> findAllOrderByName();
 	
+	List<Company> findAllOrderByProfit();
+	
 	ObjectList<Company> findAllWithPagingOrderByProfit(int pageNumber, int resultsPerPage, String searchKey);
 	
 	Boolean isExistsByName(String name);

@@ -23,6 +23,7 @@
     		<table class="table table-responsive table-hover">
     			<thead>
     				<tr>
+    					<th class="text-center">Rank</th>
     					<th>Name</th>
     					<!-- <th>Address</th>
     					<th>Agent</th>
@@ -36,6 +37,17 @@
     		
     			<tbody data-bind="foreach: { data: companyList, as: 'company' }">
     				<tr>
+    					<td class="text-center"><span data-bind="text: company.currentProfitRank"></span> 
+    					<!-- ko if: company.rankIncrease -->
+    						<span class="text-success"><i class="fa fa-arrow-up"></i><span data-bind="text: company.rankDeviation"></span></span>
+    					<!-- /ko -->
+    					<!-- ko if: company.rankDecrease -->
+    						<span class="text-danger"><i class="fa fa-arrow-down"></i><span data-bind="text: company.rankDeviation"></span></span>
+    					<!-- /ko -->
+    					<!-- ko if: company.rankSame -->
+    						<span class="text-info"><i class="fa fa-minus"></i><i class="fa fa-minus"></i></span>
+    					<!-- /ko -->
+    					</td>
     					<td data-bind="text: company.name"></td>
     					<!-- <td data-bind="text: company.address"></td>
     					<td data-bind="text: company.agent"></td>

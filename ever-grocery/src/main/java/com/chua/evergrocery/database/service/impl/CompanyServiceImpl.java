@@ -39,6 +39,11 @@ public class CompanyServiceImpl
 	}
 	
 	@Override
+	public List<Company> findAllOrderByProfit() {
+		return dao.findAllWithOrder(new Order[] { Order.desc("profitPercentage") });
+	}
+	
+	@Override
 	public Boolean isExistsByName(String name) {
 		return dao.findByName(StringUtils.trimToEmpty(name)) != null;
 	}

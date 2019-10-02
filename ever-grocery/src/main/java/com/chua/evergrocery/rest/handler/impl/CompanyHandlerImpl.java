@@ -64,6 +64,8 @@ public class CompanyHandlerImpl implements CompanyHandler {
 			company.setPurchaseValuePercentage(0.0f);
 			company.setSaleValuePercentage(0.0f);
 			company.setProfitPercentage(0.0f);
+			company.setPreviousProfitRank(0);
+			company.setCurrentProfitRank(0);
 			
 			result = new ResultBean();
 			result.setSuccess(companyService.insert(company) != null);

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.chua.evergrocery.rest.handler.ProfitRankingHandler;
 import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
 
 /**
@@ -22,6 +23,9 @@ public class StatisticsScheduler {
 
 	@Autowired
 	private TransactionSummaryHandler transactionSummaryHandler;
+	
+	@Autowired
+	private ProfitRankingHandler profitRankingHandler;
 	
 	/**
 	 * Monthly Purchase Statistics Update
@@ -55,6 +59,25 @@ public class StatisticsScheduler {
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
 		LOG.info("Monthly sales statistics update complete. Total execution time : " + seconds + "s");
+		
+		this.monthlyProfitRankingUpdate();
+	}
+	
+	/**
+	 * Monthly Profit Ranking Update
+	 * fired by @monthlySalesStatisticsUpdate after completion
+	 */
+	//@Scheduled(cron = "0 15 21 * * ?")
+	public void monthlyProfitRankingUpdate() {
+		final Date start = new Date();
+		LOG.info("Starting monthly profit ranking update");
+		
+		profitRankingHandler.updateAllProductProfitRankings();
+		profitRankingHandler.updateAllCompanyProfitRankings();
+		
+		final Date end = new Date();
+		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
+		LOG.info("Monthly profit ranking update complete. Total execution time : " + seconds + "s");
 	}
 	
 	/**

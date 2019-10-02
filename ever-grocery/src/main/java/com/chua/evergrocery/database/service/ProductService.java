@@ -18,4 +18,6 @@ public interface ProductService
 	ObjectList<Product> findAllWithPagingOrderByProfit(int pageNumber, int resultsPerPage, String searchKey, Long companyId);
 	
 	List<Product> findAllByCompanyOrderByName(Long companyId);
+	
+	List<Product> findAllByCompanyOrderByProfit(Long companyId);
 }

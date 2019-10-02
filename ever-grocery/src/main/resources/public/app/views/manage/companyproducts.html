@@ -20,6 +20,7 @@
     		<table class="table table-responsive table-hover">
     			<thead>
     				<tr>
+    					<th class="text-center">Rank</th>
     					<th>Code</th>
     					<th>Name</th>
     					<th class="text-right">Purchases (%)</th>
@@ -31,6 +32,17 @@
     		
     			<tbody data-bind="foreach: { data: productList, as: 'product' }">
     				<tr>
+    					<td class="text-center"><span data-bind="text: product.currentProfitRank"></span> 
+    					<!-- ko if: product.rankIncrease -->
+    						<span class="text-success"><i class="fa fa-arrow-up"></i><span data-bind="text: product.rankDeviation"></span></span>
+    					<!-- /ko -->
+    					<!-- ko if: product.rankDecrease -->
+    						<span class="text-danger"><i class="fa fa-arrow-down"></i><span data-bind="text: product.rankDeviation"></span></span>
+    					<!-- /ko -->
+    					<!-- ko if: product.rankSame -->
+    						<span class="text-info"><i class="fa fa-minus"></i><i class="fa fa-minus"></i></span>
+    					<!-- /ko -->
+    					</td>
     					<td data-bind="text: product.code"></td>
     					<td data-bind="text: product.name"></td>
     					<td class="text-right" data-bind="text: product.formattedPurchaseValuePercentage"></td>
