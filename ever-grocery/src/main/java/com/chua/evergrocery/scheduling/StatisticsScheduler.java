@@ -37,7 +37,7 @@ public class StatisticsScheduler {
 		final Date start = new Date();
 		LOG.info("Starting monthly purchase statistics update");
 		
-		transactionSummaryHandler.updateAllPurchaseSummaries(3);
+		transactionSummaryHandler.updateAllPurchaseSummaries(1);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
@@ -54,7 +54,7 @@ public class StatisticsScheduler {
 		final Date start = new Date();
 		LOG.info("Starting monthly sales statistics update");
 		
-		transactionSummaryHandler.updateMonthlySalesSummaries(3);
+		transactionSummaryHandler.updateMonthlySalesSummaries(1);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
@@ -89,7 +89,7 @@ public class StatisticsScheduler {
 		final Date start = new Date();
 		LOG.info("Starting daily sales statistics update");
 		
-		transactionSummaryHandler.updateDailySalesSummaries(3);
+		transactionSummaryHandler.updateDailySalesSummaries(1);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
