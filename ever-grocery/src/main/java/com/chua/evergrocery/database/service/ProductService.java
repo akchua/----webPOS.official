@@ -13,7 +13,7 @@ public interface ProductService
 	
 	Boolean isExistsByCode(String code);
 	
-	ObjectList<Product> findAllWithPagingOrderByName(int pageNumber, int resultsPerPage, String searchKey, Long companyId);
+	ObjectList<Product> findAllWithPagingOrderByName(int pageNumber, int resultsPerPage, String searchKey, Long companyId, Long categoryId);
 	
 	ObjectList<Product> findAllWithPagingOrderByProfit(int pageNumber, int resultsPerPage, String searchKey, Long companyId);
 	

@@ -15,6 +15,8 @@ public interface ProductHandler {
 
 	ObjectList<Product> getProductList(Integer pageNumber, String searchKey, Long companyId);
 	
+	ObjectList<Product> getProductListWithCategory(Integer pageNumber, String searchKey, Long companyId, Long categoryId);
+	
 	ObjectList<Product> getProductListByRank(Integer pageNumber, String searchKey, Long companyId);
 	
 	ObjectList<PriceHistory> getSalePriceHistoryList(Integer pageNumber);

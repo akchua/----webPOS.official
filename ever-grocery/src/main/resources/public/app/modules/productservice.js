@@ -12,6 +12,19 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getProductListWithCategory: function(pageNumber, searchKey, companyId, categoryId, async) {
+    		return $.ajax({
+    			url: '/services/product/listcategory',
+    			async: async,
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				searchKey: searchKey,
+    				companyId: companyId,
+    				categoryId: categoryId
+    			}
+    		});
+    	},
+    	
     	getProductListByRank: function(pageNumber, searchKey, companyId, async) {
     		return $.ajax({
     			url: '/services/product/listbyrank',

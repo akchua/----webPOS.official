@@ -30,14 +30,14 @@ public class ProductServiceImpl
 	
 	@Override
 	public ObjectList<Product> findAllWithPagingOrderByName(int pageNumber, int resultsPerPage, String searchKey,
-			Long companyId) {
-		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, new Order[] { Order.asc("name") });
+			Long companyId, Long categoryId) {
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, categoryId, new Order[] { Order.asc("name") });
 	}
 	
 	@Override
 	public ObjectList<Product> findAllWithPagingOrderByProfit(int pageNumber, int resultsPerPage,
 			String searchKey, Long companyId) {
-		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, new Order[] { Order.desc("profitPercentage") });
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, null, new Order[] { Order.desc("profitPercentage") });
 	}
 	
 	@Override

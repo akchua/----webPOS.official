@@ -76,6 +76,11 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	@Override
 	public ObjectList<Product> getProductList(Integer pageNumber, String searchKey, Long companyId) {
+		return getProductListWithCategory(pageNumber, searchKey, companyId, null);
+	}
+	
+	@Override
+	public ObjectList<Product> getProductListWithCategory(Integer pageNumber, String searchKey, Long companyId, Long categoryId) {
 		if(searchKey != null && searchKey.length() > 6 && searchKey.matches("[0-9]+")) {
 			List<Product> products = new ArrayList<Product>();
 			ProductDetail productDetail = productDetailService.findByBarcode(searchKey);
@@ -86,7 +91,7 @@ public class ProductHandlerImpl implements ProductHandler {
 			productList.setTotal(products.size());
 			return productList;
 		} else {
-			return productService.findAllWithPagingOrderByName(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, companyId);
+			return productService.findAllWithPagingOrderByName(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, companyId, categoryId);
 		}
 	}
 	

@@ -4,7 +4,9 @@
 			<button data-bind="click: create, enable: enableButtons" type="button" class="btn btn-success">Add New Product</button>
 		</div>
 		<form class="form-inline" role="form">
-			<div class="input-group col-md-5 col-xs-12 pull-right">
+			<div class="input-group col-md-8 col-xs-12 pull-right">
+				<select data-bind="options: categoryList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- All Category --', value: categoryId, event: { change: search }" class="form-control" id="inputCategory"></select>
+				<span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 				<select data-bind="options: companyList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- All Company --', value: companyId, event: { change: search }" class="form-control" id="inputCompany"></select>
 				<span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 				<input data-bind="textInput: searchKey" size="40" type="text" class="form-control" placeholder="Search Product">
