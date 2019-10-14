@@ -5,51 +5,51 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum UnitType {
 	
-	BAG ("Bag", "bg"),
-	
-	BAR ("Bar", "bar"),
-	
-	BOTTLE ("Bottle", "btl"),
-	
-	BOX ("Box", "box"),
-	
-	BUCKET ("Bucket", "bct"),
+	DEFAULT("Default", "#"),
 	
 	BUNDLE ("Bundle", "bd"),
 	
-	CAN ("Can", "can"),
-	
 	CASE ("Case", "cs"),
-	
-	DEFAULT("Default", "#"),
-	
-	DOZEN ("Dozen", "dz"),
-	
-	JAR ("Jar", "jar"),
-	
-	PACK ("Pack", "pk"),
-	
-	PAIR ("Pair", "par"),
-	
-	PIECE ("Piece", "pc"),
-	
-	POUCH ("Pouch", "pch"),
-	
-	REAM ("Ream", "rm"),
 	
 	SACK ("Sack", "sck"),
 	
-	SET ("Set", "set"),
+	PIECE ("Piece", "pc"),
 	
-	TAB ("Tab", "tab"),
+	PACK ("Pack", "pk"),
 	
-	TIE ("Tie", "tie"),
-	
-	TIN ("Tin", "tin"),
+	PAIR ("Pair", "2s"),
 	
 	X6 ("6s", "6s"),
 	
-	X8 ("8s", "8s");
+	X8 ("8s", "8s"),
+	
+	TIE ("Tie", "tie"),
+	
+	DOZEN ("Dozen", "dz"),
+	
+	REAM ("Ream", "rm"),
+	
+	SET ("Set", "set");
+	
+	//BAG ("Bag", "bg"),
+	
+	//BAR ("Bar", "bar"),
+	
+	//BOTTLE ("Bottle", "btl"),
+	
+	//BOX ("Box", "box"),
+	
+	//BUCKET ("Bucket", "bct"),
+	
+	//CAN ("Can", "can"),
+	
+	//JAR ("Jar", "jar"),
+	
+	//POUCH ("Pouch", "pch"),
+	
+	//TAB ("Tab", "tab"),
+	
+	//TIN ("Tin", "tin"),
 	
 	private final String displayName;
 	

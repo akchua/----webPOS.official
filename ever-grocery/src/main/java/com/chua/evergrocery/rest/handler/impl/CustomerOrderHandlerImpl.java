@@ -133,7 +133,11 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 
 	@Override
 	public ObjectList<CustomerOrder> getListingCustomerOrderList(Integer pageNumber, String searchKey) {
-		return customerOrderService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, new Status[] { Status.LISTING}, null);
+		if(UserContextHolder.getUser().getUserType().getAuthority() <= 3) {
+			return customerOrderService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, new Status[] { Status.LISTING}, null);
+		} else {
+			return customerOrderService.findAllWithPagingByCreator(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, new Status[] { Status.LISTING}, UserContextHolder.getUser().getId());
+		}
 	}
 	
 	@Override

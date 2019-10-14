@@ -62,6 +62,36 @@ public class CustomerOrderDAOImpl
 	}
 	
 	@Override
+	public ObjectList<CustomerOrder> findAllWithPagingByCreator(int pageNumber, int resultsPerPage, String searchKey,
+			Status[] status, Long creatorId) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		
+		/*if(StringUtils.isNotBlank(searchKey))
+		{
+			for(String s : searchKey.split("\\s+")) {
+				conjunction.add(Restrictions.ilike("id", s, MatchMode.ANYWHERE));
+			}
+		}*/
+		
+		if(status != null && status.length > 0) {
+			final Disjunction disjunction = Restrictions.disjunction();
+			
+			for(Status statuz : status) {
+				disjunction.add(Restrictions.eq("status", statuz));
+			}
+			
+			conjunction.add(disjunction);
+		}
+		
+		if(creatorId != null) {
+			conjunction.add(Restrictions.eq("creator.id", creatorId));
+		}
+		
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
+	}
+	
+	@Override
 	public List<CustomerOrder> findAllByCashierStatusAndDatePaidWithOrder(Long cashierId, Status[] status, Date dateFrom, Date dateTo, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
