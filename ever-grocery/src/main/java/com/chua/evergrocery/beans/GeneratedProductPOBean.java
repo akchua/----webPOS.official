@@ -11,6 +11,8 @@ public class GeneratedProductPOBean {
 	
 	private String productName;
 	
+	private String productDisplayName;
+	
 	private String productCode;
 	
 	private InventoryBean toPurchase;
@@ -31,6 +33,14 @@ public class GeneratedProductPOBean {
 
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+
+	public String getProductDisplayName() {
+		return productDisplayName;
+	}
+
+	public void setProductDisplayName(String productDisplayName) {
+		this.productDisplayName = productDisplayName;
 	}
 
 	public String getProductCode() {

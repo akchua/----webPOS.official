@@ -306,7 +306,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	}
 	
 	@Override
-	public ResultBean generateOfftake(Long companyId, Float offtakeDays) {
+	public ResultBean generateOfftake(Long companyId, Float offtakeDays, Boolean download, Boolean print) {
 		final ResultBean result;
 		final Company company = companyService.find(companyId);
 		
@@ -321,29 +321,57 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 				final GeneratedOfftakeBean generatedOfftake = new GeneratedOfftakeBean();
 				generatedOfftake.setProductId(product.getId());
 				generatedOfftake.setProductName(product.getName());
+				generatedOfftake.setProductDisplayName((product.getDisplayName() != null && !product.getDisplayName().isEmpty()) ? product.getDisplayName() : product.getName());
 				generatedOfftake.setProductWholeUnit(wholeDetail.getUnitType());
 				generatedOfftake.setOfftake((float) (averageOfftake / wholeDetail.getNetPrice() * offtakeDays));
 				generatedOfftakes.add(generatedOfftake);
 			}
 			
+			generatedOfftakes.sort((GeneratedOfftakeBean go1, GeneratedOfftakeBean go2) -> go2.getSuggestedOrder().compareTo(go1.getSuggestedOrder()));
+			
 			/*for(GeneratedOfftakeBean generatedOfftake : generatedOfftakes) {
-				System.out.println(generatedOfftake.getProductName() + " - " + generatedOfftake.getOfftake() + " - " + generatedOfftake.getSuggestedOrder() + " " + generatedOfftake.getProductWholeUnit().getShorthand());;
+				System.out.println(generatedOfftake.getProductName() + " - " + generatedOfftake.getOfftake() + " - " + generatedOfftake.getSuggestedOrder() + " " + generatedOfftake.getProductWholeUnit().getShorthand());
 			}*/
 			
-			// Generate pdf file of generated purchase order
-			final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_average.offtake_" + DateFormatter.fileSafeShortFormat(new Date()) + ".pdf";
-			final String filePath = fileConstants.getGenerateOfftakeHome() + fileName;
-			final String temp = new GeneratedOfftakeTemplate(
-					company.getName(),
-					offtakeDays,
-					generatedOfftakes)
-			.merge(velocityEngine);
-			SimplePdfWriter.write(
-					temp, "Ever Bazar", filePath, false);
-			final Map<String, Object> extras = new HashMap<String, Object>();
-			extras.put("fileName", fileName);
-			result = new ResultBean(Boolean.TRUE, "Done");
-			result.setExtras(extras);
+			if(download) {
+				// Generate pdf file of generated purchase order
+				final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_average.offtake_" + DateFormatter.fileSafeShortFormat(new Date()) + ".pdf";
+				final String filePath = fileConstants.getGenerateOfftakeHome() + fileName;
+				final String temp = new GeneratedOfftakeTemplate(
+						company.getName(),
+						offtakeDays,
+						generatedOfftakes)
+				.merge(velocityEngine);
+				SimplePdfWriter.write(
+						temp, "Ever Bazar", filePath, false);
+				final Map<String, Object> extras = new HashMap<String, Object>();
+				extras.put("fileName", fileName);
+				result = new ResultBean(Boolean.TRUE, "Done");
+				result.setExtras(extras);
+			} else {
+				result = new ResultBean(Boolean.TRUE, "Done");
+			}
+			
+			if(print) {
+				final List<GeneratedOfftakeBean> relevantOfftakes = new ArrayList<GeneratedOfftakeBean>();
+				for(GeneratedOfftakeBean generatedOfftake : generatedOfftakes) {
+					if(generatedOfftake.getSuggestedOrder() > 1) relevantOfftakes.add(generatedOfftake);
+					else break;
+				}
+				
+				Printer printer = new Printer();
+				
+				final GeneratedOfftakeTemplate got = new GeneratedOfftakeTemplate(
+						company.getName(),
+						offtakeDays,
+						relevantOfftakes);
+				
+				try {
+					printer.print(got.merge(velocityEngine, DocType.PRINT), "Offtake", PrintConstants.EVER_ACCOUNTING_PRINTER);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line("Please select a company."));
 		}

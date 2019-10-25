@@ -16,7 +16,7 @@ public interface PurchaseOrderHandler {
 	
 	ResultBean generatePurchaseOrder(Long companyId, Float daysToBook);
 	
-	ResultBean generateOfftake(Long companyId, Float offtakeDays);
+	ResultBean generateOfftake(Long companyId, Float offtakeDays, Boolean download, Boolean print);
 	
 	ResultBean removePurchaseOrder(Long purchaseOrderId);
 	

@@ -41,13 +41,15 @@ define(['jquery'], function ($) {
     		});
     	},
     	
-    	generateOfftake: function(companyId, offtakeDays) {
+    	generateOfftake: function(companyId, offtakeDays, download, print) {
     		return $.ajax({
     			url: '/services/purchaseorder/offtake',
     			method: 'POST',
     			data: {
     				companyId: companyId,
-    				offtakeDays: offtakeDays
+    				offtakeDays: offtakeDays,
+    				download: download,
+    				print: print
     			}
     		});
     	},

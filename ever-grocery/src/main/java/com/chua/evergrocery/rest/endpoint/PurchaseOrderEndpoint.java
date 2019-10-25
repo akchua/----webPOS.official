@@ -61,8 +61,9 @@ public class PurchaseOrderEndpoint {
 	@POST
 	@Path("/offtake")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ResultBean generateOfftake(@FormParam("companyId") Long companyId, @FormParam("offtakeDays") Float offtakeDays) {
-		return purchaseOrderHandler.generateOfftake(companyId, offtakeDays);
+	public ResultBean generateOfftake(@FormParam("companyId") Long companyId, @FormParam("offtakeDays") Float offtakeDays,
+			@FormParam("download") Boolean download, @FormParam("print") Boolean print) {
+		return purchaseOrderHandler.generateOfftake(companyId, offtakeDays, download, print);
 	}
 	
 	@POST

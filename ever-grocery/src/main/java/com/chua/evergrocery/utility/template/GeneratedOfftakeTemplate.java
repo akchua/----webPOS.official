@@ -40,7 +40,7 @@ public class GeneratedOfftakeTemplate extends AbstractTemplate {
 	public String merge(VelocityEngine velocityEngine, DocType docType) {
 		for(GeneratedOfftakeBean generateOfftake : generateOfftakes) {
 			final GeneratedOfftakeItemTemplate genOfftakeItemTemplate = new GeneratedOfftakeItemTemplate(generateOfftake);
-			formattedGeneratedOfftakes.add(genOfftakeItemTemplate.merge(velocityEngine));
+			formattedGeneratedOfftakes.add(genOfftakeItemTemplate.merge(velocityEngine, docType));
 		}
 		
 		Map<String, Object> model = new HashMap<String, Object>();

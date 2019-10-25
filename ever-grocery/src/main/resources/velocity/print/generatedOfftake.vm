@@ -1,0 +1,9 @@
+## Template for Generated Offtake Order Print
+## Has a maximum of 44 Column per line
+APPROXIMATE
+${t.Date}
+${t.OfftakeDays} days
+
+#foreach( $formattedGeneratedOfftake in $t.FormattedGeneratedOfftakes)
+$formattedGeneratedOfftake
+#end

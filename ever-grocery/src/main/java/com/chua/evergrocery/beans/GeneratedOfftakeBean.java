@@ -13,6 +13,8 @@ public class GeneratedOfftakeBean {
 
 	private String productName;
 	
+	private String productDisplayName;
+	
 	private UnitType productWholeUnit;
 	
 	private Float offtake;
@@ -33,6 +35,14 @@ public class GeneratedOfftakeBean {
 		this.productName = productName;
 	}
 	
+	public String getProductDisplayName() {
+		return productDisplayName;
+	}
+
+	public void setProductDisplayName(String productDisplayName) {
+		this.productDisplayName = productDisplayName;
+	}
+
 	public UnitType getProductWholeUnit() {
 		return productWholeUnit;
 	}
