@@ -314,10 +314,9 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			final List<GeneratedOfftakeBean> generatedOfftakes = new ArrayList<GeneratedOfftakeBean>();
 			final List<Product> products = productService.findAllByCompanyOrderByName(companyId);
 			for(Product product : products) {
-				final Double averageOfftake = transactionSummaryHandler.getProductDailySalesSummaryList(product.getId(), 28)
+				final Double averageOfftake = (transactionSummaryHandler.getProductDailySalesSummaryList(product.getId(), 28)
 												.stream().mapToDouble(pdss -> pdss.getBaseTotal())
-												.average()
-												.orElse(Double.NaN);
+												.sum()) / 28.0;
 				final ProductDetail wholeDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Whole");
 				final GeneratedOfftakeBean generatedOfftake = new GeneratedOfftakeBean();
 				generatedOfftake.setProductId(product.getId());
