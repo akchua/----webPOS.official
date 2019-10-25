@@ -314,8 +314,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 			final List<GeneratedOfftakeBean> generatedOfftakes = new ArrayList<GeneratedOfftakeBean>();
 			final List<Product> products = productService.findAllByCompanyOrderByName(companyId);
 			
-			// average 3x of the offtake days ex. 7 days -> average of past 21 days (limit of 60 days)
-			final Integer daysToAverage = (int) Math.ceil(offtakeDays * 3 > 60 ? 60.0 : offtakeDays * 3.0);
+			// average 3x of the offtake days ex. 7 days -> average of past 21 days (limit of 28 days)
+			final Integer daysToAverage = (int) Math.ceil(offtakeDays * 3 > 28 ? 28.0 : offtakeDays * 3.0);
 			//System.out.println("Days to average used : " + daysToAverage);
 			
 			for(Product product : products) {
