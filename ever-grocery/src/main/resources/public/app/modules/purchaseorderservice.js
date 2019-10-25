@@ -41,6 +41,17 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	generateOfftake: function(companyId, offtakeDays) {
+    		return $.ajax({
+    			url: '/services/purchaseorder/offtake',
+    			method: 'POST',
+    			data: {
+    				companyId: companyId,
+    				offtakeDays: offtakeDays
+    			}
+    		});
+    	},
+    	
     	removePurchaseOrder: function(purchaseOrderId) {
     		return $.ajax({
     			url: '/services/purchaseorder/remove',

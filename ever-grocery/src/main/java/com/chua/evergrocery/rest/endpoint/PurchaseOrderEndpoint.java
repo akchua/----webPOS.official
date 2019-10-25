@@ -59,6 +59,13 @@ public class PurchaseOrderEndpoint {
 	}
 	
 	@POST
+	@Path("/offtake")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean generateOfftake(@FormParam("companyId") Long companyId, @FormParam("offtakeDays") Float offtakeDays) {
+		return purchaseOrderHandler.generateOfftake(companyId, offtakeDays);
+	}
+	
+	@POST
 	@Path("/remove")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ResultBean removePurchaseOrder(@FormParam("purchaseOrderId") Long purchaseOrderId) {

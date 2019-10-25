@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.UserContextHolder;
 import com.chua.evergrocery.annotations.CheckAuthority;
+import com.chua.evergrocery.beans.GeneratedOfftakeBean;
 import com.chua.evergrocery.beans.GeneratedProductPOBean;
 import com.chua.evergrocery.beans.InventoryBean;
 import com.chua.evergrocery.beans.PurchaseOrderFormBean;
@@ -42,6 +43,7 @@ import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.InventoryHandler;
 import com.chua.evergrocery.rest.handler.PurchaseOrderHandler;
+import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
 import com.chua.evergrocery.rest.validator.PurchaseOrderFormValidator;
 import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.Html;
@@ -49,6 +51,7 @@ import com.chua.evergrocery.utility.SimplePdfWriter;
 import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.format.DateFormatter;
 import com.chua.evergrocery.utility.print.Printer;
+import com.chua.evergrocery.utility.template.GeneratedOfftakeTemplate;
 import com.chua.evergrocery.utility.template.GeneratedPurchaseTemplate;
 import com.chua.evergrocery.utility.template.PurchaseOrderCopyTemplate;
 
@@ -81,6 +84,9 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	
 	@Autowired
 	private InventoryHandler inventoryHandler;
+	
+	@Autowired
+	private TransactionSummaryHandler transactionSummaryHandler;
 	
 	@Autowired
 	private PurchaseOrderFormValidator purchaseOrderFormValidator;
@@ -292,6 +298,53 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line("You must book for at least " + Html.text(Color.BLUE, "3 days.")));
 		}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line("Please select a company."));
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public ResultBean generateOfftake(Long companyId, Float offtakeDays) {
+		final ResultBean result;
+		final Company company = companyService.find(companyId);
+		
+		if(company != null) {
+			final List<GeneratedOfftakeBean> generatedOfftakes = new ArrayList<GeneratedOfftakeBean>();
+			final List<Product> products = productService.findAllByCompanyOrderByName(companyId);
+			for(Product product : products) {
+				final Double averageOfftake = transactionSummaryHandler.getProductDailySalesSummaryList(product.getId(), 28)
+												.stream().mapToDouble(pdss -> pdss.getBaseTotal())
+												.average()
+												.orElse(Double.NaN);
+				final ProductDetail wholeDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Whole");
+				final GeneratedOfftakeBean generatedOfftake = new GeneratedOfftakeBean();
+				generatedOfftake.setProductId(product.getId());
+				generatedOfftake.setProductName(product.getName());
+				generatedOfftake.setProductWholeUnit(wholeDetail.getUnitType());
+				generatedOfftake.setOfftake((float) (averageOfftake / wholeDetail.getNetPrice() * offtakeDays));
+				generatedOfftakes.add(generatedOfftake);
+			}
+			
+			/*for(GeneratedOfftakeBean generatedOfftake : generatedOfftakes) {
+				System.out.println(generatedOfftake.getProductName() + " - " + generatedOfftake.getOfftake() + " - " + generatedOfftake.getSuggestedOrder() + " " + generatedOfftake.getProductWholeUnit().getShorthand());;
+			}*/
+			
+			// Generate pdf file of generated purchase order
+			final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_average.offtake_" + DateFormatter.fileSafeShortFormat(new Date()) + ".pdf";
+			final String filePath = fileConstants.getGenerateOfftakeHome() + fileName;
+			final String temp = new GeneratedOfftakeTemplate(
+					company.getName(),
+					offtakeDays,
+					generatedOfftakes)
+			.merge(velocityEngine);
+			SimplePdfWriter.write(
+					temp, "Ever Bazar", filePath, false);
+			final Map<String, Object> extras = new HashMap<String, Object>();
+			extras.put("fileName", fileName);
+			result = new ResultBean(Boolean.TRUE, "Done");
+			result.setExtras(extras);
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line("Please select a company."));
 		}

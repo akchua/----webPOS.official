@@ -5,6 +5,11 @@ define(['jquery', 'fileDownload'], function ($, fd) {
 			return false;
     	},
     	
+    	downloadGeneratedOfftakeByFileName: function(fileName) {
+			fd.fileDownload('/services/file/generatedofftake/' + fileName)
+			return false;
+    	},
+    	
     	downloadInventoryByFileName: function(fileName) {
 			fd.fileDownload('/services/file/inventory/' + fileName)
 			return false;

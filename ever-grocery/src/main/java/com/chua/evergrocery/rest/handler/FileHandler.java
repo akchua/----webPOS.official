@@ -11,6 +11,8 @@ public interface FileHandler {
 
 	File findGeneratedPurchaseByFileName(String fileName);
 	
+	File findGeneratedOfftakeByFileName(String fileName);
+	
 	File findInventoryByFileName(String fileName);
 	
 	File findSalesReportByFileName(String fileName);

@@ -38,6 +38,18 @@ public class FileEndpoint {
 	}
 	
 	@GET
+	@Path("/generatedofftake/{fileName}")
+	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
+	public Response getGeneratedOfftakeByFileName(@PathParam("fileName") String fileName) throws IOException {
+		File generatedOfftake = fileHandler.findGeneratedOfftakeByFileName(fileName);
+		if(generatedOfftake.exists())
+			return Response.ok(generatedOfftake, MediaType.APPLICATION_OCTET_STREAM)
+				.header("Content-Disposition", "attachment; filename=\"" + generatedOfftake.getName() + "\"" )
+				.build();
+		else return null;
+	}
+	
+	@GET
 	@Path("/inventory/{fileName}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response getInventoryByFileName(@PathParam("fileName") String fileName) throws IOException {

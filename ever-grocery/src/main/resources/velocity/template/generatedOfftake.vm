@@ -1,0 +1,16 @@
+## Template for Generated Offtake
+## Has a maximum of 95 Column per line
+                                     AVERAGE OFFTAKE                                              
+                                                   
+     Average Offtake For : ${t.CompanyName}
+                    Date : ${t.Date}
+                    
+   Average for ${t.offtakeDays} days
+
++--------------------------------------------------------------+--------------+--------------+
+|                         Product Name                         | Target Stock |   Offtake    |
++--------------------------------------------------------------+--------------+--------------+
+#foreach( $formattedGeneratedOfftake in $t.FormattedGeneratedOfftakes)
+$formattedGeneratedOfftake
+#end
++--------------------------------------------------------------+--------------+--------------+
