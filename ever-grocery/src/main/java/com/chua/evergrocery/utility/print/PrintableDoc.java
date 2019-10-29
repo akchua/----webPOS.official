@@ -66,6 +66,8 @@ public class PrintableDoc
 	
 	private final String text;
 	
+	private int defaultFontSize = 9;
+	
 	/**
 	 * Create a new printable doc with the given text to display.
 	 * 
@@ -85,7 +87,17 @@ public class PrintableDoc
 		}
 		this.fontName = DEFAULT_FONT_NAME;
 		this.text = text;
-	}    		
+	}
+	
+	/**
+	 * Create a new printable doc with adjustable default font size
+	 * @param text
+	 * @param defaultFontSize
+	 */
+	public PrintableDoc(String text, int defaultFontSize) {
+		this(text);
+		this.defaultFontSize = defaultFontSize;
+	}
 	
 	/**
 	 * Create a new printable doc with the given parameters.
@@ -142,7 +154,7 @@ public class PrintableDoc
           	}
           	else
           	{
-          		buildTextLayouts(frc, fontName, FONT_SIZE_9, split + " ", false, false);
+          		buildTextLayouts(frc, fontName, this.defaultFontSize, split + " ", false, false);
           	}
           }          
       //}

@@ -192,9 +192,16 @@ public class Printer
 		return new SimpleDoc(printByte, printDocFlavor, null);
 	}	*/
 	
-	public void print(String text, String jobName, String printerName) throws Exception
+	public void print(String text, String jobName, String printerName) throws Exception {
+		this.print(text, jobName, printerName, null);
+	}
+	
+	public void print(String text, String jobName, String printerName, Integer defaultFontSize) throws Exception
 	{
-		PrintableDoc doc = new PrintableDoc(text);
+		PrintableDoc doc;
+		if(defaultFontSize != null) doc = new PrintableDoc(text, defaultFontSize);
+		else doc = new PrintableDoc(text);
+		
 		PrinterJob pj = PrinterJob.getPrinterJob();
 		
 		try {

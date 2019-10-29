@@ -372,7 +372,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						relevantOfftakes);
 				
 				try {
-					printer.print(got.merge(velocityEngine, DocType.PRINT), "Offtake", PrintConstants.EVER_ACCOUNTING_PRINTER);
+					printer.print(got.merge(velocityEngine, DocType.PRINT), "Offtake", PrintConstants.EVER_ACCOUNTING_PRINTER, 11);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

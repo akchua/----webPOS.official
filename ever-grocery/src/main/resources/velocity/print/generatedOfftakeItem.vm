@@ -1,6 +1,6 @@
 ## Format for Generated Offtake Item Print
-## Has exactly 44 columns in a line
-${t.FormattedQuantity}${t.FormattedName}#if(${t.Overflow})
+## Has exactly 36 columns in a line
+__ ${t.FormattedQuantity}${t.FormattedName}#if(${t.Overflow})
 #foreach( $overflow in $t.OverflowList)
 
 $overflow#end
