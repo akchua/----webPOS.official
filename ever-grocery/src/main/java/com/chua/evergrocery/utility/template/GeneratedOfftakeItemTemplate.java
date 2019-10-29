@@ -87,7 +87,7 @@ public class GeneratedOfftakeItemTemplate extends AbstractTemplate {
 			if(splits == 1) firstSplitIndex = adjustedIndex;
 			
 			// +1 to not include the space on the next line
-			overflowList.add("    " + formattedName.substring(adjustedIndex, Math.min(adjustedIndex + ITEM_NAME_MAX_LENGTH, formattedName.length())));
+			overflowList.add("       " + formattedName.substring(adjustedIndex, Math.min(adjustedIndex + ITEM_NAME_MAX_LENGTH, formattedName.length())));
 		    index = adjustedIndex + ITEM_NAME_MAX_LENGTH;
 		    splits++;
 		}
