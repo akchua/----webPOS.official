@@ -27,6 +27,7 @@
     		<table class="table table-responsive table-hover">
     			<thead>
     				<tr>
+    					<th class="text-center">&mu;</th>
     					<th>Code</th>
     					<th>Name</th>
     					<th>Display Name</th>
@@ -36,6 +37,7 @@
     		
     			<tbody data-bind="foreach: { data: productList, as: 'product' }">
     				<tr>
+    					<td class="text-center" data-bind="text: product.formattedMtdOfftake"></td>
     					<td data-bind="text: product.code"></td>
     					<td data-bind="text: product.name"></td>
     					<td data-bind="text: product.displayName"></td>

@@ -29,7 +29,7 @@ public class CategoryHandlerImpl implements CategoryHandler {
 
 	@Override
 	public ObjectList<Category> getCategoryObjectList(Integer pageNumber, String searchKey) {
-		return categoryService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey);
+		return categoryService.findAllWithPagingOrderByName(pageNumber, UserContextHolder.getItemsPerPage(), searchKey);
 	}
 	
 	@Override

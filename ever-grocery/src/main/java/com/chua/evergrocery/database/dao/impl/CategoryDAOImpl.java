@@ -20,6 +20,12 @@ public class CategoryDAOImpl
 	
 	@Override
 	public ObjectList<Category> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey) {
+		return findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, null);
+	}
+	
+	@Override
+	public ObjectList<Category> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey,
+			Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		
@@ -30,7 +36,7 @@ public class CategoryDAOImpl
 			}
 		}
 		
-		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
 	}
 	
 	@Override

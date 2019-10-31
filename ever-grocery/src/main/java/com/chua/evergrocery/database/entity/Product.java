@@ -24,6 +24,7 @@ import org.hibernate.annotations.Where;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
 import com.chua.evergrocery.enums.TaxType;
+import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.serializer.json.BrandSerializer;
 import com.chua.evergrocery.serializer.json.CategorySerializer;
 import com.chua.evergrocery.serializer.json.CompanySerializer;
@@ -79,6 +80,11 @@ public class Product extends BaseObject {
 	private Integer currentProfitRank;
 	
 	private Integer previousProfitRank;
+	
+	// Month to day average offtake
+	private Float mtdOfftake;
+	
+	private UnitType mtdOfftakeUnit;
 	
 	@ManyToOne(targetEntity = Brand.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "brand_id")
@@ -337,5 +343,30 @@ public class Product extends BaseObject {
 
 	public void setPreviousProfitRank(Integer previousProfitRank) {
 		this.previousProfitRank = previousProfitRank;
+	}
+
+	@Basic
+	@Column(name = "mtd_offtake")
+	public Float getMtdOfftake() {
+		return mtdOfftake;
+	}
+	
+	@Transient
+	public String getFormattedMtdOfftake() {
+		return NumberFormatter.decimalFormat(mtdOfftake, 2);
+	}
+
+	public void setMtdOfftake(Float mtdOfftake) {
+		this.mtdOfftake = mtdOfftake;
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "mtd_offtake_unit", length = 50)
+	public UnitType getMtdOfftakeUnit() {
+		return mtdOfftakeUnit;
+	}
+
+	public void setMtdOfftakeUnit(UnitType mtdOfftakeUnit) {
+		this.mtdOfftakeUnit = mtdOfftakeUnit;
 	}
 }

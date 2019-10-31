@@ -42,4 +42,6 @@ public interface TransactionSummaryHandler {
 	void updateMonthlySalesSummaries(int includedMonthsAgo);
 	
 	void updateDailySalesSummaries(int includedDaysAgo);
+	
+	void updateAllProductMTDOfftake();
 }

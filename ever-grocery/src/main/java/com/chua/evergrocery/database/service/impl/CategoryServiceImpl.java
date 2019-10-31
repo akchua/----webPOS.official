@@ -28,6 +28,11 @@ public class CategoryServiceImpl
 	}
 	
 	@Override
+	public ObjectList<Category> findAllWithPagingOrderByName(int pageNumber, int resultsPerPage, String searchKey) {
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, new Order[] { Order.asc("name") });
+	}
+	
+	@Override
 	public List<Category> findAllOrderByName() {
 		return dao.findAllWithOrder(new Order[] { Order.asc("name") });
 	}

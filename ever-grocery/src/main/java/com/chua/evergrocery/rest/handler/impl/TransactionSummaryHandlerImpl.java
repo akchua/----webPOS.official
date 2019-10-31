@@ -26,6 +26,7 @@ import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.MTDSalesSummary;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
+import com.chua.evergrocery.database.entity.ProductDetail;
 import com.chua.evergrocery.database.entity.ProductMTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.ProductMTDSalesSummary;
 import com.chua.evergrocery.database.service.CompanyDailySalesSummaryService;
@@ -38,6 +39,7 @@ import com.chua.evergrocery.database.service.DailySalesSummaryService;
 import com.chua.evergrocery.database.service.MTDPurchaseSummaryService;
 import com.chua.evergrocery.database.service.MTDSalesSummaryService;
 import com.chua.evergrocery.database.service.ProductDailySalesSummaryService;
+import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.ProductMTDPurchaseSummaryService;
 import com.chua.evergrocery.database.service.ProductMTDSalesSummaryService;
 import com.chua.evergrocery.database.service.ProductService;
@@ -69,6 +71,9 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	
 	@Autowired
 	private PurchaseOrderDetailService purchaseOrderDetailService;
+	
+	@Autowired
+	private ProductDetailService productDetailService;
 	
 	@Autowired
 	private ProductMTDPurchaseSummaryService productMTDPurchaseSummaryService;
@@ -487,6 +492,23 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 			
 			currentDay.add(Calendar.DAY_OF_MONTH, -1);
 		}
+	}
+	
+	@Override
+	public void updateAllProductMTDOfftake() {
+		final List<Product> products = productService.findAllList();
+		
+		for(Product product : products) {
+			System.out.println(product.getName());
+			final Double averageOfftake = (this.getProductDailySalesSummaryList(product.getId(), 28)
+					.stream().mapToDouble(pdss -> pdss.getBaseTotal())
+					.sum()) / 28.0f;
+			final ProductDetail wholeDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Whole");
+			product.setMtdOfftake((float) (averageOfftake / wholeDetail.getNetPrice()));
+			product.setMtdOfftakeUnit(wholeDetail.getUnitType());
+		}
+		
+		productService.batchUpdate(products);
 	}
 	
 	private void clearAllPurchaseValuePercentage() {

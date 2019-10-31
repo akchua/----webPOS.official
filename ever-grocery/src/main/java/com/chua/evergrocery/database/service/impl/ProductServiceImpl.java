@@ -1,4 +1,3 @@
-
 package com.chua.evergrocery.database.service.impl;
 
 import java.util.List;
@@ -31,7 +30,12 @@ public class ProductServiceImpl
 	@Override
 	public ObjectList<Product> findAllWithPagingOrderByName(int pageNumber, int resultsPerPage, String searchKey,
 			Long companyId, Long categoryId) {
-		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, categoryId, new Order[] { Order.asc("name") });
+		if(categoryId != null) {
+			return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, categoryId, new Order[] { Order.desc("mtdOfftake"), Order.asc("name") });
+		} else {
+			return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, categoryId, new Order[] { Order.asc("name") });
+		}
+		
 	}
 	
 	@Override

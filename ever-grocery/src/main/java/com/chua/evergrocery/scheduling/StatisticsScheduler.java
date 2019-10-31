@@ -81,6 +81,23 @@ public class StatisticsScheduler {
 	}
 	
 	/**
+	 * Monthly product month to day average offtake update
+	 * fires at 7:10PM every first day of the month
+	 */
+	@Scheduled(cron = "0 10 19 1 * ?")
+	//@Scheduled(cron = "0 02 10 * * ?")
+	public void monthlyProductMTDOfftakeUpdate() {
+		final Date start = new Date();
+		LOG.info("Starting monthly product mtd offtake update");
+		
+		transactionSummaryHandler.updateAllProductMTDOfftake();
+		
+		final Date end = new Date();
+		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
+		LOG.info("Monthly product mtd offtake update complete. Total execution time : " + seconds + "s");
+	}
+	
+	/**
 	 * Daily Sales Statistics Update
 	 * fires at 6:55PM every day
 	 */
