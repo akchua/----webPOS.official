@@ -499,7 +499,7 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 		final List<Product> products = productService.findAllList();
 		
 		for(Product product : products) {
-			System.out.println(product.getName());
+			//System.out.println(product.getName());
 			final Double averageOfftake = (this.getProductDailySalesSummaryList(product.getId(), 28)
 					.stream().mapToDouble(pdss -> pdss.getBaseTotal())
 					.sum()) / 28.0f;
