@@ -4,6 +4,7 @@ APPROXIMATE
 ${t.Date}
 ${t.OfftakeDays} days
 
+Ord Inv    Item(s)
 #foreach( $formattedGeneratedOfftake in $t.FormattedGeneratedOfftakes)
 $formattedGeneratedOfftake
 #end
