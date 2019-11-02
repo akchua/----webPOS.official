@@ -16,6 +16,8 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
 			customerOrderNumber: ko.observable(),
 			formattedTotalAmount: ko.observable()
 		};
+		
+		this.enableAddByBarcode = ko.observable(true);
     };
     
     CustomerOrderPage.prototype.activate = function(customerOrderId) {
@@ -35,11 +37,14 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     
     CustomerOrderPage.prototype.search = function() {
     	var self = this;
+    	self.enableAddByBarcode(false);
     	
     	customerOrderService.getCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(data) { 
     		Search.show(data).done(function() {
     			self.currentPage(1);
         		self.refreshCustomerOrderDetailList();
+        		self.barcodeFocus(true);
+        		self.enableAddByBarcode(true);
         	});
     	});
     };
@@ -80,12 +85,14 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     
     CustomerOrderPage.prototype.addItemByBarcode = function() {
     	var self = this;
+    	self.enableAddByBarcode(false);
     	
     	if(self.barcodeKey() === 'e') {
     		self.submit(false);
     	} else if(self.barcodeKey() === 'p') {
     		self.printCopy();
     		self.barcodeKey("");
+    		self.enableAddByBarcode(true);
     	} else if(self.barcodeKey() === 's') {
     		self.search();
     		self.barcodeKey("");
@@ -97,11 +104,13 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
         			self.currentPage(1);
         			self.refreshCustomerOrderDetailList();
         			self.barcodeKey("");
+        			self.enableAddByBarcode(true);
         		} else {
         			soundUtil.beep();
         			InvalidBarcode.show(self.barcodeKey()).done(function() {
         				self.barcodeFocus(true);
         				self.barcodeKey("");
+        				self.enableAddByBarcode(true);
         			});
         		}
         	});
