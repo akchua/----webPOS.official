@@ -157,6 +157,8 @@ public class ProductHandlerImpl implements ProductHandler {
 				product.setProfitPercentage(0.0f);
 				product.setPreviousProfitRank(0);
 				product.setCurrentProfitRank(0);
+				product.setMtdOfftake(0.0f);
+				product.setMtdOfftakeUnit(UnitType.DEFAULT);
 				
 				result = new ResultBean();
 				result.setSuccess(productService.insert(product) != null);
