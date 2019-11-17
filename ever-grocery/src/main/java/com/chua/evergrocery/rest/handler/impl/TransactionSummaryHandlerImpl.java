@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.beans.CompanyPurchaseSummaryBean;
 import com.chua.evergrocery.beans.CompanySalesSummaryBean;
+import com.chua.evergrocery.beans.ProductDailySalesSummaryBean;
 import com.chua.evergrocery.beans.ProductPurchaseSummaryBean;
 import com.chua.evergrocery.beans.ProductSalesSummaryBean;
 import com.chua.evergrocery.beans.PurchaseSummaryBean;
@@ -144,12 +145,29 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 	}
 	
 	@Override
-	public List<ProductDailySalesSummary> getProductDailySalesSummaryList(Long productId, int daysAgo) {
+	public List<ProductDailySalesSummaryBean> getProductDailySalesSummaryList(Long productId, int daysAgo) {
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, -daysAgo);
 		final Calendar yesterday = Calendar.getInstance();
 		yesterday.add(Calendar.DAY_OF_MONTH, -1);
-		return productDailySalesSummaryService.findByRangeOrderBySalesDate(productId, cal.getTime(), yesterday.getTime());
+		
+		// FILL 0 sales days
+		final List<ProductDailySalesSummary> pdss = productDailySalesSummaryService.findByRangeOrderBySalesDate(productId, cal.getTime(), yesterday.getTime());
+		final List<ProductDailySalesSummaryBean> productDailySalesSummaries = new ArrayList<ProductDailySalesSummaryBean>();
+		int j = 0;
+		
+		for(int i = 0; i < daysAgo; i++) {
+			ProductDailySalesSummary productDailySalesSummary = pdss.get(j);
+			if(j < pdss.size() && DateUtil.isSameDay(productDailySalesSummary.getSalesDate(), cal.getTime())) {
+				productDailySalesSummaries.add(new ProductDailySalesSummaryBean(productDailySalesSummary.getFormattedSalesDate(), productDailySalesSummary.getBaseTotal(), productDailySalesSummary.getNetTotal()));
+				j++;
+			} else {
+				productDailySalesSummaries.add(new ProductDailySalesSummaryBean(DateFormatter.prettyDayFormat(cal.getTime()), 0.0f, 0.0f));
+			}
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		
+		return productDailySalesSummaries;
 	}
 	
 	@Override

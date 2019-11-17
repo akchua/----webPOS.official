@@ -10,13 +10,13 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.chua.evergrocery.beans.ProductDailySalesSummaryBean;
 import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
 import com.chua.evergrocery.database.entity.DailySalesSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.MTDSalesSummary;
-import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
 import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
 
 /**
@@ -82,7 +82,7 @@ public class TransactionSummaryEndpoint {
 	@GET
 	@Path("/productdailysaleslist")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<ProductDailySalesSummary> getProductDailySalesSummaryList(@QueryParam("productId") Long productId,
+	public List<ProductDailySalesSummaryBean> getProductDailySalesSummaryList(@QueryParam("productId") Long productId,
 				@QueryParam("daysAgo") Integer daysAgo) {
 		return transactionSummaryHandler.getProductDailySalesSummaryList(productId, daysAgo);
 	}

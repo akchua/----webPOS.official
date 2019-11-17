@@ -2,13 +2,13 @@ package com.chua.evergrocery.rest.handler;
 
 import java.util.List;
 
+import com.chua.evergrocery.beans.ProductDailySalesSummaryBean;
 import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.CompanyMTDSalesSummary;
 import com.chua.evergrocery.database.entity.DailySalesSummary;
 import com.chua.evergrocery.database.entity.MTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.MTDSalesSummary;
-import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -31,7 +31,7 @@ public interface TransactionSummaryHandler {
 	
 	List<DailySalesSummary> getDailySalesSummaryList(int daysAgo);
 	
-	List<ProductDailySalesSummary> getProductDailySalesSummaryList(Long productId, int daysAgo);
+	List<ProductDailySalesSummaryBean> getProductDailySalesSummaryList(Long productId, int daysAgo);
 	
 	SalesSummaryBean getLiveSalesSummary();
 	
