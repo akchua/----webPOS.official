@@ -25,7 +25,7 @@ public class GeneratedOfftakeItemTemplate extends AbstractTemplate {
 	
 	private List<String> overflowList;
 	
-	private final Integer ITEM_NAME_MAX_LENGTH = 35;
+	private final Integer ITEM_NAME_MAX_LENGTH = 29;
 	
 	private final Integer MAX_LINE_SPLIT_ADJUST = 7;
 	
