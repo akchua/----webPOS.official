@@ -157,8 +157,8 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 		int j = 0;
 		
 		for(int i = 0; i < daysAgo; i++) {
-			ProductDailySalesSummary productDailySalesSummary = pdss.get(j);
-			if(j < pdss.size() && DateUtil.isSameDay(productDailySalesSummary.getSalesDate(), cal.getTime())) {
+			if(j < pdss.size() && DateUtil.isSameDay(pdss.get(j).getSalesDate(), cal.getTime())) {
+				ProductDailySalesSummary productDailySalesSummary = pdss.get(j);
 				productDailySalesSummaries.add(new ProductDailySalesSummaryBean(productDailySalesSummary.getFormattedSalesDate(), productDailySalesSummary.getBaseTotal(), productDailySalesSummary.getNetTotal()));
 				j++;
 			} else {
