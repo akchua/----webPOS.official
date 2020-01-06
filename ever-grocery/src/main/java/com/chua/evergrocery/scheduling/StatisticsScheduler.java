@@ -37,7 +37,7 @@ public class StatisticsScheduler {
 		final Date start = new Date();
 		LOG.info("Starting monthly purchase statistics update");
 		
-		transactionSummaryHandler.updateAllPurchaseSummaries(1);
+		transactionSummaryHandler.updateAllPurchaseSummaries(3);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
