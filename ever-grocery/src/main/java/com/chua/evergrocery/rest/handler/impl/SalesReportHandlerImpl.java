@@ -119,6 +119,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			zReading.setVatSales((salesSummary.getVatSales() + refundSummary.getVatSales()) * businessConstants.getBusinessIncome());
 			zReading.setVatExSales(salesSummary.getVatExSales() + refundSummary.getVatExSales());
 			zReading.setZeroRatedSales(salesSummary.getZeroRatedSales() + refundSummary.getZeroRatedSales());
+			zReading.setZeroRatedRemovedVat((salesSummary.getZeroRatedSales() + refundSummary.getZeroRatedSales()) * 0.12f); 
 			
 			zReading.setVatDiscount((salesSummary.getVatDiscount() + refundSummary.getVatDiscount()));
 			zReading.setVatExDiscount(salesSummary.getVatExDiscount() + refundSummary.getVatExDiscount());
@@ -193,6 +194,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			if(!zed) othersNetSales *= businessConstants.getBusinessIncome();
 			
 			xReading.setNetSales(netSales);
+			xReading.setZeroRatedRemovedVat((salesSummary.getZeroRatedSales() + refundSummary.getZeroRatedSales()) * 0.12f);
 			
 			if(DateUtil.isSameDay(latestXReading.getReadingDate(), xReading.getReadingDate())) {
 				xReading.setBeginningBalance(latestXReading.getEndingBalance() + othersNetSales);

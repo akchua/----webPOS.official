@@ -25,6 +25,8 @@ public abstract class Reading extends BaseObject {
 	private Date readingDate;
 
 	private Float beginningBalance;
+	
+	private Float zeroRatedRemovedVat;
 
 	private Float regularDiscountAmount;
 
@@ -76,6 +78,16 @@ public abstract class Reading extends BaseObject {
 
 	public void setBeginningBalance(Float beginningBalance) {
 		this.beginningBalance = beginningBalance;
+	}
+
+	@Basic
+	@Column(name = "zero_rated_removed_vat")
+	public Float getZeroRatedRemovedVat() {
+		return zeroRatedRemovedVat;
+	}
+
+	public void setZeroRatedRemovedVat(Float zeroRatedRemovedVat) {
+		this.zeroRatedRemovedVat = zeroRatedRemovedVat;
 	}
 
 	@Basic
@@ -141,7 +153,7 @@ public abstract class Reading extends BaseObject {
 
 	@Transient
 	public Float getGrossSales() {
-		return getNetSales() + getTotalDiscountAmount() - getRefundAmount();
+		return getNetSales() + getZeroRatedRemovedVat() + getTotalDiscountAmount() - getRefundAmount();
 	}
 
 	@Transient
