@@ -160,6 +160,7 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 			zReading.setCounter(0l);
 			zReading.setBeginningSIN(0l);
 			zReading.setEndingSIN(0l);
+			zReading.setZeroRatedRemovedVat(0.0f);
 			zReading.setBeginningRefundNumber(0l);
 			zReading.setEndingRefundNumber(0l);
 			zReading.setBeginningBalance(0.0f);
@@ -193,6 +194,7 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 			final XReading xReading = new XReading();
 			xReading.setReadingDate(yesterday.getTime());
 			xReading.setCashier(userService.find(1l));
+			xReading.setZeroRatedRemovedVat(0.0f);
 			xReading.setBeginningBalance(0.0f);
 			xReading.setNetSales(0.0f);
 			xReading.setRegularDiscountAmount(0.0f);

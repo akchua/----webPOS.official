@@ -77,7 +77,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 		
 		final Calendar today = Calendar.getInstance();
 		today.setTime(DateUtil.floorDay(new Date()));
-		today.add(Calendar.DAY_OF_MONTH, 1);
+		/*today.add(Calendar.DAY_OF_MONTH, 1);*/
 		
 		final Calendar currentReadingDate = Calendar.getInstance();
 		currentReadingDate.setTime(latestZReading.getReadingDate());
@@ -119,7 +119,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			zReading.setVatSales((salesSummary.getVatSales() + refundSummary.getVatSales()) * businessConstants.getBusinessIncome());
 			zReading.setVatExSales(salesSummary.getVatExSales() + refundSummary.getVatExSales());
 			zReading.setZeroRatedSales(salesSummary.getZeroRatedSales() + refundSummary.getZeroRatedSales());
-			zReading.setZeroRatedRemovedVat((salesSummary.getZeroRatedSales() + refundSummary.getZeroRatedSales()) * 0.12f); 
+			zReading.setZeroRatedRemovedVat(((salesSummary.getZeroRatedSales() != null ? salesSummary.getZeroRatedSales() : 0.0f) + (refundSummary.getZeroRatedSales() != null ? refundSummary.getZeroRatedSales() : 0.0f)) * 0.12f); 
 			
 			zReading.setVatDiscount((salesSummary.getVatDiscount() + refundSummary.getVatDiscount()));
 			zReading.setVatExDiscount(salesSummary.getVatExDiscount() + refundSummary.getVatExDiscount());
@@ -194,7 +194,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			if(!zed) othersNetSales *= businessConstants.getBusinessIncome();
 			
 			xReading.setNetSales(netSales);
-			xReading.setZeroRatedRemovedVat((salesSummary.getZeroRatedSales() + refundSummary.getZeroRatedSales()) * 0.12f);
+			xReading.setZeroRatedRemovedVat(((salesSummary.getZeroRatedSales() != null ? salesSummary.getZeroRatedSales() : 0.0f) + (refundSummary.getZeroRatedSales() != null ? refundSummary.getZeroRatedSales() : 0.0f)) * 0.12f);
 			
 			if(DateUtil.isSameDay(latestXReading.getReadingDate(), xReading.getReadingDate())) {
 				xReading.setBeginningBalance(latestXReading.getEndingBalance() + othersNetSales);
