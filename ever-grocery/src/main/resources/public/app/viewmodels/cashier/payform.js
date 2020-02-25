@@ -191,10 +191,10 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 					if(result.success) {
 		        		dialog.close(self);
 		        		if(self.discounted()) {
-		        			customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '-- Customer Copy --');
-		        			customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '-- Accounting Copy --');
+		        			//customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '-- Customer Copy --');
+		        			//customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '-- Accounting Copy --');
 		        		} else {
-		        			customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '');
+		        			//customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '');
 		        		}
 					} else if(result.extras && result.extras.errors) {
 		        		self.errors.cash(result.extras.errors.cash);

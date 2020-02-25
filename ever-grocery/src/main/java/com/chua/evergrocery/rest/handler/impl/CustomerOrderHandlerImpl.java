@@ -815,7 +815,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					result.setSuccess(customerOrderService.update(customerOrder));
 					
 					if(result.getSuccess()) {
-						/*// TEMPORARY
+						// TEMPORARY
 						PaymentsFormBean paymentsForm = new PaymentsFormBean();
 						paymentsForm.setCustomerOrderId(customerOrderId);
 						paymentsForm.setCash(customerOrder.getTotalAmount());
@@ -824,7 +824,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 						paymentsForm.setPointsAmount(0.0f);
 						this.payCustomerOrder(paymentsForm, "192.168.0.2");
 						//
-*/						result.setMessage(Html.line(Color.GREEN, "Successfully") + " forwarded customer order #" + customerOrder.getOrderNumber() + " to cashier.");
+						result.setMessage(Html.line(Color.GREEN, "Successfully") + " forwarded customer order #" + customerOrder.getOrderNumber() + " to cashier.");
 						activityLogHandler.myLog("submitted sales order : " + customerOrder.getId(), ip);
 					} else {
 						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
