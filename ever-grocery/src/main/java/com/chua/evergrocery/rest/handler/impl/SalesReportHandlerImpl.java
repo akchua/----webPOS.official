@@ -77,7 +77,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 		
 		final Calendar today = Calendar.getInstance();
 		today.setTime(DateUtil.floorDay(new Date()));
-		/*today.add(Calendar.DAY_OF_MONTH, 1);*/
+		today.add(Calendar.DAY_OF_MONTH, 1);
 		
 		final Calendar currentReadingDate = Calendar.getInstance();
 		currentReadingDate.setTime(latestZReading.getReadingDate());
