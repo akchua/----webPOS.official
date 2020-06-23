@@ -61,6 +61,14 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 		String formattedName = customerOrderItem.getUnitType().getShorthand() + " ";
 		
 		NumberFormat nf = new DecimalFormat("##.00");
+		NumberFormat nf2 = new DecimalFormat("#.#");
+		
+		if(customerOrderItem.getUpgradedQuantity() > 0.0f 
+				&& customerOrderItem.getQuantity() >= 1.0f
+				&& (customerOrderItem.getUnitType().equals(UnitType.CASE)
+						|| customerOrderItem.getUnitType().equals(UnitType.BUNDLE)
+						|| customerOrderItem.getUnitType().equals(UnitType.SACK)))
+			formattedName += nf2.format(customerOrderItem.getUpgradedQuantity()) + "^";
 		
 		formattedName += customerOrderItem.getFormattedDisplayName();
 		if((customerOrderItem.getQuantity() % 1.0f == 0.5f

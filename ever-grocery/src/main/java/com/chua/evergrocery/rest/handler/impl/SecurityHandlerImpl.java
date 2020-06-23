@@ -1,13 +1,8 @@
 package com.chua.evergrocery.rest.handler.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +19,7 @@ import com.chua.evergrocery.rest.handler.SecurityHandler;
 @Component
 public class SecurityHandlerImpl implements SecurityHandler {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	//private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private ActivityLogHandler activityLogHandler;
@@ -45,16 +40,16 @@ public class SecurityHandlerImpl implements SecurityHandler {
 
 	@Override
 	public Boolean ipAuth(HttpServletRequest request) {
-		final Boolean success;
+		final Boolean success = true;
 		
-		List<String> allowedIp = new ArrayList<String>();
+		/*List<String> allowedIp = new ArrayList<String>();
 		allowedIp.add("0:0:0:0:0:0:0:1");
 		for(int i = 2; i <= 99; i++) allowedIp.add("192.168.0." + i); //2.25.99
 		
 		success = allowedIp.contains(request.getRemoteAddr());
 		
 		if(success) LOG.info("Successful IP Auth : " + request.getRemoteAddr());
-		else LOG.info("Declined IP Auth : " + request.getRemoteAddr());
+		else LOG.info("Declined IP Auth : " + request.getRemoteAddr());*/
 		
 		return success;
 	}

@@ -46,6 +46,8 @@ public class CustomerOrderDetail extends BaseObject {
 	
 	private UnitType contentUnit;
 	
+	private Float upgradedQuantity;
+	
 	private Float unitPrice;
 	
 	private Float quantity;
@@ -59,7 +61,7 @@ public class CustomerOrderDetail extends BaseObject {
 	private Float taxAdjustment;
 	
 	private TaxType origTaxType;
-
+	
 	@ManyToOne(targetEntity = CustomerOrder.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_order_id")
 	@Where(clause = "valid = 1")
@@ -172,6 +174,16 @@ public class CustomerOrderDetail extends BaseObject {
 
 	public void setContentUnit(UnitType contentUnit) {
 		this.contentUnit = contentUnit;
+	}
+
+	@Basic
+	@Column(name = "upgraded_quantity")
+	public Float getUpgradedQuantity() {
+		return upgradedQuantity;
+	}
+
+	public void setUpgradedQuantity(Float upgradedQuantity) {
+		this.upgradedQuantity = upgradedQuantity;
 	}
 
 	@Basic

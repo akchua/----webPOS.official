@@ -626,7 +626,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					|| (customerOrder.getStatus().equals(Status.SUBMITTED) && UserContextHolder.getUser().getUserType().getAuthority() <= 3)) {
 				if(productDetail != null) {
 					if(quantity != null) {
-						result = this.addItem(productDetail, customerOrder, quantity);
+						result = this.addItem(productDetail, customerOrder, quantity, Boolean.FALSE);
 					} else {
 						result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Invalid Quantity.")));
 					}
@@ -643,7 +643,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		return result;
 	}
 	
-	private ResultBean addItem(ProductDetail productDetail, CustomerOrder customerOrder, Float quantity) {
+	private ResultBean addItem(ProductDetail productDetail, CustomerOrder customerOrder, Float quantity, Boolean upgraded) {
 		final ResultBean result;
 		
 		if(!quantity.equals(0.0f)) {
@@ -655,8 +655,10 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				
 				customerOrderDetailService.insert(newCustomerOrderDetail);
 				
+				if(upgraded) newCustomerOrderDetail.setUpgradedQuantity(quantity);
 				result = this.changeCustomerOrderDetailQuantity(newCustomerOrderDetail, quantity);
 			} else {
+				if(upgraded) customerOrderDetail.setUpgradedQuantity(customerOrderDetail.getUpgradedQuantity() + quantity);
 				result = this.changeCustomerOrderDetailQuantity(customerOrderDetail, customerOrderDetail.getQuantity() + quantity);
 			}
 		} else {
@@ -755,7 +757,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final Float upperMinQuantity = productDetail.getQuantity() % 2 == 0 ? 0.5f : 1.0f;
 		
 		if(upperProductDetail != null && quantity / productDetail.getQuantity() >= upperMinQuantity) {
-			this.addItem(upperProductDetail, customerOrderDetail.getCustomerOrder(), quantity / productDetail.getQuantity());
+			this.addItem(upperProductDetail, customerOrderDetail.getCustomerOrder(), quantity / productDetail.getQuantity(), Boolean.TRUE);
 			result = quantity % (productDetail.getQuantity() * upperMinQuantity);
 		} else {
 			result = quantity;
@@ -882,6 +884,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				
 				Printer printer = new Printer();
 				try {
+					//System.out.println(customerOrderCopy.merge(velocityEngine, DocType.PRINT));
 					printer.print(customerOrderCopy.merge(velocityEngine, DocType.PRINT), "Customer Order #" + customerOrder.getOrderNumber() + " (COPY)", PrintConstants.EVER_CASHIER_PRINTER);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1006,11 +1009,14 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrderDetail.setTaxType(productDetail.getProduct().getTaxType());
 		customerOrderDetail.setTaxAdjustment(0.0f);
 		customerOrderDetail.setOrigTaxType(productDetail.getProduct().getTaxType());
+		customerOrderDetail.setUpgradedQuantity(0.0f);
 	}
 	
 	private void setCustomerOrderDetailQuantity(CustomerOrderDetail customerOrderDetail, float quantity) {
 		customerOrderDetail.setQuantity(quantity);
 		customerOrderDetail.setTotalPrice(quantity * customerOrderDetail.getUnitPrice());
+		// Check if upgraded quantity exceeds quantity
+		customerOrderDetail.setUpgradedQuantity(customerOrderDetail.getUpgradedQuantity() > quantity ? quantity : customerOrderDetail.getUpgradedQuantity());
 	}
 	
 	private void setCustomerOrderPayment(CustomerOrder customerOrder, PaymentsFormBean paymentsForm) {

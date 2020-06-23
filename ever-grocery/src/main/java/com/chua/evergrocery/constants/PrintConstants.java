@@ -14,7 +14,7 @@ public class PrintConstants
 	// Laptop Main Accounting "LAPTOP-M017CKTB"
 	public static final String DEFAULT_PRINTER_SERVICE = "EPSON TM-U220 Receipt"; /*"EPSON TM-U220 Receipt"*/;
 	
-	public static final String EVER_CASHIER_PRINTER = "\\\\LAPTOP-HRU02081\\Ever Cashier Printer"; /*"EPSON TM-U220 Receipt";*/
+	public static final String EVER_CASHIER_PRINTER = "\\\\LAPTOP-HRU02081\\Ever Cashier Printer"; //"\\\\LAPTOP-SNST7TM2\\Ever Cashier Printer"; //"\\\\LAPTOP-G19T4NBH\\EPSON TM-U220 Receipt"; /*"EPSON TM-U220 Receipt";*/
 	
 	public static final String EVER_ACCOUNTING_PRINTER = "\\\\LAPTOP-MO17CKTB\\Ever Accounting Printer"; /*"EPSON TM-U220 Receipt"*/;
 	
