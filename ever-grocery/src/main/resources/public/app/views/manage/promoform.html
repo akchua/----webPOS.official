@@ -1,0 +1,80 @@
+<div id="divPromoModal" class="modal-content modal-smd">
+	<form>
+	    <div class="modal-header">
+	    	<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+	        <h3 align="center"><span data-bind="text: preTitle"></span> Promo</h3>
+	    </div>
+	    
+	    <div class="modal-body">
+	    	<div>
+	    		<span><b>Product</b> : </span><span data-bind="text: product.name"></span>
+	    	</div>
+	    
+	    	<hr>
+	    
+			<div class="control-group">
+				<div class="col-xs-12">
+					<label class="control-label col-xs-12" for="startDate">Promo Duration:</label>
+					<div class="controls col-xs-6">
+						<input data-bind="value: promoFormModel.startDate" type="date" id="startDate" name="startDate" class="form-control" />
+						<p class="text-center">Start</p>
+						<p>
+							<span data-bind="text: errors.startDate" class="text-danger"></span>
+						</p>
+					</div>
+					<div class="controls col-xs-6">
+						<input data-bind="value: promoFormModel.endDate" type="date" id="endDate" name="endDate" class="form-control" />
+						<p class="text-center">End</p>
+						<p>
+							<span data-bind="text: errors.endDate" class="text-danger"></span>
+						</p>
+					</div>
+				</div>
+			</div>
+			<span><br></span>
+			<div class="control-group">
+				<label class="control-label" for="budget">Budget</label>
+				<div class="controls">
+					<div class="col-xs-4">
+						<div class="pull-right">
+							<h3>
+								<span>&#8369;</span>
+								<span><span data-bind="text: promoFormModel.usedBudget"></span> / </span>
+							</h3>
+						</div>
+					</div>
+					<div class="col-xs-8">
+						<input data-bind="textInput: promoFormModel.budget" type="number" id="budget" name="budget" placeholder="" class="form-control input-lg">
+						<p>
+							<span data-bind="text: errors.budget" class="text-danger"></span>
+						</p>
+					</div>
+					<span class="help-block">The maximum total amount of discount given for this promo</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="discountPercent">Discount Percent</label>
+				<div class="controls">
+					<input data-bind="textInput: promoFormModel.discountPercent" type="number" id="discountPercent" name="discountPercent" placeholder="" class="form-control input-lg">
+					<p>
+						<span data-bind="text: errors.discountPercent" class="text-danger"></span>
+						<span class="help-block">Discount to be given in percentage ex. (3 -> 3%)</span>
+					</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="promoType">Select Type of Promo</label>
+				<div class="controls">
+					<select data-bind="options: promoTypeList, optionsValue: 'name', optionsText: 'displayName', optionsCaption: '-- Select Promo Type --', value: promoFormModel.promoType" class="form-control select-lg" id="userType"></select>
+					<p data-bind="text: errors.promoType" class="text-danger"></p>
+				</div>
+			</div>
+			<br>
+	    </div>
+	    
+	    <div class="modal-footer">
+	    	<button class="btn btn-primary" type="submit" data-bind="click: save">Save</button>
+	        <button class="btn btn-warning" data-bind="click: cancel">Cancel</button>
+	    </div>
+	</form>
+</div>

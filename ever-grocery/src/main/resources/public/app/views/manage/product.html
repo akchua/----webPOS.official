@@ -49,6 +49,7 @@
     					</td>
     					<td>
     						<div class="pull-right">
+    							<button data-bind="visible: $parent.allowPromo, click: function() { $parent.createPromo(product.id) } " type="button" class="btn btn-success btn-sm" title="Create Promo"><i class="fa fa-dollar"></i></button>
     							<button data-bind="visible: $parent.allowStats, click: function() { $parent.view(product.id) } " type="button" class="btn btn-info btn-sm" title="View"><i class="fa fa-eye"></i></button>
     							<button data-bind="click: function() { $parent.details(product.id) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm">Details</button>
     							<button data-bind="click: function() { $parent.edit(product.id) }, enable: $parent.enableButtons" type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>

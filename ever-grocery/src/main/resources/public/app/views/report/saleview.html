@@ -30,6 +30,8 @@
 						<dd data-bind="text: customerOrderViewModel.totalItems"></dd>
 						<dt>Date Paid:</dt>
 						<dd data-bind="text: customerOrderViewModel.formattedPaidOn"></dd>
+						<dt>Cashier:</dt>
+						<dd data-bind="text: customerOrderViewModel.formattedCashier"></dd>
 			    	</dl>
 				</div>
 			</div>
@@ -51,6 +53,10 @@
 						<dd>
 							(<span data-bind="text: customerOrderViewModel.discountShorthand"></span>)
 							<span data-bind="text: customerOrderViewModel.formattedTotalDiscount"></span>
+						</dd>
+						<dt>Outright Discount:</dt>
+						<dd>
+							<span data-bind="text: customerOrderViewModel.formattedOutrightPromoDiscount"></span>
 						</dd>
 			    	</dl>
 				</div>

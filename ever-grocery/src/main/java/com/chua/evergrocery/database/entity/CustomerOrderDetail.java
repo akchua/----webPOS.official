@@ -16,6 +16,7 @@ import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Where;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
+import com.chua.evergrocery.enums.PromoType;
 import com.chua.evergrocery.enums.TaxType;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
@@ -53,6 +54,12 @@ public class CustomerOrderDetail extends BaseObject {
 	private Float quantity;
 	
 	private Float totalPrice;
+	
+	private Long promoId;
+	
+	private Float promoPercentDiscount;
+	
+	private PromoType promoType;
 	
 	private Float margin;
 	
@@ -229,6 +236,46 @@ public class CustomerOrderDetail extends BaseObject {
 
 	public void setTotalPrice(Float totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	@Basic
+	@Column(name = "promo_id")
+	public Long getPromoId() {
+		return promoId;
+	}
+	
+	@Transient
+	public String getFormattedPromo() {
+		return promoId.equals(0l) ? "x" : "$";
+	}
+
+	public void setPromoId(Long promoId) {
+		this.promoId = promoId;
+	}
+
+	@Basic
+	@Column(name = "promo_percent_discount")
+	public Float getPromoPercentDiscount() {
+		return promoPercentDiscount;
+	}
+	
+	@Transient
+	public Float getPromoDiscountAmount() {
+		return totalPrice * (promoPercentDiscount / 100);
+	}
+
+	public void setPromoPercentDiscount(Float promoPercentDiscount) {
+		this.promoPercentDiscount = promoPercentDiscount;
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "promo_type", length = 50)
+	public PromoType getPromoType() {
+		return promoType;
+	}
+
+	public void setPromoType(PromoType promoType) {
+		this.promoType = promoType;
 	}
 
 	@Basic

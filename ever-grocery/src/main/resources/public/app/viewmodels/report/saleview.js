@@ -19,12 +19,14 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 			formattedPointsEarned : ko.observable(''),
 			totalItems : ko.observable(),
 			formattedPaidOn : ko.observable(),
+			formattedCashier: ko.observable(),
 			
 			formattedCash : ko.observable(),
 			formattedCheckAmount : ko.observable(),
 			formattedCardAmount : ko.observable(),
 			formattedPointsAmount : ko.observable(),
 			formattedGrossAmount : ko.observable(),
+			formattedOutrightPromoDiscount : ko.observable(),
 			
 			discountShorthand : ko.observable(''),
 			formattedTotalDiscount: ko.observable(),
@@ -52,12 +54,14 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     	self.customerOrderViewModel.formattedPointsEarned(self.customerOrder.formattedPointsEarned);
     	self.customerOrderViewModel.totalItems(self.customerOrder.totalItems);
     	self.customerOrderViewModel.formattedPaidOn(self.customerOrder.formattedPaidOn);
+    	self.customerOrderViewModel.formattedCashier(self.customerOrder.cashier.formattedName);
 
     	self.customerOrderViewModel.formattedCash(self.customerOrder.formattedCash);
     	self.customerOrderViewModel.formattedCheckAmount(self.customerOrder.formattedCheckAmount);
     	self.customerOrderViewModel.formattedCardAmount(self.customerOrder.formattedCardAmount);
     	self.customerOrderViewModel.formattedPointsAmount(self.customerOrder.formattedPointsAmount);
     	self.customerOrderViewModel.formattedGrossAmount(self.customerOrder.formattedGrossAmount);
+    	self.customerOrderViewModel.formattedOutrightPromoDiscount(self.customerOrder.formattedOutrightPromoDiscount);
     	
     	if(self.customerOrder.discountType) {
     		self.customerOrderViewModel.discountShorthand(self.customerOrder.discountType.shortHand + ' ' + self.customerOrder.discountType.percentDiscount + '%');

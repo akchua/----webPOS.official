@@ -1,4 +1,11 @@
 <div class="row">
+	<h5>
+		<span class="col-xs-offset-6 col-xs-4 text-right">Sub Total: <span class="text-md-black-elite">&#8369; <span data-bind="text: customerOrderPageModel.formattedGrossAmount" ></span></span></span>
+		<span class="col-xs-offset-6 col-xs-4 text-right">Promo Discount: <span class="text-md-black-elite">&#8369; <span data-bind="text: customerOrderPageModel.formattedOutrightPromoDiscount" ></span></span></span>
+	</h5>
+</div>
+
+<div class="row">
 	<h3>
 		<span class="col-xs-4">Order <span class="text-md-red-elite">#<span data-bind="text: customerOrderPageModel.customerOrderNumber"></span></span></span>
 		<span class="col-xs-offset-2 col-xs-6 text-center">TOTAL: <span class="text-lg-green-neuton">&#8369; <span data-bind="text: customerOrderPageModel.formattedTotalAmount" ></span></span></span>
@@ -33,6 +40,7 @@
    					<th>Code</th>
    					<th>Product Name</th>
    					<th class = "text-right">Unit Price</th>
+   					<th class = "text-right">Promo</th>
    					<th class = "text-right">Total Price</th>
    				</tr>
    			</thead>
@@ -44,6 +52,7 @@
    					<td data-bind="text: orderDetail.productCode"></td>
    					<td data-bind="text: orderDetail.formattedItemName"></td>
    					<td data-bind="text: orderDetail.formattedUnitPrice" class = "text-right"></td>
+   					<td data-bind="text: orderDetail.formattedPromo" class = "text-right"></td>
    					<td data-bind="text: orderDetail.formattedTotalPrice" class = "text-right"></td>
    					<td>
    						<div class="pull-right">

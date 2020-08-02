@@ -52,6 +52,14 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 		return String.format("%12s", customerOrder.getFormattedGrossAmount());
 	}
 	
+	public String getFormattedOutrightPromoDiscount() {
+		return String.format("%12s", customerOrder.getFormattedOutrightPromoDiscount());
+	}
+	
+	public String getFormattedTotalAmount() {
+		return String.format("%12s", customerOrder.getFormattedTotalAmount());
+	}
+	
 	public String getTotalItems() {
 		NumberFormat nf = new DecimalFormat("###.#");
 		return nf.format(customerOrder.getTotalItems());

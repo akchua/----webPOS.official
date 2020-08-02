@@ -40,68 +40,72 @@ public class CustomerOrder extends BaseObject {
 	public static final String TABLE_NAME = "customer_order";
 
 	private Long serialInvoiceNumber;
-	
+
 	private Long referenceSerialInvoiceNumber;
-	
+
 	private Long refundNumber;
-	
-	/*private String name;*/
-	
+
+	/* private String name; */
+
 	@JsonSerialize(using = CustomerSerializer.class)
 	private Customer customer;
-	
+
 	@JsonSerialize(using = UserSerializer.class)
 	private User creator;
-	
+
 	@JsonSerialize(using = UserSerializer.class)
 	private User cashier;
-	
+
 	private Float vatSales;
-	
+
 	private Float vatExSales;
-	
+
 	private Float zeroRatedSales;
-	
+
 	private Float taxAdjustment;
-	
+
 	private DiscountType discountType;
-	
+
 	private Float vatDiscount;
-	
+
 	private Float vatExDiscount;
-	
+
 	private Float zeroRatedDiscount;
-	
+
 	private String discountIdNumber;
-	
+
 	private String discountName;
-	
+
 	private String discountAddress;
-	
+
 	private String discountTin;
-	
+
+	private Float outrightPromoDiscount;
+
+	private Float pointsPromoDiscount;
+
 	private Float totalItems;
-	
+
 	private Status status;
-	
+
 	private Date paidOn;
-	
+
 	private Float cash;
-	
+
 	private String checkAccountNumber;
-	
+
 	private String checkNumber;
-	
+
 	private Float checkAmount;
-	
+
 	private String cardTransactionNumber;
-	
+
 	private Float cardAmount;
-	
+
 	private Float pointsAmount;
-	
+
 	private Float pointsEarned;
-	
+
 	@Transient
 	public String getOrderNumber() {
 		return String.valueOf(this.getId() % 1000);
@@ -112,7 +116,7 @@ public class CustomerOrder extends BaseObject {
 	public Long getSerialInvoiceNumber() {
 		return serialInvoiceNumber;
 	}
-	
+
 	@Transient
 	public String getFormattedSIN() {
 		return NumberFormatter.SINFormat(getSerialInvoiceNumber());
@@ -121,13 +125,13 @@ public class CustomerOrder extends BaseObject {
 	public void setSerialInvoiceNumber(Long serialInvoiceNumber) {
 		this.serialInvoiceNumber = serialInvoiceNumber;
 	}
-	
+
 	@Basic()
 	@Column(name = "ref_SIN")
 	public Long getReferenceSerialInvoiceNumber() {
 		return referenceSerialInvoiceNumber;
 	}
-	
+
 	@Transient
 	public String getFormattedRefSIN() {
 		return NumberFormatter.SINFormat(getReferenceSerialInvoiceNumber());
@@ -142,7 +146,7 @@ public class CustomerOrder extends BaseObject {
 	public Long getRefundNumber() {
 		return refundNumber;
 	}
-	
+
 	@Transient
 	public String getFormattedRefundNumber() {
 		return NumberFormatter.SINFormat(getRefundNumber());
@@ -152,28 +156,20 @@ public class CustomerOrder extends BaseObject {
 		this.refundNumber = refundNumber;
 	}
 
-	/*@Basic
-	@Column(name = "name")
-	public String getName() {
-		return name;
-	}
-	
-	@Transient
-	public String getFormattedName() {
-		final String formattedName;
-		
-		if(customer != null) {
-			formattedName = customer.getFormattedName();
-		} else {
-			formattedName = name;
-		}
-		
-		return formattedName;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}*/
+	/*
+	 * @Basic
+	 * 
+	 * @Column(name = "name") public String getName() { return name; }
+	 * 
+	 * @Transient public String getFormattedName() { final String formattedName;
+	 * 
+	 * if(customer != null) { formattedName = customer.getFormattedName(); }
+	 * else { formattedName = name; }
+	 * 
+	 * return formattedName; }
+	 * 
+	 * public void setName(String name) { this.name = name; }
+	 */
 
 	@ManyToOne(targetEntity = Customer.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id")
@@ -216,12 +212,12 @@ public class CustomerOrder extends BaseObject {
 	public Float getVatSales() {
 		return vatSales;
 	}
-	
+
 	@Transient
 	public Float getNetVatSales() {
 		return vatSales - vatDiscount;
 	}
-	
+
 	@Transient
 	public String getFormattedNetVatSales() {
 		return CurrencyFormatter.pesoFormat(getNetVatSales());
@@ -236,17 +232,17 @@ public class CustomerOrder extends BaseObject {
 	public Float getVatExSales() {
 		return vatExSales;
 	}
-	
+
 	@Transient
 	public String getFormattedVatExSales() {
 		return CurrencyFormatter.pesoFormat(getVatExSales());
 	}
-	
+
 	@Transient
 	public Float getNetVatExSales() {
 		return vatExSales - vatExDiscount;
 	}
-	
+
 	@Transient
 	public String getFormattedNetVatExSales() {
 		return CurrencyFormatter.pesoFormat(getNetVatExSales());
@@ -261,17 +257,17 @@ public class CustomerOrder extends BaseObject {
 	public Float getZeroRatedSales() {
 		return zeroRatedSales;
 	}
-	
+
 	@Transient
 	public String getFormattedZeroRatedSales() {
 		return CurrencyFormatter.pesoFormat(getZeroRatedSales());
 	}
-	
+
 	@Transient
 	public Float getNetZeroRatedSales() {
 		return zeroRatedSales - zeroRatedDiscount;
 	}
-	
+
 	@Transient
 	public String getFormattedNetZeroRatedSales() {
 		return CurrencyFormatter.pesoFormat(getNetZeroRatedSales());
@@ -305,7 +301,7 @@ public class CustomerOrder extends BaseObject {
 	public Float getGrossAmount() {
 		return getVatSales() + getVatExSales() + getZeroRatedSales();
 	}
-	
+
 	@Transient
 	public String getFormattedGrossAmount() {
 		return CurrencyFormatter.pesoFormat(getGrossAmount());
@@ -344,17 +340,18 @@ public class CustomerOrder extends BaseObject {
 	public Float getTotalDiscountAmount() {
 		return vatDiscount + vatExDiscount + zeroRatedDiscount;
 	}
-	
+
 	@Transient
 	public String getFormattedTotalDiscountAmount() {
 		return CurrencyFormatter.pesoFormat(getTotalDiscountAmount());
 	}
-	
+
 	@Transient
 	public Float getTotalDiscountableAmount() {
-		return discountType.getPercentDiscount().equals(0.0f) ? 0.0f : getTotalDiscountAmount() / (discountType.getPercentDiscount() / 100.0f);
+		return discountType.getPercentDiscount().equals(0.0f) ? 0.0f
+				: getTotalDiscountAmount() / (discountType.getPercentDiscount() / 100.0f);
 	}
-	
+
 	@Transient
 	public String getFormattedTotalDiscountableAmount() {
 		return CurrencyFormatter.pesoFormat(getTotalDiscountableAmount());
@@ -400,11 +397,36 @@ public class CustomerOrder extends BaseObject {
 		this.discountTin = discountTin;
 	}
 
+	@Basic
+	@Column(name = "points_promo_discount")
+	public Float getPointsPromoDiscount() {
+		return pointsPromoDiscount;
+	}
+
+	public void setPointsPromoDiscount(Float pointsPromoDiscount) {
+		this.pointsPromoDiscount = pointsPromoDiscount;
+	}
+
+	@Basic
+	@Column(name = "outright_promo_discount")
+	public Float getOutrightPromoDiscount() {
+		return outrightPromoDiscount;
+	}
+
+	@Transient
+	public String getFormattedOutrightPromoDiscount() {
+		return CurrencyFormatter.pesoFormat(getOutrightPromoDiscount());
+	}
+
+	public void setOutrightPromoDiscount(Float outrightPromoDiscount) {
+		this.outrightPromoDiscount = outrightPromoDiscount;
+	}
+
 	@Transient
 	public Float getTotalAmount() {
-		return getGrossAmount() - getTotalDiscountAmount();
+		return getGrossAmount() - getTotalDiscountAmount() - getOutrightPromoDiscount();
 	}
-	
+
 	@Transient
 	public String getFormattedTotalAmount() {
 		return CurrencyFormatter.pesoFormat(getTotalAmount());
@@ -435,7 +457,7 @@ public class CustomerOrder extends BaseObject {
 	public Date getPaidOn() {
 		return paidOn;
 	}
-	
+
 	@Transient
 	public String getFormattedPaidOn() {
 		final String formattedPaidOn;
@@ -445,7 +467,7 @@ public class CustomerOrder extends BaseObject {
 		if(cal.getTimeInMillis() == DateUtil.getDefaultDateInMillis()) {
 			formattedPaidOn = "n/a";
 		} else {
-			formattedPaidOn = DateFormatter.shortFormat(paidOn);
+			formattedPaidOn = DateFormatter.longFormat(paidOn);
 		}
 		return formattedPaidOn;
 	}
@@ -459,7 +481,7 @@ public class CustomerOrder extends BaseObject {
 	public Float getCash() {
 		return cash;
 	}
-	
+
 	@Transient
 	public String getFormattedCash() {
 		return CurrencyFormatter.pesoFormat(getCash());
@@ -494,12 +516,12 @@ public class CustomerOrder extends BaseObject {
 	public Float getCheckAmount() {
 		return checkAmount;
 	}
-	
+
 	@Transient
 	public String getFormattedCheckAmount() {
 		return CurrencyFormatter.pesoFormat(getCheckAmount());
 	}
-	
+
 	public void setCheckAmount(Float checkAmount) {
 		this.checkAmount = checkAmount;
 	}
@@ -519,12 +541,12 @@ public class CustomerOrder extends BaseObject {
 	public Float getCardAmount() {
 		return cardAmount;
 	}
-	
+
 	@Transient
 	public String getFormattedCardAmount() {
 		return CurrencyFormatter.pesoFormat(getCardAmount());
 	}
-	
+
 	public void setCardAmount(Float cardAmount) {
 		this.cardAmount = cardAmount;
 	}
@@ -534,17 +556,17 @@ public class CustomerOrder extends BaseObject {
 	public Float getPointsAmount() {
 		return pointsAmount;
 	}
-	
+
 	@Transient
 	public String getFormattedPointsAmount() {
 		return CurrencyFormatter.pesoFormat(getPointsAmount());
 	}
-	
+
 	@Transient
 	public Float getTotalPayment() {
 		return getCash() + getCheckAmount() + getCardAmount() + getPointsAmount();
 	}
-	
+
 	@Transient
 	public String getFormattedTotalPayment() {
 		return CurrencyFormatter.pesoFormat(getTotalPayment());
@@ -559,7 +581,7 @@ public class CustomerOrder extends BaseObject {
 	public Float getPointsEarned() {
 		return pointsEarned;
 	}
-	
+
 	@Transient
 	public String getFormattedPointsEarned() {
 		return CurrencyFormatter.pesoFormat(getPointsEarned());

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.chua.evergrocery.constants.SystemConstants;
 import com.chua.evergrocery.enums.DiscountType;
+import com.chua.evergrocery.enums.PromoType;
 import com.chua.evergrocery.enums.ReportType;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.TaxType;
@@ -52,6 +53,11 @@ public class ConstantsHandlerImpl implements ConstantsHandler {
 		return Stream.of(DiscountType.values())
 					.filter(discountType -> !discountType.equals(DiscountType.NO_DISCOUNT))
 					.collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<PromoType> getPromoTypeList() {
+		return Stream.of(PromoType.values()).collect(Collectors.toList());
 	}
 	
 	@Override

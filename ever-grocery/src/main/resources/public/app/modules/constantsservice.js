@@ -30,6 +30,12 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getPromoTypeList: function() {
+    		return $.ajax({
+    			url: '/services/constants/promotypelist'
+    		});
+    	},
+    	
     	getReportTypeList: function() {
     		return $.ajax({
     			url: '/services/constants/reporttypelist'

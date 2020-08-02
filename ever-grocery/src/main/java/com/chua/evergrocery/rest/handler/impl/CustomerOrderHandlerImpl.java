@@ -23,6 +23,7 @@ import com.chua.evergrocery.database.entity.Customer;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.ProductDetail;
+import com.chua.evergrocery.database.entity.Promo;
 import com.chua.evergrocery.database.entity.User;
 import com.chua.evergrocery.database.entity.XReading;
 import com.chua.evergrocery.database.entity.ZReading;
@@ -30,6 +31,7 @@ import com.chua.evergrocery.database.service.CustomerOrderDetailService;
 import com.chua.evergrocery.database.service.CustomerOrderService;
 import com.chua.evergrocery.database.service.CustomerService;
 import com.chua.evergrocery.database.service.ProductDetailService;
+import com.chua.evergrocery.database.service.PromoService;
 import com.chua.evergrocery.database.service.SystemVariableService;
 import com.chua.evergrocery.database.service.UserService;
 import com.chua.evergrocery.database.service.ZReadingService;
@@ -37,6 +39,7 @@ import com.chua.evergrocery.enums.AuditLogType;
 import com.chua.evergrocery.enums.Color;
 import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.DocType;
+import com.chua.evergrocery.enums.PromoType;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.SystemVariableTag;
 import com.chua.evergrocery.enums.TaxType;
@@ -46,6 +49,7 @@ import com.chua.evergrocery.rest.handler.AuditLogHandler;
 import com.chua.evergrocery.rest.handler.CustomerOrderHandler;
 import com.chua.evergrocery.rest.handler.InventoryHandler;
 import com.chua.evergrocery.rest.handler.ProductHandler;
+import com.chua.evergrocery.rest.handler.PromoHandler;
 import com.chua.evergrocery.rest.handler.SalesReportHandler;
 import com.chua.evergrocery.rest.validator.DiscountFormValidator;
 import com.chua.evergrocery.rest.validator.PaymentsFormValidator;
@@ -82,6 +86,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	private ProductDetailService productDetailService;
 	
 	@Autowired
+	private PromoService promoService;
+	
+	@Autowired
 	private SystemVariableService systemVariableService;
 	
 	@Autowired
@@ -89,6 +96,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Autowired
 	private ProductHandler productHandler;
+	
+	@Autowired
+	private PromoHandler promoHandler;
 	
 	@Autowired
 	private AuditLogHandler auditLogHandler;
@@ -168,6 +178,8 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrder.setVatExDiscount(0.0f);
 		customerOrder.setZeroRatedDiscount(0.0f);
 		customerOrder.setDiscountIdNumber("");
+		customerOrder.setOutrightPromoDiscount(0.0f);
+		customerOrder.setPointsPromoDiscount(0.0f);
 		customerOrder.setTotalItems(0.0f);
 		customerOrder.setCash(0.0f);
 		customerOrder.setCheckAmount(0.0f);
@@ -497,6 +509,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 										// UPDATE INVENTORY if any item is sold at old price
 										inventoryHandler.checkForStockAdjustment(paymentsForm.getCustomerOrderId());
 										
+										// FINALIZE USED PROMOS
+										promoHandler.finalizeUsedPromos(customerOrder.getId());
+										
 										// UPDATE AUDIT LOG
 										auditLogHandler.addLog(UserContextHolder.getUser().getId(), AuditLogType.SALES, customerOrder.getTotalAmount());
 										
@@ -569,6 +584,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		result = new ResultBean();
 		
 		addAmountToOrder(-customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), customerOrder);
+		addPromoDiscountToOrder(-customerOrderDetail.getPromoDiscountAmount(), customerOrderDetail.getPromoType(), customerOrder);
 		customerOrder.setTotalItems(customerOrder.getTotalItems() - customerOrderDetail.getQuantity());
 		result.setSuccess(customerOrderDetailService.erase(customerOrderDetail));
 		if(result.getSuccess()) {
@@ -652,6 +668,15 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			if(customerOrderDetail == null) {
 				final CustomerOrderDetail newCustomerOrderDetail = new CustomerOrderDetail();
 				setCustomerOrderDetail(newCustomerOrderDetail, customerOrder, productDetail);
+				final Promo promo = promoService.findCurrentByProduct(productDetail.getProduct().getId());
+				if(promo != null) {
+					float approxDiscount = productDetail.getSellingPrice() * quantity * (promo.getDiscountPercent() / 100);
+					if(approxDiscount <= promo.getAvailableBudget()) {
+						newCustomerOrderDetail.setPromoId(promo.getId());
+						newCustomerOrderDetail.setPromoPercentDiscount(promo.getDiscountPercent());
+						newCustomerOrderDetail.setPromoType(promo.getPromoType());
+					}
+				}
 				
 				customerOrderDetailService.insert(newCustomerOrderDetail);
 				
@@ -710,6 +735,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				final CustomerOrder customerOrder = customerOrderDetail.getCustomerOrder();
 				
 				addAmountToOrder(-customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), customerOrder);
+				addPromoDiscountToOrder(-customerOrderDetail.getPromoDiscountAmount(), customerOrderDetail.getPromoType(), customerOrder);
 				customerOrder.setTotalItems(customerOrder.getTotalItems() - customerOrderDetail.getQuantity());
 				
 				setCustomerOrderDetailQuantity(customerOrderDetail, quantity);
@@ -717,6 +743,16 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				
 				if(result.getSuccess()) {
 					addAmountToOrder(customerOrderDetail.getTotalPrice(), customerOrderDetail.getTaxType(), customerOrder);
+					if(customerOrderDetail.getPromoType() != null) {
+						Promo promo = promoService.get(customerOrderDetail.getPromoId());
+						float approxDiscount = customerOrderDetail.getTotalPrice() * (promo.getDiscountPercent() / 100);
+						if(approxDiscount > promo.getAvailableBudget()) {
+							customerOrderDetail.setPromoId(0l);
+							customerOrderDetail.setPromoPercentDiscount(0.0f);
+							customerOrderDetail.setPromoType(null);
+						}
+					}
+					addPromoDiscountToOrder(customerOrderDetail.getPromoDiscountAmount(), customerOrderDetail.getPromoType(), customerOrder);
 					customerOrder.setTotalItems(customerOrder.getTotalItems() + customerOrderDetail.getQuantity());
 					customerOrderService.update(customerOrder);
 					
@@ -776,6 +812,8 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		float vatExSales = 0;
 		float zeroRatedSales = 0;
 		float totalItems = 0;
+		float outrightPromoDiscount = 0;
+		float pointsPromoDiscount = 0;
 		
 		List<CustomerOrderDetail> customerOrderDetails = customerOrderDetailService.findAllByCustomerOrderId(customerOrder.getId());
 		
@@ -792,12 +830,18 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				break;
 			}
 			totalItems += customerOrderDetail.getQuantity();
+			if(customerOrderDetail.getPromoType() != null) {
+				if(customerOrderDetail.getPromoType().equals(PromoType.OUTRIGHT)) outrightPromoDiscount += customerOrderDetail.getTotalPrice() * (customerOrderDetail.getPromoPercentDiscount() / 100);
+				else if(customerOrderDetail.getPromoType().equals(PromoType.POINTS)) pointsPromoDiscount += customerOrderDetail.getTotalPrice() * (customerOrderDetail.getPromoPercentDiscount() / 100);
+			}
 		}
 		
 		customerOrder.setVatSales(vatSales);
 		customerOrder.setVatExSales(vatExSales);
 		customerOrder.setZeroRatedSales(zeroRatedSales);
 		customerOrder.setTotalItems(totalItems);
+		customerOrder.setOutrightPromoDiscount(outrightPromoDiscount);
+		customerOrder.setPointsPromoDiscount(pointsPromoDiscount);
 		customerOrderService.update(customerOrder);
 	}
 	
@@ -1005,6 +1049,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrderDetail.setUnitPrice(productDetail.getSellingPrice());
 		customerOrderDetail.setQuantity(0.0f);
 		customerOrderDetail.setTotalPrice(0.0f);
+		customerOrderDetail.setPromoId(0l);
+		customerOrderDetail.setPromoPercentDiscount(0.0f);
+		customerOrderDetail.setPromoType(null);
 		customerOrderDetail.setMargin(productDetail.getActualPercentProfit());
 		customerOrderDetail.setTaxType(productDetail.getProduct().getTaxType());
 		customerOrderDetail.setTaxAdjustment(0.0f);
@@ -1059,6 +1106,13 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		case ZERO_RATED:
 			customerOrder.setZeroRatedSales(customerOrder.getZeroRatedSales() + amount);
 			break;
+		}
+	}
+	
+	private void addPromoDiscountToOrder(Float amount, PromoType promoType, CustomerOrder customerOrder) {
+		if(promoType != null) {
+			if(promoType.equals(PromoType.OUTRIGHT)) customerOrder.setOutrightPromoDiscount(customerOrder.getOutrightPromoDiscount() + amount);
+			else if(promoType.equals(PromoType.POINTS)) customerOrder.setPointsPromoDiscount(customerOrder.getPointsPromoDiscount() + amount);
 		}
 	}
 }

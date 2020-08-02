@@ -18,6 +18,8 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
 		this.customerOrderPageModel = {
 			customerOrderId: ko.observable(),
 			customerOrderNumber: ko.observable(),
+			formattedGrossAmount: ko.observable(),
+			formattedOutrightPromoDiscount: ko.observable(),
 			formattedTotalAmount: ko.observable()
 		};
 		
@@ -63,6 +65,8 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	
     	customerOrderService.getCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(customerOrder) { 
     		self.customerOrderPageModel.customerOrderNumber(customerOrder.orderNumber);
+    		self.customerOrderPageModel.formattedGrossAmount(customerOrder.formattedGrossAmount);
+    		self.customerOrderPageModel.formattedOutrightPromoDiscount(customerOrder.formattedOutrightPromoDiscount);
     		self.customerOrderPageModel.formattedTotalAmount(customerOrder.formattedTotalAmount);
     		self.totalAmount(customerOrder.totalAmount);
     	});

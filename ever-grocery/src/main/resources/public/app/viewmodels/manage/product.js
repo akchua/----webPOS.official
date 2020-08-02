@@ -1,5 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyservice', 'modules/categoryservice', 'viewmodels/manage/productview', 'viewmodels/manage/productform', 'viewmodels/manage/productdetailsform'], 
-		function (app, ko, productService, companyService, categoryService, ProductView, ProductForm, ProductDetailsForm) {
+define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyservice', 'modules/categoryservice', 'viewmodels/manage/productview', 'viewmodels/manage/productform', 'viewmodels/manage/promoform', 'viewmodels/manage/productdetailsform'], 
+		function (app, ko, productService, companyService, categoryService, ProductView, ProductForm, PromoForm, ProductDetailsForm) {
 	var Product = function() {
 		this.productList = ko.observable();
 		this.companyList = ko.observable();
@@ -16,6 +16,7 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyse
 		
 		this.enableButtons = ko.observable(true);
 		this.allowStats = app.user.userType.authority < 3;
+		this.allowPromo = app.user.userType.authority < 3;
 	};
 	
 	Product.prototype.activate = function() {
@@ -66,6 +67,18 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyse
 		ProductForm.show('Create', new Object()).then(function() {
 			self.refreshProductList();
 			self.enableButtons(true);
+		});
+	};
+	
+	Product.prototype.createPromo = function(productId) {
+		var self = this;
+		self.enableButtons(false);
+		
+		productService.getProduct(productId).done(function(product) {
+			PromoForm.show('Create', new Object(), product).then(function() {
+				self.refreshProductList();
+				self.enableButtons(true);
+			});
 		});
 	};
 	

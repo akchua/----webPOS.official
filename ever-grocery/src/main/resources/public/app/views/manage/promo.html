@@ -1,0 +1,42 @@
+<section>
+	<div class="row">
+		<label class="checkbox-inline col-md-offset-1 col-md-2 col-xs-6">
+			<input data-bind="checked: showActiveOnly" type="checkbox" name="paidcheckbox">Show Active
+		</label>
+		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-9 col-xs-6"></div>
+	</div>
+	
+    <div class="row">
+    	<div class="col-md-12">
+    		<table class="table table-responsive table-hover">
+    			<thead>
+    				<tr>
+    					<th>Product</th>
+    					<th>Duration</th>
+    					<th>Budget</th>
+    					<th class="text-center">Discount (%)</th>
+    					<th>Type</th>
+    					<th>Status</th>
+    				</tr>
+    			</thead>
+    		
+    			<tbody data-bind="foreach: { data: promoList, as: 'promo' }">
+    				<tr>
+    					<td data-bind="text: promo.product.name"></td>
+    					<td data-bind="text: promo.formattedDuration"></td>
+    					<td data-bind="text: promo.formattedBudget"></td>
+    					<td class="text-center" data-bind="text: promo.formattedDiscountPercent"></td>
+    					<td data-bind="text: promo.promoType.displayName"></td>
+    					<td data-bind="text: promo.formattedStatus"></td>
+    					<td>
+    						<div class="pull-right">
+    							<button data-bind="click: function() { $parent.edit(promo.id) }, enable: $parent.enableButtons" type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
+    							<button data-bind="click: function() { $parent.remove(promo.id, promo.product.name) }, enable: $parent.enableButtons" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
+    						</div>
+    					</td>
+    				</tr>
+    			</tbody>
+    		</table>
+    	</div>
+    </div>
+</section>

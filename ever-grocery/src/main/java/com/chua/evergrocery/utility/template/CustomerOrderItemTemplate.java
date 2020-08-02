@@ -70,6 +70,10 @@ public class CustomerOrderItemTemplate extends AbstractTemplate {
 						|| customerOrderItem.getUnitType().equals(UnitType.SACK)))
 			formattedName += nf2.format(customerOrderItem.getUpgradedQuantity()) + "^";
 		
+		if(!customerOrderItem.getPromoId().equals(0l)) {
+			formattedName += "$ ";
+		}
+		
 		formattedName += customerOrderItem.getFormattedDisplayName();
 		if((customerOrderItem.getQuantity() % 1.0f == 0.5f
 				|| customerOrderItem.getUnitType().equals(UnitType.CASE)

@@ -1,6 +1,37 @@
 <section>
 	<div class="col-md-12 col-xs-12">
 		<div class="row">
+			<div class="col-md-6 col-xs-12"><h4><strong>Current Promos</strong></h4></div>
+			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems2, currentPage: currentPage2 } }" class="col-md-6 col-xs-12 pull-right"></div>
+		</div>
+		
+		<div class="row">
+	    	<div class="col-md-12">
+	    		<table class="table table-responsive table-hover">
+	    			<thead>
+	    				<tr>
+	    					<th>By</th>
+	    					<th>Product</th>
+	    					<th>Availability</th>
+	    					<th>Type</th>
+	    				</tr>
+	    			</thead>
+	    		
+	    			<tbody data-bind="foreach: { data: promoList, as: 'promo' }">
+	    				<tr>
+	    					<td data-bind="text: promo.creator.shortName"></td>
+	    					<td data-bind="text: promo.product.name"></td>
+	    					<td data-bind="text: promo.formattedAvailability, style: { color: promo.availabilityColor }"></td>
+	    					<td data-bind="text: promo.promoType.displayName"></td>
+	    				</tr>
+	    			</tbody>
+	    		</table>
+	    	</div>
+	    </div>
+	</div>
+
+	<div class="col-md-12 col-xs-12">
+		<div class="row">
 			<div class="col-md-6 col-xs-12"><h4><strong>Recent Price Changes</strong></h4></div>
 			<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-6 col-xs-12 pull-right"></div>
 		</div>

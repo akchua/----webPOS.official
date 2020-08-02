@@ -53,6 +53,7 @@
 				<value>com.chua.evergrocery.database.entity.Company</value>
 				<value>com.chua.evergrocery.database.entity.Distributor</value>
 				<value>com.chua.evergrocery.database.entity.Product</value>
+				<value>com.chua.evergrocery.database.entity.Promo</value>
 				<value>com.chua.evergrocery.database.entity.ProductDetail</value>
 				<value>com.chua.evergrocery.database.entity.PriceHistory</value>
 				

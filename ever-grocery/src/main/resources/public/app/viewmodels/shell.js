@@ -30,6 +30,7 @@
 	  		    { route: 'company', moduleId: 'company', title: 'Companies', nav: true, hash: 'company' },
 	  		    /*{ route: 'distributor', moduleId: 'distributor', title: 'Distributors', nav: true, hash: 'distributor' },*/
 	      		{ route: 'product', moduleId: 'product', title: 'Products', nav: true, hash: 'product' },
+	      		{ route: 'promo', moduleId: 'promo', title: 'Promos', nav: true, hash: 'promo' },
 	      		
 	      		{ route: 'customer', moduleId: 'customer', title: 'Customers', nav: true, hash: 'customer' }
 	  		]

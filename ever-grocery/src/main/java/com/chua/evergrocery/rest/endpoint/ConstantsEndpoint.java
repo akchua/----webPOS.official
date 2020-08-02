@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.chua.evergrocery.enums.DiscountType;
+import com.chua.evergrocery.enums.PromoType;
 import com.chua.evergrocery.enums.ReportType;
 import com.chua.evergrocery.enums.Status;
 import com.chua.evergrocery.enums.TaxType;
@@ -60,6 +61,13 @@ public class ConstantsEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<DiscountType> getDiscountTypeList() {
 		return constantsHandler.getDiscountTypeList();
+	}
+	
+	@GET
+	@Path("/promotypelist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<PromoType> getPromoTypeList() {
+		return constantsHandler.getPromoTypeList();
 	}
 	
 	@GET
