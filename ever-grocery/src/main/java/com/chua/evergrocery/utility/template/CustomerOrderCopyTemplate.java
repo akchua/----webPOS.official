@@ -52,6 +52,10 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 		return String.format("%12s", customerOrder.getFormattedGrossAmount());
 	}
 	
+	public Boolean isDiscounted() {
+		return customerOrder.getOutrightPromoDiscount() > 0;
+	}
+	
 	public String getFormattedOutrightPromoDiscount() {
 		return String.format("%12s", customerOrder.getFormattedOutrightPromoDiscount());
 	}
