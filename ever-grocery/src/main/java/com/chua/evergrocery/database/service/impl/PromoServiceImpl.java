@@ -2,6 +2,7 @@ package com.chua.evergrocery.database.service.impl;
 
 import java.util.Date;
 
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,8 @@ public class PromoServiceImpl
 	}
 	
 	@Override
-	public ObjectList<Promo> findAllWithPaging(int pageNumber, int resultsPerPage, Boolean showActiveOnly) {
-		return dao.findAllWithPaging(pageNumber, resultsPerPage, showActiveOnly);
+	public ObjectList<Promo> findAllWithPagingOrderByLatest(int pageNumber, int resultsPerPage, Boolean showActiveOnly) {
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, showActiveOnly, new Order[] { Order.desc("updatedOn") });
 	}
 
 	@Override

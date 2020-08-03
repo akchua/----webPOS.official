@@ -50,7 +50,7 @@ public class PromoHandlerImpl implements PromoHandler {
 	
 	@Override
 	public ObjectList<Promo> getPromoList(Integer pageNumber, Boolean showActiveOnly) {
-		return promoService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), showActiveOnly);
+		return promoService.findAllWithPagingOrderByLatest(pageNumber, UserContextHolder.getItemsPerPage(), showActiveOnly);
 	}
 	
 	@Override

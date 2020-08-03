@@ -1,5 +1,7 @@
 package com.chua.evergrocery.database.dao;
 
+import org.hibernate.criterion.Order;
+
 import com.chua.evergrocery.database.entity.Promo;
 import com.chua.evergrocery.database.prototype.PromoPrototype;
 import com.chua.evergrocery.objects.ObjectList;
@@ -11,5 +13,5 @@ import com.chua.evergrocery.objects.ObjectList;
  */
 public interface PromoDAO extends DAO<Promo, Long>, PromoPrototype {
 
-	ObjectList<Promo> findAllWithPaging(int pageNumber, int resultsPerPage, Boolean showActiveOnly);
+	ObjectList<Promo> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, Boolean showActiveOnly, Order[] orders);
 }

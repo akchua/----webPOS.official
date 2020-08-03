@@ -3,6 +3,7 @@ package com.chua.evergrocery.database.dao.impl;
 import java.util.Date;
 
 import org.hibernate.criterion.Junction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +36,7 @@ public class PromoDAOImpl
 	}
 	
 	@Override
-	public ObjectList<Promo> findAllWithPaging(int pageNumber, int resultsPerPage, Boolean showActiveOnly) {
+	public ObjectList<Promo> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, Boolean showActiveOnly, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		
@@ -46,7 +47,7 @@ public class PromoDAOImpl
 			conjunction.add(Restrictions.ge("endDate", today));
 		}
 		
-		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
 	}
 	
 	@Override

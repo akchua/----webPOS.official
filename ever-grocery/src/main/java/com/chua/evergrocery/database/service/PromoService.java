@@ -12,5 +12,5 @@ import com.chua.evergrocery.objects.ObjectList;
 public interface PromoService
 		extends Service<Promo, Long>, PromoPrototype {
 	
-	ObjectList<Promo> findAllWithPaging(int pageNumber, int resultsPerPage, Boolean showActiveOnly);
+	ObjectList<Promo> findAllWithPagingOrderByLatest(int pageNumber, int resultsPerPage, Boolean showActiveOnly);
 }
