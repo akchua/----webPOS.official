@@ -28,7 +28,7 @@ public class PromoServiceImpl
 	
 	@Override
 	public ObjectList<Promo> findAllWithPagingOrderByLatest(int pageNumber, int resultsPerPage, Boolean showActiveOnly) {
-		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, showActiveOnly, new Order[] { Order.desc("updatedOn") });
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, showActiveOnly, new Order[] { Order.desc("createdOn") });
 	}
 
 	@Override
