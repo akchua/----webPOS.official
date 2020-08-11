@@ -13,4 +13,6 @@ public interface PromoService
 		extends Service<Promo, Long>, PromoPrototype {
 	
 	ObjectList<Promo> findAllWithPagingOrderByLatest(int pageNumber, int resultsPerPage, Boolean showActiveOnly);
+	
+	ObjectList<Promo> findAllRecentlyEndedWithPagingOrderByLatest(int pageNumber, int resultsPerPage);
 }

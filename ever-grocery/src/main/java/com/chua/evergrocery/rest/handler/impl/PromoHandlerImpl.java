@@ -54,6 +54,11 @@ public class PromoHandlerImpl implements PromoHandler {
 	}
 	
 	@Override
+	public ObjectList<Promo> getRecentlyEndedPromoList(Integer pageNumber) {
+		return promoService.findAllRecentlyEndedWithPagingOrderByLatest(pageNumber, UserContextHolder.getItemsPerPage());
+	}
+	
+	@Override
 	public Promo getPromo(Long promoId) {
 		return promoService.find(promoId);
 	}

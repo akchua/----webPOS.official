@@ -3,6 +3,7 @@
 	var Home = function() {
 		this.salePriceHistoryList = ko.observable();
 		this.promoList = ko.observable();
+		this.recentlyEndedPromoList = ko.observable();
 		
 		this.itemsPerPage = ko.observable(app.user.itemsPerPage);
 		this.totalItems = ko.observable();
@@ -12,6 +13,10 @@
 		this.totalItems2 = ko.observable();
 		this.currentPage2 = ko.observable(1);
 		this.currentPageSubscription2 = null;
+		
+		this.totalItems3 = ko.observable();
+		this.currentPage3 = ko.observable(1);
+		this.currentPageSubscription3 = null;
 	};
 	
 	Home.prototype.activate = function() {
@@ -27,8 +32,14 @@
 			self.refreshPromoList();
 		});
 		
+		self.currentPage3(1);
+		self.currentPageSubscription3 = self.currentPage3.subscribe(function() {
+			self.refreshRecentlyEndedPromoList();
+		});
+		
 		self.refreshSalePriceHistoryList();
 		self.refreshPromoList();
+		self.refreshRecentlyEndedPromoList();
 	};
 	
 	Home.prototype.refreshSalePriceHistoryList = function() {
@@ -46,6 +57,15 @@
 		promoService.getPromoList(self.currentPage2(), true, true).done(function(data) {
 			self.promoList(data.list);
 			self.totalItems2(data.total);
+		});
+	};
+	
+	Home.prototype.refreshRecentlyEndedPromoList = function() {
+		var self = this;
+		
+		promoService.getRecentlyEndedPromoList(self.currentPage2(), true, true).done(function(data) {
+			self.recentlyEndedPromoList(data.list);
+			self.totalItems3(data.total);
 		});
 	};
 	

@@ -11,6 +11,16 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getRecentlyEndedPromoList: function(pageNumber, async) {
+    		return $.ajax({
+    			url: '/services/promo/recentlyended',
+    			async: async,
+    			data: {
+    				pageNumber: pageNumber - 1
+    			}
+    		});
+    	},
+    	
     	getPromo: function(promoId) {
     		return $.ajax({
     			url: '/services/promo/get',

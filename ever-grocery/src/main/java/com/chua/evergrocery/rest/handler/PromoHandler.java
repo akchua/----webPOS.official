@@ -14,6 +14,8 @@ public interface PromoHandler {
 	
 	ObjectList<Promo> getPromoList(Integer pageNumber, Boolean showActiveOnly);
 	
+	ObjectList<Promo> getRecentlyEndedPromoList(Integer pageNumber);
+	
 	Promo getPromo(Long promoId);
 
 	ResultBean createPromo(PromoFormBean promoForm, String ip);

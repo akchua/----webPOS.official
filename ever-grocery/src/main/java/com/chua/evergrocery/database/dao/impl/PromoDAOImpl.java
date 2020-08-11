@@ -1,5 +1,6 @@
 package com.chua.evergrocery.database.dao.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.hibernate.criterion.Junction;
@@ -46,6 +47,23 @@ public class PromoDAOImpl
 			conjunction.add(Restrictions.le("startDate", today));
 			conjunction.add(Restrictions.ge("endDate", today));
 		}
+		
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
+	}
+	
+	@Override
+	public ObjectList<Promo> findAllRecentlyEndedWithPagingAndOrder(int pageNumber, int resultsPerPage, int daysAgo,
+			Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		
+		final Date today = DateUtil.floorDay(new Date());
+		
+		final Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_MONTH, -daysAgo);
+		
+		conjunction.add(Restrictions.lt("endDate", today));
+		conjunction.add(Restrictions.ge("endDate", DateUtil.floorDay(cal.getTime())));
 		
 		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
 	}

@@ -30,6 +30,11 @@ public class PromoServiceImpl
 	public ObjectList<Promo> findAllWithPagingOrderByLatest(int pageNumber, int resultsPerPage, Boolean showActiveOnly) {
 		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, showActiveOnly, new Order[] { Order.desc("createdOn") });
 	}
+	
+	@Override
+	public ObjectList<Promo> findAllRecentlyEndedWithPagingOrderByLatest(int pageNumber, int resultsPerPage) {
+		return dao.findAllRecentlyEndedWithPagingAndOrder(pageNumber, resultsPerPage, 4, new Order[] { Order.desc("endDate") });
+	}
 
 	@Override
 	public Promo findByProductAndDuration(Long productId, Date startDate, Date endDate, Long promoId) {

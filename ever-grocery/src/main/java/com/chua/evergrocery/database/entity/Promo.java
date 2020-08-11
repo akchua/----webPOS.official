@@ -103,6 +103,11 @@ public class Promo extends BaseObject {
 	public Date getEndDate() {
 		return endDate;
 	}
+	
+	@Transient
+	public String getFormattedEndDate() {
+		return DateFormatter.prettyFormat(endDate);
+	}
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;

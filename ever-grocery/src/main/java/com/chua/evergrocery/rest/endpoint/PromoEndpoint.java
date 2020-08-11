@@ -41,6 +41,13 @@ public class PromoEndpoint {
 	}
 	
 	@GET
+	@Path("/recentlyended")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<Promo> getRecentlyEndedPromoList(@QueryParam("pageNumber") Integer pageNumber) {
+		return promoHandler.getRecentlyEndedPromoList(pageNumber);
+	}
+	
+	@GET
 	@Path("/get")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Promo getPromo(@QueryParam("promoId") Long promoId) {
