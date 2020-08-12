@@ -63,7 +63,7 @@
 	Home.prototype.refreshRecentlyEndedPromoList = function() {
 		var self = this;
 		
-		promoService.getRecentlyEndedPromoList(self.currentPage2(), true, true).done(function(data) {
+		promoService.getRecentlyEndedPromoList(self.currentPage3(), true, true).done(function(data) {
 			self.recentlyEndedPromoList(data.list);
 			self.totalItems3(data.total);
 		});
