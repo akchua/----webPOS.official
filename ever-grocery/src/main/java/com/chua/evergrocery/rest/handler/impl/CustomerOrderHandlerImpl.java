@@ -126,6 +126,8 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Autowired
 	private VelocityEngine velocityEngine;
+	
+	private static final Float PROMO_ALLOWANCE = 5.0f;
 
 	@Override
 	public ObjectList<CustomerOrder> getCustomerOrderList(Integer pageNumber, String searchKey, Boolean showPaid, Integer daysAgo) {
@@ -671,7 +673,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 				final Promo promo = promoService.findCurrentByProduct(productDetail.getProduct().getId());
 				if(promo != null) {
 					float approxDiscount = productDetail.getSellingPrice() * quantity * (promo.getDiscountPercent() / 100);
-					if(approxDiscount <= promo.getAvailableBudget()) {
+					if(approxDiscount <= promo.getAvailableBudget() || (promo.getAvailableBudget() > 0 && approxDiscount <= promo.getAvailableBudget() + PROMO_ALLOWANCE )) {
 						newCustomerOrderDetail.setPromoId(promo.getId());
 						newCustomerOrderDetail.setPromoPercentDiscount(promo.getDiscountPercent());
 						newCustomerOrderDetail.setPromoType(promo.getPromoType());
@@ -746,7 +748,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 					if(customerOrderDetail.getPromoType() != null) {
 						Promo promo = promoService.get(customerOrderDetail.getPromoId());
 						float approxDiscount = customerOrderDetail.getTotalPrice() * (promo.getDiscountPercent() / 100);
-						if(approxDiscount > promo.getAvailableBudget()) {
+						if(promo.getAvailableBudget() > 0 && approxDiscount > promo.getAvailableBudget() + PROMO_ALLOWANCE) {
 							customerOrderDetail.setPromoId(0l);
 							customerOrderDetail.setPromoPercentDiscount(0.0f);
 							customerOrderDetail.setPromoType(null);
