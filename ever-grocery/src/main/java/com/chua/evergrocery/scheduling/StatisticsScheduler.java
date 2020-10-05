@@ -29,9 +29,9 @@ public class StatisticsScheduler {
 	
 	/**
 	 * Monthly Purchase Statistics Update
-	 * fires at 7:00PM every first day of the month
+	 * fires at 8:00PM every first day of the month
 	 */
-	@Scheduled(cron = "0 0 19 1 * ?")
+	@Scheduled(cron = "0 0 20 1 * ?")
 	//@Scheduled(cron = "0 29 15 * * ?")
 	public void monthlyPurchaseStatisticsUpdate() {
 		final Date start = new Date();
@@ -46,9 +46,9 @@ public class StatisticsScheduler {
 	
 	/**
 	 * Monthly Sales Statistics Update
-	 * fires at 7:05PM every first day of the month
+	 * fires at 8:05PM every first day of the month
 	 */
-	@Scheduled(cron = "0 5 19 1 * ?")
+	@Scheduled(cron = "0 5 20 1 * ?")
 	//@Scheduled(cron = "0 26 15 * * ?")
 	public void monthlySalesStatisticsUpdate() {
 		final Date start = new Date();
@@ -82,9 +82,9 @@ public class StatisticsScheduler {
 	
 	/**
 	 * Monthly product month to day average offtake update
-	 * fires at 7:10PM every first day of the month
+	 * fires at 8:10PM every first day of the month
 	 */
-	@Scheduled(cron = "0 10 19 1 * ?")
+	@Scheduled(cron = "0 10 20 1 * ?")
 	//@Scheduled(cron = "0 02 10 * * ?")
 	public void monthlyProductMTDOfftakeUpdate() {
 		final Date start = new Date();
@@ -99,9 +99,9 @@ public class StatisticsScheduler {
 	
 	/**
 	 * Daily Sales Statistics Update
-	 * fires at 6:55PM every day
+	 * fires at 7:55PM every day
 	 */
-	@Scheduled(cron = "0 55 18 * * ?")
+	@Scheduled(cron = "0 55 19 * * ?")
 	public void dailySalesStatisticsUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting daily sales statistics update");
