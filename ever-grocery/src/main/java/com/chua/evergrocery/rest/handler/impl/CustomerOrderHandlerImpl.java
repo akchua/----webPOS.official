@@ -1048,9 +1048,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			customerOrder.setCartonCount(cartonCount);
-			customerOrder.setPlasticCount(plasticCount);
-			customerOrder.setBagCount(bagCount);
+			setPackageCount(customerOrder, cartonCount, plasticCount, bagCount);
 			
 			result = new ResultBean();
 			result.setSuccess(customerOrderService.update(customerOrder));
@@ -1064,6 +1062,12 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		}
 		
 		return result;
+	}
+	
+	private void setPackageCount(CustomerOrder customerOrder, Integer cartonCount, Integer plasticCount, Integer bagCount) {
+		customerOrder.setCartonCount(cartonCount != null ? cartonCount : 0);
+		customerOrder.setPlasticCount(plasticCount != null ? plasticCount : 0);
+		customerOrder.setBagCount(bagCount != null ? bagCount : 0);
 	}
 	
 	private void setCustomerOrderDetail(CustomerOrderDetail customerOrderDetail, CustomerOrder customerOrder, ProductDetail productDetail) {
