@@ -235,4 +235,14 @@ public class CustomerOrderEndpoint {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		return customerOrderHandler.generateBackendReport(sdf.parse(dateFrom), sdf.parse(dateTo), request.getRemoteAddr());
 	}
+	
+	@POST
+	@Path("/updatepackagecount")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean updatePackageCount(@FormParam("customerOrderId") Long customerOrderId,
+				@FormParam("cartonCount") Integer cartonCount,
+				@FormParam("plasticCount") Integer plasticCount,
+				@FormParam("bagCount") Integer bagCount) {
+		return customerOrderHandler.updatePackageCount(customerOrderId, cartonCount, plasticCount, bagCount);
+	}
 }

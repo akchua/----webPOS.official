@@ -260,6 +260,19 @@ define(['jquery'], function ($) {
     				dateTo: dateTo
     			}
     		});
+    	},
+    	
+    	updatePackageCount: function(customerOrderId, cartonCount, plasticCount, bagCount) {
+    		return $.ajax({
+    			url: '/services/customerorder/updatepackagecount',
+    			method: 'POST',
+    			data: {
+    				customerOrderId: customerOrderId,
+    				cartonCount: cartonCount,
+    				plasticCount: plasticCount,
+    				bagCount: bagCount
+    			}
+    		});
     	}
     };
 });

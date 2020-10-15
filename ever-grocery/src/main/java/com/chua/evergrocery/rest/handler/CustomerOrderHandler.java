@@ -61,4 +61,6 @@ public interface CustomerOrderHandler {
 	ResultBean printZReading(Date readingDate, String ip);
 	
 	void endOfShift(String ip);
+	
+	ResultBean updatePackageCount(Long customerOrderId, Integer cartonCount, Integer plasticCount, Integer bagCount);
 }

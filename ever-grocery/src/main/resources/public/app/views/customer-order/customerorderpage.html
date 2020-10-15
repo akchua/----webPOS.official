@@ -18,14 +18,28 @@
 		<form role="search" class="form-inline">
 			<button data-bind="click: search" class="btn btn-info col-xs-4" type="button"><span> </span><span class="glyphicon glyphicon-search"></span> Search </button>
 			<div class="input-group col-xs-8">
-				<input data-bind="value: barcodeKey, hasFocus: barcodeFocus" type="text" class="form-control" placeholder="Input Barcode Here.......">
+				<input data-bind="value: barcodeKey, hasFocus: barcodeFocus" tabindex="1" type="text" class="form-control" placeholder="Input Barcode Here.......">
 				<span class="input-group-btn">
 					<button data-bind="click: addItemByBarcode, enable: enableAddByBarcode" type="submit" class="btn btn-default"><i class="fa fa-barcode"></i></button>
 				</span>
 			</div>
 	   	</form>
 	</div>
-	<div class="col-md-offset-2 col-xs-6">
+	
+	<div class="col-md-4 col-xs-6">
+		<div class="input-group">
+			<input data-bind="value: customerOrderPageModel.cartonCount, event: { change: function() { updatePackageCount() } }" tabindex="2" type="text" size="1" class="form-control">
+	    	<span class="input-group-btn"><button class="btn btn-default disabled">C</button></span>
+	    	
+	    	<input data-bind="value: customerOrderPageModel.plasticCount, event: { change: function() { updatePackageCount() } }" tabindex="3" type="text" size="1" class="form-control">
+	    	<span class="input-group-btn"><button class="btn btn-default disabled">P</button></span>
+	    	
+	    	<input data-bind="value: customerOrderPageModel.bagCount, event: { change: function() { updatePackageCount() } }" tabindex="4" type="text" size="1" class="form-control">
+	    	<span class="input-group-btn"><button class="btn btn-default disabled">SB</button></span>
+		</div>
+	</div>
+	
+	<div class="col-md-4 col-xs-12">
 		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12 col-xs-12"></div>
 	</div>
 </div>

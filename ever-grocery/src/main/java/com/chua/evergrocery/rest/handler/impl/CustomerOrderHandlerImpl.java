@@ -189,6 +189,9 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrder.setPointsAmount(0.0f);
 		customerOrder.setPointsEarned(0.0f);
 		customerOrder.setTaxAdjustment(0.0f);
+		customerOrder.setCartonCount(0);
+		customerOrder.setPlasticCount(0);
+		customerOrder.setBagCount(0);
 		
 		customerOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
 		customerOrder.setStatus(Status.LISTING);
@@ -1036,6 +1039,31 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public ResultBean updatePackageCount(Long customerOrderId, Integer cartonCount, Integer plasticCount, Integer bagCount) {
+		final ResultBean result;
+		
+		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
+		
+		if(customerOrder != null) {
+			customerOrder.setCartonCount(cartonCount);
+			customerOrder.setPlasticCount(plasticCount);
+			customerOrder.setBagCount(bagCount);
+			
+			result = new ResultBean();
+			result.setSuccess(customerOrderService.update(customerOrder));
+			if(result.getSuccess()) {
+				result.setMessage("Package count updated.");
+			} else {
+				result.setMessage(Html.line(Html.text(Color.RED, "Failed") + " to update package count. Please refresh the page."));
+			}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load customer order. Please refresh the page."));
+		}
+		
+		return result;
 	}
 	
 	private void setCustomerOrderDetail(CustomerOrderDetail customerOrderDetail, CustomerOrder customerOrder, ProductDetail productDetail) {

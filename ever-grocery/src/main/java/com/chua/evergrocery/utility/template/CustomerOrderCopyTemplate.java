@@ -48,6 +48,16 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 		return customerOrder.getOrderNumber();
 	}
 	
+	public String getFormattedPackageCount() {
+		String formattedPackageCount = "";
+		
+		if(customerOrder.getCartonCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getCartonCount() + "C    ";
+		if(customerOrder.getPlasticCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getPlasticCount() + "P    ";
+		if(customerOrder.getBagCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getBagCount() + " SB";
+		
+		return formattedPackageCount;
+	}
+	
 	public String getFormattedGrossAmount() {
 		return String.format("%12s", customerOrder.getFormattedGrossAmount());
 	}

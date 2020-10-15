@@ -18,6 +18,9 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
 		this.customerOrderPageModel = {
 			customerOrderId: ko.observable(),
 			customerOrderNumber: ko.observable(),
+			cartonCount: ko.observable(0),
+			plasticCount: ko.observable(0),
+			bagCount: ko.observable(0),
 			formattedGrossAmount: ko.observable(),
 			formattedOutrightPromoDiscount: ko.observable(),
 			formattedTotalAmount: ko.observable()
@@ -60,11 +63,33 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	});
     };
     
+    CustomerOrderPage.prototype.updatePackageCount = function() {
+    	var self = this;
+    	self.enableAddByBarcode(false);
+    	
+    	customerOrderService.updatePackageCount(
+    				self.customerOrderPageModel.customerOrderId(), 
+    				self.customerOrderPageModel.cartonCount(),
+    				self.customerOrderPageModel.plasticCount(),
+    				self.customerOrderPageModel.bagCount()).done(function(result) { 
+    		self.refreshCustomerOrderDetailList();
+    		self.barcodeFocus(true);
+    		self.enableAddByBarcode(true);
+    		
+    		if(!result.success) {
+				app.showMessage(result.message);
+			}
+    	});
+    };
+    
     CustomerOrderPage.prototype.refreshCustomerOrderDetailList = function() {
     	var self = this;
     	
     	customerOrderService.getCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(customerOrder) { 
     		self.customerOrderPageModel.customerOrderNumber(customerOrder.orderNumber);
+    		self.customerOrderPageModel.cartonCount(customerOrder.cartonCount);
+    		self.customerOrderPageModel.plasticCount(customerOrder.plasticCount);
+    		self.customerOrderPageModel.bagCount(customerOrder.bagCount);
     		self.customerOrderPageModel.formattedGrossAmount(customerOrder.formattedGrossAmount);
     		self.customerOrderPageModel.formattedOutrightPromoDiscount(customerOrder.formattedOutrightPromoDiscount);
     		self.customerOrderPageModel.formattedTotalAmount(customerOrder.formattedTotalAmount);

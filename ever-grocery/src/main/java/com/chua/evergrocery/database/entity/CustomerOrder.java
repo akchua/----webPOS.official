@@ -105,6 +105,12 @@ public class CustomerOrder extends BaseObject {
 	private Float pointsAmount;
 
 	private Float pointsEarned;
+	
+	private Integer cartonCount;
+	
+	private Integer plasticCount;
+	
+	private Integer bagCount;
 
 	@Transient
 	public String getOrderNumber() {
@@ -589,5 +595,35 @@ public class CustomerOrder extends BaseObject {
 
 	public void setPointsEarned(Float pointsEarned) {
 		this.pointsEarned = pointsEarned;
+	}
+
+	@Basic
+	@Column(name = "carton_count")
+	public Integer getCartonCount() {
+		return cartonCount;
+	}
+
+	public void setCartonCount(Integer cartonCount) {
+		this.cartonCount = cartonCount;
+	}
+
+	@Basic
+	@Column(name = "plastic_count")
+	public Integer getPlasticCount() {
+		return plasticCount;
+	}
+
+	public void setPlasticCount(Integer plasticCount) {
+		this.plasticCount = plasticCount;
+	}
+
+	@Basic
+	@Column(name = "bag_count")
+	public Integer getBagCount() {
+		return bagCount;
+	}
+
+	public void setBagCount(Integer bagCount) {
+		this.bagCount = bagCount;
 	}
 }
