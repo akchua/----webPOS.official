@@ -96,7 +96,7 @@ public class ZReadingTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedVatExSales() {
-		return String.format("%21s", "Php " + zReading.getFormattedNetVatExSales());
+		return String.format("%21s", "Php " + zReading.getFormattedVatExSales());
 	}
 	
 	public String getFormattedZeroRatedSales() {
