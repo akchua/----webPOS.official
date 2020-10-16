@@ -129,16 +129,19 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			Float regularDiscountAmount = 0.0f;
 			Float seniorDiscountAmount = 0.0f;
 			Float pwdDiscountAmount = 0.0f;
+			Float specialDiscountVatAdjustment = 0.0f;
 			
 			for(CustomerOrder dco : discountedCustomerOrders) {
 				switch(dco.getDiscountType()) {
 				case NO_DISCOUNT:
 					break;
 				case SENIOR_DISCOUNT:
+					specialDiscountVatAdjustment += dco.getTotalDiscountAmount() - (dco.getTotalDiscountAmount() / 1.12f);
 				case SENIOR_MEDICINE_DISCOUNT:
 					seniorDiscountAmount += dco.getTotalDiscountAmount();
 					break;
 				case PWD_DISCOUNT:
+					specialDiscountVatAdjustment += dco.getTotalDiscountAmount() - (dco.getTotalDiscountAmount() / 1.12f);
 				case PWD_MEDICINE_DISCOUNT:
 					pwdDiscountAmount += dco.getTotalDiscountAmount();
 					break;
@@ -150,6 +153,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			zReading.setRegularDiscountAmount(regularDiscountAmount);
 			zReading.setSeniorDiscountAmount(seniorDiscountAmount);
 			zReading.setPwdDiscountAmount(pwdDiscountAmount);
+			zReading.setSpecialDiscountVatAdjustment(specialDiscountVatAdjustment);
 			zReading.setBeginningRefundAmount(latestZReading.getEndingRefundAmount());
 			zReading.setRefundAmount(refundSummary.getNetSales());
 			zReading.setTotalCheckPayment((salesSummary.getCheckAmount() != null ? salesSummary.getCheckAmount() : 0.0f) + 

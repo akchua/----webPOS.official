@@ -121,11 +121,11 @@ public class BIRBackendReport {
 			createRightAlignedCell(row, 10, zReading.getFormattedVatExSales());
 			createRightAlignedCell(row, 11, zReading.getFormattedZeroRatedSales());
 			createRightAlignedCell(row, 12, zReading.getFormattedRegularDiscountAmount());
-			createRightAlignedCell(row, 13, zReading.getFormattedTotalSpecialDiscountAmount());
+			createRightAlignedCell(row, 13, zReading.getFormattedNetTotalSpecialDiscountAmount());
 			createRightAlignedCell(row, 14, CurrencyFormatter.pesoFormat(-(zReading.getRefundAmount())));
 			createRightAlignedCell(row, 15, "0.00");
 			createRightAlignedCell(row, 16, zReading.getFormattedTotalDeductions());
-			createRightAlignedCell(row, 17, "0.00");
+			createRightAlignedCell(row, 17, zReading.getFormattedSpecialDiscountVatAdjustment());
 			createRightAlignedCell(row, 18, "0.00");
 			createRightAlignedCell(row, 19, "0.00");
 			createRightAlignedCell(row, 20, "0.00");
@@ -133,7 +133,7 @@ public class BIRBackendReport {
 			createRightAlignedCell(row, 22, zReading.getFormattedNetOfVatSales());
 			createRightAlignedCell(row, 23, "0.00");
 			createRightAlignedCell(row, 24, "0.00");
-			createRightAlignedCell(row, 25, zReading.getFormattedNetOfVatSales());
+			createRightAlignedCell(row, 25, zReading.getFormattedNetSales());
 			createCenteredCell(row, 26, "n/a");
 			createCenteredCell(row, 27, "");
 		}
