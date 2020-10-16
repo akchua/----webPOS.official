@@ -13,6 +13,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.enums.DocType;
+import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.utility.format.DateFormatter;
 
 /**
@@ -51,8 +52,17 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 	public String getFormattedPackageCount() {
 		String formattedPackageCount = "";
 		
-		if(customerOrder.getCartonCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getCartonCount() + "C    ";
-		if(customerOrder.getPlasticCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getPlasticCount() + "P    ";
+		NumberFormat nf = new DecimalFormat("##.0");
+		
+		Float caseCount = 0.0f;
+		for(CustomerOrderDetail orderItem : customerOrderItems) {
+			if((orderItem.getUnitType().equals(UnitType.CASE) || orderItem.getUnitType().equals(UnitType.BUNDLE) || orderItem.getUnitType().equals(UnitType.SACK))
+					&& orderItem.getQuantity() >= 1.0f) caseCount += orderItem.getQuantity() - orderItem.getUpgradedQuantity();
+		}
+		
+		if(caseCount > 0.0f) formattedPackageCount += "[ ]" + nf.format(caseCount) + " CS   ";
+		if(customerOrder.getCartonCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getCartonCount() + "C   ";
+		if(customerOrder.getPlasticCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getPlasticCount() + "P   ";
 		if(customerOrder.getBagCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getBagCount() + " SB";
 		
 		return formattedPackageCount;
