@@ -130,7 +130,7 @@ public class BIRBackendReport {
 			createRightAlignedCell(row, 19, "0.00");
 			createRightAlignedCell(row, 20, zReading.getFormattedSpecialDiscountVatAdjustment());
 			createRightAlignedCell(row, 21, zReading.getFormattedNetVatAmount());
-			createRightAlignedCell(row, 22, zReading.getFormattedNetOfVatSales());
+			createRightAlignedCell(row, 22, zReading.getFormattedNetSales());
 			createRightAlignedCell(row, 23, "0.00");
 			createRightAlignedCell(row, 24, "0.00");
 			createRightAlignedCell(row, 25, zReading.getFormattedNetSales());
