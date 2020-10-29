@@ -139,6 +139,11 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
+	public ObjectList<CustomerOrder> getCustomerOrderListByCustomer(Integer pageNumber, Long customerId) {
+		return customerOrderService.findAllWithPagingByCustomerOrderByLatest(pageNumber, UserContextHolder.getItemsPerPage(), customerId);
+	}
+	
+	@Override
 	public ObjectList<CustomerOrder> getCashierCustomerOrderList(Integer pageNumber, String searchKey) {
 		return customerOrderService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, new Status[] { Status.SUBMITTED, Status.DISCOUNTED}, null);
 	}
@@ -250,21 +255,59 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
 		
 		if(customerOrder != null) {
-			final Customer customer = customerService.findByCardId(customerCardId);
-			
-			if(customer != null) {
-				result = new ResultBean();
+			if(!customerCardId.isEmpty()) {
+				final Customer customer = customerService.findByCardId(customerCardId);
 				
-				customerOrder.setCustomer(customer);
-				result.setSuccess(customerOrderService.update(customerOrder));
-				if(result.getSuccess()) {
-					result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " set Mr./Mrs. " + customer.getFormattedName() + " as the customer for this transaction."));
-					activityLogHandler.myLog("set customer on a sales order : " + customer.getId() + " - " + customer.getFormattedName() + " to " + customerOrder.getId(), ip);
+				if(customer != null) {
+					result = new ResultBean();
+					
+					customerOrder.setCustomer(customer);
+					result.setSuccess(customerOrderService.update(customerOrder));
+					if(result.getSuccess()) {
+						result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " set Mr./Mrs. " + customer.getName() + " as the customer for this transaction."));
+						activityLogHandler.myLog("set customer on a sales order : " + customer.getId() + " - " + customer.getName() + " to " + customerOrder.getId(), ip);
+					} else {
+						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+					}
 				} else {
-					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+					result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Invalid ") + " customer card."));
 				}
 			} else {
 				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Invalid ") + " customer card."));
+			}
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load sales order. Please refresh the page."));
+		}
+		
+		return result;
+	}
+	
+	@Override
+	@CheckAuthority(minimumAuthority = 5)
+	public ResultBean setCustomerByCode(Long customerOrderId, String customerCode, String ip) {
+		final ResultBean result;
+		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
+		
+		if(customerOrder != null) {
+			if(customerCode != null && !customerCode.isEmpty()) {
+				final Customer customer = customerService.findByCode(customerCode);
+				
+				if(customer != null) {
+					result = new ResultBean();
+					
+					customerOrder.setCustomer(customer);
+					result.setSuccess(customerOrderService.update(customerOrder));
+					if(result.getSuccess()) {
+						result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " set Mr./Mrs. " + customer.getName() + " as the customer for this transaction."));
+						activityLogHandler.myLog("set customer on a sales order : " + customer.getId() + " - " + customer.getName() + " to " + customerOrder.getId(), ip);
+					} else {
+						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+					}
+				} else {
+					result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Invalid ") + " customer code."));
+				}
+			} else {
+				result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Invalid ") + " customer code."));
 			}
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load sales order. Please refresh the page."));
@@ -287,7 +330,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 			result.setSuccess(customerOrderService.update(customerOrder));
 			if(result.getSuccess()) {
 				result.setMessage(Html.line(Html.text(Color.GREEN, "Successfully") + " removed the customer for this transaction."));
-				activityLogHandler.myLog("removed customer from a sales order : " + customer.getId() + " - " + customer.getFormattedName() + " to " + customerOrder.getId(), ip);
+				activityLogHandler.myLog("removed customer from a sales order : " + customer.getId() + " - " + customer.getName() + " to " + customerOrder.getId(), ip);
 			} else {
 				result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
 			}
@@ -500,12 +543,15 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 									setCustomerOrderPayment(customerOrder, paymentsForm);
 									
 									if(customerOrder.getCustomer() != null) {
-										setEarnedPoints(customerOrder);
 										final Customer customer = customerOrder.getCustomer();
-										customer.setTotalPoints(customer.getTotalPoints() + customerOrder.getPointsEarned());
-										
-										// add used points if any
-										customer.setUsedPoints(customer.getUsedPoints() + customerOrder.getPointsAmount());
+										customer.setLastPurchase(new Date());
+										if(!customerOrder.getCustomer().getCardId().isEmpty()) {
+											setEarnedPoints(customerOrder);
+											customer.setTotalPoints(customer.getTotalPoints() + customerOrder.getPointsEarned());
+											
+											// add used points if any
+											customer.setUsedPoints(customer.getUsedPoints() + customerOrder.getPointsAmount());
+										}
 										customerService.update(customer);
 									}
 									

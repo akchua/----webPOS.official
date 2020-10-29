@@ -28,13 +28,14 @@ public class CustomerServiceImpl
 	}
 	
 	@Override
+	public ObjectList<Customer> findAllWithPagingByCategoryOrderByLatest(int pageNumber, int resultsPerPage,
+			Long customerCategoryId) {
+		return dao.findAllWithPagingByCategoryWithOrder(pageNumber, resultsPerPage, customerCategoryId, new Order[] { Order.asc("name") });
+	}
+	
+	@Override
 	public List<Customer> findAllOrderByLastName() {
 		return dao.findAllWithOrder(new Order[] { Order.asc("lastName") });
-	}
-
-	@Override
-	public Boolean isExistsByFullName(String firstName, String lastName) {
-		return dao.findByFullName(StringUtils.trimToEmpty(firstName), StringUtils.trimToEmpty(lastName)) != null;
 	}
 
 	@Override
@@ -45,5 +46,15 @@ public class CustomerServiceImpl
 	@Override
 	public Boolean isExistsByCardId(String cardId) {
 		return dao.findByCardId(StringUtils.trimToEmpty(cardId)) != null;
+	}
+
+	@Override
+	public Customer findByCode(String code) {
+		return dao.findByCode(StringUtils.trimToEmpty(code));
+	}
+
+	@Override
+	public Boolean isExistsByCode(String code) {
+		return dao.findByCode(StringUtils.trimToEmpty(code)) != null;
 	}
 }

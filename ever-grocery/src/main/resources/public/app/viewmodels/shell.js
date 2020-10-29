@@ -26,13 +26,14 @@
 	  	{ route: 'manage', moduleRootId: 'viewmodels/manage', title: '', nav: true, hash: '#manage',
 	  		childRoutes: [
 	  		    /*{ route: 'brand', moduleId: 'brand', title: 'Brands', nav: true, hash: 'brand' },*/
-	  		    { route: 'category', moduleId: 'category', title: 'Categories', nav: true, hash: 'category' },
 	  		    { route: 'company', moduleId: 'company', title: 'Companies', nav: true, hash: 'company' },
 	  		    /*{ route: 'distributor', moduleId: 'distributor', title: 'Distributors', nav: true, hash: 'distributor' },*/
 	      		{ route: 'product', moduleId: 'product', title: 'Products', nav: true, hash: 'product' },
+	      		{ route: 'category', moduleId: 'category', title: 'Product Categories', nav: true, hash: 'category' },
 	      		{ route: 'promo', moduleId: 'promo', title: 'Promos', nav: true, hash: 'promo' },
 	      		
-	      		{ route: 'customer', moduleId: 'customer', title: 'Customers', nav: true, hash: 'customer' }
+	      		{ route: 'customer', moduleId: 'customer', title: 'Customers', nav: true, hash: 'customer' },
+	      		{ route: 'customercategory', moduleId: 'customercategory', title: 'Customer Categories', nav: true, hash: 'customercategory' }
 	  		]
 	  	}
 	];

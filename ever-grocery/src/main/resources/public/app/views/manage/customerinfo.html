@@ -1,0 +1,37 @@
+<div class="row">
+	<br>
+	<dl class="dl-horizontal">
+		<dt>Category:</dt>
+		<dd data-bind="text: customer.customerCategoryName"></dd>
+		<dt>Code:</dt>
+		<dd data-bind="text: customer.code"></dd>
+		<dt>Name:</dt>
+		<dd data-bind="text: customer.name"></dd>
+		<dt>Store Name:</dt>
+		<dd data-bind="text: customer.storeName"></dd>
+		<dt>Address:</dt>
+		<dd data-bind="text: customer.address"></dd>
+		<dt>Contact Number:</dt>
+		<dd data-bind="text: customer.contactNumber"></dd>
+		<dt>Card ID:</dt>
+		<dd data-bind="text: customer.cardId"></dd>
+		<dt>Last Order Date:</dt>
+		<dd data-bind="text: customer.formattedLastPurchase"></dd>
+   	</dl>
+   	<hr>
+   	<dl class="dl-horizontal">
+		<dt>Total Points:</dt>
+		<dd data-bind="text: customer.formattedTotalPoints"></dd>
+		<dt>Used Points:</dt>
+		<dd data-bind="text: customer.formattedUsedPoints"></dd>
+		<dt>Available Points:</dt>
+		<dd data-bind="text: customer.formattedAvailablePoints"></dd>
+   	</dl>
+   	<hr>
+   	<dl class="dl-horizontal">
+		<dt>Sales Value (%):</dt>
+		<dd data-bind="text: customer.formattedSaleValuePercentage"></dd>
+		<dt>Profit (%):</dt>
+		<dd data-bind="text: customer.formattedProfitPercentage"></dd>
+   	</dl>
+</div>

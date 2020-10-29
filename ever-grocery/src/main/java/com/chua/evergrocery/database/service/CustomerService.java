@@ -4,9 +4,13 @@ import java.util.List;
 
 import com.chua.evergrocery.database.entity.Customer;
 import com.chua.evergrocery.database.prototype.CustomerPrototype;
+import com.chua.evergrocery.objects.ObjectList;
 
 public interface CustomerService 
 		extends Service<Customer, Long>, CustomerPrototype {
+	
+	ObjectList<Customer> findAllWithPagingByCategoryOrderByLatest(int pageNumber, int resultsPerPage, Long customerCategoryId);
+	
 	/**
 	 * Find all customer ordered by name.
 	 * 
@@ -14,7 +18,7 @@ public interface CustomerService
 	 */
 	List<Customer> findAllOrderByLastName();
 	
-	Boolean isExistsByFullName(String firstName, String lastName);
-	
 	Boolean isExistsByCardId(String cardId);
+	
+	Boolean isExistsByCode(String code);
 }

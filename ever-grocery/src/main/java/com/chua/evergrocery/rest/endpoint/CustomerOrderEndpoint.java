@@ -43,6 +43,14 @@ public class CustomerOrderEndpoint {
 	}
 	
 	@GET
+	@Path("/listbycustomer")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<CustomerOrder> getCustomerOrderListByCustomer(@QueryParam("pageNumber") Integer pageNumber,
+			@QueryParam("customerId") Long customerId) {
+		return customerOrderHandler.getCustomerOrderListByCustomer(pageNumber, customerId);
+	}
+	
+	@GET
 	@Path("/cashierlist")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ObjectList<CustomerOrder> getCashierCustomerOrderList(@QueryParam("pageNumber") Integer pageNumber,
@@ -94,6 +102,15 @@ public class CustomerOrderEndpoint {
 				@FormParam("customerCardId") String customerCardId,
 				@Context HttpServletRequest request) {
 		return customerOrderHandler.setCustomer(customerOrderId, customerCardId, request.getRemoteAddr());
+	}
+	
+	@POST
+	@Path("/setcustomerbycode")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean setCustomerByCode(@FormParam("customerOrderId") Long customerOrderId,
+				@FormParam("customerCode") String customerCode,
+				@Context HttpServletRequest request) {
+		return customerOrderHandler.setCustomerByCode(customerOrderId, customerCode, request.getRemoteAddr());
 	}
 	
 	@POST

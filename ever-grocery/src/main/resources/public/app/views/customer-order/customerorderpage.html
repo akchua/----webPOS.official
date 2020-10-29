@@ -1,8 +1,27 @@
 <div class="row">
-	<h5>
-		<span class="col-xs-offset-6 col-xs-4 text-right">Sub Total: <span class="text-md-black-elite">&#8369; <span data-bind="text: customerOrderPageModel.formattedGrossAmount" ></span></span></span>
-		<span class="col-xs-offset-6 col-xs-4 text-right">Promo Discount: <span class="text-md-black-elite">&#8369; <span data-bind="text: customerOrderPageModel.formattedOutrightPromoDiscount" ></span></span></span>
-	</h5>
+	<!-- ko ifnot: hasCustomer -->
+	<div class="col-xs-4">
+		<form role="search" class="form-inline">
+			<div class="input-group col-xs-8">
+				<input data-bind="value: customerCode" tabindex="5" type="text" class="form-control" placeholder="Customer Code">
+				<span class="input-group-btn">
+					<button data-bind="click: setCustomerByCode, enable: enableAddByBarcode" type="submit" class="btn btn-default"><i class="fa fa-arrow-right"></i></button>
+				</span>
+			</div>
+	   	</form>
+	</div>
+	<!-- /ko -->
+	<!-- ko if: hasCustomer -->
+	<div class="col-xs-4">
+		<span>Customer : <span data-bind="text: customerCode"></span> <button class="btn btn-sm" data-bind="click: removeCustomer, enable: enableAddByBarcode"><i class="fa fa-times"></i></button></span>
+	</div>
+	<!-- /ko -->
+	<div class="col-xs-8">
+		<h5>
+			<span class="col-xs-offset-6 col-xs-4 text-right">Sub Total: <span class="text-md-black-elite">&#8369; <span data-bind="text: customerOrderPageModel.formattedGrossAmount" ></span></span></span>
+			<span class="col-xs-offset-6 col-xs-4 text-right">Promo Discount: <span class="text-md-black-elite">&#8369; <span data-bind="text: customerOrderPageModel.formattedOutrightPromoDiscount" ></span></span></span>
+		</h5>
+	</div>
 </div>
 
 <div class="row">

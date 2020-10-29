@@ -35,24 +35,35 @@ public class CustomerDAOImpl
 	}
 	
 	@Override
+	public ObjectList<Customer> findAllWithPagingByCategoryWithOrder(int pageNumber, int resultsPerPage,
+			Long customerCategoryId, Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		
+		if(customerCategoryId != null) {
+			conjunction.add(Restrictions.eq("customerCategory.id", customerCategoryId));
+		}
+		
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
+	}
+	
+	@Override
 	public List<Customer> findAllWithOrder(Order[] orders) {
 		return findAllByCriterionList(null, null, null, orders, Restrictions.eq("isValid", Boolean.TRUE));
 	}
 	
 	@Override
-	public Customer findByFullName(String firstName, String lastName) {
+	public Customer findByCardId(String cardId) {
 		final Junction conjunction = Restrictions.conjunction();
-		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.eq("firstName", firstName));
-		conjunction.add(Restrictions.eq("lastName", lastName));
+		conjunction.add(Restrictions.eq("cardId", cardId));
 		
 		return findUniqueResult(null, null, null, conjunction);
 	}
 
 	@Override
-	public Customer findByCardId(String cardId) {
+	public Customer findByCode(String code) {
 		final Junction conjunction = Restrictions.conjunction();
-		conjunction.add(Restrictions.eq("cardId", cardId));
+		conjunction.add(Restrictions.eq("code", code));
 		
 		return findUniqueResult(null, null, null, conjunction);
 	}

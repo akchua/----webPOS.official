@@ -197,7 +197,7 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedCustomerName() {
-		return StringHelper.center(customerOrder.getCustomer() != null ? customerOrder.getCustomer().getFormattedName() : "", 44);
+		return StringHelper.center(customerOrder.getCustomer() != null ? customerOrder.getCustomer().getName() : "", 44);
 	}
 	
 	public String getFormattedCustomerCardId() {

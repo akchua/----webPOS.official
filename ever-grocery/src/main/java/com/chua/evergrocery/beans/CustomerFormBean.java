@@ -2,9 +2,13 @@ package com.chua.evergrocery.beans;
 
 public class CustomerFormBean extends FormBean {
 
-	private String firstName;
+	private Long customerCategoryId;
 	
-	private String lastName;
+	private String name;
+	
+	private String storeName;
+	
+	private String code;
 	
 	private String contactNumber;
 	
@@ -12,20 +16,36 @@ public class CustomerFormBean extends FormBean {
 	
 	private String cardId;
 
-	public String getFirstName() {
-		return firstName;
+	public Long getCustomerCategoryId() {
+		return customerCategoryId;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setCustomerCategoryId(Long customerCategoryId) {
+		this.customerCategoryId = customerCategoryId;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public String getName() {
+		return name;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getContactNumber() {

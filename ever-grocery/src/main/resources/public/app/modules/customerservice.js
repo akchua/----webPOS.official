@@ -10,6 +10,17 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getCustomerListByCategory: function(pageNumber, customerCategoryId, async) {
+    		return $.ajax({
+    			url: '/services/customer/listbycategory',
+    			async: async,
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				customerCategoryId: customerCategoryId
+    			}
+    		});
+    	},
+    	
     	getCustomer: function(customerId) {
     		return $.ajax({
     			url: '/services/customer/get',

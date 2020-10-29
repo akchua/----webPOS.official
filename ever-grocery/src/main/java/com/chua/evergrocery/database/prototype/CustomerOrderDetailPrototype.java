@@ -15,4 +15,6 @@ public interface CustomerOrderDetailPrototype {
 	List<CustomerOrderDetail> findAllByProductLimitByDate(Long productId, Date from);
 	
 	List<CustomerOrderDetail> findAllByCustomerOrderId(Long customerOrderId);
+	
+	List<CustomerOrderDetail> findAllByCustomerAndDatePaid(Long customerId, Date datePaidStart, Date datePaidEnd);
 }

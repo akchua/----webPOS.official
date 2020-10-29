@@ -92,6 +92,19 @@ public class CustomerOrderDAOImpl
 	}
 	
 	@Override
+	public ObjectList<CustomerOrder> findAllWithPagingByCustomerWithOrder(int pageNumber, int resultsPerPage,
+			Long customerId, Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		
+		if(customerId != null) {
+			conjunction.add(Restrictions.eq("customer.id", customerId));
+		}
+		
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
+	}
+	
+	@Override
 	public List<CustomerOrder> findAllByCashierStatusAndDatePaidWithOrder(Long cashierId, Status[] status, Date dateFrom, Date dateTo, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));

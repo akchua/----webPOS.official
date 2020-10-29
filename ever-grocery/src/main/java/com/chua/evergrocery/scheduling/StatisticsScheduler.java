@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.chua.evergrocery.rest.handler.CustomerSummaryHandler;
 import com.chua.evergrocery.rest.handler.ProfitRankingHandler;
 import com.chua.evergrocery.rest.handler.TransactionSummaryHandler;
 
@@ -23,6 +24,9 @@ public class StatisticsScheduler {
 
 	@Autowired
 	private TransactionSummaryHandler transactionSummaryHandler;
+	
+	@Autowired
+	private CustomerSummaryHandler customerSummaryHandler;
 	
 	@Autowired
 	private ProfitRankingHandler profitRankingHandler;
@@ -61,6 +65,7 @@ public class StatisticsScheduler {
 		LOG.info("Monthly sales statistics update complete. Total execution time : " + seconds + "s");
 		
 		this.monthlyProfitRankingUpdate();
+		this.monthlyCustomerSummaryUpdate();
 	}
 	
 	/**
@@ -78,6 +83,22 @@ public class StatisticsScheduler {
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
 		LOG.info("Monthly profit ranking update complete. Total execution time : " + seconds + "s");
+	}
+	
+	/**
+	 * Monthly customer sales summary update
+	 * fires by @monthlySalesStatisticsUpdate after completion
+	 */
+	//@Scheduled(cron = "0 02 10 * * ?")
+	public void monthlyCustomerSummaryUpdate() {
+		final Date start = new Date();
+		LOG.info("Starting monthly customer sales summary update");
+		
+		customerSummaryHandler.updateMonthlyCustomerSummaries(1);
+		
+		final Date end = new Date();
+		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
+		LOG.info("Monthly customer sales summary update complete. Total execution time : " + seconds + "s");
 	}
 	
 	/**
@@ -116,9 +137,9 @@ public class StatisticsScheduler {
 	/*@Autowired
 	private InventoryHandler inventoryHandler;
 	
-	@Scheduled(cron = "0/15 * * * * ?")
+	@Scheduled(cron = "0 30 16 * * ?")
 	public void test() {
-		inventoryHandler.getProductInventory(4146l);
+		customerSummaryHandler.updateMonthlyCustomerSummaries(2);
 	}*/
 	
 	/*@Autowired

@@ -7,16 +7,29 @@
 	    
 	    <div class="modal-body">
 	    	<div class="row">
-		      	<div class="control-group">
-					<label class="control-label" for="firstName">First Name</label>
+	    		<div class="control-group">
+					<label class="control-label" for="customerCategory">Select Customer Category</label>
 					<div class="controls">
-						<input data-bind="textInput: customerFormModel.firstName" type="text" id="firstName" name="firstName" placeholder="" class="form-control input-lg autofocus">
-						<p data-bind="text: errors.firstName" class="text-danger"></p>
+						<select data-bind="options: customerCategoryList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- Select Customer Category --', value: customerFormModel.customerCategoryId" class="form-control select-lg" id="customerCategory"></select>
+						<p data-bind="text: errors.customerCategoryId" class="text-danger"></p>
 					</div>
-					<label class="control-label" for="lastName">Last Name</label>
+				</div>
+			
+		      	<div class="control-group">
+					<label class="control-label" for="name">Name</label>
 					<div class="controls">
-						<input data-bind="textInput: customerFormModel.lastName" type="text" id="lastName" name="lastName" placeholder="" class="form-control input-lg">
-						<p data-bind="text: errors.lastName" class="text-danger"></p>
+						<input data-bind="textInput: customerFormModel.name" type="text" id="name" name="name" placeholder="" class="form-control input-lg autofocus">
+						<p data-bind="text: errors.name" class="text-danger"></p>
+					</div>
+					<label class="control-label" for="storeName">Store Name</label>
+					<div class="controls">
+						<input data-bind="textInput: customerFormModel.storeName" type="text" id="storeName" name="storeName" placeholder="" class="form-control input-lg">
+						<p data-bind="text: errors.storeName" class="text-danger"></p>
+					</div>
+					<label class="control-label" for="code">Code</label>
+					<div class="controls">
+						<input data-bind="textInput: customerFormModel.code" type="text" id="code" name="code" placeholder="" class="form-control input-lg">
+						<p data-bind="text: errors.code" class="text-danger"></p>
 					</div>
 				</div>
 				

@@ -12,6 +12,7 @@ import com.chua.evergrocery.UserContextHolder;
 import com.chua.evergrocery.beans.CustomerFormBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.database.entity.Customer;
+import com.chua.evergrocery.database.service.CustomerCategoryService;
 import com.chua.evergrocery.database.service.CustomerService;
 import com.chua.evergrocery.enums.Color;
 import com.chua.evergrocery.objects.ObjectList;
@@ -29,6 +30,9 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	private CustomerService customerService;
 	
 	@Autowired
+	private CustomerCategoryService customerCategoryService;
+	
+	@Autowired
 	private ActivityLogHandler activityLogHandler;
 	
 	@Autowired
@@ -37,6 +41,11 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	@Override
 	public ObjectList<Customer> getCustomerObjectList(Integer pageNumber, String searchKey) {
 		return customerService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey);
+	}
+	
+	@Override
+	public ObjectList<Customer> getCustomerListByCategory(Integer pageNumber, Long customerCategoryId) {
+		return customerService.findAllWithPagingByCategoryOrderByLatest(pageNumber, UserContextHolder.getItemsPerPage(), customerCategoryId);
 	}
 	
 	@Override
@@ -50,23 +59,25 @@ public class CustomerHandlerImpl implements CustomerHandler {
 		final Map<String, String> errors = customerFormValidator.validate(customerForm);
 		
 		if(errors.isEmpty()) {
-			if(!customerService.isExistsByCardId(customerForm.getCardId())) {
+			if(!customerService.isExistsByCode(customerForm.getCode())) {
 				final Customer customer = new Customer();
 				setCustomer(customer, customerForm);
 				customer.setTotalPoints(0.0f);
 				customer.setUsedPoints(0.0f);
 				customer.setLastPurchase(DateUtil.getDefaultDate());
+				customer.setSaleValuePercentage(0.0f);
+				customer.setProfitPercentage(0.0f);
 				
 				result = new ResultBean();
 				result.setSuccess(customerService.insert(customer) != null);
 				if(result.getSuccess()) {
 					result.setMessage("Customer successfully created.");
-					activityLogHandler.myLog("created a customer  : " + customer.getId() + " - " + customer.getFormattedName(), ip);
+					activityLogHandler.myLog("created a customer  : " + customer.getId() + " - " + customer.getName(), ip);
 				} else {
 					result.setMessage("Failed to create customer.");
 				}
 			} else {
-				result = new ResultBean(false, "Customer \"" + customerForm.getLastName() + ", " + customerForm.getFirstName() + "\" already exists!");
+				result = new ResultBean(false, "Customer \"" + customerForm.getCode() + "\" already exists!");
 			}
 		} else {
 			result = new ResultBean(Boolean.FALSE, "");
@@ -85,10 +96,9 @@ public class CustomerHandlerImpl implements CustomerHandler {
 			final Map<String, String> errors = customerFormValidator.validate(customerForm);
 			
 			if(errors.isEmpty()) {
-				if(!(StringUtils.trimToEmpty(customer.getFirstName()).equalsIgnoreCase(customerForm.getFirstName()) &&
-						StringUtils.trimToEmpty(customer.getLastName()).equalsIgnoreCase(customerForm.getLastName())) &&
-						customerService.isExistsByFullName(customerForm.getFirstName(), customerForm.getLastName())) {
-					result = new ResultBean(false, "Customer \"" + customerForm.getLastName() + ", " + customerForm.getFirstName() + "\" already exists!");
+				if(!(StringUtils.trimToEmpty(customer.getCode()).equalsIgnoreCase(customerForm.getCode())) &&
+						customerService.isExistsByCode(customerForm.getCode())) {
+					result = new ResultBean(false, "Customer \"" + customerForm.getCode() + "\" already exists!");
 				} else {
 					setCustomer(customer, customerForm);
 					
@@ -96,7 +106,7 @@ public class CustomerHandlerImpl implements CustomerHandler {
 					result.setSuccess(customerService.update(customer));
 					if(result.getSuccess()) {
 						result.setMessage("Customer successfully updated.");
-						activityLogHandler.myLog("updated a customer : " + customer.getId() + " - " + customer.getFormattedName(), ip);
+						activityLogHandler.myLog("updated a customer : " + customer.getId() + " - " + customer.getName(), ip);
 					} else {
 						result.setMessage("Failed to update customer.");
 					}
@@ -123,10 +133,10 @@ public class CustomerHandlerImpl implements CustomerHandler {
 				
 				result.setSuccess(customerService.delete(customer));
 				if(result.getSuccess()) {
-					result.setMessage("Successfully removed Customer \"" + customer.getFormattedName() + "\".");
-					activityLogHandler.myLog("removed a customer : " + customer.getId() + " - " + customer.getFormattedName(), ip);
+					result.setMessage("Successfully removed Customer \"" + customer.getName() + "\".");
+					activityLogHandler.myLog("removed a customer : " + customer.getId() + " - " + customer.getName(), ip);
 				} else {
-					result.setMessage("Failed to remove Customer \"" + customer.getLastName() + ", " + customer.getFirstName() + "\".");
+					result.setMessage("Failed to remove Customer \"" + customer.getName() + "\".");
 				}
 			} else {
 				result = new ResultBean(Boolean.FALSE, Html.line("You are " + Html.text(Color.RED, "NOT ALLOWED") + " to delete a customer account with rewards points remaining.")
@@ -145,10 +155,12 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	}
 	
 	private void setCustomer(Customer customer, CustomerFormBean customerForm) {
-		customer.setFirstName(customerForm.getFirstName().trim());
-		customer.setLastName(customerForm.getLastName().trim());
-		customer.setContactNumber(customerForm.getContactNumber().trim());
+		customer.setCustomerCategory(customerCategoryService.find(customerForm.getCustomerCategoryId()));
+		customer.setName(customerForm.getName().trim());
+		customer.setStoreName(customerForm.getStoreName().trim());
+		customer.setCode(customerForm.getCode().trim());
+		customer.setContactNumber(customerForm.getContactNumber() != null ? customerForm.getContactNumber().trim() : "");
 		customer.setAddress(customerForm.getAddress().trim());
-		customer.setCardId(customerForm.getCardId().trim());
+		customer.setCardId(customerForm.getCardId() != null ? customerForm.getCardId().trim() : "");
 	}
 }

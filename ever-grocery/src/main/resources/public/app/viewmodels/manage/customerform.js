@@ -1,4 +1,5 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerservice'], function (dialog, app, ko, customerService) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerservice', 'modules/customercategoryservice'], 
+			function (dialog, app, ko, customerService, customerCategoryService) {
     var CustomerForm = function(preTitle, customer) {
         this.preTitle = preTitle;
         this.customer = customer;
@@ -6,8 +7,10 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerservice']
         this.customerFormModel = {
         	id : ko.observable(),
         	
-        	firstName : ko.observable(),
-        	lastName : ko.observable(),
+        	customerCategoryId: ko.observable(),
+        	name : ko.observable(),
+        	storeName : ko.observable(),
+        	code: ko.observable(),
         	contactNumber : ko.observable(),
         	address : ko.observable(),
         	
@@ -15,24 +18,34 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerservice']
         };
         
         this.errors = {
-    		firstName : ko.observable(),
-        	lastName : ko.observable(),
+        	customerCategoryId: ko.observable(),
+    		name : ko.observable(),
+        	storeName : ko.observable(),
+        	code: ko.observable(),
         	contactNumber : ko.observable(),
         	address : ko.observable(),
         	
         	cardId : ko.observable()	
         };
+        
+        this.customerCategoryList = ko.observable();
     };
     
     CustomerForm.prototype.activate = function() {
     	var self = this;
     	
     	self.customerFormModel.id(self.customer.id);
-    	self.customerFormModel.firstName(self.customer.firstName);
-    	self.customerFormModel.lastName(self.customer.lastName);
+    	self.customerFormModel.name(self.customer.name);
+    	self.customerFormModel.storeName(self.customer.storeName);
+    	self.customerFormModel.code(self.customer.code);
     	self.customerFormModel.contactNumber(self.customer.contactNumber);
     	self.customerFormModel.address(self.customer.address);
     	self.customerFormModel.cardId(self.customer.cardId);
+    	
+    	customerCategoryService.getCustomerCategoryListByName().done(function(customerCategoryList) {
+    		self.customerCategoryList(customerCategoryList);
+    		self.customerFormModel.customerCategoryId(self.customer.customerCategory.id);
+    	});
     };
  
     CustomerForm.show = function(preTitle, customer) {
@@ -46,8 +59,10 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerservice']
         	if(result.success) {
         		dialog.close(self);	
         	} else {
-        		self.errors.firstName(result.extras.errors.firstName);
-        		self.errors.lastName(result.extras.errors.lastName);
+        		self.errors.customerCategoryId(result.extras.errors.customerCategoryId);
+        		self.errors.name(result.extras.errors.name);
+        		self.errors.storeName(result.extras.errors.storeName);
+        		self.errors.code(result.extras.errors.code);
         		self.errors.contactNumber(result.extras.errors.contactNumber);
         		self.errors.address(result.extras.errors.address);
         		self.errors.cardId(result.extras.errors.cardId);

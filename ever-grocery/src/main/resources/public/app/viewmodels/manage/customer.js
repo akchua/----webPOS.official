@@ -1,5 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/customerservice', 'viewmodels/manage/customerform'], 
-		function (app, ko, customerService, CustomerForm) {
+define(['durandal/app', 'knockout', 'modules/customerservice', 'viewmodels/manage/customerform', 'viewmodels/manage/customerview'], 
+		function (app, ko, customerService, CustomerForm, CustomerView) {
 	var Customer = function() {
 		this.customerList = ko.observable();
 		
@@ -61,10 +61,9 @@ define(['durandal/app', 'knockout', 'modules/customerservice', 'viewmodels/manag
     	self.enableButtons(false);
     	
     	customerService.getCustomer(customerId).done(function(customer) {
-    		alert('here');
-    		/*CustomerView.show(customer).then(function() {
+    		CustomerView.show(customer).then(function() {
     			self.enableButtons(true);
-    		});*/
+    		});
     	});
     };
 	
@@ -80,11 +79,11 @@ define(['durandal/app', 'knockout', 'modules/customerservice', 'viewmodels/manag
 		});
 	};
 	
-	Customer.prototype.remove = function(customerId, customerFormattedName) {
+	Customer.prototype.remove = function(customerId, customerName) {
 		var self = this;
 		self.enableButtons(false);
 		
-		app.showMessage('Are you sure you want to remove Customer "' + customerFormattedName + '"?',
+		app.showMessage('Are you sure you want to remove Customer "' + customerName + '"?',
 				'Confirm Remove',
 				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
 		.then(function(confirm) {

@@ -11,6 +11,8 @@ public interface CustomerHandler {
 
 	ObjectList<Customer> getCustomerObjectList(Integer pageNumber, String searchKey);
 	
+	ObjectList<Customer> getCustomerListByCategory(Integer pageNumber, Long customerCategoryId);
+	
 	Customer getCustomer(Long customerId);
 	
 	ResultBean createCustomer(CustomerFormBean customerForm, String ip);

@@ -70,4 +70,10 @@ public class CustomerOrderDetailServiceImpl
 	public List<ProductSalesSummaryBean> getAllProductSalesSummaryByCompanyAndDate(long companyId, Date salesDay) {
 		return dao.getAllProductSalesSummaryByCompanyAndPaidDate(companyId, DateUtil.floorDay(salesDay), DateUtil.ceilDay(salesDay));
 	}
+
+	@Override
+	public List<CustomerOrderDetail> findAllByCustomerAndDatePaid(Long customerId, Date datePaidStart,
+			Date datePaidEnd) {
+		return dao.findAllByCustomerAndDatePaid(customerId, datePaidStart, datePaidEnd);
+	}
 }

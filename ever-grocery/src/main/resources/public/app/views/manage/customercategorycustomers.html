@@ -1,0 +1,33 @@
+<section>
+	<br />
+	
+	<div class="row">
+		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
+	</div>
+	
+    <div class="row">
+    	<div class="col-md-12">
+    		<table class="table table-responsive table-hover">
+    			<thead>
+    				<tr>
+    					<th>Code</th>
+    					<th>Name</th>
+    					<th>Store Name</th>
+    					<th class="text-right">Sales (%)</th>
+    					<th class="text-right">Profit (%)</th>
+    				</tr>
+    			</thead>
+    		
+    			<tbody data-bind="foreach: { data: customerList, as: 'customer' }">
+    				<tr>
+    					<td data-bind="text: customer.code"></td>
+    					<td data-bind="text: customer.name"></td>
+    					<td data-bind="text: customer.storeName"></td>
+    					<td class="text-right" data-bind="text: customer.formattedSaleValuePercentage"></td>
+    					<td class="text-right" data-bind="text: customer.formattedProfitPercentage"></td>
+    				</tr>
+    			</tbody>
+    		</table>
+    	</div>
+    </div>
+</section>

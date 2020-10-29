@@ -23,24 +23,28 @@
     		<table class="table table-responsive table-hover">
     			<thead>
     				<tr>
-    					<th>Card ID</th>
-    					<th>First Name</th>
-    					<th>Last Name</th>
-    					<th>Available Points</th>
+    					<th>Code</th>
+    					<th>Name</th>
+    					<th>Store Name</th>
+    					<th>Category</th>
+    					<th class="text-right">Sales (%)</th>
+    					<th class="text-right">Profit (%)</th>
     				</tr>
     			</thead>
     		
     			<tbody data-bind="foreach: { data: customerList, as: 'customer' }">
     				<tr>
-    					<td data-bind="text: customer.cardId"></td>
-    					<td data-bind="text: customer.firstName"></td>
-    					<td data-bind="text: customer.lastName"></td>
-    					<td data-bind="text: customer.availablePoints"></td>
+    					<td data-bind="text: customer.code"></td>
+    					<td data-bind="text: customer.name"></td>
+    					<td data-bind="text: customer.storeName"></td>
+    					<td data-bind="text: customer.customerCategory.name"></td>
+    					<td class="text-right" data-bind="text: customer.formattedSaleValuePercentage"></td>
+    					<td class="text-right" data-bind="text: customer.formattedProfitPercentage"></td>
     					<td>
     						<div class="pull-right">
 	    						<button data-bind="click: function() { $parent.view(customer.id) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm" title="View"><i class="fa fa-eye"></i></button>
 								<button data-bind="click: function() { $parent.edit(customer.id) }, enable: $parent.enableButtons" type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
-								<button data-bind="click: function() { $parent.remove(customer.id, customer.formattedName) }, enable: $parent.enableButtons" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
+								<button data-bind="click: function() { $parent.remove(customer.id, customer.name) }, enable: $parent.enableButtons" type="button" class="btn btn-danger btn-sm" title="Remove"><i class="fa fa-times"></i></button>
     						</div>
     					</td>
     				</tr>

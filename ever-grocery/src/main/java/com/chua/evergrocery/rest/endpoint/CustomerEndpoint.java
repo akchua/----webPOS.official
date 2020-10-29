@@ -36,6 +36,14 @@ public class CustomerEndpoint {
 	}
 	
 	@GET
+	@Path("/listbycategory")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<Customer> getCustomerListByCategory(@QueryParam("pageNumber") Integer pageNumber,
+			@QueryParam("customerCategoryId") Long customerCategoryId) {
+		return customerHandler.getCustomerListByCategory(pageNumber, customerCategoryId);
+	}
+	
+	@GET
 	@Path("/get")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Customer getCustomer(@QueryParam("customerId") Long customerId) {

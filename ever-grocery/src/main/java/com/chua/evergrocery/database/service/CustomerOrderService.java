@@ -9,9 +9,12 @@ import com.chua.evergrocery.beans.SalesReportQueryBean;
 import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.prototype.CustomerOrderPrototype;
 import com.chua.evergrocery.enums.DiscountType;
+import com.chua.evergrocery.objects.ObjectList;
 
 public interface CustomerOrderService 
 		extends Service<CustomerOrder, Long>, CustomerOrderPrototype {
+	
+	ObjectList<CustomerOrder> findAllWithPagingByCustomerOrderByLatest(int pageNumber, int resultsPerPage, Long customerId);
 	
 	List<CustomerOrder> findAllPaidByCashierAndDateFromToNow(Long cashierId, Date dateFrom);
 	

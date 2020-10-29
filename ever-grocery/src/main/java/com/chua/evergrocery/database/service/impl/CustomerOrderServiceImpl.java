@@ -40,6 +40,12 @@ public class CustomerOrderServiceImpl
 			Status[] status, Long creatorId) {
 		return dao.findAllWithPagingByCreator(pageNumber, resultsPerPage, searchKey, status, creatorId);
 	}
+	
+	@Override
+	public ObjectList<CustomerOrder> findAllWithPagingByCustomerOrderByLatest(int pageNumber, int resultsPerPage,
+			Long customerId) {
+		return dao.findAllWithPagingByCustomerWithOrder(pageNumber, resultsPerPage, customerId, new Order[] { Order.desc("paidOn") });
+	}
 
 	@Override
 	public List<CustomerOrder> findAllPaidByCashierAndDateFromToNow(Long cashierId, Date dateFrom) {

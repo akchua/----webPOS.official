@@ -5,13 +5,25 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.annotations.Where;
+
 import com.chua.evergrocery.database.entity.base.BaseObject;
+import com.chua.evergrocery.serializer.json.CustomerCategorySerializer;
+import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
+import com.chua.evergrocery.utility.format.DateFormatter;
+import com.chua.evergrocery.utility.format.NumberFormatter;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity(name = "Customer")
 @Table(name = Customer.TABLE_NAME)
@@ -21,9 +33,14 @@ public class Customer extends BaseObject {
 	
 	public static final String TABLE_NAME = "customer";
 	
-	private String firstName;
+	@JsonSerialize(using = CustomerCategorySerializer.class)
+	private CustomerCategory customerCategory;
 	
-	private String lastName;
+	private String name;
+	
+	private String storeName;
+	
+	private String code;
 	
 	private String contactNumber;
 	
@@ -36,30 +53,51 @@ public class Customer extends BaseObject {
 	private Float usedPoints;
 	
 	private Date lastPurchase;
-
-	@Basic
-	@Column(name = "first_name")
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	@Basic
-	@Column(name = "last_name")
-	public String getLastName() {
-		return lastName;
-	}
 	
-	@Transient
-	public String getFormattedName() {
-		return lastName + ", " + firstName;
+	private Float saleValuePercentage;
+	
+	private Float profitPercentage;
+
+	@ManyToOne(targetEntity = CustomerCategory.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_category_id")
+	@Where(clause = "valid = 1")
+	@NotFound(action = NotFoundAction.IGNORE)
+	public CustomerCategory getCustomerCategory() {
+		return customerCategory;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setCustomerCategory(CustomerCategory customerCategory) {
+		this.customerCategory = customerCategory;
+	}
+
+	@Basic
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Basic
+	@Column(name = "store_name")
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+
+	@Basic
+	@Column(name = "code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	@Basic
@@ -90,7 +128,7 @@ public class Customer extends BaseObject {
 	
 	@Transient
 	public String getFormattedCardId() {
-		return "*********" + getCardId().substring(9);
+		return cardId.isEmpty() ? "" : "*********" + getCardId().substring(9);
 	}
 
 	public void setCardId(String cardId) {
@@ -102,6 +140,11 @@ public class Customer extends BaseObject {
 	public Float getTotalPoints() {
 		return totalPoints;
 	}
+	
+	@Transient
+	public String getFormattedTotalPoints() {
+		return CurrencyFormatter.pesoFormat(getTotalPoints());
+	}
 
 	public void setTotalPoints(Float totalPoints) {
 		this.totalPoints = totalPoints;
@@ -111,6 +154,11 @@ public class Customer extends BaseObject {
 	@Column(name = "used_points")
 	public Float getUsedPoints() {
 		return usedPoints;
+	}
+	
+	@Transient
+	public String getFormattedUsedPoints() {
+		return CurrencyFormatter.pesoFormat(getUsedPoints());
 	}
 	
 	@Transient
@@ -132,8 +180,63 @@ public class Customer extends BaseObject {
 	public Date getLastPurchase() {
 		return lastPurchase;
 	}
+	
+	@Transient
+	public String getFormattedLastPurchase() {
+		return DateUtil.getDefaultDate().equals(lastPurchase) ? "n/a" : DateFormatter.prettyFormat(lastPurchase);
+	}
 
 	public void setLastPurchase(Date lastPurchase) {
 		this.lastPurchase = lastPurchase;
+	}
+
+	@Basic
+	@Column(name = "sale_value_percentage")
+	public Float getSaleValuePercentage() {
+		return saleValuePercentage;
+	}
+	
+	@Transient 
+	public String getFormattedSaleValuePercentage() {
+		return NumberFormatter.toPercent(saleValuePercentage);
+	}
+	
+	@Transient
+	public Float getCategoryOnlySaleValuePercentage() {
+		return saleValuePercentage / customerCategory.getSaleValuePercentage();
+	}
+	
+	@Transient 
+	public String getFormattedCategoryOnlySaleValuePercentage() {
+		return NumberFormatter.toPercent(getCategoryOnlySaleValuePercentage());
+	}
+
+	public void setSaleValuePercentage(Float saleValuePercentage) {
+		this.saleValuePercentage = saleValuePercentage;
+	}
+	
+	@Basic
+	@Column(name = "profit_percentage")
+	public Float getProfitPercentage() {
+		return profitPercentage;
+	}
+	
+	@Transient 
+	public String getFormattedProfitPercentage() {
+		return NumberFormatter.toPercent(profitPercentage);
+	}
+	
+	@Transient
+	public Float getCategoryOnlyProfitPercentage() {
+		return profitPercentage / customerCategory.getProfitPercentage();
+	}
+	
+	@Transient 
+	public String getFormattedCategoryOnlyProfitPercentage() {
+		return NumberFormatter.toPercent(getCategoryOnlyProfitPercentage());
+	}
+
+	public void setProfitPercentage(Float profitPercentage) {
+		this.profitPercentage = profitPercentage;
 	}
 }

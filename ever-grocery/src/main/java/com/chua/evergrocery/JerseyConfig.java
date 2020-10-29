@@ -12,8 +12,10 @@ import com.chua.evergrocery.rest.endpoint.CashTransferEndpoint;
 import com.chua.evergrocery.rest.endpoint.CategoryEndpoint;
 import com.chua.evergrocery.rest.endpoint.CompanyEndpoint;
 import com.chua.evergrocery.rest.endpoint.ConstantsEndpoint;
+import com.chua.evergrocery.rest.endpoint.CustomerCategoryEndpoint;
 import com.chua.evergrocery.rest.endpoint.CustomerEndpoint;
 import com.chua.evergrocery.rest.endpoint.CustomerOrderEndpoint;
+import com.chua.evergrocery.rest.endpoint.CustomerSummaryEndpoint;
 import com.chua.evergrocery.rest.endpoint.DistributorEndpoint;
 import com.chua.evergrocery.rest.endpoint.FileEndpoint;
 import com.chua.evergrocery.rest.endpoint.InventoryEndpoint;
@@ -45,6 +47,7 @@ public class JerseyConfig extends ResourceConfig {
 		register(SecurityEndpoint.class);
 		
 		register(CustomerEndpoint.class);
+		register(CustomerCategoryEndpoint.class);
 		register(CustomerOrderEndpoint.class);
 		
 		register(PurchaseOrderEndpoint.class);
@@ -52,6 +55,7 @@ public class JerseyConfig extends ResourceConfig {
 		register(CashTransferEndpoint.class);
 		register(AuditLogEndpoint.class);
 		register(TransactionSummaryEndpoint.class);
+		register(CustomerSummaryEndpoint.class);
 		
 		register(InventoryEndpoint.class);
 		

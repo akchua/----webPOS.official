@@ -56,7 +56,6 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice'/*
     		self.productFormModel.companyId(self.product.company.id);
     	});
     	
-    	
     	constantsService.getTaxTypeList().done(function(taxTypeList) {
     		self.taxTypeList(taxTypeList);
     	});

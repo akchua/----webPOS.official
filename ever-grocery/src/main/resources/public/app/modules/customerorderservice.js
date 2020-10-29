@@ -12,6 +12,17 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getCustomerOrderListByCustomer: function(pageNumber, customerId, async) {
+    		return $.ajax({
+    			url: '/services/customerorder/listbycustomer',
+    			async: async,
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				customerId: customerId
+    			}
+    		});
+    	},
+    	
     	getCashierCustomerOrderList: function(pageNumber, searchKey) {
     		return $.ajax({
     			url: '/services/customerorder/cashierlist',
@@ -74,6 +85,17 @@ define(['jquery'], function ($) {
     			data: {
     				customerOrderId: customerOrderId,
     				customerCardId: customerCardId
+    			}
+    		});
+    	},
+    	
+    	setCustomerByCode: function(customerOrderId, customerCode) {
+    		return $.ajax({
+    			url: '/services/customerorder/setcustomerbycode',
+    			method: 'POST',
+    			data: {
+    				customerOrderId: customerOrderId,
+    				customerCode: customerCode
     			}
     		});
     	},

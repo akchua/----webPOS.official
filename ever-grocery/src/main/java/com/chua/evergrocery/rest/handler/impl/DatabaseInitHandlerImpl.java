@@ -129,6 +129,15 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 			LOG.info("Cigarette category exists");
 		}
 		
+		if(!categoryService.isExistsByName("Liquors")) {
+			final Category category = new Category();
+			category.setName("Liquors");
+			categoryService.insert(category);
+			LOG.info("Created Liquors category");
+		} else {
+			LOG.info("Liquors category exists");
+		}
+		
 		if(!categoryService.isExistsByName("Counter Item")) {
 			final Category category = new Category();
 			category.setName("Counter Item");

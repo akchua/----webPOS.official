@@ -12,11 +12,14 @@ import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.prototype.CustomerOrderPrototype;
 import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.Status;
+import com.chua.evergrocery.objects.ObjectList;
 
 public interface CustomerOrderDAO extends DAO<CustomerOrder, Long>, CustomerOrderPrototype {
 
-	List<CustomerOrder> findAllByCashierStatusAndDatePaidWithOrder(Long cashierId, Status[] status, Date dateFrom, Date dateTo, Order[] orders);
+	ObjectList<CustomerOrder> findAllWithPagingByCustomerWithOrder(int pageNumber, int resultsPerPage, Long customerId, Order[] orders);
 	
+	List<CustomerOrder> findAllByCashierStatusAndDatePaidWithOrder(Long cashierId, Status[] status, Date dateFrom, Date dateTo, Order[] orders);
+
 	List<CashierSalesSummaryBean> findAllCashierSalesSummaryByDatePaidAndDiscountType(Date dateFrom, Date dateTo, List<DiscountType> discountTypes, Boolean returnsOnly);
 	
 	SINRangeBean getSINRangeByDate(Date dateFrom, Date dateTo);

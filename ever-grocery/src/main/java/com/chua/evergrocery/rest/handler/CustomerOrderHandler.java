@@ -13,6 +13,8 @@ import com.chua.evergrocery.objects.ObjectList;
 public interface CustomerOrderHandler {
 
 	ObjectList<CustomerOrder> getCustomerOrderList(Integer pageNumber, String searchKey, Boolean showPaid, Integer daysAgo);
+
+	ObjectList<CustomerOrder> getCustomerOrderListByCustomer(Integer pageNumber, Long customerId);
 	
 	ObjectList<CustomerOrder> getCashierCustomerOrderList(Integer pageNumber, String searchKey);
 	
@@ -27,6 +29,8 @@ public interface CustomerOrderHandler {
 	ResultBean removeCustomerOrder(Long customerOrderId, String ip);
 	
 	ResultBean setCustomer(Long customerOrderId, String customerCardId, String ip);
+	
+	ResultBean setCustomerByCode(Long customerOrderId, String customerCode, String ip);
 	
 	ResultBean removeCustomer(Long customerOrderId, String ip);
 	

@@ -3,6 +3,9 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     var CustomerOrderPage = function() {
     	this.customerOrderDetailList = ko.observable();
     	
+    	this.customerCode = ko.observable();
+    	this.hasCustomer = ko.observable(false);
+    	
     	this.barcodeKey = ko.observable();
     	this.barcodeFocus = ko.observable(true);
     	
@@ -49,6 +52,41 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	});
     };
     
+    CustomerOrderPage.prototype.setCustomerByCode = function() {
+		var self = this;
+		self.enableAddByBarcode(false);
+		
+		customerOrderService.setCustomerByCode(self.customerOrderPageModel.customerOrderId(), self.customerCode()).done(function(result) {
+			if(result.success) {
+				self.refreshCustomerOrderDetailList();
+				self.barcodeFocus(true);
+			} else {
+				self.customerCode('');
+				app.showMessage(result.message);
+			}
+			self.enableAddByBarcode(true);
+		});
+	};
+	
+	CustomerOrderPage.prototype.removeCustomer = function() {
+		var self = this;
+		self.enableAddByBarcode(false);
+		
+		app.showMessage('<p>Are you sure you want to remove/change the customer for this transaction?</p>',
+				'<p class="text-danger">Confirm Remove</p>',
+				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+				customerOrderService.removeCustomer(self.customerOrderPageModel.customerOrderId()).done(function(result) {
+					self.customerCode('');
+					self.refreshCustomerOrderDetailList();
+					app.showMessage(result.message);
+				});
+			}
+			self.enableAddByBarcode(true);
+		})
+	};
+    
     CustomerOrderPage.prototype.search = function() {
     	var self = this;
     	self.enableAddByBarcode(false);
@@ -86,6 +124,12 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	var self = this;
     	
     	customerOrderService.getCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(customerOrder) { 
+    		if(customerOrder.customer) {
+    			self.hasCustomer(true);
+    			self.customerCode(customerOrder.customer.code);
+    		} else {
+    			self.hasCustomer(false);
+    		}
     		self.customerOrderPageModel.customerOrderNumber(customerOrder.orderNumber);
     		self.customerOrderPageModel.cartonCount(customerOrder.cartonCount);
     		self.customerOrderPageModel.plasticCount(customerOrder.plasticCount);

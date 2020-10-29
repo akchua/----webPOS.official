@@ -57,6 +57,20 @@ public class CustomerOrderDetailDAOImpl
 	}
 	
 	@Override
+	public List<CustomerOrderDetail> findAllByCustomerAndDatePaid(Long customerId, Date datePaidStart,
+			Date datePaidEnd) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("co.customer.id", customerId));
+		
+		String[] associatedPaths = { "customerOrder" };
+		String[] aliasNames = { "co" };
+		JoinType[] joinTypes = { JoinType.INNER_JOIN };
+		
+		return findAllByCriterionList(associatedPaths, aliasNames, joinTypes, null, conjunction);
+	}
+	
+	@Override
 	public List<CustomerOrderDetail> findAllByProductLimitByDate(Long productId, Date start) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
