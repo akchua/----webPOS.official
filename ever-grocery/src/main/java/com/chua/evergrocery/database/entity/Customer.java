@@ -203,7 +203,7 @@ public class Customer extends BaseObject {
 	
 	@Transient
 	public Float getCategoryOnlySaleValuePercentage() {
-		return saleValuePercentage / customerCategory.getSaleValuePercentage();
+		return saleValuePercentage / customerCategory.getSaleValuePercentage() * 100;
 	}
 	
 	@Transient 
@@ -228,7 +228,7 @@ public class Customer extends BaseObject {
 	
 	@Transient
 	public Float getCategoryOnlyProfitPercentage() {
-		return profitPercentage / customerCategory.getProfitPercentage();
+		return profitPercentage / customerCategory.getProfitPercentage() * 100;
 	}
 	
 	@Transient 
