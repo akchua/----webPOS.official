@@ -29,7 +29,7 @@ public class CustomerFormValidator extends AbstractFormValidator<CustomerFormBea
 		if(!temp.isEmpty()) errors.put("storeName", temp);
 		temp = notNull(customerForm.getCode());
 		if(!temp.isEmpty()) errors.put("code", temp);
-		temp = validateString(customerForm.getAddress(), 5, 10);
+		temp = validateString(customerForm.getAddress(), 5, 100);
 		if(!temp.isEmpty()) errors.put("address", temp);
 		temp = validateStringNull(customerForm.getCardId(), 13, 13);
 		if(!temp.isEmpty()) errors.put("cardId", temp);
