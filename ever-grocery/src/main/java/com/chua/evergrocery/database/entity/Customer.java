@@ -80,6 +80,19 @@ public class Customer extends BaseObject {
 	public String getName() {
 		return name;
 	}
+	
+	@Transient
+	public String getFormattedName() {
+		final String formattedName;
+		
+		if(storeName == null || storeName.isEmpty()) {
+			formattedName = name;
+		} else {
+			formattedName = storeName;
+		}
+		
+		return formattedName;
+	}
 
 	public void setName(String name) {
 		this.name = name;

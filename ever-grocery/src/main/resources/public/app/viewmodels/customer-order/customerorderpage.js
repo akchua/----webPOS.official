@@ -4,6 +4,7 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	this.customerOrderDetailList = ko.observable();
     	
     	this.customerCode = ko.observable();
+    	this.customerFormattedName = ko.observable();
     	this.hasCustomer = ko.observable(false);
     	
     	this.barcodeKey = ko.observable();
@@ -61,9 +62,9 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
 				self.refreshCustomerOrderDetailList();
 				self.barcodeFocus(true);
 			} else {
-				self.customerCode('');
 				app.showMessage(result.message);
 			}
+			self.customerCode('');
 			self.enableAddByBarcode(true);
 		});
 	};
@@ -126,7 +127,7 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	customerOrderService.getCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(customerOrder) { 
     		if(customerOrder.customer) {
     			self.hasCustomer(true);
-    			self.customerCode(customerOrder.customer.code);
+    			self.customerFormattedName(customerOrder.customer.formattedName);
     		} else {
     			self.hasCustomer(false);
     		}

@@ -13,7 +13,7 @@
 	<!-- /ko -->
 	<!-- ko if: hasCustomer -->
 	<div class="col-xs-4">
-		<span>Customer : <span data-bind="text: customerCode"></span> <button class="btn btn-sm" data-bind="click: removeCustomer, enable: enableAddByBarcode"><i class="fa fa-times"></i></button></span>
+		<span>Customer : <span data-bind="text: customerFormattedName"></span> <button class="btn btn-sm" data-bind="click: removeCustomer, enable: enableAddByBarcode"><i class="fa fa-times"></i></button></span>
 	</div>
 	<!-- /ko -->
 	<div class="col-xs-8">
