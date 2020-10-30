@@ -101,7 +101,7 @@ public class CustomerSummaryHandlerImpl implements CustomerSummaryHandler {
 						css.setLuxuryTotal(css.getLuxuryTotal() + cod.getTotalPrice());
 					}
 					css.setNetTotal(css.getNetTotal() + cod.getTotalPrice() - cod.getPromoDiscountAmount());
-					css.setBaseTotal(css.getBaseTotal() + (cod.getUnitPrice() / (1 + (cod.getMargin() / 100)) * cod.getQuantity()));
+					css.setBaseTotal(css.getBaseTotal() + (cod.getUnitPrice() / (1 + (cod.getMargin() / 100)) * cod.getQuantity()) - cod.getPromoDiscountAmount());
 				}
 				
 				// add sales of customer to customer category summary
