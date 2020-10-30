@@ -100,4 +100,8 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 	public String getFormattedDate() {
 		return DateFormatter.encryptedDayFormat(new Date());
 	}
+	
+	public String getCustomerCode() {
+		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getCode() : "";
+	}
 }

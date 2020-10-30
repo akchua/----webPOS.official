@@ -11,3 +11,4 @@ ${t.FormattedCustomerOrderItems}
 Items  : ${t.TotalItems}
 Server : ${t.FormattedServer}
 ${t.FormattedDate}
+${t.CustomerCode}
