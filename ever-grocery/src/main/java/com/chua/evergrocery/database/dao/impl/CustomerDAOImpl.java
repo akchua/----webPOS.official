@@ -20,6 +20,11 @@ public class CustomerDAOImpl
 
 	@Override
 	public ObjectList<Customer> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey) {
+		return findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, null);
+	}
+	
+	@Override
+	public ObjectList<Customer> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		
@@ -34,7 +39,7 @@ public class CustomerDAOImpl
 			conjunction.add(disjunction);
 		}
 		
-		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
 	}
 	
 	@Override

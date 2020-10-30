@@ -28,14 +28,30 @@ public class CustomerServiceImpl
 	}
 	
 	@Override
-	public ObjectList<Customer> findAllWithPagingByCategoryOrderByLatest(int pageNumber, int resultsPerPage,
+	public ObjectList<Customer> findAllWithPagingOrderByRank(int pageNumber, int resultsPerPage, String searchKey) {
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, new Order[] { Order.desc("profitPercentage") });
+	}
+	
+	@Override
+	public ObjectList<Customer> findAllWithPagingByCategoryOrderByName(int pageNumber, int resultsPerPage,
 			Long customerCategoryId) {
 		return dao.findAllWithPagingByCategoryWithOrder(pageNumber, resultsPerPage, customerCategoryId, new Order[] { Order.asc("name") });
 	}
 	
 	@Override
+	public ObjectList<Customer> findAllWithPagingByCategoryOrderByRank(int pageNumber, int resultsPerPage,
+			Long customerCategoryId) {
+		return dao.findAllWithPagingByCategoryWithOrder(pageNumber, resultsPerPage, customerCategoryId, new Order[] { Order.desc("profitPercentage") });
+	}
+	
+	@Override
 	public List<Customer> findAllOrderByLastName() {
 		return dao.findAllWithOrder(new Order[] { Order.asc("lastName") });
+	}
+	
+	@Override
+	public List<Customer> findAllOrderByProfit() {
+		return dao.findAllWithOrder(new Order[] { Order.desc("profitPercentage") });
 	}
 
 	@Override

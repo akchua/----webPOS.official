@@ -10,4 +10,8 @@ public interface ProfitRankingHandler {
 	void updateAllProductProfitRankings();
 	
 	void updateAllCompanyProfitRankings();
+	
+	void updateAllCustomerProfitRankings();
+	
+	void updateAllCustomerCategoryProfitRankings();
 }

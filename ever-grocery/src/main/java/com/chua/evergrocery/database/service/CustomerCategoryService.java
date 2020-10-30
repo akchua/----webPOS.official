@@ -15,7 +15,11 @@ public interface CustomerCategoryService extends Service<CustomerCategory, Long>
 
 	List<CustomerCategory> findAllOrderByName();
 	
+	List<CustomerCategory> findAllOrderByProfit();
+	
 	ObjectList<CustomerCategory> findAllWithPagingOrderByName(int pageNumber, int resultsPerPage, String searchKey);
+	
+	ObjectList<CustomerCategory> findAllWithPagingOrderByRank(int pageNumber, int resultsPerPage, String searchKey);
 	
 	Boolean isExistsByName(String name);
 }

@@ -7,8 +7,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chua.evergrocery.database.entity.Company;
+import com.chua.evergrocery.database.entity.Customer;
+import com.chua.evergrocery.database.entity.CustomerCategory;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.service.CompanyService;
+import com.chua.evergrocery.database.service.CustomerCategoryService;
+import com.chua.evergrocery.database.service.CustomerService;
 import com.chua.evergrocery.database.service.ProductService;
 import com.chua.evergrocery.rest.handler.ProfitRankingHandler;
 
@@ -26,6 +30,12 @@ public class ProfitRankingHandlerImpl implements ProfitRankingHandler {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private CustomerService customerService;
+	
+	@Autowired
+	private CustomerCategoryService customerCategoryService;
 
 	@Override
 	public void updateAllProductProfitRankings() {
@@ -55,5 +65,31 @@ public class ProfitRankingHandlerImpl implements ProfitRankingHandler {
 		}
 		
 		companyService.batchUpdate(companies);
+	}
+
+	@Override
+	public void updateAllCustomerProfitRankings() {
+		final List<Customer> customers = customerService.findAllOrderByProfit();
+		
+		for(int i = 0; i < customers.size(); i++) {
+			final Customer customer = customers.get(i);
+			customer.setPreviousProfitRank(customer.getCurrentProfitRank());
+			customer.setCurrentProfitRank(i + 1);
+		}
+		
+		customerService.batchUpdate(customers);
+	}
+
+	@Override
+	public void updateAllCustomerCategoryProfitRankings() {
+		final List<CustomerCategory> customerCategories = customerCategoryService.findAllOrderByProfit();
+		
+		for(int i = 0; i < customerCategories.size(); i++) {
+			final CustomerCategory customerCategory = customerCategories.get(i);
+			customerCategory.setPreviousProfitRank(customerCategory.getCurrentProfitRank());
+			customerCategory.setCurrentProfitRank(i + 1);
+		}
+		
+		customerCategoryService.batchUpdate(customerCategories);
 	}
 }

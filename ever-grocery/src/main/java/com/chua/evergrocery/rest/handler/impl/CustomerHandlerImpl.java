@@ -40,12 +40,12 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	
 	@Override
 	public ObjectList<Customer> getCustomerObjectList(Integer pageNumber, String searchKey) {
-		return customerService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey);
+		return customerService.findAllWithPagingOrderByRank(pageNumber, UserContextHolder.getItemsPerPage(), searchKey);
 	}
 	
 	@Override
 	public ObjectList<Customer> getCustomerListByCategory(Integer pageNumber, Long customerCategoryId) {
-		return customerService.findAllWithPagingByCategoryOrderByLatest(pageNumber, UserContextHolder.getItemsPerPage(), customerCategoryId);
+		return customerService.findAllWithPagingByCategoryOrderByRank(pageNumber, UserContextHolder.getItemsPerPage(), customerCategoryId);
 	}
 	
 	@Override
@@ -67,6 +67,8 @@ public class CustomerHandlerImpl implements CustomerHandler {
 				customer.setLastPurchase(DateUtil.getDefaultDate());
 				customer.setSaleValuePercentage(0.0f);
 				customer.setProfitPercentage(0.0f);
+				customer.setPreviousProfitRank(0);
+				customer.setCurrentProfitRank(0);
 				
 				result = new ResultBean();
 				result.setSuccess(customerService.insert(customer) != null);

@@ -100,7 +100,7 @@ public class CustomerSummaryHandlerImpl implements CustomerSummaryHandler {
 					if(category.getName().equals("Liquors") || category.getName().equals("Cigarette")) {
 						css.setLuxuryTotal(css.getLuxuryTotal() + cod.getTotalPrice());
 					}
-					css.setNetTotal(css.getNetTotal() + cod.getTotalPrice());
+					css.setNetTotal(css.getNetTotal() + cod.getTotalPrice() - cod.getPromoDiscountAmount());
 					css.setBaseTotal(css.getBaseTotal() + (cod.getUnitPrice() / (1 + (cod.getMargin() / 100)) * cod.getQuantity()));
 				}
 				

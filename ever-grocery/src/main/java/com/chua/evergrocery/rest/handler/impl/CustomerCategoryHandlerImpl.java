@@ -35,7 +35,7 @@ public class CustomerCategoryHandlerImpl implements CustomerCategoryHandler {
 
 	@Override
 	public ObjectList<CustomerCategory> getCustomerCategoryObjectList(Integer pageNumber, String searchKey) {
-		return customerCategoryService.findAllWithPagingOrderByName(pageNumber, UserContextHolder.getItemsPerPage(), searchKey);
+		return customerCategoryService.findAllWithPagingOrderByRank(pageNumber, UserContextHolder.getItemsPerPage(), searchKey);
 	}
 	
 	@Override
@@ -53,6 +53,8 @@ public class CustomerCategoryHandlerImpl implements CustomerCategoryHandler {
 			setCustomerCategory(customerCategory, customerCategoryForm);
 			customerCategory.setSaleValuePercentage(0.0f);
 			customerCategory.setProfitPercentage(0.0f);
+			customerCategory.setPreviousProfitRank(0);
+			customerCategory.setCurrentProfitRank(0);
 			
 			result = new ResultBean();
 			result.setSuccess(customerCategoryService.insert(customerCategory) != null);

@@ -19,5 +19,7 @@ public interface CustomerDAO extends DAO<Customer, Long>, CustomerPrototype {
 	 */
 	List<Customer> findAllWithOrder(Order[] orders);
 	
+	ObjectList<Customer> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey, Order[] orders);
+	
 	ObjectList<Customer> findAllWithPagingByCategoryWithOrder(int pageNumber, int resultsPerPage, Long customerCategoryId, Order[] orders);
 }

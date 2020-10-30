@@ -9,7 +9,11 @@ import com.chua.evergrocery.objects.ObjectList;
 public interface CustomerService 
 		extends Service<Customer, Long>, CustomerPrototype {
 	
-	ObjectList<Customer> findAllWithPagingByCategoryOrderByLatest(int pageNumber, int resultsPerPage, Long customerCategoryId);
+	ObjectList<Customer> findAllWithPagingOrderByRank(int pageNumber, int resultsPerPage, String searchKey);
+	
+	ObjectList<Customer> findAllWithPagingByCategoryOrderByName(int pageNumber, int resultsPerPage, Long customerCategoryId);
+	
+	ObjectList<Customer> findAllWithPagingByCategoryOrderByRank(int pageNumber, int resultsPerPage, Long customerCategoryId);
 	
 	/**
 	 * Find all customer ordered by name.
@@ -17,6 +21,8 @@ public interface CustomerService
 	 * @return the list of customer
 	 */
 	List<Customer> findAllOrderByLastName();
+	
+	List<Customer> findAllOrderByProfit();
 	
 	Boolean isExistsByCardId(String cardId);
 	

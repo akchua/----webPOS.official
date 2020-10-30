@@ -1,4 +1,4 @@
-define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerCategoryservice'], function (dialog, app, ko, customerCategoryService) {
+define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customercategoryservice'], function (dialog, app, ko, customerCategoryService) {
     var CustomerCategoryForm = function(preTitle, customerCategory) {
         this.preTitle = preTitle;
         this.customerCategory = customerCategory;

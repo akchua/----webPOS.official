@@ -63,6 +63,8 @@ public class CustomerOrderDetailDAOImpl
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.eq("co.customer.id", customerId));
 		
+		conjunction.add(Restrictions.between("co.paidOn", datePaidStart, datePaidEnd));
+		
 		String[] associatedPaths = { "customerOrder" };
 		String[] aliasNames = { "co" };
 		JoinType[] joinTypes = { JoinType.INNER_JOIN };

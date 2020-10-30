@@ -64,21 +64,23 @@ public class StatisticsScheduler {
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
 		LOG.info("Monthly sales statistics update complete. Total execution time : " + seconds + "s");
 		
-		this.monthlyProfitRankingUpdate();
 		this.monthlyCustomerSummaryUpdate();
+		this.monthlyProfitRankingUpdate();
 	}
 	
 	/**
 	 * Monthly Profit Ranking Update
 	 * fired by @monthlySalesStatisticsUpdate after completion
 	 */
-	//@Scheduled(cron = "0 15 21 * * ?")
+	//@Scheduled(cron = "0 15 14 * * ?")
 	public void monthlyProfitRankingUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting monthly profit ranking update");
 		
 		profitRankingHandler.updateAllProductProfitRankings();
 		profitRankingHandler.updateAllCompanyProfitRankings();
+		profitRankingHandler.updateAllCustomerProfitRankings();
+		profitRankingHandler.updateAllCustomerCategoryProfitRankings();
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
@@ -89,12 +91,12 @@ public class StatisticsScheduler {
 	 * Monthly customer sales summary update
 	 * fires by @monthlySalesStatisticsUpdate after completion
 	 */
-	//@Scheduled(cron = "0 02 10 * * ?")
+	//@Scheduled(cron = "0 47 13 * * ?")
 	public void monthlyCustomerSummaryUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting monthly customer sales summary update");
 		
-		customerSummaryHandler.updateMonthlyCustomerSummaries(1);
+		customerSummaryHandler.updateMonthlyCustomerSummaries(2);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
