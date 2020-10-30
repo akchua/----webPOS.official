@@ -124,7 +124,7 @@ public class StatisticsScheduler {
 	 * Daily Sales Statistics Update
 	 * fires at 7:55PM every day
 	 */
-	@Scheduled(cron = "0 19 55 * * ?")
+	@Scheduled(cron = "0 55 19 * * ?")
 	public void dailySalesStatisticsUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting daily sales statistics update");
