@@ -49,6 +49,10 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 		return customerOrder.getOrderNumber();
 	}
 	
+	public String getCustomerFormattedName() {
+		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getCode() + " - " + customerOrder.getCustomer().getFormattedName() : "";
+	}
+	
 	public String getFormattedPackageCount() {
 		String formattedPackageCount = "";
 		
@@ -99,9 +103,5 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 	
 	public String getFormattedDate() {
 		return DateFormatter.encryptedDayFormat(new Date());
-	}
-	
-	public String getCustomerCode() {
-		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getCode() : "";
 	}
 }
