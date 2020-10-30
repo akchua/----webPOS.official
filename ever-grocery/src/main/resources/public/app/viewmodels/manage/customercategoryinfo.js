@@ -1,4 +1,4 @@
-define(['knockout', 'modules/customerCategoryservice'], 
+define(['knockout', 'modules/customercategoryservice'], 
 		function (ko, customerCategoryService) {
     var CustomerCategoryInfo = function() {
     	this.customerCategoryId = ko.observable();
