@@ -249,7 +249,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	@CheckAuthority(minimumAuthority = 5)
+	@CheckAuthority(minimumAuthority = 10)
 	public ResultBean setCustomer(Long customerOrderId, String customerCardId, String ip) {
 		final ResultBean result;
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
@@ -283,7 +283,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
-	@CheckAuthority(minimumAuthority = 5)
+	@CheckAuthority(minimumAuthority = 10)
 	public ResultBean setCustomerByCode(Long customerOrderId, String customerCode, String ip) {
 		final ResultBean result;
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);
@@ -317,7 +317,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 
 	@Override
-	@CheckAuthority(minimumAuthority = 5)
+	@CheckAuthority(minimumAuthority = 10)
 	public ResultBean removeCustomer(Long customerOrderId, String ip) {
 		final ResultBean result;
 		final CustomerOrder customerOrder = customerOrderService.find(customerOrderId);

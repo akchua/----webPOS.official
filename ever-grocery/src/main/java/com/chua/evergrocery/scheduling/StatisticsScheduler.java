@@ -72,7 +72,7 @@ public class StatisticsScheduler {
 	 * Monthly Profit Ranking Update
 	 * fired by @monthlySalesStatisticsUpdate after completion
 	 */
-	//@Scheduled(cron = "0 15 14 * * ?")
+	//@Scheduled(cron = "0 53 16 * * ?")
 	public void monthlyProfitRankingUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting monthly profit ranking update");
@@ -91,7 +91,7 @@ public class StatisticsScheduler {
 	 * Monthly customer sales summary update
 	 * fires by @monthlySalesStatisticsUpdate after completion
 	 */
-	//@Scheduled(cron = "0 47 13 * * ?")
+	//@Scheduled(cron = "0 52 16 * * ?")
 	public void monthlyCustomerSummaryUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting monthly customer sales summary update");
