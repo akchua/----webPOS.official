@@ -25,10 +25,13 @@ public class CustomerDAOImpl
 		
 		if(StringUtils.isNotBlank(searchKey))
 		{
+			final Junction disjunction = Restrictions.disjunction();
 			for(String s : searchKey.split("\\s+")) {
-				conjunction.add(Restrictions.ilike("name", s, MatchMode.ANYWHERE));
-				conjunction.add(Restrictions.ilike("storeName", s, MatchMode.ANYWHERE));
+				disjunction.add(Restrictions.ilike("name", s, MatchMode.ANYWHERE));
+				disjunction.add(Restrictions.ilike("storeName", s, MatchMode.ANYWHERE));
+				disjunction.add(Restrictions.ilike("code", s, MatchMode.ANYWHERE));
 			}
+			conjunction.add(disjunction);
 		}
 		
 		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
