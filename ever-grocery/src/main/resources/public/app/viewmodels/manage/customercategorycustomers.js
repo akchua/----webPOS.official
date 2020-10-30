@@ -1,4 +1,4 @@
-define(['durandal/app', 'knockout', 'modules/customerCategoryservice', 'modules/customerservice'], 
+define(['durandal/app', 'knockout', 'modules/customercategoryservice', 'modules/customerservice'], 
 		function (app, ko, customerCategoryService, customerService) {
     var CustomerCategoryCustomers = function() {
     	this.customerCategoryId = ko.observable();
