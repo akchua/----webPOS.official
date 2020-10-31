@@ -5,7 +5,13 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customercategorys
         
         this.customerCategoryFormModel = {
         	id: ko.observable(),
-        	name: ko.observable()
+        	name: ko.observable(),
+        	code: ko.observable()
+        };
+        
+        this.errors = {
+    		name : ko.observable(),
+        	code: ko.observable()
         };
     };
     
@@ -14,6 +20,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customercategorys
     	
     	self.customerCategoryFormModel.id(self.customerCategory.id);
     	self.customerCategoryFormModel.name(self.customerCategory.name);
+    	self.customerCategoryFormModel.code(self.customerCategory.code);
     };
  
     CustomerCategoryForm.show = function(preTitle, customerCategory) {
@@ -26,7 +33,10 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customercategorys
     	customerCategoryService.saveCustomerCategory(ko.toJSON(self.customerCategoryFormModel)).done(function(result) {
         	if(result.success) {
         		dialog.close(self);	
-        	} 
+        	} else {
+        		self.errors.name(result.extras.errors.name);
+        		self.errors.code(result.extras.errors.code);
+        	}
         	app.showMessage(result.message);
         });
     };

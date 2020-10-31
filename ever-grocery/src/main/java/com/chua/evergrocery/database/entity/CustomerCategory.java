@@ -24,6 +24,8 @@ public class CustomerCategory extends BaseObject {
 	
 	private String name;
 	
+	private String code;
+	
 	private Float saleValuePercentage;
 	
 	private Float profitPercentage;
@@ -43,6 +45,16 @@ public class CustomerCategory extends BaseObject {
 		this.name = name;
 	}
 	
+	@Basic
+	@Column(name = "code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	@Basic
 	@Column(name = "sale_value_percentage")
 	public Float getSaleValuePercentage() {

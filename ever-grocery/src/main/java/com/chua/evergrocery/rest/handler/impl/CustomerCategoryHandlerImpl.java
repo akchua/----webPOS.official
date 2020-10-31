@@ -1,6 +1,7 @@
 package com.chua.evergrocery.rest.handler.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -17,6 +18,7 @@ import com.chua.evergrocery.database.service.CustomerCategoryService;
 import com.chua.evergrocery.objects.ObjectList;
 import com.chua.evergrocery.rest.handler.ActivityLogHandler;
 import com.chua.evergrocery.rest.handler.CustomerCategoryHandler;
+import com.chua.evergrocery.rest.validator.CustomerCategoryFormValidator;
 
 /**
  * @author Adrian Jasper K. Chua
@@ -32,6 +34,9 @@ public class CustomerCategoryHandlerImpl implements CustomerCategoryHandler {
 	
 	@Autowired
 	private ActivityLogHandler activityLogHandler;
+	
+	@Autowired
+	private CustomerCategoryFormValidator customerCategoryFormValidator;
 
 	@Override
 	public ObjectList<CustomerCategory> getCustomerCategoryObjectList(Integer pageNumber, String searchKey) {
@@ -47,25 +52,31 @@ public class CustomerCategoryHandlerImpl implements CustomerCategoryHandler {
 	@CheckAuthority(minimumAuthority = 3)
 	public ResultBean createCustomerCategory(CustomerCategoryFormBean customerCategoryForm, String ip) {
 		final ResultBean result;
+		final Map<String, String> errors = customerCategoryFormValidator.validate(customerCategoryForm);
 		
-		if(!customerCategoryService.isExistsByName(customerCategoryForm.getName())) {
-			final CustomerCategory customerCategory = new CustomerCategory();
-			setCustomerCategory(customerCategory, customerCategoryForm);
-			customerCategory.setSaleValuePercentage(0.0f);
-			customerCategory.setProfitPercentage(0.0f);
-			customerCategory.setPreviousProfitRank(0);
-			customerCategory.setCurrentProfitRank(0);
-			
-			result = new ResultBean();
-			result.setSuccess(customerCategoryService.insert(customerCategory) != null);
-			if(result.getSuccess()) {
-				result.setMessage("Customer category successfully created.");
-				activityLogHandler.myLog("created a customer category : " + customerCategory.getId() + " - " + customerCategory.getName(), ip);
+		if(errors.isEmpty()) {
+			if(!customerCategoryService.isExistsByName(customerCategoryForm.getName())) {
+				final CustomerCategory customerCategory = new CustomerCategory();
+				setCustomerCategory(customerCategory, customerCategoryForm);
+				customerCategory.setSaleValuePercentage(0.0f);
+				customerCategory.setProfitPercentage(0.0f);
+				customerCategory.setPreviousProfitRank(0);
+				customerCategory.setCurrentProfitRank(0);
+				
+				result = new ResultBean();
+				result.setSuccess(customerCategoryService.insert(customerCategory) != null);
+				if(result.getSuccess()) {
+					result.setMessage("Customer category successfully created.");
+					activityLogHandler.myLog("created a customer category : " + customerCategory.getId() + " - " + customerCategory.getName(), ip);
+				} else {
+					result.setMessage("Failed to create customer category.");
+				}
 			} else {
-				result.setMessage("Failed to create customer category.");
+				result = new ResultBean(false, "Customer category \"" + customerCategoryForm.getName() + "\" already exists!");
 			}
 		} else {
-			result = new ResultBean(false, "Customer category \"" + customerCategoryForm.getName() + "\" already exists!");
+			result = new ResultBean(Boolean.FALSE, "");
+			result.addToExtras("errors", errors);
 		}
 		
 		return result;
@@ -131,5 +142,6 @@ public class CustomerCategoryHandlerImpl implements CustomerCategoryHandler {
 	
 	private void setCustomerCategory(CustomerCategory customerCategory, CustomerCategoryFormBean customerCategoryForm) {
 		customerCategory.setName(customerCategoryForm.getName().trim());
+		customerCategory.setCode(customerCategoryForm.getCode().trim());
 	}
 }

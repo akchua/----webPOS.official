@@ -50,7 +50,7 @@ public class CustomerOrderCopyTemplate extends AbstractTemplate {
 	}
 	
 	public String getCustomerFormattedName() {
-		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getCode() + " - " + customerOrder.getCustomer().getFormattedName() : "";
+		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getCustomerCategory().getCode() + " " + customerOrder.getCustomer().getCode() + " - " + customerOrder.getCustomer().getFormattedName() : "";
 	}
 	
 	public String getFormattedPackageCount() {

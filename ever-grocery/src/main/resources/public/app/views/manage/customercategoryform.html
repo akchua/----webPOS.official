@@ -9,6 +9,13 @@
 	        <div class="form-group">
 				<label for="inputName" class="control-label">Name</label>
 				<input data-bind="value: customerCategoryFormModel.name" type="text" class="form-control autofocus" id="inputName" placeholder="Name">
+				<p data-bind="text: errors.name" class="text-danger"></p>
+			</div>
+			
+			<div class="form-group">
+				<label for="inputCode" class="control-label">Code</label>
+				<input data-bind="value: customerCategoryFormModel.code" type="text" class="form-control autofocus" id="inputCode" placeholder="Code">
+				<p data-bind="text: errors.code" class="text-danger"></p>
 			</div>
 	    </div>
 	    

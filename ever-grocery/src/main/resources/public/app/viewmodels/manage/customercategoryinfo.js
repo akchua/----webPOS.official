@@ -5,6 +5,7 @@ define(['knockout', 'modules/customercategoryservice'],
     	
     	this.customerCategory = {
     		name: ko.observable(),
+    		code: ko.observable(),
     		
     		formattedSaleValuePercentage: ko.observable(),
     		formattedProfitPercentage: ko.observable()
@@ -18,6 +19,7 @@ define(['knockout', 'modules/customercategoryservice'],
     	
     	customerCategoryService.getCustomerCategory(self.customerCategoryId()).done(function(customerCategory) {
     		self.customerCategory.name(customerCategory.name);
+    		self.customerCategory.code(customerCategory.code);
     		
     		self.customerCategory.formattedSaleValuePercentage(customerCategory.formattedSaleValuePercentage);
     		self.customerCategory.formattedProfitPercentage(customerCategory.formattedProfitPercentage);

@@ -24,6 +24,7 @@
     			<thead>
     				<tr>
     					<th class="text-center">Rank</th>
+    					<th>Code</th>
     					<th>Name</th>
     					<th class="text-right">Sales (%)</th>
     					<th class="text-right">Profit (%)</th>
@@ -43,6 +44,7 @@
     						<span class="text-info"><i class="fa fa-minus"></i><i class="fa fa-minus"></i></span>
     					<!-- /ko -->
     					</td>
+    					<td data-bind="text: customerCategory.code"></td>
     					<td data-bind="text: customerCategory.name"></td>
     					<td class="text-right" data-bind="text: customerCategory.formattedSaleValuePercentage"></td>
     					<td class="text-right" data-bind="text: customerCategory.formattedProfitPercentage"></td>
