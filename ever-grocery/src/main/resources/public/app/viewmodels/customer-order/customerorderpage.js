@@ -127,7 +127,7 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	customerOrderService.getCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(customerOrder) { 
     		if(customerOrder.customer) {
     			self.hasCustomer(true);
-    			self.customerFormattedName(customerOrder.customer.formattedName);
+    			self.customerFormattedName(customerOrder.customer.customerCategory.code + ' ' + customerOrder.customer.code + ' - ' + customerOrder.customer.formattedName);
     		} else {
     			self.hasCustomer(false);
     		}
