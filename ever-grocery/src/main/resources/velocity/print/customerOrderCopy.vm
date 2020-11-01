@@ -6,7 +6,7 @@ ${t.FormattedPackageCount}
 ${t.FormattedCustomerOrderItems}
 #if($t.Discounted)
                  Sub Total ${t.FormattedGrossAmount}
-                 Price Off ${t.FormattedOutrightPromoDiscount}
+               $ Price Off ${t.FormattedOutrightPromoDiscount}
 #end
        Total Amount ${t.FormattedTotalAmount}
 Items  : ${t.TotalItems}
