@@ -21,6 +21,15 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getOutOfScheduleCustomerList: function(pageNumber) {
+    		return $.ajax({
+    			url: '/services/customer/outofschedulelist',
+    			data: {
+    				pageNumber: pageNumber - 1
+    			}
+    		});
+    	},
+    	
     	getCustomer: function(customerId) {
     		return $.ajax({
     			url: '/services/customer/get',

@@ -62,6 +62,13 @@ public class Customer extends BaseObject {
 	private Integer currentProfitRank;
 	
 	private Integer previousProfitRank;
+	
+	// Out of Schedule
+	private Float averageSchedule;
+	
+	private Boolean oosFlag;
+	
+	private Date oosLastFlag;
 
 	@ManyToOne(targetEntity = CustomerCategory.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_category_id")
@@ -203,6 +210,11 @@ public class Customer extends BaseObject {
 	public String getFormattedLastPurchase() {
 		return DateUtil.getDefaultDate().equals(lastPurchase) ? "n/a" : DateFormatter.prettyFormat(lastPurchase);
 	}
+	
+	@Transient
+	public String getFormattedLastPurchaseDays() {
+		return DateUtil.daysBetween(lastPurchase, new Date()) + " days ago";
+	}
 
 	public void setLastPurchase(Date lastPurchase) {
 		this.lastPurchase = lastPurchase;
@@ -297,5 +309,40 @@ public class Customer extends BaseObject {
 
 	public void setPreviousProfitRank(Integer previousProfitRank) {
 		this.previousProfitRank = previousProfitRank;
+	}
+	
+	@Basic
+	@Column(name = "average_schedule")
+	public Float getAverageSchedule() {
+		return averageSchedule;
+	}
+	
+	@Transient
+	public String getFormattedAverageSchedule() {
+		return NumberFormatter.decimalFormat(averageSchedule, 2);
+	}
+
+	public void setAverageSchedule(Float averageSchedule) {
+		this.averageSchedule = averageSchedule;
+	}
+
+	@Basic
+	@Column(name = "oos_flag")
+	public Boolean getOosFlag() {
+		return oosFlag;
+	}
+
+	public void setOosFlag(Boolean oosFlag) {
+		this.oosFlag = oosFlag;
+	}
+
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name = "oos_last_flag", nullable = false)
+	public Date getOosLastFlag() {
+		return oosLastFlag;
+	}
+
+	public void setOosLastFlag(Date oosLastFlag) {
+		this.oosLastFlag = oosLastFlag;
 	}
 }

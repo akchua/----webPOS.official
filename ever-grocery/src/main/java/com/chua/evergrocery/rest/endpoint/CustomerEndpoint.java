@@ -44,6 +44,13 @@ public class CustomerEndpoint {
 	}
 	
 	@GET
+	@Path("/outofschedulelist")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<Customer> getOutOfScheduleCustomerList(@QueryParam("pageNumber") Integer pageNumber) {
+		return customerHandler.getOutOfScheduleCustomerList(pageNumber);
+	}
+	
+	@GET
 	@Path("/get")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Customer getCustomer(@QueryParam("customerId") Long customerId) {

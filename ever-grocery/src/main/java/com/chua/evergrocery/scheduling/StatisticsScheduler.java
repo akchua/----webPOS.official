@@ -121,6 +121,23 @@ public class StatisticsScheduler {
 	}
 	
 	/**
+	 * Monthly customer average schedule update
+	 * fires at 8:22PM every first day of the month
+	 */
+	@Scheduled(cron = "0 22 20 1 * ?")
+	//@Scheduled(cron = "0 57 22 * * ?")
+	public void monthlyCustomerScheduleUpdate() {
+		final Date start = new Date();
+		LOG.info("Starting monthly customer average schedule update");
+		
+		customerSummaryHandler.updateMonthlyCustomerSchedule();
+		
+		final Date end = new Date();
+		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
+		LOG.info("Monthly customer average schedule update complete. Total execution time : " + seconds + "s");
+	}
+	
+	/**
 	 * Daily Sales Statistics Update
 	 * fires at 7:55PM every day
 	 */
@@ -134,6 +151,23 @@ public class StatisticsScheduler {
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
 		LOG.info("Daily sales statistics update complete. Total execution time : " + seconds + "s");
+	}
+	
+	/**
+	 * Daily customer out of schedule flag update
+	 * fires at 8:24PM every day
+	 */
+	@Scheduled(cron = "0 24 20 * * ?")
+	//@Scheduled(cron = "0 20 23 * * ?")
+	public void dailyCustomerOOSFlagUpdate() {
+		final Date start = new Date();
+		LOG.info("Starting daily customer OOS flag update");
+		
+		customerSummaryHandler.updateDailyCustomerOOSFlag();
+		
+		final Date end = new Date();
+		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
+		LOG.info("Daily customer OOS flag update complete. Total execution time : " + seconds + "s");
 	}
 	
 	/*@Autowired

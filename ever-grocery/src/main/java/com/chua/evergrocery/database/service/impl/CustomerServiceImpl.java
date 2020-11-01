@@ -45,6 +45,11 @@ public class CustomerServiceImpl
 	}
 	
 	@Override
+	public ObjectList<Customer> findAllOutOfScheduleOrderByFlagDate(int pageNumber, int resultsPerPage) {
+		return dao.findAllOutOfScheduleWithPagingAndOrder(pageNumber, resultsPerPage, new Order[] { Order.desc("oosLastFlag") });
+	}
+	
+	@Override
 	public List<Customer> findAllOrderByLastName() {
 		return dao.findAllWithOrder(new Order[] { Order.asc("lastName") });
 	}

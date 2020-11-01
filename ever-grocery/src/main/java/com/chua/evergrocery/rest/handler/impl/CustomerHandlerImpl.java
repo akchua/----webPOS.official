@@ -47,6 +47,11 @@ public class CustomerHandlerImpl implements CustomerHandler {
 	public ObjectList<Customer> getCustomerListByCategory(Integer pageNumber, Long customerCategoryId) {
 		return customerService.findAllWithPagingByCategoryOrderByRank(pageNumber, UserContextHolder.getItemsPerPage(), customerCategoryId);
 	}
+
+	@Override
+	public ObjectList<Customer> getOutOfScheduleCustomerList(Integer pageNumber) {
+		return customerService.findAllOutOfScheduleOrderByFlagDate(pageNumber, UserContextHolder.getItemsPerPage());
+	}
 	
 	@Override
 	public Customer getCustomer(Long customerId) {
@@ -69,6 +74,9 @@ public class CustomerHandlerImpl implements CustomerHandler {
 				customer.setProfitPercentage(0.0f);
 				customer.setPreviousProfitRank(0);
 				customer.setCurrentProfitRank(0);
+				customer.setAverageSchedule(0.0f);
+				customer.setOosFlag(Boolean.FALSE);
+				customer.setOosLastFlag(DateUtil.getDefaultDate());
 				
 				result = new ResultBean();
 				result.setSuccess(customerService.insert(customer) != null);

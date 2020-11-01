@@ -23,6 +23,7 @@
     		<table class="table table-responsive table-hover">
     			<thead>
     				<tr>
+    					<th class="text-center">&mu;</th>
     					<th class="text-center">Rank</th>
     					<th>Code</th>
     					<th>Name</th>
@@ -35,6 +36,7 @@
     		
     			<tbody data-bind="foreach: { data: customerList, as: 'customer' }">
     				<tr>
+    					<td class="text-center" data-bind="text: customer.formattedAverageSchedule"></td>
     					<td class="text-center"><span data-bind="text: customer.currentProfitRank"></span> 
     					<!-- ko if: customer.rankIncrease -->
     						<span class="text-success"><i class="fa fa-arrow-up"></i><span data-bind="text: customer.rankDeviation"></span></span>

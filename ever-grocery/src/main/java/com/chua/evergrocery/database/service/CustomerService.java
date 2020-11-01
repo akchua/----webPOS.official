@@ -15,6 +15,8 @@ public interface CustomerService
 	
 	ObjectList<Customer> findAllWithPagingByCategoryOrderByRank(int pageNumber, int resultsPerPage, Long customerCategoryId);
 	
+	ObjectList<Customer> findAllOutOfScheduleOrderByFlagDate(int pageNumber, int resultsPerPage);
+	
 	/**
 	 * Find all customer ordered by name.
 	 * 

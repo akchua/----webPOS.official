@@ -17,4 +17,8 @@ public interface CustomerSummaryHandler {
 	List<CustomerCategoryMTDSalesSummary> getCustomerCategoryMTDSalesSummaryList(Long customerCategoryId);
 	
 	void updateMonthlyCustomerSummaries(int includedMonthsAgo);
+	
+	void updateMonthlyCustomerSchedule();
+	
+	void updateDailyCustomerOOSFlag();
 }

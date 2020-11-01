@@ -18,12 +18,14 @@ import com.chua.evergrocery.database.entity.Customer;
 import com.chua.evergrocery.database.entity.CustomerCategory;
 import com.chua.evergrocery.database.entity.CustomerCategoryMTDSalesSummary;
 import com.chua.evergrocery.database.entity.CustomerMTDSalesSummary;
+import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.MTDSalesSummary;
 import com.chua.evergrocery.database.service.CustomerCategoryMTDSalesSummaryService;
 import com.chua.evergrocery.database.service.CustomerCategoryService;
 import com.chua.evergrocery.database.service.CustomerMTDSalesSummaryService;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
+import com.chua.evergrocery.database.service.CustomerOrderService;
 import com.chua.evergrocery.database.service.CustomerService;
 import com.chua.evergrocery.database.service.MTDSalesSummaryService;
 import com.chua.evergrocery.rest.handler.CustomerSummaryHandler;
@@ -41,6 +43,9 @@ public class CustomerSummaryHandlerImpl implements CustomerSummaryHandler {
 
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private CustomerOrderService customerOrderService;
 	
 	@Autowired
 	private CustomerCategoryService customerCategoryService;
@@ -170,6 +175,43 @@ public class CustomerSummaryHandlerImpl implements CustomerSummaryHandler {
 					customerCategory.setProfitPercentage(ccss.getTotalProfit().equals(0.0f) ? 0.0f : ccss.getTotalProfit() / grandTotal.getProfit() * 100.0f);
 					customerCategoryService.update(customerCategory);
 				}
+			}
+		}
+	}
+	
+	@Override
+	public void updateMonthlyCustomerSchedule() {
+		final List<Customer> customers = customerService.findAllList();
+		
+		for(Customer customer : customers) {
+			LOG.info("Processing customer : " + customer.getName());
+			
+			final List<CustomerOrder> customerOrders = customerOrderService.findAllWithPagingByCustomerOrderByLatest(0, 20, customer.getId()).getList();
+			
+			if(customerOrders != null && customerOrders.size() > 5) {
+				float averageSchedule = 0.0f;
+				for(int i = 0; i < customerOrders.size() - 1; i++) {
+					averageSchedule += DateUtil.daysBetween(customerOrders.get(i + 1).getPaidOn(), customerOrders.get(i).getPaidOn());
+				}
+				averageSchedule /= customerOrders.size() - 1;
+				customer.setAverageSchedule(Math.abs(averageSchedule));
+			}
+		}
+	}
+
+	@Override
+	public void updateDailyCustomerOOSFlag() {
+		final List<Customer> customers = customerService.findAllList();
+		
+		for(Customer customer : customers) {
+			LOG.info("Processing customer : " + customer.getName());
+			
+			if(!customer.getAverageSchedule().equals(0.0f) && 
+					DateUtil.daysBetween(customer.getLastPurchase(), new Date()) > customer.getAverageSchedule() * 2) {
+				customer.setOosFlag(Boolean.TRUE);
+				customer.setOosLastFlag(new Date());
+			} else {
+				customer.setOosFlag(Boolean.FALSE);
 			}
 		}
 	}

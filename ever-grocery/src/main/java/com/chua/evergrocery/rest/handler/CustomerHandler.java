@@ -13,6 +13,8 @@ public interface CustomerHandler {
 	
 	ObjectList<Customer> getCustomerListByCategory(Integer pageNumber, Long customerCategoryId);
 	
+	ObjectList<Customer> getOutOfScheduleCustomerList(Integer pageNumber);
+	
 	Customer getCustomer(Long customerId);
 	
 	ResultBean createCustomer(CustomerFormBean customerForm, String ip);

@@ -30,14 +30,24 @@ public class CustomerDAOImpl
 		
 		if(StringUtils.isNotBlank(searchKey))
 		{
-			final Junction disjunction = Restrictions.disjunction();
 			for(String s : searchKey.split("\\s+")) {
+				final Junction disjunction = Restrictions.disjunction();
 				disjunction.add(Restrictions.ilike("name", s, MatchMode.ANYWHERE));
 				disjunction.add(Restrictions.ilike("storeName", s, MatchMode.ANYWHERE));
 				disjunction.add(Restrictions.ilike("code", s, MatchMode.ANYWHERE));
+				conjunction.add(disjunction);
 			}
-			conjunction.add(disjunction);
 		}
+		
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
+	}
+	
+	@Override
+	public ObjectList<Customer> findAllOutOfScheduleWithPagingAndOrder(int pageNumber, int resultsPerPage,
+			Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("oosFlag", Boolean.TRUE));
 		
 		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
 	}

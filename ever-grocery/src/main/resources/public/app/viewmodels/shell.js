@@ -38,6 +38,14 @@
 	  	}
 	];
 	
+	var analyticsroute = [
+		{ route: 'analytics', moduleRootId: 'viewmodels/analytics', title: 'Analytics', nav: true, hash: '#analytics',
+			childRoutes: [
+				{ route: 'customerschedule', moduleId: 'customerschedule', title: 'Customer Schedule', nav: true, hash: 'customerschedule'}
+			]
+		}
+	];
+	
 	var assistmanageroute = [
 	  	{ route: 'manage', moduleRootId: 'viewmodels/manage', title: '', nav: true, hash: '#manage',
 	  		childRoutes: [
@@ -110,6 +118,7 @@
 	        	case 'MANAGER':
 	        		self.routes = self.routes.concat(reportroute);
 	        		self.routes = self.routes.concat(manageroute);
+	        		self.routes = self.routes.concat(analyticsroute);
 	        		self.routes = self.routes.concat(cashierroute);
 	        		self.routes = self.routes.concat(cashtransferroute);
 	        		self.routes = self.routes.concat(purchaseorderroute);
