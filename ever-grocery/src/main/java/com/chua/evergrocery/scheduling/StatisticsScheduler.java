@@ -125,7 +125,7 @@ public class StatisticsScheduler {
 	 * fires at 8:22PM every first day of the month
 	 */
 	@Scheduled(cron = "0 22 20 1 * ?")
-	//@Scheduled(cron = "0 57 22 * * ?")
+	//@Scheduled(cron = "0 56 23 * * ?")
 	public void monthlyCustomerScheduleUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting monthly customer average schedule update");
@@ -158,7 +158,7 @@ public class StatisticsScheduler {
 	 * fires at 8:24PM every day
 	 */
 	@Scheduled(cron = "0 24 20 * * ?")
-	//@Scheduled(cron = "0 20 23 * * ?")
+	//@Scheduled(cron = "0 59 23 * * ?")
 	public void dailyCustomerOOSFlagUpdate() {
 		final Date start = new Date();
 		LOG.info("Starting daily customer OOS flag update");

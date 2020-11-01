@@ -190,10 +190,13 @@ public class CustomerSummaryHandlerImpl implements CustomerSummaryHandler {
 			
 			if(customerOrders != null && customerOrders.size() > 5) {
 				float averageSchedule = 0.0f;
+				int sameDayOrderOffset = 0;
 				for(int i = 0; i < customerOrders.size() - 1; i++) {
-					averageSchedule += DateUtil.daysBetween(customerOrders.get(i + 1).getPaidOn(), customerOrders.get(i).getPaidOn());
+					float daysDiff = DateUtil.daysBetween(customerOrders.get(i + 1).getPaidOn(), customerOrders.get(i).getPaidOn());
+					averageSchedule += daysDiff;
+					if(daysDiff <= 0.0f) sameDayOrderOffset++;
 				}
-				averageSchedule /= customerOrders.size() - 1;
+				averageSchedule /= customerOrders.size() - 1 - sameDayOrderOffset;
 				customer.setAverageSchedule(Math.abs(averageSchedule));
 			}
 		}
