@@ -211,12 +211,16 @@ public class CustomerSummaryHandlerImpl implements CustomerSummaryHandler {
 			
 			if(!customer.getAverageSchedule().equals(0.0f) && 
 					DateUtil.daysBetween(customer.getLastPurchase(), new Date()) > customer.getAverageSchedule() * 2) {
-				customer.setOosFlag(Boolean.TRUE);
-				customer.setOosLastFlag(new Date());
+				if(!customer.getOosFlag()) {
+					customer.setOosFlag(Boolean.TRUE);
+					customer.setOosLastFlag(new Date());
+				}
 			} else {
 				customer.setOosFlag(Boolean.FALSE);
 			}
 		}
+		
+		customerService.batchUpdate(customers);
 	}
 	
 	private void clearAllSalesAndProfitValuePercentage() {
