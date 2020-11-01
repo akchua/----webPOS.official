@@ -96,7 +96,7 @@ public class StatisticsScheduler {
 		final Date start = new Date();
 		LOG.info("Starting monthly customer sales summary update");
 		
-		customerSummaryHandler.updateMonthlyCustomerSummaries(2);
+		customerSummaryHandler.updateMonthlyCustomerSummaries(1);
 		
 		final Date end = new Date();
 		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
