@@ -49,8 +49,7 @@
 	var assistmanageroute = [
 	  	{ route: 'manage', moduleRootId: 'viewmodels/manage', title: '', nav: true, hash: '#manage',
 	  		childRoutes: [
-	      		{ route: 'product', moduleId: 'product', title: 'Products', nav: true, hash: 'product' },
-	      		{ route: 'customer', moduleId: 'customer', title: 'Customers', nav: true, hash: 'customer' }
+	      		{ route: 'product', moduleId: 'product', title: 'Products', nav: true, hash: 'product' }
 	  		]
 	  	}
 	];
