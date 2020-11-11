@@ -1,5 +1,7 @@
 package com.chua.evergrocery.database.service;
 
+import java.util.List;
+
 import com.chua.evergrocery.database.entity.Promo;
 import com.chua.evergrocery.database.prototype.PromoPrototype;
 import com.chua.evergrocery.objects.ObjectList;
@@ -15,4 +17,6 @@ public interface PromoService
 	ObjectList<Promo> findAllWithPagingOrderByLatest(int pageNumber, int resultsPerPage, Boolean showActiveOnly);
 	
 	ObjectList<Promo> findAllRecentlyEndedWithPagingOrderByLatest(int pageNumber, int resultsPerPage);
+	
+	List<Promo> findAllActivePromosOrderByProductName();
 }

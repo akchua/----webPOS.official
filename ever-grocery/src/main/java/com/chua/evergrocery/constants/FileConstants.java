@@ -24,6 +24,8 @@ public class FileConstants {
 	
 	private final String generateOfftakeHome;
 	
+	private final String currentPromoHome;
+	
 	private final String inventoryHome;
 	
 	private final String activityLogHome;
@@ -42,6 +44,7 @@ public class FileConstants {
 		this.backendReportHome = fileHome + "files/backend_report/";
 		this.generatePurchasesHome = fileHome + "files/generate_purchase/";
 		this.generateOfftakeHome = fileHome + "files/generate_offtake/";
+		this.currentPromoHome = fileHome + "files/current_promo/";
 		this.inventoryHome = fileHome + "files/inventory/";
 		this.activityLogHome = fileHome + "files/activity_log/";
 		this.imageDefaultFileName = imageDefaultFileName;
@@ -69,6 +72,10 @@ public class FileConstants {
 	
 	public String getGenerateOfftakeHome() {
 		return generateOfftakeHome;
+	}
+
+	public String getCurrentPromoHome() {
+		return currentPromoHome;
 	}
 
 	public String getInventoryHome() {

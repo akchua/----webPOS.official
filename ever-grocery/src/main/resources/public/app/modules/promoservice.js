@@ -48,6 +48,13 @@ define(['jquery'], function ($) {
     				promoId: promoId
     			}
     		});
+    	},
+    	
+    	generateCurrentPromoPDF: function() {
+    		return $.ajax({
+    			url: '/services/promo/currentpromo',
+    			method: 'POST'
+    		});
     	}
     };
 });

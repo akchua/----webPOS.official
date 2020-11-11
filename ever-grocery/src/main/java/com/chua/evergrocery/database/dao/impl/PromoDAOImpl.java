@@ -2,10 +2,12 @@ package com.chua.evergrocery.database.dao.impl;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Repository;
 
 import com.chua.evergrocery.database.dao.PromoDAO;
@@ -78,5 +80,22 @@ public class PromoDAOImpl
 		conjunction.add(Restrictions.ne("id", promoId));
 		
 		return findUniqueResult(null, null, null, conjunction);
+	}
+
+	@Override
+	public List<Promo> findAllActivePromosWithOrder(Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		
+		final Date today = DateUtil.floorDay(new Date());
+		
+		conjunction.add(Restrictions.le("startDate", today));
+		conjunction.add(Restrictions.ge("endDate", today));
+		
+		String[] associatedPaths = { "product" };
+		String[] aliasNames = { "p" };
+		JoinType[] joinTypes = { JoinType.INNER_JOIN };
+		
+		return findAllByCriterionList(associatedPaths, aliasNames, joinTypes, orders, conjunction);
 	}
 }

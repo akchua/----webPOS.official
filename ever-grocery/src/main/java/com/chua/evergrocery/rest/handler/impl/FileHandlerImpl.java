@@ -28,6 +28,11 @@ public class FileHandlerImpl implements FileHandler {
 	public File findGeneratedOfftakeByFileName(String fileName) {
 		return new File(fileConstants.getGenerateOfftakeHome() + fileName);
 	}
+	
+	@Override
+	public File findCurrentPromoByFileName(String fileName) {
+		return new File(fileConstants.getCurrentPromoHome() + fileName);
+	}
 
 	@Override
 	public File findInventoryByFileName(String fileName) {

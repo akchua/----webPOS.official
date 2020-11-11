@@ -1,0 +1,3 @@
+## Format for Current Promo Item
+## Has exactly 95 columns in a line
+|${t.FormattedProductName}| ${t.FormattedPricePerCase}| ${t.FormattedPricePerPiece}|

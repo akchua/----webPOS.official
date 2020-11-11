@@ -13,6 +13,8 @@ public interface FileHandler {
 	
 	File findGeneratedOfftakeByFileName(String fileName);
 	
+	File findCurrentPromoByFileName(String fileName);
+	
 	File findInventoryByFileName(String fileName);
 	
 	File findSalesReportByFileName(String fileName);

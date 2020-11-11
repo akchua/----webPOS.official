@@ -78,4 +78,11 @@ public class PromoEndpoint {
 				@Context HttpServletRequest request) {
 		return promoHandler.removePromo(promoId, request.getRemoteAddr());
 	}
+	
+	@POST
+	@Path("/currentpromo")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean generateCurrentPromoPDF() {
+		return promoHandler.generateCurrentPromoPDF();
+	}
 }

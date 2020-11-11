@@ -25,4 +25,6 @@ public interface PromoHandler {
 	ResultBean removePromo(Long promoId, String ip);
 	
 	ResultBean finalizeUsedPromos(Long customerOrderId);
+	
+	ResultBean generateCurrentPromoPDF();
 }

@@ -50,6 +50,18 @@ public class FileEndpoint {
 	}
 	
 	@GET
+	@Path("/currentpromo/{fileName}")
+	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
+	public Response getCurrentPromoByFileName(@PathParam("fileName") String fileName) throws IOException {
+		File currentPromo = fileHandler.findCurrentPromoByFileName(fileName);
+		if(currentPromo.exists())
+			return Response.ok(currentPromo, MediaType.APPLICATION_OCTET_STREAM)
+				.header("Content-Disposition", "attachment; filename=\"" + currentPromo.getName() + "\"" )
+				.build();
+		else return null;
+	}
+	
+	@GET
 	@Path("/inventory/{fileName}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response getInventoryByFileName(@PathParam("fileName") String fileName) throws IOException {

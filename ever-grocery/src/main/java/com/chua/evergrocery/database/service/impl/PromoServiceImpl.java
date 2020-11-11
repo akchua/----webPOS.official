@@ -1,6 +1,7 @@
 package com.chua.evergrocery.database.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,10 @@ public class PromoServiceImpl
 	@Override
 	public Promo findCurrentByProduct(Long productId) {
 		return dao.findCurrentByProduct(productId);
+	}
+
+	@Override
+	public List<Promo> findAllActivePromosOrderByProductName() {
+		return dao.findAllActivePromosWithOrder(new Order[] { Order.asc("p.name") });
 	}
 }

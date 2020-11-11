@@ -1,0 +1,13 @@
+## Template for Current Promo
+## Has a maximum of 95 Column per line
+                                      CURRENT PROMO                                              
+                                                   
+                    Date : ${t.FormattedDate}
+                    
++--------------------------------------------------------------+--------------+--------------+
+|                         Product Name                         |  Price / cs. |  Price / pc. |
++--------------------------------------------------------------+--------------+--------------+
+#foreach( $formattedPromo in $t.FormattedPromos)
+$formattedPromo
+#end
++--------------------------------------------------------------+--------------+--------------+

@@ -1,5 +1,5 @@
-﻿define(['durandal/app', 'knockout', 'modules/productservice', 'modules/promoservice'], 
-		function (app, ko, productService, promoService) {
+﻿define(['durandal/app', 'knockout', 'modules/productservice', 'modules/promoservice', 'modules/fileservice'], 
+		function (app, ko, productService, promoService, fileService) {
 	var Home = function() {
 		this.salePriceHistoryList = ko.observable();
 		this.promoList = ko.observable();
@@ -17,6 +17,9 @@
 		this.totalItems3 = ko.observable();
 		this.currentPage3 = ko.observable(1);
 		this.currentPageSubscription3 = null;
+		
+		this.enableDownloadButton = ko.observable(true);
+		this.allowDownload = app.user.userType.authority < 9;
 	};
 	
 	Home.prototype.activate = function() {
@@ -59,6 +62,21 @@
 			self.totalItems2(data.total);
 		});
 	};
+	
+	Home.prototype.printCurrentPromo = function() {
+    	var self = this;
+    	
+    	self.enableDownloadButton(false);
+    	promoService.generateCurrentPromoPDF().done(function(result) {
+        	if(result.success) {
+				fileService.downloadCurrentPromoByFileName(result.extras.fileName);
+    			dialog.close(self);
+    		} else {
+    			app.showMessage(result.message);
+    		}
+        	self.enableDownloadButton(true);
+        });
+    };
 	
 	Home.prototype.refreshRecentlyEndedPromoList = function() {
 		var self = this;

@@ -1,20 +1,27 @@
 package com.chua.evergrocery.rest.handler.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chua.evergrocery.UserContextHolder;
 import com.chua.evergrocery.annotations.CheckAuthority;
+import com.chua.evergrocery.beans.PromoBean;
 import com.chua.evergrocery.beans.PromoFormBean;
 import com.chua.evergrocery.beans.ResultBean;
+import com.chua.evergrocery.constants.FileConstants;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.Promo;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
+import com.chua.evergrocery.database.service.ProductDetailService;
 import com.chua.evergrocery.database.service.ProductService;
 import com.chua.evergrocery.database.service.PromoService;
 import com.chua.evergrocery.enums.Color;
@@ -23,6 +30,9 @@ import com.chua.evergrocery.rest.handler.ActivityLogHandler;
 import com.chua.evergrocery.rest.handler.PromoHandler;
 import com.chua.evergrocery.rest.validator.PromoFormValidator;
 import com.chua.evergrocery.utility.Html;
+import com.chua.evergrocery.utility.SimplePdfWriter;
+import com.chua.evergrocery.utility.format.DateFormatter;
+import com.chua.evergrocery.utility.template.CurrentPromoTemplate;
 
 /**
  * @author Adrian Jasper K. Chua
@@ -47,6 +57,15 @@ public class PromoHandlerImpl implements PromoHandler {
 	
 	@Autowired
 	private CustomerOrderDetailService customerOrderDetailService;
+	
+	@Autowired
+	private ProductDetailService productDetailService;
+	
+	@Autowired
+	private FileConstants fileConstants;
+
+	@Autowired
+	private VelocityEngine velocityEngine;
 	
 	@Override
 	public ObjectList<Promo> getPromoList(Integer pageNumber, Boolean showActiveOnly) {
@@ -186,5 +205,40 @@ public class PromoHandlerImpl implements PromoHandler {
 		
 		result = new ResultBean(Boolean.TRUE, "");
 		return result;
+	}
+
+	@Override
+	public ResultBean generateCurrentPromoPDF() {
+		final ResultBean result;
+		final List<Promo> promos = promoService.findAllActivePromosOrderByProductName();
+		
+		// Generate pdf file of current promos
+		final String fileName = "current.promos_"
+				+ DateFormatter.fileSafeShortFormat(new Date()) + ".pdf";
+		final String filePath = fileConstants.getCurrentPromoHome() + fileName;
+		final String temp = new CurrentPromoTemplate(convertAllToBean(promos))
+				.merge(velocityEngine);
+		SimplePdfWriter.write(temp, "Ever Bazar", filePath, false);
+		final Map<String, Object> extras = new HashMap<String, Object>();
+		extras.put("fileName", fileName);
+		result = new ResultBean(Boolean.TRUE, "Done");
+		result.setExtras(extras);
+		
+		return result;
+	}
+	
+	private List<PromoBean> convertAllToBean(List<Promo> promos) {
+		final List<PromoBean> promoBeans = new ArrayList<PromoBean>();
+		
+		for(Promo promo : promos) {
+			final PromoBean promoBean = new PromoBean();
+			promoBean.setProductName(promo.getProduct().getName());
+			promoBean.setDiscountPercent(promo.getDiscountPercent());
+			promoBean.setCaseSellingPrice(productDetailService.findByProductIdAndTitle(promo.getProduct().getId(), "Whole").getSellingPrice());
+			promoBean.setPieceSellingPrice(productDetailService.findByProductIdAndTitle(promo.getProduct().getId(),  "Piece").getSellingPrice());
+			promoBeans.add(promoBean);
+		}
+		
+		return promoBeans;
 	}
 }
