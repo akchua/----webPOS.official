@@ -735,7 +735,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		if (purchaseOrder != null) {
 			final UserBean currentUser = UserContextHolder.getUser();
 
-			if (purchaseOrder.getStatus().equals(Status.LISTING) || currentUser.getUserType().getAuthority() <= 3) {
+			if (purchaseOrder.getStatus().equals(Status.LISTING) || currentUser.getUserType().getAuthority() <= 8) {
 				final List<PurchaseOrderDetail> purchaseOrderItems = purchaseOrderDetailService
 						.findAllByPurchaseOrderIdOrderByProductName(purchaseOrder.getId());
 				final PurchaseOrderCopyTemplate purchaseOrderCopy = new PurchaseOrderCopyTemplate(purchaseOrder,

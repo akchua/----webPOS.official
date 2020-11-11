@@ -127,8 +127,8 @@
 	        		self.routes = self.routes.concat(assistmanageroute);
 	        		self.routes = self.routes.concat(cashierroute);
 	        		self.routes = self.routes.concat(cashtransferroute);
-	        	case 'SENIOR_STAFF':
 	        		self.routes = self.routes.concat(purchaseorderroute);
+	        	case 'SENIOR_STAFF':
 	        	case 'STAFF':
 	        		self.routes = self.routes.concat(customerorderroute);
 	        		break;
