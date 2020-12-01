@@ -13,7 +13,6 @@ import com.chua.evergrocery.database.dao.ProductDailySalesSummaryDAO;
 import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
 import com.chua.evergrocery.database.service.ProductDailySalesSummaryService;
 import com.chua.evergrocery.utility.DateUtil;
-import com.chua.evergrocery.utility.format.DateFormatter;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -46,9 +45,10 @@ public class ProductDailySalesSummaryServiceImpl
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(DateUtil.monthIdToDate(monthId));
 		cal.add(Calendar.SECOND, -1);
+		final Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(DateUtil.monthIdToDate(monthId + 1));
+		cal2.add(Calendar.SECOND, -1);
 		
-		System.out.println(DateFormatter.longFormat(cal.getTime()) + " - " + DateFormatter.longFormat(DateUtil.monthIdToDate(monthId + 1)));
-		
-		return dao.getAllProductSalesSummaryByCompanyAndPaidDate(companyId, cal.getTime(), DateUtil.monthIdToDate(monthId + 1));
+		return dao.getAllProductSalesSummaryByCompanyAndPaidDate(companyId, cal.getTime(), cal2.getTime());
 	}
 }
