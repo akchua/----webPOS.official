@@ -73,6 +73,7 @@ public class CustomerDAOImpl
 	@Override
 	public Customer findByCardId(String cardId) {
 		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.eq("cardId", cardId));
 		
 		return findUniqueResult(null, null, null, conjunction);
@@ -81,6 +82,7 @@ public class CustomerDAOImpl
 	@Override
 	public Customer findByCode(String code) {
 		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		conjunction.add(Restrictions.eq("code", code));
 		
 		return findUniqueResult(null, null, null, conjunction);
