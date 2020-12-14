@@ -1,5 +1,6 @@
 package com.chua.evergrocery.database.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -49,7 +50,14 @@ public class PurchaseOrderDetailServiceImpl
 
 	@Override
 	public List<PurchaseOrderDetail> findAllByCompanyAndMonthId(long companyId, int monthId) {
-		return dao.findAllByCompanyAndDeliveryDate(companyId, DateUtil.monthIdToDate(monthId), DateUtil.monthIdToDate(monthId + 1));
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(DateUtil.monthIdToDate(monthId));
+		cal.add(Calendar.SECOND, -1);
+		final Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(DateUtil.monthIdToDate(monthId + 1));
+		cal2.add(Calendar.SECOND, -1);
+		
+		return dao.findAllByCompanyAndDeliveryDate(companyId, cal.getTime(), cal2.getTime());
 	}
 
 	@Override
@@ -72,6 +80,13 @@ public class PurchaseOrderDetailServiceImpl
 	@Override
 	public List<ProductPurchaseSummaryBean> getAllProductPurchaseSummaryByCompanyAndMonthId(long companyId,
 			int monthId) {
-		return dao.getAllProductPurchaseSummaryByCompanyAndDeliveryDate(companyId, DateUtil.monthIdToDate(monthId), DateUtil.monthIdToDate(monthId + 1));
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(DateUtil.monthIdToDate(monthId));
+		cal.add(Calendar.SECOND, -1);
+		final Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(DateUtil.monthIdToDate(monthId + 1));
+		cal2.add(Calendar.SECOND, -1);
+		
+		return dao.getAllProductPurchaseSummaryByCompanyAndDeliveryDate(companyId, cal.getTime(), cal2.getTime());
 	}
 }
