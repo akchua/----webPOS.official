@@ -22,7 +22,7 @@
 	
 	<div class="row">
 		<label class="checkbox-inline col-xs-offset-1 col-xs-2">
-			<input data-bind="checked: showRecent" type="checkbox" name="recentcheckbox">Show Recent Only
+			<input data-bind="visible: allowRecentToggle, checked: showRecent" type="checkbox" name="recentcheckbox">Show Recent Only
 		</label>
 		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-9"></div>
 	</div>

@@ -4,6 +4,7 @@ define(['durandal/app', 'knockout', 'modules/customerorderservice', 'modules/fil
 		this.customerOrderList = ko.observable();
 		
 		this.showRecent = ko.observable(true);
+		this.allowRecentToggle = app.user.userType.authority < 3;
 		
 		this.quickId = ko.observable();
 		
