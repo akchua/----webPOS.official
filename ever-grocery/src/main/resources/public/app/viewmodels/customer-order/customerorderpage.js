@@ -15,10 +15,6 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
 		
-		this.totalAmount = ko.observable();
-		this.netOfVat = 0.0;
-		this.vat = 0.0;
-		
 		this.customerOrderPageModel = {
 			customerOrderId: ko.observable(),
 			customerOrderNumber: ko.observable(),
@@ -45,11 +41,6 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	
     	customerOrderService.refreshCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function() {
     		self.refreshCustomerOrderDetailList();
-    	});
-    	
-    	self.totalAmount.subscribe(function() {
-    		self.netOfVat = (self.totalAmount() / 1.12).toFixed(2);
-    		self.vat = (self.totalAmount() - self.netOfVat).toFixed(2);
     	});
     };
     
@@ -138,7 +129,6 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     		self.customerOrderPageModel.formattedGrossAmount(customerOrder.formattedGrossAmount);
     		self.customerOrderPageModel.formattedOutrightPromoDiscount(customerOrder.formattedOutrightPromoDiscount);
     		self.customerOrderPageModel.formattedTotalAmount(customerOrder.formattedTotalAmount);
-    		self.totalAmount(customerOrder.totalAmount);
     	});
     	
     	customerOrderService.getCustomerOrderDetailList(self.currentPage(), self.customerOrderPageModel.customerOrderId(), true).done(function(data) { 
@@ -173,7 +163,7 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	
     	if(self.barcodeKey() === 'e') {
     		self.submit(false);
-    	} else if(self.barcodeKey() === 'p') {
+    	} else if(self.barcodeKey() === 'd') {
     		self.printCopy();
     		self.barcodeKey("");
     		self.enableAddByBarcode(true);
@@ -218,9 +208,7 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     CustomerOrderPage.prototype.submit = function(createNew) {
     	var self = this;
     	
-    	app.showMessage('<p>' + self.totalAmount() + '<br>' + self.netOfVat + '<br>' + self.vat + '</p>' +
-    			
-    			'<p>Submit order #<span class="text-primary">' + self.customerOrderPageModel.customerOrderNumber() + '</span>?<br>' +
+    	app.showMessage('<p>Submit order #<span class="text-primary">' + self.customerOrderPageModel.customerOrderNumber() + '</span>?<br>' +
 				'Make sure to label all packages with <span class="text-danger">#' + self.customerOrderPageModel.customerOrderNumber() + '</span>.<br><br>' +
 				'By clicking confirm, you will be forwarding the order to the cashier.</p>',
 		'Submit Order',

@@ -94,6 +94,8 @@
 			username: ko.observable(),
 			password: ko.observable()
 		};
+		
+		this.allowRecentTransactionsView = ko.observable();
 	};
 	
 	Shell.prototype.activate = function() {
@@ -109,6 +111,7 @@
     		self.userDetails.userType(app.user.userType);
     		self.userDetails.itemsPerPage(app.user.itemsPerPage);
     		self.userDetails.imagePath(userService.getUserImageByFileName(app.user.image));
+    		self.allowRecentTransactionsView(app.user.userType.authority < 6);
     		
     		switch(app.user.userType.name) {
 	        	case 'ADMINISTRATOR':

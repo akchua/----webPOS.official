@@ -6,7 +6,9 @@ ${t.FormattedSIN}
 ${t.FormattedRefundNumber}
 ${t.FormattedTitle}
 ${t.FormattedSubtitle}
-${t.FormattedOrderNumber}
+Order #${t.OrderNumber}
+${t.CustomerFormattedName}
+${t.FormattedPackageCount}
 ${t.FormattedCustomerOrderItems}
 #if($t.taxAdjusted)
            Amount w/ VAT ${t.FormattedTaxAdjustableAmount}
@@ -18,6 +20,10 @@ ${t.FormattedCustomerOrderItems}
          Net of Discount ${t.FormattedNetOfDiscount}
 #end
 
+#if($t.Discounted2)
+                 Sub Total ${t.FormattedGrossAmount}
+               $ Price Off ${t.FormattedOutrightPromoDiscount}
+#end
        Total Amount ${t.FormattedTotalAmount}
                     Cash ${t.FormattedCash}
 #if($t.PaidWithCheck)
@@ -58,7 +64,7 @@ ${t.FormattedDiscountName}
 ${t.FormattedDiscountAddress}
 ${t.FormattedDiscountTin}
 ${t.FormattedIdNumber}
-Signature     : ___________________________
+Signature  : ___________________________
 #else
 Cust. Name : ___________________________
 Address    : ___________________________
@@ -74,12 +80,12 @@ Saturnino O. Chua
 Abadilla St., Brgy. 17
 Laoag City, Ilocos Norte
 VAT Reg. TIN: 102-198-471-0000
-Acc No : 
-Date Issued : 
-Valid Until : 
-PTU No. : 
-Date Issued : 
-Valid Until : 
+Acc No : 0011021984712019051080
+Date Issued : 12/15/2020
+Valid Until : 12/15/2025
+PTU No. : FP122020-001-0276370-00000
+Date Issued : 12/21/2020
+Valid Until : 12/21/2025
 #foreach( $disclaimer in $t.DisclaimerList)
 $disclaimer
 #end

@@ -54,7 +54,9 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     	self.customerOrderViewModel.formattedPointsEarned(self.customerOrder.formattedPointsEarned);
     	self.customerOrderViewModel.totalItems(self.customerOrder.totalItems);
     	self.customerOrderViewModel.formattedPaidOn(self.customerOrder.formattedPaidOn);
-    	self.customerOrderViewModel.formattedCashier(self.customerOrder.cashier.formattedName);
+    	if(self.customerOrder.cashier) {
+    		self.customerOrderViewModel.formattedCashier(self.customerOrder.cashier.formattedName);
+    	}
 
     	self.customerOrderViewModel.formattedCash(self.customerOrder.formattedCash);
     	self.customerOrderViewModel.formattedCheckAmount(self.customerOrder.formattedCheckAmount);

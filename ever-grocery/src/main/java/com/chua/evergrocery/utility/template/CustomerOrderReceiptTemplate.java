@@ -1,5 +1,7 @@
 package com.chua.evergrocery.utility.template;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +14,7 @@ import com.chua.evergrocery.database.entity.CustomerOrder;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.enums.DiscountType;
 import com.chua.evergrocery.enums.DocType;
+import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
 import com.chua.evergrocery.utility.format.DateFormatter;
@@ -99,8 +102,31 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 		return StringHelper.center(temp, 44);
 	}
 	
-	public String getFormattedOrderNumber() {
-		return "Order #" + customerOrder.getOrderNumber();
+	public String getOrderNumber() {
+		return customerOrder.getOrderNumber();
+	}
+	
+	public String getCustomerFormattedName() {
+		return customerOrder.getCustomer() != null ? customerOrder.getCustomer().getCustomerCategory().getCode() + " " + customerOrder.getCustomer().getCode() + " - " + customerOrder.getCustomer().getFormattedName() : "";
+	}
+	
+	public String getFormattedPackageCount() {
+		String formattedPackageCount = "";
+		
+		NumberFormat nf = new DecimalFormat("##.0");
+		
+		Float caseCount = 0.0f;
+		for(CustomerOrderDetail orderItem : customerOrderItems) {
+			if((orderItem.getUnitType().equals(UnitType.CASE) || orderItem.getUnitType().equals(UnitType.BUNDLE) || orderItem.getUnitType().equals(UnitType.SACK))
+					&& orderItem.getQuantity() >= 1.0f) caseCount += orderItem.getQuantity() - orderItem.getUpgradedQuantity();
+		}
+		
+		if(caseCount > 0.0f) formattedPackageCount += "[ ]" + nf.format(caseCount) + " CS   ";
+		if(customerOrder.getCartonCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getCartonCount() + "C   ";
+		if(customerOrder.getPlasticCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getPlasticCount() + "P   ";
+		if(customerOrder.getBagCount() > 0) formattedPackageCount += "[ ]" + customerOrder.getBagCount() + " SB";
+		
+		return formattedPackageCount;
 	}
 	
 	public String getFormattedVatable() {
@@ -154,6 +180,18 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 	
 	public String getFormattedNetOfDiscount() {
 		return String.format("%16s", "Php " + CurrencyFormatter.pesoFormat(customerOrder.getTotalDiscountableAmount() - customerOrder.getTotalDiscountAmount()));
+	}
+	
+	public String getFormattedGrossAmount() {
+		return String.format("%12s", customerOrder.getFormattedGrossAmount());
+	}
+	
+	public Boolean isDiscounted2() {
+		return customerOrder.getOutrightPromoDiscount() > 0;
+	}
+	
+	public String getFormattedOutrightPromoDiscount() {
+		return String.format("%12s", customerOrder.getFormattedOutrightPromoDiscount());
 	}
 	
 	public String getFormattedTotalAmount() {
