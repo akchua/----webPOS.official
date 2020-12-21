@@ -22,6 +22,14 @@
 		}
 	];
 	
+	var assistreportroute = [
+		{ route: 'report', moduleRootId: 'viewmodels/report', title: 'Reports', nav: true, hash: '#report',
+			childRoutes: [
+				{ route: 'sale', moduleId: 'sale', title: 'Sales', nav: true, hash: 'sale'}
+			]
+		}
+	];
+	
 	var manageroute = [
 	  	{ route: 'manage', moduleRootId: 'viewmodels/manage', title: '', nav: true, hash: '#manage',
 	  		childRoutes: [
@@ -127,6 +135,7 @@
 	        		self.routes = self.routes.concat(customerorderroute);
 	        		break;
 	        	case 'ASSISTANT_MANAGER':
+	        		self.routes = self.routes.concat(assistreportroute);
 	        		self.routes = self.routes.concat(assistmanageroute);
 	        		self.routes = self.routes.concat(analyticsroute);
 	        		self.routes = self.routes.concat(cashierroute);
@@ -139,6 +148,7 @@
 	        	case 'CASHIER':
 	        		self.routes = self.routes.concat(cashierroute);
 	        		self.routes = self.routes.concat(cashtransferroute);
+	        		self.routes = self.routes.concat(customerorderroute);
 	        		break;
 	        	case 'STORAGE_MANAGER':
 	        		break;
