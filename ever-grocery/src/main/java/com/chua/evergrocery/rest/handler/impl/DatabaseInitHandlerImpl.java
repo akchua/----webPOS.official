@@ -183,6 +183,7 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 			zReading.setSeniorDiscountAmount(0.0f);
 			zReading.setPwdDiscountAmount(0.0f);
 			zReading.setBeginningRefundAmount(0.0f);
+			zReading.setSpecialDiscountVatAdjustment(0.0f);
 			zReading.setRefundAmount(0.0f);
 			zReading.setTotalCheckPayment(0.0f);
 			zReading.setTotalCardPayment(0.0f);
