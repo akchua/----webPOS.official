@@ -165,8 +165,6 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     		self.submit(false);
     	} else if(self.barcodeKey() === 'd') {
     		self.printCopy();
-    		self.barcodeKey("");
-    		self.enableAddByBarcode(true);
     	} else if(self.barcodeKey() === 's') {
     		self.search();
     		self.barcodeKey("");
@@ -243,16 +241,31 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     CustomerOrderPage.prototype.printCopy = function() {
 		var self = this;
 		
-		app.showMessage('<p>Confirm print copy of Order <span class="text-danger">#' + self.customerOrderPageModel.customerOrderNumber() + '</span>',
-				'Print Order Copy',
+		app.showMessage('<p>Submit order <span class="text-primary">#' + self.customerOrderPageModel.customerOrderNumber() + '</span> with duplicate?',
+				'Submit with Duplicate',
 				[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
 		.then(function(confirm) {
 			if(confirm) {
 				customerOrderService.printCustomerOrderCopy(self.customerOrderPageModel.customerOrderId()).done(function(result) {
-					if(!result.success) {
+					if(result.success) {
+						customerOrderService.submitCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function(result) {
+							if(result.success) {
+								customerOrderService.createCustomerOrder().done(function(result) {
+					            	if(result.success) {
+					            		router.navigate('#customerorderpage/' + result.extras.customerOrderId);
+					            	} else {
+					            		app.showMessage(result.message);
+					            	}
+					            });
+							} else {
+								app.showMessage(result.message).done(function() {
+									self.barcodeFocus(true);
+								});
+							}
+						});
+					} else {
 						app.showMessage(result.message);
 					}
-					self.barcodeFocus(true);
 				});
 			} else {
 				self.barcodeFocus(true);
