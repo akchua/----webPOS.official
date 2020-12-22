@@ -5,7 +5,17 @@
     </div>
     
     <div class="modal-body">
-    	<h3>Order #<span data-bind="text: orderNumber"></span></h3>
+    	<div class="row">
+    		<div class="col-xs-6">
+    			<h3>Order #<span data-bind="text: orderNumber"></span></h3>
+    		</div>
+    		<div class="col-xs-6">
+	    		<label class="checkbox-inline pull-right">
+					<input data-bind="checked: enablePrintReceipt" type="checkbox" name="printreceiptcheckbox">PR
+				</label>
+    		</div>
+    	</div>
+    	
 		<div class="tabbable">
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#regular" data-toggle="tab">Regular</a></li>

@@ -58,6 +58,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		this.discounted = ko.observable();
 		this.enableButtons = ko.observable(true);
 		this.enableQuickPay = ko.observable(false);
+		
+		this.enablePrintReceipt = ko.observable(true);
 	};
 	
 	PayForm.prototype.activate = function() {
@@ -193,11 +195,13 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 				customerOrderService.payCustomerOrder(ko.toJSON(self.paymentsForm)).done(function(result) {
 					if(result.success) {
 		        		dialog.close(self);
-		        		if(self.discounted()) {
-		        			customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '-- Customer Copy --');
-		        			customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '-- Accounting Copy --');
-		        		} else {
-		        			customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '');
+		        		if(self.enablePrintReceipt()) {
+		        			if(self.discounted()) {
+			        			customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '-- Customer Copy --');
+			        			customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '-- Accounting Copy --');
+			        		} else {
+			        			customerOrderService.printOriginalReceipt(self.paymentsForm.customerOrderId(), '');
+			        		}
 		        		}
 					} else if(result.extras && result.extras.errors) {
 		        		self.errors.cash(result.extras.errors.cash);
