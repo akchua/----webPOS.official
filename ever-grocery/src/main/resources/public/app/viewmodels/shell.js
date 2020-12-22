@@ -134,6 +134,12 @@
 	        		self.routes = self.routes.concat(purchaseorderroute);
 	        		self.routes = self.routes.concat(customerorderroute);
 	        		break;
+	        	case 'ROOT' :
+	        		self.routes = self.routes.concat(assistreportroute);
+	        		self.routes = self.routes.concat(assistmanageroute);
+	        		self.routes = self.routes.concat(cashierroute);
+	        		self.routes = self.routes.concat(cashtransferroute);
+	        		break;
 	        	case 'ASSISTANT_MANAGER':
 	        		self.routes = self.routes.concat(assistreportroute);
 	        		self.routes = self.routes.concat(assistmanageroute);

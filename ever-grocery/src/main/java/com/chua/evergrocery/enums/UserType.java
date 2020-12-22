@@ -13,6 +13,8 @@ public enum UserType {
 	
 	STORAGE_MANAGER ("Storage Manager", Integer.valueOf(3)),
 	
+	ROOT ("ROOT", Integer.valueOf(5)),
+	
 	CASHIER ("Cashier", Integer.valueOf(5)),
 	
 	SENIOR_STAFF ("Senior Staff", Integer.valueOf(8)),
