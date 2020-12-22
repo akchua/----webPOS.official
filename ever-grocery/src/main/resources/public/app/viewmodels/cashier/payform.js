@@ -13,6 +13,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		this.formattedExact = ko.observable();
 		
 		this.formattedTotalAmount = ko.observable();
+		this.orderNumber = ko.observable();
 		
 		this.paymentsForm = {
 			customerOrderId : ko.observable(customerOrderId),
@@ -107,6 +108,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		var self = this;
 		
 		customerOrderService.getCustomerOrder(self.paymentsForm.customerOrderId()).done(function(customerOrder) {
+			self.orderNumber(customerOrder.orderNumber);
+			
 			self.thousand(utility.ceilToThousand(customerOrder.totalAmount));
 			self.formattedThousand(self.thousand().toLocaleString(
 					undefined,

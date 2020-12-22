@@ -36,6 +36,12 @@ public class CustomerOrderServiceImpl
 	}
 	
 	@Override
+	public ObjectList<CustomerOrder> findAllWithPagingOrderByLatest(int pageNumber, int resultsPerPage,
+			String searchKey, Status[] status, Integer daysAgo) {
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, status, daysAgo, new Order[] { Order.desc("updatedOn") });
+	}
+	
+	@Override
 	public ObjectList<CustomerOrder> findAllWithPagingByCreator(int pageNumber, int resultsPerPage, String searchKey,
 			Status[] status, Long creatorId) {
 		return dao.findAllWithPagingByCreator(pageNumber, resultsPerPage, searchKey, status, creatorId);

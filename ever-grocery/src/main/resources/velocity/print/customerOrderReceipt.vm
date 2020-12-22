@@ -49,7 +49,7 @@ ${t.FormattedCustomerCardId} ${t.FormattedPointsAmount}
         Zero-Rated Sales ${t.FormattedZeroRatedSales}
   
 --------------------------------------------
-#if($t.Customer)
+#if($t.PointsActivated)
 ${t.FormattedCustomerName}
 ${t.FormattedCustomerCardId}
 

@@ -145,7 +145,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	
 	@Override
 	public ObjectList<CustomerOrder> getCashierCustomerOrderList(Integer pageNumber, String searchKey) {
-		return customerOrderService.findAllWithPaging(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, new Status[] { Status.SUBMITTED, Status.DISCOUNTED}, null);
+		return customerOrderService.findAllWithPagingOrderByLatest(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, new Status[] { Status.SUBMITTED, Status.DISCOUNTED}, null);
 	}
 
 	@Override

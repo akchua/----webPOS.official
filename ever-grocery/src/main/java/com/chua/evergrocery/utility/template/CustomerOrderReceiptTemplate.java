@@ -258,8 +258,8 @@ public class CustomerOrderReceiptTemplate extends AbstractTemplate {
 		return String.format("%14s", "Php " + CurrencyFormatter.pesoFormat(customerOrder.getTotalPayment() - customerOrder.getTotalAmount()));
 	}
 	
-	public Boolean isCustomer() {
-		return customerOrder.getCustomer() != null;
+	public Boolean isPointsActivated() {
+		return customerOrder.getCustomer() != null && customerOrder.getCustomer().getCardId() != null && !customerOrder.getCustomer().getCardId().isEmpty();
 	}
 	
 	public String getFormattedTotalPoints() {

@@ -32,6 +32,12 @@ public class CustomerOrderDAOImpl
 	@Override
 	public ObjectList<CustomerOrder> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey, Status[] status, Integer daysAgo)
 	{
+		return findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, status, daysAgo, null);
+	}
+	
+	@Override
+	public ObjectList<CustomerOrder> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey,
+			Status[] status, Integer daysAgo, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		
@@ -58,7 +64,7 @@ public class CustomerOrderDAOImpl
 			conjunction.add(Restrictions.ge("createdOn", date.minusDays(daysAgo.intValue())));
 		}
 		
-		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, null, conjunction);
+		return findAllByCriterion(pageNumber, resultsPerPage, null, null, null, orders, conjunction);
 	}
 	
 	@Override

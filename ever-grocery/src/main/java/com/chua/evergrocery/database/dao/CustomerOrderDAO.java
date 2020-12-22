@@ -18,6 +18,8 @@ public interface CustomerOrderDAO extends DAO<CustomerOrder, Long>, CustomerOrde
 
 	ObjectList<CustomerOrder> findAllWithPagingByCustomerWithOrder(int pageNumber, int resultsPerPage, Long customerId, Order[] orders);
 	
+	ObjectList<CustomerOrder> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey, Status[] status, Integer daysAgo, Order[] orders);
+	
 	List<CustomerOrder> findAllByCashierStatusAndDatePaidWithOrder(Long cashierId, Status[] status, Date dateFrom, Date dateTo, Order[] orders);
 
 	List<CashierSalesSummaryBean> findAllCashierSalesSummaryByDatePaidAndDiscountType(Date dateFrom, Date dateTo, List<DiscountType> discountTypes, Boolean returnsOnly);
