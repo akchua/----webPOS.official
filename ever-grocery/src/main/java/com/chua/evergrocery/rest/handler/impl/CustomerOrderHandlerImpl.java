@@ -1030,8 +1030,6 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	public ResultBean printZReading(Date readingDate, String ip) {
 		final ResultBean result;
 		
-		salesReportHandler.updateZReading();
-		
 		final ZReading zReading = zReadingService.findByReadingDate(readingDate);
 		
 		if(zReading != null) {
