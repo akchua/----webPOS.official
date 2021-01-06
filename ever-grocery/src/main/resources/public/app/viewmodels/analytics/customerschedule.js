@@ -14,7 +14,7 @@ define(['durandal/app', 'knockout', 'modules/customerservice'],
 		
 		self.currentPage(1);
 		self.currentPageSubscription = self.currentPage.subscribe(function() {
-			self.refreshCustomerScheduleList();
+			self.refreshCustomerList();
 		});
 		
 		self.refreshCustomerList();
