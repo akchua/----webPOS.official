@@ -9,4 +9,6 @@ public interface PurchaseOrderService
 	extends Service<PurchaseOrder, Long>, PurchaseOrderPrototype {
 
 	List<PurchaseOrder> findDeliveredAfterCutoffByCompanyOrderByDeliveryDate(Long companyId);
+	
+	PurchaseOrder findLatestDeliveryByCompany(Long companyId);
 }

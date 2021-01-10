@@ -41,6 +41,6 @@ public class PurchaseOrderServiceImpl
 
 	@Override
 	public PurchaseOrder findLatestDeliveryByCompany(Long companyId) {
-		return dao.findLatestDeliveryByCompany(companyId);
+		return dao.findAllByCompanyAndDaysWithOrder(companyId, DateUtil.getOrderCutoffDate(), new Order[] { Order.desc("deliveredOn") }).get(0);
 	}
 }

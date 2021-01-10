@@ -112,7 +112,7 @@ public class CustomerOrderDetailDAOImpl
 		
 		final ProjectionList pList = Projections.projectionList();
 		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");
-		pList.add(Projections.sqlProjection("sum(unit_price / (1 + (margin / 100)) * quantity) as baseTotal", new String[] { "baseTotal" }, new FloatType[] { new FloatType() }), "baseTotal");
+		pList.add(Projections.sqlProjection("sum(purchase_price * quantity) as baseTotal", new String[] { "baseTotal" }, new FloatType[] { new FloatType() }), "baseTotal");
 		
 		String[] associatedPaths = { "customerOrder" };
 		String[] aliasNames = { "co" };
@@ -135,7 +135,7 @@ public class CustomerOrderDetailDAOImpl
 		final ProjectionList pList = Projections.projectionList();
 		pList.add(Projections.groupProperty("p.id"), "productId");
 		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");
-		pList.add(Projections.sqlProjection("sum(unit_price / (1 + (margin / 100)) * quantity) as baseTotal", new String[] { "baseTotal" }, new FloatType[] { new FloatType() }), "baseTotal");
+		pList.add(Projections.sqlProjection("sum(purchase_price * quantity) as baseTotal", new String[] { "baseTotal" }, new FloatType[] { new FloatType() }), "baseTotal");
 		
 		String[] associatedPaths = { "customerOrder", "product" };
 		String[] aliasNames = { "co", "p" };

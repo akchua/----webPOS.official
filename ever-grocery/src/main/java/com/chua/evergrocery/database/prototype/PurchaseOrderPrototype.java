@@ -9,6 +9,4 @@ public interface PurchaseOrderPrototype {
 	ObjectList<PurchaseOrder> findAllWithPaging(int pageNumber, int resultsPerPage, Long companyId);
 	
 	ObjectList<PurchaseOrder> findAllWithPagingAndStatus(int pageNumber, int resultsPerPage, Long companyId, Status[] status);
-	
-	PurchaseOrder findLatestDeliveryByCompany(Long companyId);
 }

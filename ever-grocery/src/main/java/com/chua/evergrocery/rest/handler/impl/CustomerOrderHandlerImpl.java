@@ -1122,6 +1122,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		customerOrderDetail.setPromoPercentDiscount(0.0f);
 		customerOrderDetail.setPromoType(null);
 		customerOrderDetail.setMargin(productDetail.getActualPercentProfit());
+		customerOrderDetail.setPurchasePrice(productDetail.getNetPrice());
 		customerOrderDetail.setTaxType(productDetail.getProduct().getTaxType());
 		customerOrderDetail.setTaxAdjustment(0.0f);
 		customerOrderDetail.setOrigTaxType(productDetail.getProduct().getTaxType());

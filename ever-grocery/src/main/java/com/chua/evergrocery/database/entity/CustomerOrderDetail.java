@@ -63,6 +63,8 @@ public class CustomerOrderDetail extends BaseObject {
 	
 	private Float margin;
 	
+	private Float purchasePrice;
+	
 	private TaxType taxType;
 	
 	private Float taxAdjustment;
@@ -286,6 +288,16 @@ public class CustomerOrderDetail extends BaseObject {
 
 	public void setMargin(Float margin) {
 		this.margin = margin;
+	}
+
+	@Basic
+	@Column(name = "purchase_price")
+	public Float getPurchasePrice() {
+		return purchasePrice;
+	}
+
+	public void setPurchasePrice(Float purchasePrice) {
+		this.purchasePrice = purchasePrice;
 	}
 
 	@Enumerated(EnumType.STRING)

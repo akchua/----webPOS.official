@@ -30,7 +30,6 @@ import com.chua.evergrocery.database.service.ProductService;
 import com.chua.evergrocery.database.service.PurchaseOrderDetailService;
 import com.chua.evergrocery.enums.UnitType;
 import com.chua.evergrocery.rest.handler.InventoryHandler;
-import com.chua.evergrocery.utility.DateUtil;
 import com.chua.evergrocery.utility.Html;
 import com.chua.evergrocery.utility.SimplePdfWriter;
 import com.chua.evergrocery.utility.StringHelper;
@@ -82,10 +81,11 @@ public class InventoryHandlerImpl implements InventoryHandler {
 		if(product != null) {
 			LOG.info("## Processing inventory of " + product.getName());
 			inventory = new InventoryBean();
-			
 			inventory.setProduct(product);
 			
-			final PurchaseSummaryBean purchaseSummary = purchaseOrderDetailService.getPurchaseSummaryByProductAndDeliveryDate(productId, DateUtil.floorDay(product.getCompany().getLastPurchaseOrderDate()), DateUtil.floorDay(upTo));
+			// FOR FIRST INVENTORY
+			//final PurchaseSummaryBean purchaseSummary = purchaseOrderDetailService.getPurchaseSummaryByProductAndDeliveryDate(productId, DateUtil.floorDay(product.getCompany().getLastPurchaseOrderDate()), DateUtil.floorDay(upTo.getTime()));
+			final PurchaseSummaryBean purchaseSummary = purchaseOrderDetailService.getPurchaseSummaryByProductAndDeliveryDate(productId, product.getCompany().getLastPurchaseOrderDate(), upTo);
 			inventory.setTotalNetPurchase(purchaseSummary.getNetTotal() != null ? purchaseSummary.getNetTotal() : 0.0f);
 			LOG.info("Found total purchase : " + inventory.getTotalNetPurchase());
 			final SalesSummaryBean salesSummary = customerOrderDetailService.getSalesSummaryByProductAndDatePaid(productId, product.getCompany().getLastPurchaseOrderDate(), upTo);

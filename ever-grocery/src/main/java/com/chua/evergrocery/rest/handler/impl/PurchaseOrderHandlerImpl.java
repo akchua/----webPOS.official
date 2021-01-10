@@ -181,6 +181,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		if (company != null) {
 			if (daysToBook >= 3) {
 				// Check if last purchase order date is more than 3 days ago
+				// FOR FIRST INVENTORY
+				//if (Days.daysBetween(new DateTime(company.getLastPurchaseOrderDate()), new DateTime()).getDays() > -1) {
 				if (Days.daysBetween(new DateTime(company.getLastPurchaseOrderDate()), new DateTime()).getDays() > 3) {
 					LOG.info("#### Generating purchase order for " + company.getName() + " - "
 							+ DateFormatter.longFormat(generateStartTime));
@@ -202,6 +204,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 					LOG.info("Last Booked Days : " + company.getDaysBooked());
 
 					// Determining actual sales period (in days)
+					// FOR FIRST INVENTORY
+					//final int salesPeriod = 1;
 					final int salesPeriod = DateUtil.daysBetween(company.getLastPurchaseOrderDate(), generateStartTime);
 					LOG.info("Actual Sales Period (In Days) : " + salesPeriod);
 

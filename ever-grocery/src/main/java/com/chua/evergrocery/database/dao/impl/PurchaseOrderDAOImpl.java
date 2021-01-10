@@ -3,11 +3,9 @@ package com.chua.evergrocery.database.dao.impl;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -63,18 +61,5 @@ public class PurchaseOrderDAOImpl
 		conjunction.add(Restrictions.between("deliveredOn", cutOff, new Date()));
 		
 		return findAllByCriterionList(null, null, null, orders, conjunction);
-	}
-
-	@Override
-	public PurchaseOrder findLatestDeliveryByCompany(Long companyId) {
-		final DetachedCriteria latestDelivery = DetachedCriteria.forClass(PurchaseOrder.class)
-			    .setProjection( Projections.max("deliveredOn") );
-		
-		final Junction conjunction = Restrictions.conjunction();
-		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
-		conjunction.add(Restrictions.eq("company.id", companyId));
-		conjunction.add(Restrictions.eq("deliveredOn", latestDelivery));
-		
-		return findUniqueResult(null, null, null, conjunction);
 	}
 }
