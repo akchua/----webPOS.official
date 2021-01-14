@@ -65,9 +65,9 @@ public class Product extends BaseObject {
 	
 	private Float saleRate;
 	
-	private Float purchaseBudget;
+	private Double purchaseBudget;
 	
-	private Float totalBudget;
+	private Double totalBudget;
 	
 	// Percentage in respective company only (previous month only) (net amount is used)
 	private Float purchaseValuePercentage;
@@ -206,26 +206,26 @@ public class Product extends BaseObject {
 
 	@Basic
 	@Column(name = "purchase_budget")
-	public Float getPurchaseBudget() {
+	public Double getPurchaseBudget() {
 		return purchaseBudget;
 	}
 	
-	public void setPurchaseBudget(Float purchaseBudget) {
+	public void setPurchaseBudget(Double purchaseBudget) {
 		this.purchaseBudget = purchaseBudget;
 	}
 
 	@Basic
 	@Column(name = "total_budget")
-	public Float getTotalBudget() {
+	public Double getTotalBudget() {
 		return totalBudget;
 	}
 	
 	@Transient
-	public Float getStockBudget() {
+	public Double getStockBudget() {
 		return totalBudget - purchaseBudget;
 	}
 
-	public void setTotalBudget(Float totalBudget) {
+	public void setTotalBudget(Double totalBudget) {
 		this.totalBudget = totalBudget;
 	}
 

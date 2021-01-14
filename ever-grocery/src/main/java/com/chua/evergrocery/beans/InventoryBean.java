@@ -16,7 +16,7 @@ public class InventoryBean {
 	
 	private Float totalBaseSales;
 	
-	private Float stockBudget;
+	private Double stockBudget;
 	
 	private Float wholePurchasePrice;
 	
@@ -55,11 +55,11 @@ public class InventoryBean {
 		this.totalBaseSales = totalBaseSales;
 	}
 
-	public Float getStockBudget() {
+	public Double getStockBudget() {
 		return stockBudget;
 	}
 
-	public void setStockBudget(Float stockBudget) {
+	public void setStockBudget(Double stockBudget) {
 		this.stockBudget = stockBudget;
 	}
 
@@ -88,7 +88,7 @@ public class InventoryBean {
 	}
 	
 	public Float getPieceQuantity() {
-		return (stockBudget % wholePurchasePrice) / piecePurchasePrice;
+		return (float) ((stockBudget % wholePurchasePrice) / piecePurchasePrice);
 	}
 	
 	public Float getPurchasedPieceQuantity() {

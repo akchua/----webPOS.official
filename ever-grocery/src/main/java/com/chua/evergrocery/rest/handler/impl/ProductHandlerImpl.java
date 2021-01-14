@@ -150,8 +150,8 @@ public class ProductHandlerImpl implements ProductHandler {
 				final Product product = new Product();
 				setProduct(product, productForm);
 				product.setSaleRate(70.0f);
-				product.setPurchaseBudget(0.0f);
-				product.setTotalBudget(0.0f);
+				product.setPurchaseBudget(0.0d);
+				product.setTotalBudget(0.0d);
 				product.setPurchaseValuePercentage(0.0f);
 				product.setSaleValuePercentage(0.0f);
 				product.setProfitPercentage(0.0f);
@@ -374,8 +374,8 @@ public class ProductHandlerImpl implements ProductHandler {
 								percentChange = (newNetPrice - oldNetPrice) / oldNetPrice * 100.0f;
 							}
 							
-							final Float adjustedStockBudget = product.getStockBudget() + (productLatestInventory.getStockBudget() * (percentChange / 100.0f));
-							final Float adjustedPurchaseBudget = product.getPurchaseBudget() * (1 + (percentChange / 100.0f));
+							final Double adjustedStockBudget = product.getStockBudget() + (productLatestInventory.getStockBudget() * (percentChange / 100.0f));
+							final Double adjustedPurchaseBudget = product.getPurchaseBudget() * (1 + (percentChange / 100.0f));
 							
 							LOG.info("Adjusted stock budget of " + product.getName() + " from " + product.getStockBudget() + " to " + adjustedStockBudget + " ## earned " + (adjustedStockBudget - product.getStockBudget()));
 							LOG.info("Adjusted purchase budget of " + product.getName() + " from " + product.getPurchaseBudget() + " to " + adjustedPurchaseBudget);

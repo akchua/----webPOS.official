@@ -182,7 +182,7 @@ public class InventoryHandlerImpl implements InventoryHandler {
 			Float diff = cod.getProductDetail().getNetPrice() - (cod.getUnitPrice() / (1 + (cod.getMargin() / 100)));
 			if(diff > 0.1f) {
 				final Product product = cod.getProductDetail().getProduct();
-				final Float newTotalBudget = product.getTotalBudget() - (diff * cod.getQuantity());
+				final Double newTotalBudget = product.getTotalBudget() - (diff * cod.getQuantity());
 				LOG.info("Adjusting Stock budget of " + product.getName() + " from " + product.getStockBudget() + " to " + (newTotalBudget - product.getPurchaseBudget()));
 				product.setTotalBudget(newTotalBudget);
 				productService.update(product);

@@ -97,7 +97,7 @@ public class GeneratedPurchaseTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedTotalBudget() {
-		Float totalBudget = 0.0f;
+		Double totalBudget = 0.0;
 		
 		for(GeneratedProductPOBean generatedProductPO : generatedProductPOs) {
 			totalBudget += generatedProductPO.getToPurchase().getStockBudget();

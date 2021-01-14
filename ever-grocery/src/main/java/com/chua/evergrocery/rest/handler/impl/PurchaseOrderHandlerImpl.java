@@ -226,7 +226,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 
 						// Compute for ACTUAL BUDGET (Adjusted Stock Budget +
 						// Net Purchase Amount)
-						final Float actualBudget = product.getStockBudget() + inventory.getTotalNetPurchase();
+						final Double actualBudget = product.getStockBudget() + inventory.getTotalNetPurchase();
 						LOG.info("Computed actual budget : " + actualBudget);
 
 						// Compute for sale rate (net sales amount / actual
@@ -234,8 +234,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						final Float proportionedNetSalesAmount = (inventory.getTotalBaseSales() < actualBudget)
 								? inventory.getTotalBaseSales() / salesPeriod * company.getDaysBooked()
 								: inventory.getTotalBaseSales();
-						Float tempRate = actualBudget.equals(0.0f) ? 0
-								: proportionedNetSalesAmount / actualBudget * 100;
+						Float tempRate = (float) (actualBudget.equals(0.0f) ? 0
+								: proportionedNetSalesAmount / actualBudget * 100);
 						final Float saleRate = tempRate > 100.0f ? 100.0f : (tempRate < 0.0f ? 0.0f : tempRate);
 						LOG.info("Computed sale rate : " + saleRate);
 
@@ -256,7 +256,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 
 						// Compute new total budget (total budget * adjustment
 						// rate)
-						Float tempTotalBudget = actualBudget * adjustmentRate;
+						Double tempTotalBudget = actualBudget * adjustmentRate;
 						tempTotalBudget = saleRate >= 70 ? Math.max(tempTotalBudget, product.getTotalBudget())
 								: Math.min(tempTotalBudget, product.getTotalBudget());
 						// adjust to number of days to book
@@ -267,8 +267,8 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 
 						// Compute new purchase budget (total budget - (actual
 						// budget - sales))
-						final Float actualStock = inventory.getStockBudget();
-						product.setPurchaseBudget(product.getTotalBudget() - (actualStock > 0.0f ? actualStock : 0.0f));
+						final Double actualStock = inventory.getStockBudget();
+						product.setPurchaseBudget(product.getTotalBudget() - (actualStock > 0.0 ? actualStock : 0.0));
 						LOG.info("Computed new purchase budget : " + product.getPurchaseBudget());
 
 						// Applying new sale rate to product
@@ -282,7 +282,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						toPurchase.setPieceUnit(inventory.getPieceUnit());
 						toPurchase.setWholePurchasePrice(inventory.getWholePurchasePrice());
 						toPurchase.setWholeUnit(inventory.getWholeUnit());
-						toPurchase.setStockBudget(product.getPurchaseBudget());
+						toPurchase.setStockBudget(product.getPurchaseBudget() / 1.0f);
 						toPurchase.setProduct(product);
 						generatedProductPO.setToPurchase(toPurchase);
 
