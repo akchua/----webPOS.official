@@ -964,7 +964,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		if(customerOrder != null) {
 			final UserBean currentUser = UserContextHolder.getUser();
 			
-			if(customerOrder.getStatus().equals(Status.LISTING) || currentUser.getUserType().getAuthority() <= 3) {
+			if(customerOrder.getStatus().equals(Status.LISTING) || currentUser.getUserType().getAuthority() <= 8) {
 				final List<CustomerOrderDetail> customerOrderItems = customerOrderDetailService.findAllByCustomerOrderIdOrderByProductName(customerOrder.getId());
 				final CustomerOrderCopyTemplate customerOrderCopy = new CustomerOrderCopyTemplate(customerOrder, customerOrderItems);
 				

@@ -153,7 +153,7 @@ public class Customer extends BaseObject {
 	
 	@Transient
 	public String getFormattedCardId() {
-		return cardId.isEmpty() ? "" : "*********" + getCardId().substring(9);
+		return cardId.isEmpty() ? "-" : "*********" + getCardId().substring(9);
 	}
 
 	public void setCardId(String cardId) {

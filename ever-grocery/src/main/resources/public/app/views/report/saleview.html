@@ -64,6 +64,19 @@
 		</div>
 		
 		<div class="row">
+			<div class="input-group col-md-offset-3 col-md-6">
+				<input data-bind="value: customerOrderViewModel.cartonCount" type="text" size="1" class="form-control" disabled>
+		    	<span class="input-group-btn"><button class="btn btn-default disabled">C</button></span>
+		    	
+		    	<input data-bind="value: customerOrderViewModel.plasticCount" type="text" size="1" class="form-control" disabled>
+		    	<span class="input-group-btn"><button class="btn btn-default disabled">P</button></span>
+		    	
+		    	<input data-bind="value: customerOrderViewModel.bagCount" type="text" size="1" class="form-control" disabled>
+		    	<span class="input-group-btn"><button class="btn btn-default disabled">SB</button></span>
+			</div>
+		</div>
+		
+		<div class="row">
 			<h3>
 				<span class="col-xs-4">Order <span class="text-md-red-elite">#<span data-bind="text: customerOrderViewModel.customerOrderNumber"></span></span></span>
 				<span class="col-xs-offset-2 col-xs-6 text-center">TOTAL: <span class="text-lg-green-neuton">&#8369; <span data-bind="text: customerOrderViewModel.formattedTotalAmount" ></span></span></span>

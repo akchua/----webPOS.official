@@ -30,7 +30,11 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 			
 			discountShorthand : ko.observable(''),
 			formattedTotalDiscount: ko.observable(),
-			formattedTotalAmount: ko.observable()
+			formattedTotalAmount: ko.observable(),
+			
+			cartonCount: ko.observable(),
+			plasticCount: ko.observable(),
+			bagCount: ko.observable()
 		};
 		
 		this.customer = {
@@ -79,6 +83,10 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     		self.customer.formattedName('n/a');
     		self.customer.formattedCardId('n/a');
     	}
+    	
+    	self.customerOrderViewModel.cartonCount(self.customerOrder.cartonCount);
+    	self.customerOrderViewModel.plasticCount(self.customerOrder.plasticCount);
+    	self.customerOrderViewModel.bagCount(self.customerOrder.bagCount);
     	
     	self.currentPage(1);
     	self.currentPageSubscription = self.currentPage.subscribe(function() {
