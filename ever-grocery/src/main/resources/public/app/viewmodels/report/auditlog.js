@@ -15,6 +15,11 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/auditlogservice',
     AuditLog.prototype.activate = function() {
     	var self = this;
     	
+    	self.currentPage(1);
+		self.currentPageSubscription = self.currentPage.subscribe(function() {
+			self.refreshAuditLogList();
+		});
+    	
     	userService.getUserListOrderByName().done(function(userList) {
     		self.userList(userList);
     	});

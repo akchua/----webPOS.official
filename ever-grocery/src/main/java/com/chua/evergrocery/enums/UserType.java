@@ -17,7 +17,7 @@ public enum UserType {
 	
 	CASHIER ("Cashier", Integer.valueOf(5)),
 	
-	SENIOR_STAFF ("Senior Staff", Integer.valueOf(8)),
+	SENIOR_STAFF ("Senior Staff", Integer.valueOf(3)),
 	
 	STAFF ("Staff", Integer.valueOf(10));
 	

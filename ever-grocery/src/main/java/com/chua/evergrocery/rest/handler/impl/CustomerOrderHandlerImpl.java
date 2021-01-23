@@ -774,7 +774,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 		
 		quantity = resolveCustomerOrderDetailUnitType(customerOrderDetail, quantity);
 		
-		if(quantity > 0 || (quantity < 0 && UserContextHolder.getUser().getUserType().getAuthority() <= 2)) {
+		if(quantity > 0 || (quantity < 0 && UserContextHolder.getUser().getUserType().getAuthority() <= 3)) {
 			final Float tempTotalItems = customerOrderDetail.getCustomerOrder().getTotalItems();
 			if((quantity > 0 && tempTotalItems >= 0) || (quantity < 0 && tempTotalItems <= 0)) {
 				// Limit maximum quantity to 999
