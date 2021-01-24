@@ -30,6 +30,6 @@ public class CashTransferValidator extends AbstractFormValidator<CashTransferFor
 	}
 	
 	private String validateAmount(Float amount) {
-		return validateFloat(amount, 1, 100000);
+		return validateFloat(amount, 1, 10000000);
 	}
 }
