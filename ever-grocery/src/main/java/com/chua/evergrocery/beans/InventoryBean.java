@@ -12,9 +12,9 @@ public class InventoryBean {
 
 	private Product product;
 	
-	private Float totalNetPurchase;
+	private Double totalNetPurchase;
 	
-	private Float totalBaseSales;
+	private Double totalBaseSales;
 	
 	private Double stockBudget;
 	
@@ -27,8 +27,8 @@ public class InventoryBean {
 	private UnitType pieceUnit;
 	
 	public InventoryBean() {
-		this.totalNetPurchase = 0.0f;
-		this.totalBaseSales = 0.0f;
+		this.totalNetPurchase = 0.0d;
+		this.totalBaseSales = 0.0d;
 	}
 
 	public Product getProduct() {
@@ -39,19 +39,19 @@ public class InventoryBean {
 		this.product = product;
 	}
 
-	public Float getTotalNetPurchase() {
+	public Double getTotalNetPurchase() {
 		return totalNetPurchase;
 	}
 
-	public void setTotalNetPurchase(Float totalNetPurchase) {
+	public void setTotalNetPurchase(Double totalNetPurchase) {
 		this.totalNetPurchase = totalNetPurchase;
 	}
 
-	public Float getTotalBaseSales() {
+	public Double getTotalBaseSales() {
 		return totalBaseSales;
 	}
 
-	public void setTotalBaseSales(Float totalBaseSales) {
+	public void setTotalBaseSales(Double totalBaseSales) {
 		this.totalBaseSales = totalBaseSales;
 	}
 
@@ -92,11 +92,11 @@ public class InventoryBean {
 	}
 	
 	public Float getPurchasedPieceQuantity() {
-		return (totalNetPurchase % wholePurchasePrice) / piecePurchasePrice;
+		return (float) ((totalNetPurchase % wholePurchasePrice) / piecePurchasePrice);
 	}
 	
 	public Float getSoldPieceQuantity() {
-		return (totalBaseSales % wholePurchasePrice) / piecePurchasePrice;
+		return (float) ((totalBaseSales % wholePurchasePrice) / piecePurchasePrice);
 	}
 
 	public void setPiecePurchasePrice(Float piecePurchasePrice) {

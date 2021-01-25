@@ -162,7 +162,7 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 				productDailySalesSummaries.add(new ProductDailySalesSummaryBean(productDailySalesSummary.getFormattedSalesDate(), productDailySalesSummary.getBaseTotal(), productDailySalesSummary.getNetTotal()));
 				j++;
 			} else {
-				productDailySalesSummaries.add(new ProductDailySalesSummaryBean(DateFormatter.prettyDayFormat(cal.getTime()), 0.0f, 0.0f));
+				productDailySalesSummaries.add(new ProductDailySalesSummaryBean(DateFormatter.prettyDayFormat(cal.getTime()), 0.0d, 0.0d));
 			}
 			cal.add(Calendar.DAY_OF_MONTH, 1);
 		}
@@ -230,7 +230,7 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 				if(monthId == lastMonthId) {
 					for(ProductPurchaseSummaryBean pps : productPurchaseSummaries) {
 						final Product product = productService.find(pps.getProductId());
-						product.setPurchaseValuePercentage(companyPurchaseSummary.getNetTotal().equals(0.0f) ? 0.0f : pps.getNetTotal() / companyPurchaseSummary.getNetTotal() * 100.0f);
+						product.setPurchaseValuePercentage(companyPurchaseSummary.getNetTotal().equals(0.0d) ? 0.0f : (float) (pps.getNetTotal() / companyPurchaseSummary.getNetTotal() * 100.0f));
 						productService.update(product);
 					}
 				}
@@ -269,7 +269,7 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 			if(monthId == lastMonthId) {
 				for(CompanyPurchaseSummaryBean cps : companyPurchaseSummaries) {
 					final Company company = companyService.find(cps.getCompanyId());
-					company.setPurchaseValuePercentage(totalPurchaseSummary.getNetTotal().equals(0.0f) ? 0.0f : cps.getNetTotal() / totalPurchaseSummary.getNetTotal() * 100.0f);
+					company.setPurchaseValuePercentage(totalPurchaseSummary.getNetTotal().equals(0.0f) ? 0.0f : (float) (cps.getNetTotal() / totalPurchaseSummary.getNetTotal() * 100.0f));
 					companyService.update(company);
 				}
 			}
@@ -346,8 +346,8 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 				if(monthId == lastMonthId) {
 					for(ProductSalesSummaryBean pss : productSalesSummaries) {
 						final Product product = productService.find(pss.getProductId());
-						product.setSaleValuePercentage(companySalesSummary.getNetTotal().equals(0.0f) ? 0.0f : pss.getNetTotal() / companySalesSummary.getNetTotal() * 100.0f);
-						product.setProfitPercentage(companySalesSummary.getTotalProfit().equals(0.0f) ? 0.0f : pss.getTotalProfit() / companySalesSummary.getTotalProfit() * 100.0f);
+						product.setSaleValuePercentage(companySalesSummary.getNetTotal().equals(0.0f) ? 0.0f : (float) (pss.getNetTotal() / companySalesSummary.getNetTotal() * 100.0f));
+						product.setProfitPercentage(companySalesSummary.getTotalProfit().equals(0.0f) ? 0.0f : (float) (pss.getTotalProfit() / companySalesSummary.getTotalProfit() * 100.0f));
 						productService.update(product);
 					}
 				}
@@ -386,8 +386,8 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 			if(monthId == lastMonthId) {
 				for(CompanySalesSummaryBean css : companySalesSummaries) {
 					final Company company = companyService.find(css.getCompanyId());
-					company.setSaleValuePercentage(totalSalesSummary.getNetTotal().equals(0.0f) ? 0.0f : css.getNetTotal() / totalSalesSummary.getNetTotal() * 100.0f);
-					company.setProfitPercentage(totalSalesSummary.getTotalProfit().equals(0.0f) ? 0.0f : css.getTotalProfit() / totalSalesSummary.getTotalProfit() * 100.0f);
+					company.setSaleValuePercentage(totalSalesSummary.getNetTotal().equals(0.0f) ? 0.0f : (float) (css.getNetTotal() / totalSalesSummary.getNetTotal() * 100.0f));
+					company.setProfitPercentage(totalSalesSummary.getTotalProfit().equals(0.0f) ? 0.0f : (float) (css.getTotalProfit() / totalSalesSummary.getTotalProfit() * 100.0f));
 					companyService.update(company);
 				}
 			}

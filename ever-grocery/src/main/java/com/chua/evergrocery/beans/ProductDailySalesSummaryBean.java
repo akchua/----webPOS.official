@@ -9,11 +9,11 @@ public class ProductDailySalesSummaryBean {
 
 	private String formattedSalesDate;
 	
-	private Float baseTotal;
+	private Double baseTotal;
 	
-	private Float netTotal;
+	private Double netTotal;
 	
-	public ProductDailySalesSummaryBean(String formattedSalesDate, Float baseTotal, Float netTotal) {
+	public ProductDailySalesSummaryBean(String formattedSalesDate, Double baseTotal, Double netTotal) {
 		super();
 		this.formattedSalesDate = formattedSalesDate;
 		this.baseTotal = baseTotal;
@@ -28,23 +28,23 @@ public class ProductDailySalesSummaryBean {
 		this.formattedSalesDate = formattedSalesDate;
 	}
 
-	public Float getBaseTotal() {
+	public Double getBaseTotal() {
 		return baseTotal;
 	}
 
-	public void setBaseTotal(Float baseTotal) {
+	public void setBaseTotal(Double baseTotal) {
 		this.baseTotal = baseTotal;
 	}
 
-	public Float getNetTotal() {
+	public Double getNetTotal() {
 		return netTotal;
 	}
 
-	public void setNetTotal(Float netTotal) {
+	public void setNetTotal(Double netTotal) {
 		this.netTotal = netTotal;
 	}
 
-	public Float getProfit() {
+	public Double getProfit() {
 		return netTotal - baseTotal;
 	}
 }

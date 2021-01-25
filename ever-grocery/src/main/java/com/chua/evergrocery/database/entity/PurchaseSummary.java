@@ -16,27 +16,27 @@ public class PurchaseSummary extends BaseObject {
 
 	private static final long serialVersionUID = -3971918047824128940L;
 
-	private Float grossTotal;
+	private Double grossTotal;
 	
-	private Float netTotal;
+	private Double netTotal;
 	
 	@Basic
 	@Column(name = "gross_total")
-	public Float getGrossTotal() {
+	public Double getGrossTotal() {
 		return grossTotal;
 	}
 
-	public void setGrossTotal(Float grossTotal) {
+	public void setGrossTotal(Double grossTotal) {
 		this.grossTotal = grossTotal;
 	}
 	
 	@Basic
 	@Column(name = "net_total")
-	public Float getNetTotal() {
+	public Double getNetTotal() {
 		return netTotal;
 	}
 	
-	public void setNetTotal(Float netTotal) {
+	public void setNetTotal(Double netTotal) {
 		this.netTotal = netTotal;
 	}
 }

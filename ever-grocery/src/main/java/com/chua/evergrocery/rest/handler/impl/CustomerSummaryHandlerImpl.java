@@ -96,9 +96,9 @@ public class CustomerSummaryHandlerImpl implements CustomerSummaryHandler {
 				
 				final CustomerSalesSummaryBean css = new CustomerSalesSummaryBean();
 				css.setCustomerId(customer.getId());
-				css.setLuxuryTotal(0.0f);
-				css.setNetTotal(0.0f);
-				css.setBaseTotal(0.0f);
+				css.setLuxuryTotal(0.0d);
+				css.setNetTotal(0.0d);
+				css.setBaseTotal(0.0d);
 				
 				for(CustomerOrderDetail cod : cods) {
 					Category category = cod.getProduct().getCategory();
@@ -114,9 +114,9 @@ public class CustomerSummaryHandlerImpl implements CustomerSummaryHandler {
 				if(ccss == null) {
 					ccss = new CustomerCategorySalesSummaryBean();
 					ccss.setCustomerCategoryId(customer.getCustomerCategory().getId());
-					ccss.setBaseTotal(0.0f);
-					ccss.setLuxuryTotal(0.0f);
-					ccss.setNetTotal(0.0f);
+					ccss.setBaseTotal(0.0d);
+					ccss.setLuxuryTotal(0.0d);
+					ccss.setNetTotal(0.0d);
 				}
 				ccss.setLuxuryTotal(ccss.getLuxuryTotal() + css.getLuxuryTotal());
 				ccss.setBaseTotal(ccss.getBaseTotal() + css.getBaseTotal());
@@ -142,8 +142,8 @@ public class CustomerSummaryHandlerImpl implements CustomerSummaryHandler {
 				
 				// check if processing last month, then update customer's sales and profit percentage
 				if(monthId == lastMonthId) {
-					customer.setSaleValuePercentage(css.getNetTotal().equals(0.0f) ? 0.0f : css.getNetTotal() / grandTotal.getNetTotal() * 100.0f);
-					customer.setProfitPercentage(css.getTotalProfit().equals(0.0f) ? 0.0f : css.getTotalProfit() / grandTotal.getProfit() * 100.0f);
+					customer.setSaleValuePercentage(css.getNetTotal().equals(0.0f) ? 0.0f : (float) (css.getNetTotal() / grandTotal.getNetTotal() * 100.0f));
+					customer.setProfitPercentage(css.getTotalProfit().equals(0.0f) ? 0.0f : (float) (css.getTotalProfit() / grandTotal.getProfit() * 100.0f));
 					customerService.update(customer);
 				}
 			}
@@ -171,8 +171,8 @@ public class CustomerSummaryHandlerImpl implements CustomerSummaryHandler {
 				
 				// check if processing last month, then update customer category's sales and profit percentage
 				if(monthId == lastMonthId) {
-					customerCategory.setSaleValuePercentage(ccss.getNetTotal().equals(0.0f) ? 0.0f : ccss.getNetTotal() / grandTotal.getNetTotal() * 100.0f);
-					customerCategory.setProfitPercentage(ccss.getTotalProfit().equals(0.0f) ? 0.0f : ccss.getTotalProfit() / grandTotal.getProfit() * 100.0f);
+					customerCategory.setSaleValuePercentage(ccss.getNetTotal().equals(0.0f) ? 0.0f : (float) (ccss.getNetTotal() / grandTotal.getNetTotal() * 100.0f));
+					customerCategory.setProfitPercentage(ccss.getTotalProfit().equals(0.0f) ? 0.0f : (float) (ccss.getTotalProfit() / grandTotal.getProfit() * 100.0f));
 					customerCategoryService.update(customerCategory);
 				}
 			}

@@ -87,7 +87,7 @@ public class GeneratedPurchaseTemplate extends AbstractTemplate {
 	}
 	
 	public String getFormattedTotalBaseSales() {
-		Float totalSales = 0.0f;
+		Double totalSales = 0.0d;
 		
 		for(GeneratedProductPOBean generatedProductPO : generatedProductPOs) {
 			totalSales += generatedProductPO.getInventory().getTotalBaseSales();

@@ -9,7 +9,7 @@ public class CustomerSalesSummaryBean extends SalesSummaryBean {
 
 	private Long customerId;
 	
-	private Float luxuryTotal;
+	private Double luxuryTotal;
 
 	public Long getCustomerId() {
 		return customerId;
@@ -19,11 +19,11 @@ public class CustomerSalesSummaryBean extends SalesSummaryBean {
 		this.customerId = customerId;
 	}
 
-	public Float getLuxuryTotal() {
+	public Double getLuxuryTotal() {
 		return luxuryTotal;
 	}
 
-	public void setLuxuryTotal(Float luxuryTotal) {
+	public void setLuxuryTotal(Double luxuryTotal) {
 		this.luxuryTotal = luxuryTotal;
 	}
 }

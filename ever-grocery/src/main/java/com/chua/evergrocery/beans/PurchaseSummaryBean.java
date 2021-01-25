@@ -7,23 +7,23 @@ package com.chua.evergrocery.beans;
  */
 public class PurchaseSummaryBean {
 
-	private Float grossTotal;
+	private Double grossTotal;
 	
-	private Float netTotal;
+	private Double netTotal;
 
-	public Float getGrossTotal() {
-		return grossTotal == null ? 0.0f : grossTotal;
+	public Double getGrossTotal() {
+		return grossTotal == null ? 0.0d : grossTotal;
 	}
 	
-	public void setGrossTotal(Float grossTotal) {
+	public void setGrossTotal(Double grossTotal) {
 		this.grossTotal = grossTotal;
 	}
 
-	public Float getNetTotal() {
-		return netTotal == null ? 0.0f : netTotal;
+	public Double getNetTotal() {
+		return netTotal == null ? 0.0d : netTotal;
 	}
 
-	public void setNetTotal(Float netTotal) {
+	public void setNetTotal(Double netTotal) {
 		this.netTotal = netTotal;
 	}
 }

@@ -7,27 +7,27 @@ package com.chua.evergrocery.beans;
  */
 public class SalesSummaryBean {
 
-	private Float netTotal;
+	private Double netTotal;
 	
-	private Float baseTotal;
+	private Double baseTotal;
 	
-	public Float getNetTotal() {
-		return netTotal == null ? 0.0f : netTotal;
+	public Double getNetTotal() {
+		return netTotal == null ? 0.0d : netTotal;
 	}
 
-	public void setNetTotal(Float netTotal) {
+	public void setNetTotal(Double netTotal) {
 		this.netTotal = netTotal;
 	}
 
-	public Float getBaseTotal() {
-		return baseTotal == null ? 0.0f : baseTotal;
+	public Double getBaseTotal() {
+		return baseTotal == null ? 0.0d : baseTotal;
 	}
 	
-	public Float getTotalProfit() {
+	public Double getTotalProfit() {
 		return getNetTotal() - getBaseTotal();
 	}
 
-	public void setBaseTotal(Float baseTotal) {
+	public void setBaseTotal(Double baseTotal) {
 		this.baseTotal = baseTotal;
 	}
 }

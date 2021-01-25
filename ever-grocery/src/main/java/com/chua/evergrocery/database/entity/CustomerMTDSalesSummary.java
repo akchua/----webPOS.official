@@ -35,7 +35,7 @@ public class CustomerMTDSalesSummary extends SalesSummary {
 	@JsonSerialize(using = CustomerSerializer.class)
 	private Customer customer;
 	
-	private Float luxuryTotal;
+	private Double luxuryTotal;
 
 	@Basic
 	@Column(name = "month_id")
@@ -66,11 +66,11 @@ public class CustomerMTDSalesSummary extends SalesSummary {
 
 	@Basic
 	@Column(name = "luxury_total")
-	public Float getLuxuryTotal() {
+	public Double getLuxuryTotal() {
 		return luxuryTotal;
 	}
 
-	public void setLuxuryTotal(Float luxuryTotal) {
+	public void setLuxuryTotal(Double luxuryTotal) {
 		this.luxuryTotal = luxuryTotal;
 	}
 }
