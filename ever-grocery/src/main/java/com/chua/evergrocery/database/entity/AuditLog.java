@@ -47,13 +47,13 @@ public class AuditLog extends BaseObject {
 	
 	private Date auditEnd;
 	
-	private Float amount;
+	private Double amount;
 	
 	private AuditLogType auditLogType;
 	
 	private Integer transactionCount;
 	
-	private Float withheldCash;
+	private Double withheldCash;
 
 	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "subject_id")
@@ -98,7 +98,7 @@ public class AuditLog extends BaseObject {
 
 	@Basic
 	@Column(name = "amount")
-	public Float getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 	
@@ -107,7 +107,7 @@ public class AuditLog extends BaseObject {
 		return CurrencyFormatter.pesoFormat(amount);
 	}
 
-	public void setAmount(Float amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 
@@ -133,7 +133,7 @@ public class AuditLog extends BaseObject {
 
 	@Basic
 	@Column(name = "withheld_cash")
-	public Float getWithheldCash() {
+	public Double getWithheldCash() {
 		return withheldCash;
 	}
 	
@@ -142,7 +142,7 @@ public class AuditLog extends BaseObject {
 		return CurrencyFormatter.pesoFormat(withheldCash);
 	}
 
-	public void setWithheldCash(Float withheldCash) {
+	public void setWithheldCash(Double withheldCash) {
 		this.withheldCash = withheldCash;
 	}
 }

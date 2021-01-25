@@ -37,7 +37,7 @@ public class AuditLogHandlerImpl implements AuditLogHandler {
 	}
 	
 	@Override
-	public ResultBean addLog(Long subjectOfAuditId, AuditLogType auditLogType, Float amount) {
+	public ResultBean addLog(Long subjectOfAuditId, AuditLogType auditLogType, Double amount) {
 		final ResultBean result;
 		final User subjectOfAudit = userService.find(subjectOfAuditId);
 		final AuditLog lastLogOfSubject = auditLogService.find(subjectOfAudit.getAuditLogId());

@@ -29,7 +29,7 @@ public class CashTransferValidator extends AbstractFormValidator<CashTransferFor
 		return errors;
 	}
 	
-	private String validateAmount(Float amount) {
-		return validateFloat(amount, 1, 10000000);
+	private String validateAmount(Double amount) {
+		return validateDouble(amount, 1, 10000000);
 	}
 }

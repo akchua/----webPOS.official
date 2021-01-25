@@ -122,7 +122,7 @@ public class CashTransferHandlerImpl implements CashTransferHandler {
 						result.setSuccess(cashTransferService.update(cashTransfer));
 						if(result.getSuccess()) {
 							// UPDATE AUDIT LOG
-							auditLogHandler.addLog(cashTransfer.getCashFrom().getId(), AuditLogType.CASH_TRANSFER, 0.0f - cashTransfer.getAmount());
+							auditLogHandler.addLog(cashTransfer.getCashFrom().getId(), AuditLogType.CASH_TRANSFER, 0.0d - cashTransfer.getAmount());
 							auditLogHandler.addLog(cashTransfer.getCashTo().getId(), AuditLogType.CASH_TRANSFER, cashTransfer.getAmount());
 							
 							result.setMessage(Html.line(Html.text(Color.GREEN, "Success!") + " You have just received Php " + cashTransfer.getFormattedAmount() + " from " + cashTransfer.getCashFrom().getFormattedName() + "." ));

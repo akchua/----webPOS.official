@@ -14,5 +14,5 @@ public interface AuditLogHandler {
 
 	ObjectList<AuditLog> getAuditLogObjectList(Integer pageNumber, Long subjectId);
 	
-	ResultBean addLog(Long subjectOfAuditId, AuditLogType auditLogType, Float amount);
+	ResultBean addLog(Long subjectOfAuditId, AuditLogType auditLogType, Double amount);
 }

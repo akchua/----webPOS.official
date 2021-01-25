@@ -9,7 +9,7 @@ public class CashTransferFormBean extends FormBean {
 
 	private Long cashToId;
 	
-	private Float amount;
+	private Double amount;
 
 	public Long getCashToId() {
 		return cashToId;
@@ -19,11 +19,11 @@ public class CashTransferFormBean extends FormBean {
 		this.cashToId = cashToId;
 	}
 
-	public Float getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Float amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 }

@@ -564,7 +564,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 										promoHandler.finalizeUsedPromos(customerOrder.getId());
 										
 										// UPDATE AUDIT LOG
-										auditLogHandler.addLog(UserContextHolder.getUser().getId(), AuditLogType.SALES, customerOrder.getTotalAmount());
+										auditLogHandler.addLog(UserContextHolder.getUser().getId(), AuditLogType.SALES, customerOrder.getTotalAmount() / 1.0d);
 										
 										result.setMessage(Html.rightLine(Html.boldText("CHANGE: Php " + CurrencyFormatter.pesoFormat(customerOrder.getTotalPayment() - customerOrder.getTotalAmount())) +
 												Html.newLine + Html.newLine + Html.text("Cash          : " + customerOrder.getFormattedCash()) +

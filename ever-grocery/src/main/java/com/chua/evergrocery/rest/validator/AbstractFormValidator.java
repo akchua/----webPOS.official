@@ -70,6 +70,15 @@ public abstract class AbstractFormValidator<T extends FormBean>
 		return ret;
 	}
 	
+	protected String validateDouble(Double f, double min, double max) {
+		String ret = notNull(f);
+		if(!ret.isEmpty()) return ret;
+		
+		ret = f >= min && f <= max ? "" : "Value must be between " + min + " to " + max + ".";
+		
+		return ret;
+	}
+	
 	protected String validateEmail(String email) {
 		String ret = notNull(email);
 		if(!ret.isEmpty()) return ret;
