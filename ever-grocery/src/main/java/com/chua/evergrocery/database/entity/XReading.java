@@ -31,7 +31,7 @@ public class XReading extends Reading {
 
 	private User cashier;
 	
-	private Float netSales;
+	private Double netSales;
 	
 	@Transient
 	public String getFormattedReadingDate() {
@@ -53,7 +53,7 @@ public class XReading extends Reading {
 	@Override
 	@Basic
 	@Column(name = "net_sales")
-	public Float getNetSales() {
+	public Double getNetSales() {
 		return netSales;
 	}
 	
@@ -62,7 +62,7 @@ public class XReading extends Reading {
 		return CurrencyFormatter.pesoFormat(getNetSales());
 	}
 
-	public void setNetSales(Float netSales) {
+	public void setNetSales(Double netSales) {
 		this.netSales = netSales;
 	}
 }

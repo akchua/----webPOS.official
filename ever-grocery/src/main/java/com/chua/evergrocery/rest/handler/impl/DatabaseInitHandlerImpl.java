@@ -172,8 +172,8 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 			zReading.setZeroRatedRemovedVat(0.0f);
 			zReading.setBeginningRefundNumber(0l);
 			zReading.setEndingRefundNumber(0l);
-			zReading.setBeginningBalance(0.0f);
-			zReading.setVatSales(0.0f);
+			zReading.setBeginningBalance(0.0d);
+			zReading.setVatSales(0.0d);
 			zReading.setVatExSales(0.0f);
 			zReading.setZeroRatedSales(0.0f);
 			zReading.setVatDiscount(0.0f);
@@ -182,7 +182,7 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 			zReading.setRegularDiscountAmount(0.0f);
 			zReading.setSeniorDiscountAmount(0.0f);
 			zReading.setPwdDiscountAmount(0.0f);
-			zReading.setBeginningRefundAmount(0.0f);
+			zReading.setBeginningRefundAmount(0.0d);
 			zReading.setSpecialDiscountVatAdjustment(0.0f);
 			zReading.setRefundAmount(0.0f);
 			zReading.setTotalCheckPayment(0.0f);
@@ -205,8 +205,8 @@ public class DatabaseInitHandlerImpl implements DatabaseInitHandler {
 			xReading.setReadingDate(yesterday.getTime());
 			xReading.setCashier(userService.find(1l));
 			xReading.setZeroRatedRemovedVat(0.0f);
-			xReading.setBeginningBalance(0.0f);
-			xReading.setNetSales(0.0f);
+			xReading.setBeginningBalance(0.0d);
+			xReading.setNetSales(0.0d);
 			xReading.setRegularDiscountAmount(0.0f);
 			xReading.setSeniorDiscountAmount(0.0f);
 			xReading.setPwdDiscountAmount(0.0f);

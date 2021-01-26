@@ -116,7 +116,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 							: refundSummary.getEndingRefundNumber());
 			
 			zReading.setBeginningBalance(latestZReading.getEndingBalance());
-			zReading.setVatSales((salesSummary.getVatSales() + refundSummary.getVatSales()) * businessConstants.getBusinessIncome());
+			zReading.setVatSales((salesSummary.getVatSales() / 1.0d + refundSummary.getVatSales()) * businessConstants.getBusinessIncome());
 			zReading.setVatExSales(salesSummary.getVatExSales() + refundSummary.getVatExSales());
 			zReading.setZeroRatedSales(salesSummary.getZeroRatedSales() + refundSummary.getZeroRatedSales());
 			zReading.setZeroRatedRemovedVat(((salesSummary.getZeroRatedSales() != null ? salesSummary.getZeroRatedSales() : 0.0f) + (refundSummary.getZeroRatedSales() != null ? refundSummary.getZeroRatedSales() : 0.0f)) * 0.12f); 
@@ -187,7 +187,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			
 			final BIRSalesSummaryBean salesSummary = customerOrderService.getSalesSummaryByDatePaidAndCashier(latestReadingDate, xReading.getReadingDate(), cashier.getId());
 			final BIRSalesSummaryBean refundSummary = customerOrderService.getRefundSummaryByDatePaidAndCashier(latestReadingDate, xReading.getReadingDate(), cashier.getId());
-			Float netSales = salesSummary.getNetSales() + refundSummary.getNetSales();
+			Double netSales = salesSummary.getNetSales() / 1.0d + refundSummary.getNetSales();
 			final BIRSalesSummaryBean othersSalesSummary = customerOrderService.getSalesSummaryByDatePaidAndExceptCashier(latestReadingDate, xReading.getReadingDate(), cashier.getId());
 			final BIRSalesSummaryBean othersRefundSummary = customerOrderService.getRefundSummaryByDatePaidAndExceptCashier(latestReadingDate, xReading.getReadingDate(), cashier.getId());
 			Float othersNetSales = othersSalesSummary.getNetSales() + othersRefundSummary.getNetSales();

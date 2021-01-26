@@ -24,7 +24,7 @@ public abstract class Reading extends BaseObject {
 	
 	private Date readingDate;
 
-	private Float beginningBalance;
+	private Double beginningBalance;
 	
 	private Float zeroRatedRemovedVat;
 
@@ -43,7 +43,7 @@ public abstract class Reading extends BaseObject {
 	private Float totalPointsPayment;
 
 	@Transient
-	public abstract Float getNetSales();
+	public abstract Double getNetSales();
 	
 	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "reading_date", nullable = false)
@@ -57,7 +57,7 @@ public abstract class Reading extends BaseObject {
 	
 	@Basic
 	@Column(name = "beginning_balance")
-	public Float getBeginningBalance() {
+	public Double getBeginningBalance() {
 		return beginningBalance;
 	}
 
@@ -67,7 +67,7 @@ public abstract class Reading extends BaseObject {
 	}
 	
 	@Transient
-	public Float getEndingBalance() {
+	public Double getEndingBalance() {
 		return getBeginningBalance() + getGrossSales();
 	}
 	
@@ -76,7 +76,7 @@ public abstract class Reading extends BaseObject {
 		return CurrencyFormatter.pesoFormat(getEndingBalance());
 	}
 
-	public void setBeginningBalance(Float beginningBalance) {
+	public void setBeginningBalance(Double beginningBalance) {
 		this.beginningBalance = beginningBalance;
 	}
 
@@ -152,7 +152,7 @@ public abstract class Reading extends BaseObject {
 	}
 
 	@Transient
-	public Float getGrossSales() {
+	public Double getGrossSales() {
 		return getNetSales() + getZeroRatedRemovedVat() + getTotalDiscountAmount() - getRefundAmount();
 	}
 
@@ -232,7 +232,7 @@ public abstract class Reading extends BaseObject {
 	}
 	
 	@Transient
-	public Float getTotalCashPayment() {
+	public Double getTotalCashPayment() {
 		return getNetSales() - getTotalCheckPayment() - getTotalCardPayment() - getTotalPointsPayment();
 	}
 
