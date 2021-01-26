@@ -6,12 +6,12 @@
 			</h4>
 			<div class="container-fluid">
 		    	<dl class="dl-horizontal">
-					<dt>Completed Sales:</dt>
-					<dd data-bind="text: completedSales"></dd>
-					<dt>Total Sales:</dt>
-					<dd data-bind="text: totalSales"></dd>
-					<dt>Total Profit:</dt>
-					<dd data-bind="text: totalProfit"></dd>
+					<dt>Completed Sales :</dt>
+					<dd><span class="pull-right" data-bind="text: completedSales"></span></dd>
+					<dt>Total Sales :</dt>
+					<dd><span class="text-success pull-right">&#8369; <span data-bind="text: formattedTotalSales"></span></span></dd>
+					<dt>Total Profit :</dt>
+					<dd><span class="text-success pull-right">&#8369; <span data-bind="text: formattedTotalProfit"></span></span></dd>
 		    	</dl>
 	    	</div>
 	    	<h5 class="text-muted pull-right">As of <span data-bind="text: time"></span></h5>

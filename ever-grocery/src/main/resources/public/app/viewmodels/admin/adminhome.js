@@ -30,9 +30,9 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		this.averageNetSales = ko.observable(0.0);
 		this.averageProfit = ko.observable(0.0);
 		
-		this.completedSales = ko.observable();
-		this.totalSales = ko.observable();
-		this.totalProfit = ko.observable();
+		this.completedSales = ko.observable(0);
+		this.formattedTotalSales = ko.observable(0.0);
+		this.formattedTotalProfit = ko.observable(0.0);
 		
 		this.time = ko.observable();
 	};
@@ -74,8 +74,8 @@ define(['jquery', 'c3', 'durandal/app', 'knockout', 'modules/transactionsummarys
 		});
 		
 		transactionSummaryService.getLiveSalesSummary().done(function(liveSalesSummary) {
-			self.totalSales(liveSalesSummary.netTotal);
-			self.totalProfit(liveSalesSummary.totalProfit);
+			self.formattedTotalSales(liveSalesSummary.formattedNetTotal);
+			self.formattedTotalProfit(liveSalesSummary.formattedTotalProfit);
 		});
 	};
 	
