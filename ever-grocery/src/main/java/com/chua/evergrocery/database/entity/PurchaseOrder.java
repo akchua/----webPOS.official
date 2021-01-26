@@ -46,7 +46,7 @@ public class PurchaseOrder extends BaseObject {
 	@JsonSerialize(using = UserSerializer.class)
 	private User managerInCharge;
 	
-	private Float totalAmount;
+	private Double totalAmount;
 	
 	private Integer totalItems;
 	
@@ -94,7 +94,7 @@ public class PurchaseOrder extends BaseObject {
 
 	@Basic
 	@Column(name = "total_amount")
-	public Float getTotalAmount() {
+	public Double getTotalAmount() {
 		return totalAmount;
 	}
 	
@@ -104,7 +104,7 @@ public class PurchaseOrder extends BaseObject {
 	}
 
 
-	public void setTotalAmount(Float totalAmount) {
+	public void setTotalAmount(Double totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 

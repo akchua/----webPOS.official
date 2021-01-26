@@ -10,7 +10,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.FloatType;
+import org.hibernate.type.DoubleType;
 import org.springframework.stereotype.Repository;
 
 import com.chua.evergrocery.beans.ProductSalesSummaryBean;
@@ -111,8 +111,8 @@ public class CustomerOrderDetailDAOImpl
 		}
 		
 		final ProjectionList pList = Projections.projectionList();
-		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");
-		pList.add(Projections.sqlProjection("sum(purchase_price * quantity) as baseTotal", new String[] { "baseTotal" }, new FloatType[] { new FloatType() }), "baseTotal");
+		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new DoubleType[] { new DoubleType() }), "netTotal");
+		pList.add(Projections.sqlProjection("sum(purchase_price * quantity) as baseTotal", new String[] { "baseTotal" }, new DoubleType[] { new DoubleType() }), "baseTotal");
 		
 		String[] associatedPaths = { "customerOrder" };
 		String[] aliasNames = { "co" };
@@ -134,8 +134,8 @@ public class CustomerOrderDetailDAOImpl
 		
 		final ProjectionList pList = Projections.projectionList();
 		pList.add(Projections.groupProperty("p.id"), "productId");
-		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");
-		pList.add(Projections.sqlProjection("sum(purchase_price * quantity) as baseTotal", new String[] { "baseTotal" }, new FloatType[] { new FloatType() }), "baseTotal");
+		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new DoubleType[] { new DoubleType() }), "netTotal");
+		pList.add(Projections.sqlProjection("sum(purchase_price * quantity) as baseTotal", new String[] { "baseTotal" }, new DoubleType[] { new DoubleType() }), "baseTotal");
 		
 		String[] associatedPaths = { "customerOrder", "product" };
 		String[] aliasNames = { "co", "p" };

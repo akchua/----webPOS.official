@@ -134,7 +134,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 				if (errors.isEmpty()) {
 					final PurchaseOrder purchaseOrder = new PurchaseOrder();
 					purchaseOrder.setCompany(company);
-					purchaseOrder.setTotalAmount(0.0f);
+					purchaseOrder.setTotalAmount(0.0d);
 					purchaseOrder.setTotalItems(0);
 
 					purchaseOrder.setCreator(userService.find(UserContextHolder.getUser().getId()));
@@ -459,7 +459,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 	}
 
 	private void refreshPurchaseOrder(PurchaseOrder purchaseOrder) {
-		float totalAmount = 0l;
+		double totalAmount = 0.0d;
 		int totalItems = 0;
 
 		List<PurchaseOrderDetail> purchaseOrderDetails = purchaseOrderDetailService
@@ -777,11 +777,11 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		purchaseOrderDetail.setGrossPrice(productDetail.getGrossPrice());
 		purchaseOrderDetail.setNetPrice(productDetail.getNetPrice());
 		purchaseOrderDetail.setQuantity(0);
-		purchaseOrderDetail.setTotalPrice(0.0f);
+		purchaseOrderDetail.setTotalPrice(0.0d);
 	}
 
 	private void setPurchaseOrderDetailQuantity(PurchaseOrderDetail purchaseOrderDetail, int quantity) {
 		purchaseOrderDetail.setQuantity(quantity);
-		purchaseOrderDetail.setTotalPrice(quantity * purchaseOrderDetail.getNetPrice());
+		purchaseOrderDetail.setTotalPrice(quantity * (purchaseOrderDetail.getNetPrice() / 1.0d));
 	}
 }

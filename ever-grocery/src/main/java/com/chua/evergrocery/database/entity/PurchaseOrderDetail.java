@@ -45,7 +45,7 @@ public class PurchaseOrderDetail extends BaseObject {
 	
 	private Integer quantity;
 	
-	private Float totalPrice;
+	private Double totalPrice;
 
 	@ManyToOne(targetEntity = PurchaseOrder.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "purchase_order_id")
@@ -166,7 +166,7 @@ public class PurchaseOrderDetail extends BaseObject {
 
 	@Basic
 	@Column(name = "total_price")
-	public Float getTotalPrice() {
+	public Double getTotalPrice() {
 		return totalPrice;
 	}
 	
@@ -175,7 +175,7 @@ public class PurchaseOrderDetail extends BaseObject {
 		return CurrencyFormatter.pesoFormat(getTotalPrice());
 	}
 
-	public void setTotalPrice(Float totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 }

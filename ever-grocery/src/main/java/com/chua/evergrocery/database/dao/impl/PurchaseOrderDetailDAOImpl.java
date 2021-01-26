@@ -10,7 +10,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.FloatType;
+import org.hibernate.type.DoubleType;
 import org.springframework.stereotype.Repository;
 
 import com.chua.evergrocery.beans.ProductPurchaseSummaryBean;
@@ -110,8 +110,8 @@ public class PurchaseOrderDetailDAOImpl
 		conjunction.add(Restrictions.between("po.deliveredOn", deliveryStart, deliveryEnd));
 		
 		final ProjectionList pList = Projections.projectionList();
-		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");
-		pList.add(Projections.sqlProjection("sum(gross_price*quantity) as grossTotal", new String[] { "grossTotal" }, new FloatType[] { new FloatType() }), "grossTotal");
+		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new DoubleType[] { new DoubleType() }), "netTotal");
+		pList.add(Projections.sqlProjection("sum(gross_price*quantity) as grossTotal", new String[] { "grossTotal" }, new DoubleType[] { new DoubleType() }), "grossTotal");
 		
 		String[] associatedPaths = { "purchaseOrder" };
 		String[] aliasNames = { "po" };
@@ -133,8 +133,8 @@ public class PurchaseOrderDetailDAOImpl
 		
 		final ProjectionList pList = Projections.projectionList();
 		pList.add(Projections.groupProperty("p.id"), "productId");
-		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new FloatType[] { new FloatType() }), "netTotal");
-		pList.add(Projections.sqlProjection("sum(gross_price*quantity) as grossTotal", new String[] { "grossTotal" }, new FloatType[] { new FloatType() }), "grossTotal");
+		pList.add(Projections.sqlProjection("sum(total_price) as netTotal", new String[] { "netTotal" }, new DoubleType[] { new DoubleType() }), "netTotal");
+		pList.add(Projections.sqlProjection("sum(gross_price*quantity) as grossTotal", new String[] { "grossTotal" }, new DoubleType[] { new DoubleType() }), "grossTotal");
 		
 		String[] associatedPaths = { "purchaseOrder", "product" };
 		String[] aliasNames = { "po", "p" };
