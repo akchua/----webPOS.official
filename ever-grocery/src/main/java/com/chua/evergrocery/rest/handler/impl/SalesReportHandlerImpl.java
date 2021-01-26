@@ -155,7 +155,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			zReading.setPwdDiscountAmount(pwdDiscountAmount);
 			zReading.setSpecialDiscountVatAdjustment(specialDiscountVatAdjustment);
 			zReading.setBeginningRefundAmount(latestZReading.getEndingRefundAmount());
-			zReading.setRefundAmount(refundSummary.getNetSales());
+			zReading.setRefundAmount((float) (refundSummary.getNetSales() / 1.0f));
 			zReading.setTotalCheckPayment((salesSummary.getCheckAmount() != null ? salesSummary.getCheckAmount() : 0.0f) + 
 							(refundSummary.getCheckAmount() != null ? refundSummary.getCheckAmount() : 0.0f));
 			zReading.setTotalCardPayment((salesSummary.getCardAmount() != null ? salesSummary.getCardAmount() : 0.0f) + 
@@ -190,7 +190,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			Double netSales = salesSummary.getNetSales() / 1.0d + refundSummary.getNetSales();
 			final BIRSalesSummaryBean othersSalesSummary = customerOrderService.getSalesSummaryByDatePaidAndExceptCashier(latestReadingDate, xReading.getReadingDate(), cashier.getId());
 			final BIRSalesSummaryBean othersRefundSummary = customerOrderService.getRefundSummaryByDatePaidAndExceptCashier(latestReadingDate, xReading.getReadingDate(), cashier.getId());
-			Float othersNetSales = othersSalesSummary.getNetSales() + othersRefundSummary.getNetSales();
+			Double othersNetSales = othersSalesSummary.getNetSales() + othersRefundSummary.getNetSales();
 			
 			// ZED
 			final Boolean zed = (xReading.getReadingDate().getTime() - latestReadingDate.getTime()) / 1000.0f / 60.0f < businessConstants.getZedMinutes();
@@ -233,7 +233,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 			xReading.setRegularDiscountAmount(regularDiscountAmount);
 			xReading.setSeniorDiscountAmount(seniorDiscountAmount);
 			xReading.setPwdDiscountAmount(pwdDiscountAmount);
-			xReading.setRefundAmount(refundSummary.getNetSales());
+			xReading.setRefundAmount((float) (refundSummary.getNetSales() / 1.0f));
 			xReading.setTotalCheckPayment((salesSummary.getCheckAmount() != null ? salesSummary.getCheckAmount() : 0.0f) + 
 					(refundSummary.getCheckAmount() != null ? refundSummary.getCheckAmount() : 0.0f));
 			xReading.setTotalCardPayment((salesSummary.getCardAmount() != null ? salesSummary.getCardAmount() : 0.0f) + 
@@ -328,7 +328,7 @@ public class SalesReportHandlerImpl implements SalesReportHandler {
 	}
 	
 	private void ensureBIRSalesSummaryBeanNotNull(BIRSalesSummaryBean birSalesSummary) {
-		if(birSalesSummary.getVatSales() == null) birSalesSummary.setVatSales(0.0f);
+		if(birSalesSummary.getVatSales() == null) birSalesSummary.setVatSales(0.0d);
 		if(birSalesSummary.getVatExSales() == null) birSalesSummary.setVatExSales(0.0f);
 		if(birSalesSummary.getZeroRatedSales() == null) birSalesSummary.setZeroRatedSales(0.0f);
 		if(birSalesSummary.getVatDiscount() == null) birSalesSummary.setVatDiscount(0.0f);

@@ -15,7 +15,7 @@ public class BIRSalesSummaryBean {
 	
 	private Long endingRefundNumber;
 	
-	private Float vatSales;
+	private Double vatSales;
 	
 	private Float vatExSales;
 	
@@ -67,11 +67,11 @@ public class BIRSalesSummaryBean {
 		this.endingRefundNumber = endingRefundNumber;
 	}
 
-	public Float getVatSales() {
+	public Double getVatSales() {
 		return vatSales;
 	}
 
-	public void setVatSales(Float vatSales) {
+	public void setVatSales(Double vatSales) {
 		this.vatSales = vatSales;
 	}
 
@@ -103,7 +103,7 @@ public class BIRSalesSummaryBean {
 		return vatDiscount;
 	}
 	
-	public Float getNetVatSales() {
+	public Double getNetVatSales() {
 		return (getVatSales() != null ? getVatSales() : 0) - 
 				(getVatDiscount() != null ? getVatDiscount() : 0);
 	}
@@ -138,7 +138,7 @@ public class BIRSalesSummaryBean {
 		this.zeroRatedDiscount = zeroRatedDiscount;
 	}
 	
-	public Float getNetSales() {
+	public Double getNetSales() {
 		return getNetVatSales() + getNetVatExSales() + getNetZeroRatedSales();
 	}
 
