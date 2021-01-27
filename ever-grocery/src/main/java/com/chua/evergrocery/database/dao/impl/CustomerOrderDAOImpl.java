@@ -11,6 +11,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.hibernate.transform.Transformers;
+import org.hibernate.type.DoubleType;
 import org.hibernate.type.FloatType;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
@@ -169,7 +170,7 @@ public class CustomerOrderDAOImpl
 		pList.add(Projections.groupProperty("c.id"), "cashierId");
 		pList.add(Projections.max("c.firstName"), "cashierFirstName");
 		pList.add(Projections.max("c.lastName"), "cashierLastName");
-		pList.add(Projections.sqlProjection("sum(vat_sales) as vatSales", new String[] { "vatSales" }, new FloatType[] { new FloatType() }), "vatSales");
+		pList.add(Projections.sqlProjection("sum(vat_sales) as vatSales", new String[] { "vatSales" }, new DoubleType[] { new DoubleType() }), "vatSales");
 		pList.add(Projections.sqlProjection("sum(vat_ex_sales) as vatExSales", new String[] { "vatExSales" }, new FloatType[] { new FloatType() }), "vatExSales");
 		pList.add(Projections.sqlProjection("sum(zero_rated_sales) as zeroRatedSales", new String[] { "zeroRatedSales" }, new FloatType[] { new FloatType() }), "zeroRatedSales");
 		pList.add(Projections.sqlProjection("sum(discount_amount) as discountAmount", new String[] { "discountAmount" }, new FloatType[] { new FloatType() }), "discountAmount");
@@ -225,7 +226,7 @@ public class CustomerOrderDAOImpl
 		pList.add(Projections.max("serialInvoiceNumber"), "endingSIN");
 		pList.add(Projections.min("refundNumber"), "beginningRefundNumber");
 		pList.add(Projections.max("refundNumber"), "endingRefundNumber");
-		pList.add(Projections.sqlProjection("sum(vat_sales) as vatSales", new String[] { "vatSales" }, new FloatType[] { new FloatType() }), "vatSales");
+		pList.add(Projections.sqlProjection("sum(vat_sales) as vatSales", new String[] { "vatSales" }, new DoubleType[] { new DoubleType() }), "vatSales");
 		pList.add(Projections.sqlProjection("sum(vat_ex_sales) as vatExSales", new String[] { "vatExSales" }, new FloatType[] { new FloatType() }), "vatExSales");
 		pList.add(Projections.sqlProjection("sum(zero_rated_sales) as zeroRatedSales", new String[] { "zeroRatedSales" }, new FloatType[] { new FloatType() }), "zeroRatedSales");
 		pList.add(Projections.sqlProjection("sum(vat_discount) as vatDiscount", new String[] { "vatDiscount" }, new FloatType[] { new FloatType() }), "vatDiscount");
