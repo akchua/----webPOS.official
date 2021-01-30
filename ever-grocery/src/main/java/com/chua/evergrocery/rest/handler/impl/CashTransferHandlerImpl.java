@@ -154,25 +154,30 @@ public class CashTransferHandlerImpl implements CashTransferHandler {
 			final Long currentUserId = UserContextHolder.getUser().getId();
 			result = new ResultBean();
 			
-			if(cashTransfer.getCashFrom().getId().equals(currentUserId)) {
-				cashTransfer.setStatus(Status.CANCELLED);
-				result.setSuccess(cashTransferService.delete(cashTransfer));
-				if(result.getSuccess()){
-					result.setMessage(Html.line(Html.text(Color.GREEN, "Success!") + " You have just canceled transfer of Php " + cashTransfer.getFormattedAmount() + " to " + cashTransfer.getCashTo().getFormattedName() + "." ));
+			if(cashTransfer.getStatus().equals(Status.REQUESTING)) {
+				if(cashTransfer.getCashFrom().getId().equals(currentUserId)) {
+					cashTransfer.setStatus(Status.CANCELLED);
+					result.setSuccess(cashTransferService.delete(cashTransfer));
+					if(result.getSuccess()){
+						result.setMessage(Html.line(Html.text(Color.GREEN, "Success!") + " You have just canceled transfer of Php " + cashTransfer.getFormattedAmount() + " to " + cashTransfer.getCashTo().getFormattedName() + "." ));
+					} else {
+						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+					}
+				} else if(cashTransfer.getCashTo().getId().equals(currentUserId)) {
+					cashTransfer.setStatus(Status.DECLINED);
+					result.setSuccess(cashTransferService.update(cashTransfer));
+					if(result.getSuccess()){
+						result.setMessage(Html.line(Html.text(Color.GREEN, "Success!") + " You have just declined transfer of Php " + cashTransfer.getFormattedAmount() + " from " + cashTransfer.getCashFrom().getFormattedName() + "." ));
+					} else {
+						result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+					}
 				} else {
-					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
-				}
-			} else if(cashTransfer.getCashTo().getId().equals(currentUserId)) {
-				cashTransfer.setStatus(Status.DECLINED);
-				result.setSuccess(cashTransferService.update(cashTransfer));
-				if(result.getSuccess()){
-					result.setMessage(Html.line(Html.text(Color.GREEN, "Success!") + " You have just declined transfer of Php " + cashTransfer.getFormattedAmount() + " from " + cashTransfer.getCashFrom().getFormattedName() + "." ));
-				} else {
-					result.setMessage(Html.line(Html.text(Color.RED, "Server Error.") + " Please try again later."));
+					result.setSuccess(Boolean.FALSE);
+					result.setMessage(Html.line(Html.text(Color.RED, "DECLINED!") + " You are not authorized to cancel this cash transfer."));
 				}
 			} else {
 				result.setSuccess(Boolean.FALSE);
-				result.setMessage(Html.line(Html.text(Color.RED, "DECLINED!") + " You are not authorized to cancel this cash transfer."));
+				result.setMessage(Html.line(Html.text(Color.RED, "DECLINED!") + " This cash transfer is already finalized."));
 			}
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line(Html.text(Color.RED, "Failed") + " to load cash transfer. Please refresh the page."));
