@@ -84,7 +84,7 @@ public class InventoryHandlerImpl implements InventoryHandler {
 			inventory.setProduct(product);
 			
 			// FOR FIRST INVENTORY
-			//final PurchaseSummaryBean purchaseSummary = purchaseOrderDetailService.getPurchaseSummaryByProductAndDeliveryDate(productId, DateUtil.floorDay(product.getCompany().getLastPurchaseOrderDate()), DateUtil.floorDay(upTo.getTime()));
+			//final PurchaseSummaryBean purchaseSummary = purchaseOrderDetailService.getPurchaseSummaryByProductAndDeliveryDate(productId, DateUtil.floorDay(product.getCompany().getLastPurchaseOrderDate()), upTo);
 			final PurchaseSummaryBean purchaseSummary = purchaseOrderDetailService.getPurchaseSummaryByProductAndDeliveryDate(productId, product.getCompany().getLastPurchaseOrderDate(), upTo);
 			inventory.setTotalNetPurchase(purchaseSummary.getNetTotal() != null ? purchaseSummary.getNetTotal() : 0.0d);
 			LOG.info("Found total purchase : " + inventory.getTotalNetPurchase());
@@ -96,6 +96,7 @@ public class InventoryHandlerImpl implements InventoryHandler {
 			final ProductDetail wholeProductDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Whole");
 			inventory.setWholePurchasePrice(wholeProductDetail != null ? wholeProductDetail.getNetPrice() : -1.0f);
 			inventory.setWholeUnit(wholeProductDetail != null ? wholeProductDetail.getUnitType() : UnitType.DEFAULT);
+			inventory.setWholeContent(wholeProductDetail != null && wholeProductDetail.getContent() != null ? wholeProductDetail.getContent() : 0);
 			
 			final ProductDetail pieceProductDetail = productDetailService.findByProductIdAndTitle(product.getId(), "Piece");
 			inventory.setPiecePurchasePrice(pieceProductDetail != null ? pieceProductDetail.getNetPrice() : -1.0f);

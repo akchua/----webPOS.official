@@ -26,6 +26,8 @@ public class InventoryBean {
 	
 	private UnitType pieceUnit;
 	
+	private Integer wholeContent;
+	
 	public InventoryBean() {
 		this.totalNetPurchase = 0.0d;
 		this.totalBaseSales = 0.0d;
@@ -88,15 +90,15 @@ public class InventoryBean {
 	}
 	
 	public Float getPieceQuantity() {
-		return (float) ((stockBudget % wholePurchasePrice) / piecePurchasePrice);
+		return piecePurchasePrice.equals(0.0f) ? 0.0f : (float) ((stockBudget % wholePurchasePrice) / piecePurchasePrice);
 	}
 	
 	public Float getPurchasedPieceQuantity() {
-		return (float) ((totalNetPurchase % wholePurchasePrice) / piecePurchasePrice);
+		return piecePurchasePrice.equals(0.0f) ? 0.0f : (float) ((totalNetPurchase % wholePurchasePrice) / piecePurchasePrice);
 	}
 	
 	public Float getSoldPieceQuantity() {
-		return (float) ((totalBaseSales % wholePurchasePrice) / piecePurchasePrice);
+		return piecePurchasePrice.equals(0.0f) ? 0.0f : (float) ((totalBaseSales % wholePurchasePrice) / piecePurchasePrice);
 	}
 
 	public void setPiecePurchasePrice(Float piecePurchasePrice) {
@@ -117,5 +119,13 @@ public class InventoryBean {
 
 	public void setPieceUnit(UnitType pieceUnit) {
 		this.pieceUnit = pieceUnit;
+	}
+
+	public Integer getWholeContent() {
+		return wholeContent;
+	}
+
+	public void setWholeContent(Integer wholeContent) {
+		this.wholeContent = wholeContent;
 	}
 }

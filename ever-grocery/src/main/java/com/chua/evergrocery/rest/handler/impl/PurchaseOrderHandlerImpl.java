@@ -234,7 +234,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 						final Double proportionedNetSalesAmount = (inventory.getTotalBaseSales() < actualBudget)
 								? inventory.getTotalBaseSales() / salesPeriod * company.getDaysBooked()
 								: inventory.getTotalBaseSales();
-						Float tempRate = (float) (actualBudget.equals(0.0f) ? 0
+						Float tempRate = (float) (actualBudget.equals(0.0d) ? 0
 								: proportionedNetSalesAmount / actualBudget * 100);
 						final Float saleRate = tempRate > 100.0f ? 100.0f : (tempRate < 0.0f ? 0.0f : tempRate);
 						LOG.info("Computed sale rate : " + saleRate);

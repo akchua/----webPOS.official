@@ -34,7 +34,7 @@ public class GeneratedPurchaseItemTemplate extends AbstractTemplate {
 	
 	//62
 	public String getFormattedProductName() {
-		return StringHelper.center(generatedProductPO.getProductName(), 62);
+		return StringHelper.center(generatedProductPO.getProductName() + (generatedProductPO.getInventory().getWholeContent() != 0 ? " (x" + generatedProductPO.getInventory().getWholeContent() + ")" : ""), 62);
 	}
 	
 	//19 right pad
@@ -44,10 +44,10 @@ public class GeneratedPurchaseItemTemplate extends AbstractTemplate {
 		
 		if(toPurchase.getWholeQuantity() != 0) {
 			formattedOrder += toPurchase.getWholeQuantity() + toPurchase.getWholeUnit().getShorthand();
-			if(toPurchase.getPieceQuantity() != 0.0f) {
+			if(!toPurchase.getPieceQuantity().equals(0.0f)) {
 				formattedOrder += " & " + NumberFormatter.decimalFormat(toPurchase.getPieceQuantity(), 2) + toPurchase.getPieceUnit().getShorthand();
 			}
-		} else if(toPurchase.getPieceQuantity() != 0.0f) {
+		} else if(!toPurchase.getPieceQuantity().equals(0.0f)) {
 			formattedOrder += NumberFormatter.decimalFormat(toPurchase.getPieceQuantity(), 2) + toPurchase.getPieceUnit().getShorthand();
 		} else {
 			formattedOrder += "=";

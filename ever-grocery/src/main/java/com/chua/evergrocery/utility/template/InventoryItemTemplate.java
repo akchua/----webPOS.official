@@ -27,7 +27,7 @@ public class InventoryItemTemplate extends AbstractTemplate {
 	}
 
 	public String getProductName() {
-		return StringHelper.center(inventoryItem.getProduct().getName(), 60);
+		return StringHelper.center(inventoryItem.getProduct().getName() + (inventoryItem.getWholeContent() != 0 ? " (x" + inventoryItem.getWholeContent() + ")" : ""), 60);
 	}
 	
 	public String getProductDisplayName() {
@@ -39,6 +39,8 @@ public class InventoryItemTemplate extends AbstractTemplate {
 	}
 	
 	public String getPieceInventory() {
-		return " " + String.format("%-14s", NumberFormatter.decimalFormat(this.inventoryItem.getPieceQuantity(), 2) + " " + inventoryItem.getPieceUnit().getShorthand()) + " ";
+		return " " + String.format("%-14s", 
+					(inventoryItem.getPieceUnit() != null ? NumberFormatter.decimalFormat(this.inventoryItem.getPieceQuantity(), 2) + " " + inventoryItem.getPieceUnit().getShorthand() : ""))
+					+ " ";
 	}
 }
