@@ -8,6 +8,9 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
 		
+		this.enableButtons = ko.observable(true);
+		this.allowPrint = ko.observable(false);
+		
 		this.customerOrderViewModel = {
 			customerOrderId: ko.observable(),
 			customerOrderNumber: ko.observable(),
@@ -60,6 +63,7 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     	self.customerOrderViewModel.formattedPaidOn(self.customerOrder.formattedPaidOn);
     	if(self.customerOrder.cashier) {
     		self.customerOrderViewModel.formattedCashier(self.customerOrder.cashier.formattedName);
+    		self.allowPrint(true);
     	}
 
     	self.customerOrderViewModel.formattedCash(self.customerOrder.formattedCash);
@@ -106,6 +110,23 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     	customerOrderService.getCustomerOrderDetailList(self.currentPage(), self.customerOrderViewModel.customerOrderId(), false).done(function(data) { 
 			self.customerOrderDetailList(data.list);
 			self.totalItems(data.total);
+		});
+    };
+    
+    SaleView.prototype.print = function() {
+    	var self = this;
+		self.enableButtons(false);
+		
+		app.showMessage('Are you sure you want to print Customer Order #' + self.customerOrderViewModel.customerOrderNumber() + '?',
+				'Confirm Print',
+				[{ text: 'Yes', value: true }, { text: 'No', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+				customerOrderService.printReceiptCopy(self.customerOrderViewModel.customerOrderId()).done(function(result) {
+					app.showMessage(result.message);
+				});
+			}
+			self.enableButtons(true);
 		});
     };
     
