@@ -137,7 +137,7 @@ public class InventoryHandlerImpl implements InventoryHandler {
 			LOG.info("#### Processing inventory of " + company.getName());
 			LOG.info("Last Purchase Order Date : " + company.getFormattedLastPurchaseOrderDate());
 			inventories = new ArrayList<InventoryBean>();
-			for(Product product : productService.findAllByCompanyOrderByName(companyId)) {
+			for(Product product : productService.findAllByCompanyOrderByCategoryAndName(companyId)) {
 				inventories.add(getProductInventory(product.getId(), upTo));
 			}
 			final Date end = new Date();

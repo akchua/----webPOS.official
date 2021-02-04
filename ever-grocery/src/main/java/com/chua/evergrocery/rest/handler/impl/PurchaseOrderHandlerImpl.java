@@ -345,7 +345,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 
 		if (company != null) {
 			final List<GeneratedOfftakeBean> generatedOfftakes = new ArrayList<GeneratedOfftakeBean>();
-			final List<Product> products = productService.findAllByCompanyOrderByName(companyId);
+			final List<Product> products = productService.findAllByCompanyOrderByCategoryAndName(companyId);
 
 			// average 3x of the offtake days ex. 7 days -> average of past 21
 			// days (limit of 28 days)
@@ -369,11 +369,6 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 				generatedOfftake.setOfftake((float) (averageOfftake / wholeDetail.getNetPrice() * offtakeDays));
 				generatedOfftakes.add(generatedOfftake);
 			}
-
-			generatedOfftakes.sort((GeneratedOfftakeBean go1, GeneratedOfftakeBean go2) -> go2.getSuggestedOrder()
-					.compareTo(go1.getSuggestedOrder()));
-			generatedOfftakes.sort((GeneratedOfftakeBean go1, GeneratedOfftakeBean go2) -> go2.getCategoryName()
-					.compareTo(go1.getCategoryName()));
 
 			/*
 			 * for(GeneratedOfftakeBean generatedOfftake : generatedOfftakes) {

@@ -19,6 +19,8 @@ public interface ProductService
 	
 	List<Product> findAllByCompanyOrderByName(Long companyId);
 	
+	List<Product> findAllByCompanyOrderByCategoryAndName(Long companyId);
+	
 	List<Product> findAllByCompanyOrderByProfit(Long companyId);
 	
 	List<Product> findAllByCategoryOrderByName(Long categoryId);

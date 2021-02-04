@@ -58,6 +58,11 @@ public class ProductServiceImpl
 	public List<Product> findAllByCompanyOrderByName(Long companyId) {
 		return dao.findAllByCompanyWithOrder(companyId, new Order[] { Order.asc("name") });
 	}
+	
+	@Override
+	public List<Product> findAllByCompanyOrderByCategoryAndName(Long companyId) {
+		return dao.findAllByCompanyWithOrder(companyId, new Order[] { Order.asc("category.id"), Order.asc("name") });
+	}
 
 	@Override
 	public List<Product> findAllByCompanyOrderByProfit(Long companyId) {
