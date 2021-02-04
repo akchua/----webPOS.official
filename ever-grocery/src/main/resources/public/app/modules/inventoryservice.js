@@ -8,6 +8,16 @@ define(['jquery'], function ($) {
     				companyId: companyId
     			}
     		});
+    	},
+    	
+    	generateInventoryByCategoryName: function(categoryName) {
+    		return $.ajax({
+    			url: '/services/inventory/bycategoryname',
+    			method: 'POST',
+    			data: {
+    				categoryName: categoryName
+    			}
+    		});
     	}
 	};
 });

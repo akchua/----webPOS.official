@@ -28,4 +28,11 @@ public class InventoryEndpoint {
 	public ResultBean generateProductInventoryByCompany(@FormParam("companyId") Long companyId) {
 		return inventoryHandler.generateInventory(companyId);
 	}
+	
+	@POST
+	@Path("/bycategoryname")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean generateProductInventoryByCategoryName(@FormParam("categoryName") String categoryName) {
+		return inventoryHandler.generateInventoryByCategoryName(categoryName);
+	}
 }

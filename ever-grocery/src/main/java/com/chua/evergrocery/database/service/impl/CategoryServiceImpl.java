@@ -41,4 +41,9 @@ public class CategoryServiceImpl
 	public Boolean isExistsByName(String name) {
 		return dao.findByName(StringUtils.trimToEmpty(name)) != null;
 	}
+
+	@Override
+	public Category findByName(String name) {
+		return dao.findByName(StringUtils.trimToEmpty(name));
+	}
 }

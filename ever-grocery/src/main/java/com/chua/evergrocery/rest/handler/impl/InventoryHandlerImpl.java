@@ -19,10 +19,12 @@ import com.chua.evergrocery.beans.PurchaseSummaryBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.beans.SalesSummaryBean;
 import com.chua.evergrocery.constants.FileConstants;
+import com.chua.evergrocery.database.entity.Category;
 import com.chua.evergrocery.database.entity.Company;
 import com.chua.evergrocery.database.entity.CustomerOrderDetail;
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.database.entity.ProductDetail;
+import com.chua.evergrocery.database.service.CategoryService;
 import com.chua.evergrocery.database.service.CompanyService;
 import com.chua.evergrocery.database.service.CustomerOrderDetailService;
 import com.chua.evergrocery.database.service.ProductDetailService;
@@ -50,6 +52,9 @@ public class InventoryHandlerImpl implements InventoryHandler {
 	
 	@Autowired
 	private CompanyService companyService;
+	
+	@Autowired
+	private CategoryService categoryService;
 	
 	@Autowired
 	private ProductDetailService productDetailService;
@@ -145,6 +150,35 @@ public class InventoryHandlerImpl implements InventoryHandler {
 		
 		return inventories;
 	}
+	
+	@Override
+	public List<InventoryBean> getProductInventoryByCategory(Long categoryId) {
+		return getProductInventoryByCategory(categoryId, new Date());
+	}
+	
+	@Override
+	public List<InventoryBean> getProductInventoryByCategory(Long categoryId, Date upTo) {
+		final List<InventoryBean> inventories;
+		final Category category = categoryService.find(categoryId);
+		
+		if(category != null) {
+			final Date start = new Date();
+			LOG.info("#### Processing inventory of " + category.getName());
+			inventories = new ArrayList<InventoryBean>();
+			for(Product product : productService.findAllByCategoryOrderByName(categoryId)) {
+				inventories.add(getProductInventory(product.getId(), upTo));
+			}
+			final Date end = new Date();
+			final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
+			LOG.info("Inventory of " + category.getName() + " complete in " + seconds + "s");
+		} else {
+			LOG.info("Product inventory by category exited due to invalid categoryId : " + categoryId);
+			inventories = null;
+		}
+		
+		return inventories;
+	}
+
 
 	@Override
 	public ResultBean generateInventory(Long companyId) {
@@ -170,6 +204,35 @@ public class InventoryHandlerImpl implements InventoryHandler {
 			LOG.info("File name : " + fileName);
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line("Please select a company."));
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public ResultBean generateInventoryByCategoryName(String categoryName) {
+		final ResultBean result;
+		final Category category = categoryService.findByName(categoryName);
+		
+		if(category != null) {
+			final List<InventoryBean> inventories = getProductInventoryByCategory(category.getId());
+			
+			// Generate text file of inventory
+			final String fileName = StringHelper.convertToFileSafeFormat(category.getName()) + "_inventory_" + DateFormatter.fileSafeShortFormat(new Date()) + ".pdf";
+			final String filePath = fileConstants.getInventoryHome() + fileName;
+			final String temp = new InventoryTemplate(
+					category.getName(),
+					inventories)
+			.merge(velocityEngine);
+			SimplePdfWriter.write(temp, "Ever Bazar", filePath, false);
+			
+			final Map<String, Object> extras = new HashMap<String, Object>();
+			extras.put("fileName", fileName);
+			result = new ResultBean(Boolean.TRUE, "Done");
+			result.setExtras(extras);
+			LOG.info("File name : " + fileName);
+		} else {
+			result = new ResultBean(Boolean.FALSE, Html.line("Please select a category."));
 		}
 		
 		return result;
