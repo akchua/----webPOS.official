@@ -15,4 +15,6 @@ public interface CategoryPrototype extends Prototype<Category, Long> {
 	 * @return the object list of category
 	 */
 	ObjectList<Category> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey);
+	
+	Category findByName(String name);
 }

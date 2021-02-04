@@ -177,153 +177,159 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 
 		final ResultBean result;
 		final Company company = companyService.find(companyId);
-
+		
 		if (company != null) {
-			if (daysToBook >= 3) {
-				// Check if last purchase order date is more than 3 days ago
-				// FOR FIRST INVENTORY
-				//if (Days.daysBetween(new DateTime(company.getLastPurchaseOrderDate()), new DateTime()).getDays() > -1) {
-				if (Days.daysBetween(new DateTime(company.getLastPurchaseOrderDate()), new DateTime()).getDays() > 3) {
-					LOG.info("#### Generating purchase order for " + company.getName() + " - "
-							+ DateFormatter.longFormat(generateStartTime));
-
-					// Determining last purchase order date
-					Calendar lastPODate = Calendar.getInstance();
-					lastPODate.setTime(company.getLastPurchaseOrderDate());
-					if (lastPODate.getTimeInMillis() == DateUtil.getDefaultDateInMillis()) {
-						lastPODate
-								.setTime(purchaseOrderService.findLatestDeliveryByCompany(companyId).getDeliveredOn());
-					}
-					LOG.info("Last PO Date : " + lastPODate.getTime());
-
-					// Determining last booked days
-					if (company.getDaysBooked().equals(0.0f)) {
-						company.setDaysBooked(
-								Days.daysBetween(new DateTime(lastPODate.getTime()), new DateTime()).getDays() / 1.0f);
-					}
-					LOG.info("Last Booked Days : " + company.getDaysBooked());
-
-					// Determining actual sales period (in days)
+			Calendar lastPODate = Calendar.getInstance();
+			lastPODate.setTime(company.getLastPurchaseOrderDate());
+			// FOR FIRST INVENTORY 
+			//if (true) {
+			if (lastPODate.getTimeInMillis() != DateUtil.getDefaultDateInMillis()) {
+				if (daysToBook >= 3) {
+					// Check if last purchase order date is more than 3 days ago
 					// FOR FIRST INVENTORY
-					//final int salesPeriod = 1;
-					final int salesPeriod = DateUtil.daysBetween(company.getLastPurchaseOrderDate(), generateStartTime);
-					LOG.info("Actual Sales Period (In Days) : " + salesPeriod);
-
-					// Retrieving latest inventories
-					final List<InventoryBean> inventories = inventoryHandler.getProductInventoryByCompany(companyId,
-							generateStartTime);
-					final List<GeneratedProductPOBean> generatedProductPOs = new ArrayList<GeneratedProductPOBean>();
-
-					for (InventoryBean inventory : inventories) {
-						final Product product = inventory.getProduct();
-						final GeneratedProductPOBean generatedProductPO = new GeneratedProductPOBean();
-						generatedProductPO.setProductId(product.getId());
-						generatedProductPO.setProductName(product.getName());
-						generatedProductPO.setProductCode(product.getCode());
-						generatedProductPO.setInventory(inventory);
-
-						LOG.info("## Generating purchase order of " + product.getName());
-
-						// Compute for ACTUAL BUDGET (Adjusted Stock Budget +
-						// Net Purchase Amount)
-						final Double actualBudget = product.getStockBudget() + inventory.getTotalNetPurchase();
-						LOG.info("Computed actual budget : " + actualBudget);
-
-						// Compute for sale rate (net sales amount / actual
-						// budget * 100) [cap value between 0-100%]
-						final Double proportionedNetSalesAmount = (inventory.getTotalBaseSales() < actualBudget)
-								? inventory.getTotalBaseSales() / salesPeriod * company.getDaysBooked()
-								: inventory.getTotalBaseSales();
-						Float tempRate = (float) (actualBudget.equals(0.0d) ? 0
-								: proportionedNetSalesAmount / actualBudget * 100);
-						final Float saleRate = tempRate > 100.0f ? 100.0f : (tempRate < 0.0f ? 0.0f : tempRate);
-						LOG.info("Computed sale rate : " + saleRate);
-
-						// Compute adjustment rate {actual value to be
-						// multiplied to budget for simplicity}
-						// 20/30 Maximum increase of 25% at 70-100% sales AND
-						// 30/70 Maximum decrease of 30% at 0-70% sales
-						Float tempAdjustmentRate = (saleRate - 70.0f)
-								* (saleRate >= 70.0f ? (25.0f / 30.0f) : (30.0f / 70.0f)) / 100.0f;
-						if ((saleRate >= 95.0f && product.getSaleRate() >= 95.0f)
-								|| (saleRate <= 30 && product.getSaleRate() <= 30)) {
-							tempAdjustmentRate *= 2.0f;
+					//if (Days.daysBetween(new DateTime(company.getLastPurchaseOrderDate()), new DateTime()).getDays() > -1) {
+					if (Days.daysBetween(new DateTime(company.getLastPurchaseOrderDate()), new DateTime()).getDays() > 3) {
+						LOG.info("#### Generating purchase order for " + company.getName() + " - "
+								+ DateFormatter.longFormat(generateStartTime));
+	
+						// Determining last purchase order date
+						if (lastPODate.getTimeInMillis() == DateUtil.getDefaultDateInMillis()) {
+							lastPODate
+									.setTime(purchaseOrderService.findLatestDeliveryByCompany(companyId).getDeliveredOn());
 						}
-						final Float adjustmentRate = 1.0f + tempAdjustmentRate;
-						LOG.info("Computed adjustment rate : " + adjustmentRate);
-
-						// ################ CHANGES TO PRODUCT STARTS HERE
-
-						// Compute new total budget (total budget * adjustment
-						// rate)
-						Double tempTotalBudget = actualBudget * adjustmentRate;
-						tempTotalBudget = saleRate >= 70 ? Math.max(tempTotalBudget, product.getTotalBudget())
-								: Math.min(tempTotalBudget, product.getTotalBudget());
-						// adjust to number of days to book
-						if (!company.getDaysBooked().equals(0.0f))
-							tempTotalBudget = (tempTotalBudget / company.getDaysBooked()) * daysToBook;
-						product.setTotalBudget(tempTotalBudget);
-						LOG.info("Computed new total budget : " + product.getTotalBudget());
-
-						// Compute new purchase budget (total budget - (actual
-						// budget - sales))
-						final Double actualStock = inventory.getStockBudget();
-						product.setPurchaseBudget(product.getTotalBudget() - (actualStock > 0.0 ? actualStock : 0.0));
-						LOG.info("Computed new purchase budget : " + product.getPurchaseBudget());
-
-						// Applying new sale rate to product
-						product.setSaleRate(saleRate);
-
+						LOG.info("Last PO Date : " + lastPODate.getTime());
+	
+						// Determining last booked days
+						if (company.getDaysBooked().equals(0.0f)) {
+							company.setDaysBooked(
+									Days.daysBetween(new DateTime(lastPODate.getTime()), new DateTime()).getDays() / 1.0f);
+						}
+						LOG.info("Last Booked Days : " + company.getDaysBooked());
+	
+						// Determining actual sales period (in days)
+						// FOR FIRST INVENTORY
+						//final int salesPeriod = 1;
+						final int salesPeriod = DateUtil.daysBetween(company.getLastPurchaseOrderDate(), generateStartTime);
+						LOG.info("Actual Sales Period (In Days) : " + salesPeriod);
+	
+						// Retrieving latest inventories
+						final List<InventoryBean> inventories = inventoryHandler.getProductInventoryByCompany(companyId,
+								generateStartTime);
+						final List<GeneratedProductPOBean> generatedProductPOs = new ArrayList<GeneratedProductPOBean>();
+	
+						for (InventoryBean inventory : inventories) {
+							final Product product = inventory.getProduct();
+							final GeneratedProductPOBean generatedProductPO = new GeneratedProductPOBean();
+							generatedProductPO.setProductId(product.getId());
+							generatedProductPO.setProductName(product.getName());
+							generatedProductPO.setProductCode(product.getCode());
+							generatedProductPO.setInventory(inventory);
+	
+							LOG.info("## Generating purchase order of " + product.getName());
+	
+							// Compute for ACTUAL BUDGET (Adjusted Stock Budget +
+							// Net Purchase Amount)
+							final Double actualBudget = product.getStockBudget() + inventory.getTotalNetPurchase();
+							LOG.info("Computed actual budget : " + actualBudget);
+	
+							// Compute for sale rate (net sales amount / actual
+							// budget * 100) [cap value between 0-100%]
+							final Double proportionedNetSalesAmount = (inventory.getTotalBaseSales() < actualBudget)
+									? inventory.getTotalBaseSales() / salesPeriod * company.getDaysBooked()
+									: inventory.getTotalBaseSales();
+							Float tempRate = (float) (actualBudget.equals(0.0d) ? 0
+									: proportionedNetSalesAmount / actualBudget * 100);
+							final Float saleRate = tempRate > 100.0f ? 100.0f : (tempRate < 0.0f ? 0.0f : tempRate);
+							LOG.info("Computed sale rate : " + saleRate);
+	
+							// Compute adjustment rate {actual value to be
+							// multiplied to budget for simplicity}
+							// 20/30 Maximum increase of 25% at 70-100% sales AND
+							// 30/70 Maximum decrease of 30% at 0-70% sales
+							Float tempAdjustmentRate = (saleRate - 70.0f)
+									* (saleRate >= 70.0f ? (25.0f / 30.0f) : (30.0f / 70.0f)) / 100.0f;
+							if ((saleRate >= 95.0f && product.getSaleRate() >= 95.0f)
+									|| (saleRate <= 30 && product.getSaleRate() <= 30)) {
+								tempAdjustmentRate *= 2.0f;
+							}
+							final Float adjustmentRate = 1.0f + tempAdjustmentRate;
+							LOG.info("Computed adjustment rate : " + adjustmentRate);
+	
+							// ################ CHANGES TO PRODUCT STARTS HERE
+	
+							// Compute new total budget (total budget * adjustment
+							// rate)
+							Double tempTotalBudget = actualBudget * adjustmentRate;
+							tempTotalBudget = saleRate >= 70 ? Math.max(tempTotalBudget, product.getTotalBudget())
+									: Math.min(tempTotalBudget, product.getTotalBudget());
+							// adjust to number of days to book
+							if (!company.getDaysBooked().equals(0.0f))
+								tempTotalBudget = (tempTotalBudget / company.getDaysBooked()) * daysToBook;
+							product.setTotalBudget(tempTotalBudget);
+							LOG.info("Computed new total budget : " + product.getTotalBudget());
+	
+							// Compute new purchase budget (total budget - (actual
+							// budget - sales))
+							final Double actualStock = inventory.getStockBudget();
+							product.setPurchaseBudget(product.getTotalBudget() - (actualStock > 0.0 ? actualStock : 0.0));
+							LOG.info("Computed new purchase budget : " + product.getPurchaseBudget());
+	
+							// Applying new sale rate to product
+							product.setSaleRate(saleRate);
+	
+							// Saving changes
+							productService.update(product);
+	
+							final InventoryBean toPurchase = new InventoryBean();
+							toPurchase.setPiecePurchasePrice(inventory.getPiecePurchasePrice());
+							toPurchase.setPieceUnit(inventory.getPieceUnit());
+							toPurchase.setWholePurchasePrice(inventory.getWholePurchasePrice());
+							toPurchase.setWholeUnit(inventory.getWholeUnit());
+							toPurchase.setStockBudget(product.getPurchaseBudget() / 1.0f);
+							toPurchase.setProduct(product);
+							generatedProductPO.setToPurchase(toPurchase);
+	
+							generatedProductPOs.add(generatedProductPO);
+						}
+	
+						// Computing expected delivery date (30% of previous days
+						// booked)
+						Calendar expectedDeliveryDate = Calendar.getInstance();
+						int maxDaysToDeliver = company.getDaysBooked().equals(0.0f) ? 2
+								: (int) Math.floor(company.getDaysBooked() * 0.30f);
+						expectedDeliveryDate.add(Calendar.DAY_OF_MONTH, maxDaysToDeliver);
+	
+						// Applying changes to company
+						company.setDaysBooked(daysToBook);
+						company.setLastPurchaseOrderDate(generateStartTime);
+	
 						// Saving changes
-						productService.update(product);
-
-						final InventoryBean toPurchase = new InventoryBean();
-						toPurchase.setPiecePurchasePrice(inventory.getPiecePurchasePrice());
-						toPurchase.setPieceUnit(inventory.getPieceUnit());
-						toPurchase.setWholePurchasePrice(inventory.getWholePurchasePrice());
-						toPurchase.setWholeUnit(inventory.getWholeUnit());
-						toPurchase.setStockBudget(product.getPurchaseBudget() / 1.0f);
-						toPurchase.setProduct(product);
-						generatedProductPO.setToPurchase(toPurchase);
-
-						generatedProductPOs.add(generatedProductPO);
+						companyService.update(company);
+	
+						// Generate pdf file of generated purchase order
+						final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_purchase.order_"
+								+ DateFormatter.fileSafeShortFormat(new Date()) + ".pdf";
+						final String filePath = fileConstants.getGeneratePurchasesHome() + fileName;
+						final String temp = new GeneratedPurchaseTemplate(company.getName(), lastPODate.getTime(),
+								generateStartTime, expectedDeliveryDate.getTime(), daysToBook, generatedProductPOs)
+										.merge(velocityEngine);
+						SimplePdfWriter.write(temp, "Ever Bazar", filePath, true);
+						final Map<String, Object> extras = new HashMap<String, Object>();
+						extras.put("fileName", fileName);
+						result = new ResultBean(Boolean.TRUE, "Done");
+						result.setExtras(extras);
+					} else {
+						result = new ResultBean(Boolean.FALSE,
+								Html.line("Last purchase order was generated on "
+										+ DateFormatter.longFormat(company.getLastPurchaseOrderDate())
+										+ ". You can generate another after a minimum of 3 days have passed."));
 					}
-
-					// Computing expected delivery date (30% of previous days
-					// booked)
-					Calendar expectedDeliveryDate = Calendar.getInstance();
-					int maxDaysToDeliver = company.getDaysBooked().equals(0.0f) ? 2
-							: (int) Math.floor(company.getDaysBooked() * 0.30f);
-					expectedDeliveryDate.add(Calendar.DAY_OF_MONTH, maxDaysToDeliver);
-
-					// Applying changes to company
-					company.setDaysBooked(daysToBook);
-					company.setLastPurchaseOrderDate(generateStartTime);
-
-					// Saving changes
-					companyService.update(company);
-
-					// Generate pdf file of generated purchase order
-					final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_purchase.order_"
-							+ DateFormatter.fileSafeShortFormat(new Date()) + ".pdf";
-					final String filePath = fileConstants.getGeneratePurchasesHome() + fileName;
-					final String temp = new GeneratedPurchaseTemplate(company.getName(), lastPODate.getTime(),
-							generateStartTime, expectedDeliveryDate.getTime(), daysToBook, generatedProductPOs)
-									.merge(velocityEngine);
-					SimplePdfWriter.write(temp, "Ever Bazar", filePath, true);
-					final Map<String, Object> extras = new HashMap<String, Object>();
-					extras.put("fileName", fileName);
-					result = new ResultBean(Boolean.TRUE, "Done");
-					result.setExtras(extras);
 				} else {
 					result = new ResultBean(Boolean.FALSE,
-							Html.line("Last purchase order was generated on "
-									+ DateFormatter.longFormat(company.getLastPurchaseOrderDate())
-									+ ". You can generate another after a minimum of 3 days have passed."));
+							Html.line("You must book for at least " + Html.text(Color.BLUE, "3 days.")));
 				}
 			} else {
-				result = new ResultBean(Boolean.FALSE,
-						Html.line("You must book for at least " + Html.text(Color.BLUE, "3 days.")));
+				result = new ResultBean(Boolean.FALSE, Html.line("Company inventory not yet activated."));
 			}
 		} else {
 			result = new ResultBean(Boolean.FALSE, Html.line("Please select a company."));

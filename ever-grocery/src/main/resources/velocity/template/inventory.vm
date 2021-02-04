@@ -2,7 +2,7 @@
 ## Has a maximum of 96 Column per line
                                             INVENTORY                                             
                                                    
-   Company : ${t.CompanyName}
+   Subject : ${t.SubjectName}
      As of : ${t.Date}
 
 +------------------------------------------------------------+----------------+----------------+

@@ -15,14 +15,14 @@ import com.chua.evergrocery.utility.format.DateFormatter;
 
 public class InventoryTemplate extends AbstractTemplate {
 	
-	private String companyName;
+	private String subjectName;
 	
 	private List<InventoryBean> inventories;
 	
 	private List<String> formattedInventoryItems;
 
-	public InventoryTemplate(String companyName, List<InventoryBean> inventories) {
-		this.companyName = companyName;
+	public InventoryTemplate(String subjectName, List<InventoryBean> inventories) {
+		this.subjectName = subjectName;
 		this.inventories = inventories;
 		this.formattedInventoryItems = new ArrayList<String>();
 	}
@@ -39,8 +39,8 @@ public class InventoryTemplate extends AbstractTemplate {
 		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, docType.getFolderName() + "/inventory.vm", "UTF-8", model);
 	}
 	
-	public String getCompanyName() {
-		return this.companyName;
+	public String getSubjectName() {
+		return this.subjectName;
 	}
 	
 	public String getDate() {

@@ -63,4 +63,9 @@ public class ProductServiceImpl
 	public List<Product> findAllByCompanyOrderByProfit(Long companyId) {
 		return dao.findAllByCompanyWithOrder(companyId, new Order[] { Order.desc("profitPercentage") });
 	}
+
+	@Override
+	public List<Product> findAllByCategoryOrderByName(Long categoryId) {
+		return dao.findAllByCategoryWithOrder(categoryId, new Order[] { Order.asc("company.id"), Order.asc("name")});
+	}
 }

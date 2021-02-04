@@ -21,7 +21,13 @@ public interface InventoryHandler {
 	
 	List<InventoryBean> getProductInventoryByCompany(Long companyId, Date upTo);
 	
+	List<InventoryBean> getProductInventoryByCategory(Long categoryId);
+	
+	List<InventoryBean> getProductInventoryByCategory(Long categoryId, Date upTo);
+	
 	ResultBean generateInventory(Long companyId);
+	
+	ResultBean generateInventoryByCategoryName(String categoryName);
 	
 	void checkForStockAdjustment(Long customerOrderId);
 }

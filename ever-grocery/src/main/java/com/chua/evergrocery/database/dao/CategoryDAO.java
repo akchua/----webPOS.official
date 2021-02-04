@@ -20,6 +20,4 @@ public interface CategoryDAO extends DAO<Category, Long>, CategoryPrototype {
 	List<Category> findAllWithOrder(Order[] orders);
 	
 	ObjectList<Category> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey, Order[] orders);
-	
-	Category findByName(String name);
 }

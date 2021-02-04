@@ -1,5 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customerorderservice', 'viewmodels/cashier/payform', 'viewmodels/report/saleview'], 
-		function (app, ko, securityService, customerOrderService, PayForm, SaleView) {
+define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customerorderservice', 'modules/inventoryservice', 'modules/fileservice', 'viewmodels/cashier/payform', 'viewmodels/report/saleview'], 
+		function (app, ko, securityService, customerOrderService, inventoryService, fileService, PayForm, SaleView) {
 	var Cashier = function() {
 		this.customerOrderList = ko.observable();
 		
@@ -48,6 +48,29 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 		})
 		
 	};
+	
+	Cashier.prototype.generateCigaretteInventory = function() {
+    	var self = this;
+    	self.enableButtons(false);
+    	
+    	app.showMessage('<p>Confirm generate cigarette Inventory?',
+				'Generate Cigarette Inventory',
+		[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
+		.then(function(confirm) {
+			if(confirm) {
+		    	inventoryService.generateInventoryByCategoryName('Cigarette').done(function(result) {
+		        	if(result.success) {
+						fileService.downloadInventoryByFileName(result.extras.fileName);
+		    		} else {
+		    			app.showMessage(result.message);
+		    		}
+		        	self.enableButtons(true);
+		        });
+			} else {
+				self.enableButtons(true);
+			}
+		})
+    };
 	
 	Cashier.prototype.refreshCustomerOrderList = function() {
 		var self = this;

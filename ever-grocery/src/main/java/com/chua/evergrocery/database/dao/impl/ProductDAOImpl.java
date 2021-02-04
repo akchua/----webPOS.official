@@ -79,4 +79,13 @@ public class ProductDAOImpl
 		
 		return findAllByCriterionList(null, null, null, orders, conjunction);
 	}
+
+	@Override
+	public List<Product> findAllByCategoryWithOrder(Long categoryId, Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("category.id", categoryId));
+		
+		return findAllByCriterionList(null, null, null, orders, conjunction);
+	}
 }
