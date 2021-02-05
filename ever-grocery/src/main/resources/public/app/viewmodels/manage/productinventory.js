@@ -55,7 +55,7 @@ define(['durandal/app', 'knockout', 'modules/inventoryservice', 'modules/purchas
     ProductInventory.prototype.refreshPurchaseOrderDetailList = function() {
     	var self = this;
     	
-    	purchaseOrderService.getPurchaseOrderDetailListByProduct(self.currentPage(), self.productId(), false).done(function(data) { 
+    	purchaseOrderService.getPurchaseOrderDetailListByProduct(self.currentPage(), self.productId(), true).done(function(data) { 
 			self.purchaseOrderDetailList(data.list);
 			self.totalItems(data.total);
 		});
@@ -64,7 +64,7 @@ define(['durandal/app', 'knockout', 'modules/inventoryservice', 'modules/purchas
     ProductInventory.prototype.refreshCustomerOrderDetailList = function() {
     	var self = this;
     	
-    	customerOrderService.getCustomerOrderDetailListByProduct(self.currentPage2(), self.productId(), false).done(function(data) { 
+    	customerOrderService.getCustomerOrderDetailListByProduct(self.currentPage2(), self.productId(), true).done(function(data) { 
 			self.customerOrderDetailList(data.list);
 			self.totalItems2(data.total);
 		});
