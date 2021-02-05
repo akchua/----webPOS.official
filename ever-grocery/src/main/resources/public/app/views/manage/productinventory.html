@@ -13,42 +13,6 @@
 </div>
 
 <hr>
-<h4 class="text-center">Purchases</h4>
-<div class="row">
-	<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12 col-xs-12"></div>
-</div>
-<div class="row">
-   	<div class="col-md-12">
-   		<table class="table table-responsive table-hover">
-   			<thead>
-   				<tr>
-   					<th>ID</th>
-   					<th>Delivery Date</th>
-   					<th>Creator</th>
-   					<th class = "text-center col-md-1 col-xs-1">Quantity</th>
-   					<th>Unit</th>
-   				</tr>
-   			</thead>
-   			
-   			<tbody data-bind="foreach: { data: purchaseOrderDetailList, as: 'orderDetail' }">
-   				<tr>
-   					<td data-bind="text: orderDetail.purchaseOrder.id"></td>
-   					<td data-bind="text: orderDetail.purchaseOrder.formattedDeliveredOn"></td>
-   					<td>
-   						<span data-bind="if: orderDetail.purchaseOrder.creator">
-   							<span data-bind="text: orderDetail.purchaseOrder.creator.lastName"></span><span>, </span><span data-bind="text: orderDetail.purchaseOrder.creator.firstName"></span>
-   						</span>
-   					</td>
-   					<td data-bind="text: orderDetail.quantity" class = "text-center"></td>
-   					<td data-bind="text: orderDetail.unitType.displayName"></td>
-   				</tr>
-   			</tbody>
-   		</table>
-   	</div>
-</div>
-
-<br>
-<hr>
 <h4 class="text-center">Sales</h4>
 <div class="row">
 	<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage2, totalItems: totalItems2, currentPage: currentPage2 } }" class="col-md-12 col-xs-12"></div>
@@ -84,6 +48,42 @@
    					<td>
    						<span data-bind="if: orderDetail.customerOrder.cashier">
    							<span data-bind="text: orderDetail.customerOrder.cashier.shortName"></span>
+   						</span>
+   					</td>
+   					<td data-bind="text: orderDetail.quantity" class = "text-center"></td>
+   					<td data-bind="text: orderDetail.unitType.displayName"></td>
+   				</tr>
+   			</tbody>
+   		</table>
+   	</div>
+</div>
+
+<br>
+<hr>
+<h4 class="text-center">Purchases</h4>
+<div class="row">
+	<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12 col-xs-12"></div>
+</div>
+<div class="row">
+   	<div class="col-md-12">
+   		<table class="table table-responsive table-hover">
+   			<thead>
+   				<tr>
+   					<th>ID</th>
+   					<th>Delivery Date</th>
+   					<th>Creator</th>
+   					<th class = "text-center col-md-1 col-xs-1">Quantity</th>
+   					<th>Unit</th>
+   				</tr>
+   			</thead>
+   			
+   			<tbody data-bind="foreach: { data: purchaseOrderDetailList, as: 'orderDetail' }">
+   				<tr>
+   					<td data-bind="text: orderDetail.purchaseOrder.id"></td>
+   					<td data-bind="text: orderDetail.purchaseOrder.formattedDeliveredOn"></td>
+   					<td>
+   						<span data-bind="if: orderDetail.purchaseOrder.creator">
+   							<span data-bind="text: orderDetail.purchaseOrder.creator.lastName"></span><span>, </span><span data-bind="text: orderDetail.purchaseOrder.creator.firstName"></span>
    						</span>
    					</td>
    					<td data-bind="text: orderDetail.quantity" class = "text-center"></td>
