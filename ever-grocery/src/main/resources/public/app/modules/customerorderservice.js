@@ -151,6 +151,17 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getCustomerOrderDetailListByProduct: function(pageNumber, productId, async) {
+    		return $.ajax({
+    			url: '/services/customerorder/detaillistbyproduct',
+    			async: async,
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				productId: productId
+    			}
+    		});
+    	},
+    	
     	addItemByBarcode: function(barcode, customerOrderId) {
     		return $.ajax({
     			url: '/services/customerorder/additembybarcode',

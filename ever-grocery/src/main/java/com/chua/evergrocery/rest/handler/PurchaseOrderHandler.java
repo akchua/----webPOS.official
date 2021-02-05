@@ -24,6 +24,8 @@ public interface PurchaseOrderHandler {
 	
 	ObjectList<PurchaseOrderDetail> getPurchaseOrderDetailList(Integer pageNumber, Long purchaseOrderId);
 	
+	ObjectList<PurchaseOrderDetail> getPurchaseOrderDetailListByProduct(Integer pageNumber, Long productId);
+	
 	ResultBean addItemByBarcode(String barcode, Long purchaseOrderId);
 	
 	ResultBean addItemByProductDetailId(Long productDetailId, Long purchaseOrderId, Integer quantity);

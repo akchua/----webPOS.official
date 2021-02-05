@@ -15,6 +15,8 @@ public interface CustomerOrderDetailDAO extends DAO<CustomerOrderDetail, Long>, 
 
 	ObjectList<CustomerOrderDetail> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, long customerOrderId, Order[] orders);
 	
+	ObjectList<CustomerOrderDetail> findAllWithPagingAndOrderByProduct(int pageNumber, int resultsPerPage, long productId, Order[] orders);
+	
 	List<CustomerOrderDetail> findAllByCustomerOrderIdWithOrder(Long customerOrderId, Order[] orders);
 	
 	SalesSummaryBean getSalesSummaryByProductAndDatePaid(Long productId, Date datePaidStart, Date datePaidEnd);

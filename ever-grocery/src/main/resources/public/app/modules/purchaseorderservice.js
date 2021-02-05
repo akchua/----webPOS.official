@@ -85,6 +85,17 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getPurchaseOrderDetailListByProduct: function(pageNumber, productId, async) {
+    		return $.ajax({
+    			url: '/services/purchaseorder/detaillistbyproduct',
+    			async: async,
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				productId: productId
+    			}
+    		});
+    	},
+    	
     	addItem: function(productDetailId, purchaseOrderId, quantity) {
     		return $.ajax({
     			url: '/services/purchaseorder/additem',

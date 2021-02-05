@@ -7,10 +7,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.chua.evergrocery.beans.GeneratedProductPOBean;
-import com.chua.evergrocery.beans.InventoryBean;
 import com.chua.evergrocery.enums.DocType;
 import com.chua.evergrocery.utility.StringHelper;
-import com.chua.evergrocery.utility.format.NumberFormatter;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -39,56 +37,14 @@ public class GeneratedPurchaseItemTemplate extends AbstractTemplate {
 	
 	//19 right pad
 	public String getFormattedOrder() {
-		String formattedOrder = "";
-		final InventoryBean toPurchase = generatedProductPO.getToPurchase();
-		
-		if(toPurchase.getWholeQuantity() != 0) {
-			formattedOrder += toPurchase.getWholeQuantity() + toPurchase.getWholeUnit().getShorthand();
-			if(!toPurchase.getPieceQuantity().equals(0.0f)) {
-				formattedOrder += " & " + NumberFormatter.decimalFormat(toPurchase.getPieceQuantity(), 2) + toPurchase.getPieceUnit().getShorthand();
-			}
-		} else if(!toPurchase.getPieceQuantity().equals(0.0f)) {
-			formattedOrder += NumberFormatter.decimalFormat(toPurchase.getPieceQuantity(), 2) + toPurchase.getPieceUnit().getShorthand();
-		} else {
-			formattedOrder += "=";
-		}
-		
-		return String.format("%-19s", formattedOrder);
+		return String.format("%-19s", generatedProductPO.getToPurchase().getFormattedInventory());
 	}
 	
 	public String getFormattedInventory() {
-		String formattedInventory = "";
-		final InventoryBean inventory = generatedProductPO.getInventory();
-		
-		if(inventory.getWholeQuantity() != 0) {
-			formattedInventory += inventory.getWholeQuantity() + inventory.getWholeUnit().getShorthand();
-			if(inventory.getPieceQuantity() != 0.0f) {
-				formattedInventory += " & " + NumberFormatter.decimalFormat(inventory.getPieceQuantity(), 2) + inventory.getPieceUnit().getShorthand();
-			}
-		} else if(inventory.getPieceQuantity() != 0.0f) {
-			formattedInventory += NumberFormatter.decimalFormat(inventory.getPieceQuantity(), 2) + inventory.getPieceUnit().getShorthand();
-		} else {
-			formattedInventory += "=";
-		}
-		
-		return String.format("%-19s", formattedInventory);
+		return String.format("%-19s", generatedProductPO.getInventory().getFormattedInventory());
 	}
 	
 	public String getFormattedSold() {
-		String formattedSold = "";
-		final InventoryBean inventory = generatedProductPO.getInventory();
-		
-		if(inventory.getSoldWholeQuantity() != 0) {
-			formattedSold += inventory.getSoldWholeQuantity() + inventory.getWholeUnit().getShorthand();
-			if(inventory.getSoldPieceQuantity() != 0.0f) {
-				formattedSold += " & " + NumberFormatter.decimalFormat(inventory.getSoldPieceQuantity(), 2) + inventory.getPieceUnit().getShorthand();
-			}
-		} else if(inventory.getSoldPieceQuantity() != 0.0f) {
-			formattedSold += NumberFormatter.decimalFormat(inventory.getSoldPieceQuantity(), 2) + inventory.getPieceUnit().getShorthand();
-		} else {
-			formattedSold += "=";
-		}
-		
-		return String.format("%-19s", formattedSold);
+		return String.format("%-19s", generatedProductPO.getInventory().getFormattedSoldCount());
 	}
 }

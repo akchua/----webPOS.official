@@ -87,6 +87,13 @@ public class PurchaseOrderEndpoint {
 		return purchaseOrderHandler.getPurchaseOrderDetailList(pageNumber, purchaseOrderId);
 	}
 	
+	@GET
+	@Path("/detaillistbyproduct")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<PurchaseOrderDetail> getPurchaseOrderDetailListByProduct(@QueryParam("pageNumber") Integer pageNumber, @QueryParam("productId") Long productId) {
+		return purchaseOrderHandler.getPurchaseOrderDetailListByProduct(pageNumber, productId);
+	}
+	
 	@POST
 	@Path("/additem")
 	@Produces({ MediaType.APPLICATION_JSON })

@@ -2,6 +2,7 @@ package com.chua.evergrocery.beans;
 
 import com.chua.evergrocery.database.entity.Product;
 import com.chua.evergrocery.enums.UnitType;
+import com.chua.evergrocery.utility.format.NumberFormatter;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -127,5 +128,39 @@ public class InventoryBean {
 
 	public void setWholeContent(Integer wholeContent) {
 		this.wholeContent = wholeContent;
+	}
+	
+	public String getFormattedInventory() {
+		String formattedInventory = "";
+		
+		if(this.getWholeQuantity() != 0) {
+			formattedInventory += this.getWholeQuantity() + this.getWholeUnit().getShorthand();
+			if(this.getPieceQuantity() != 0.0f) {
+				formattedInventory += " & " + NumberFormatter.decimalFormat(this.getPieceQuantity(), 2) + this.getPieceUnit().getShorthand();
+			}
+		} else if(this.getPieceQuantity() != 0.0f) {
+			formattedInventory += NumberFormatter.decimalFormat(this.getPieceQuantity(), 2) + this.getPieceUnit().getShorthand();
+		} else {
+			formattedInventory += "=";
+		}
+		
+		return formattedInventory;
+	}
+	
+	public String getFormattedSoldCount() {
+		String formattedSold = "";
+		
+		if(this.getSoldWholeQuantity() != 0) {
+			formattedSold += this.getSoldWholeQuantity() + this.getWholeUnit().getShorthand();
+			if(this.getSoldPieceQuantity() != 0.0f) {
+				formattedSold += " & " + NumberFormatter.decimalFormat(this.getSoldPieceQuantity(), 2) + this.getPieceUnit().getShorthand();
+			}
+		} else if(this.getSoldPieceQuantity() != 0.0f) {
+			formattedSold += NumberFormatter.decimalFormat(this.getSoldPieceQuantity(), 2) + this.getPieceUnit().getShorthand();
+		} else {
+			formattedSold += "=";
+		}
+		
+		return formattedSold;
 	}
 }

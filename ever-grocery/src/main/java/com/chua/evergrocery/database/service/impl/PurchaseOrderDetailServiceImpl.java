@@ -39,6 +39,12 @@ public class PurchaseOrderDetailServiceImpl
 	}
 	
 	@Override
+	public ObjectList<PurchaseOrderDetail> findAllWithPagingByProductOrderByLastUpdate(int pageNumber,
+			int resultsPerPage, long productId) {
+		return dao.findAllWithPagingAndOrderByProduct(pageNumber, resultsPerPage, productId, new Order[] { Order.desc("updatedOn") });
+	}
+	
+	@Override
 	public PurchaseOrderDetail findByOrderAndDetailId(long purchaseOrderId, long productDetailId) {
 		return dao.findByOrderAndDetailId(purchaseOrderId, productDetailId);
 	}

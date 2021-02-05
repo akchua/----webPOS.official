@@ -43,6 +43,21 @@ public class CustomerOrderDetailDAOImpl
 	}
 	
 	@Override
+	public ObjectList<CustomerOrderDetail> findAllWithPagingAndOrderByProduct(int pageNumber, int resultsPerPage,
+			long productId, Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("co.isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("product.id", productId));
+		
+		String[] associatedPaths = { "customerOrder" };
+		String[] aliasNames = { "co" };
+		JoinType[] joinTypes = { JoinType.INNER_JOIN };
+		
+		return findAllByCriterion(pageNumber, resultsPerPage, associatedPaths, aliasNames, joinTypes, orders, conjunction);
+	}
+	
+	@Override
 	public List<CustomerOrderDetail> findAllByCustomerOrderId(Long customerOrderId) {
 		return findAllByCustomerOrderIdWithOrder(customerOrderId, null);
 	}

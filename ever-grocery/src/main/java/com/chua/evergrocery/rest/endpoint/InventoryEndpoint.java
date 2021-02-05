@@ -1,13 +1,16 @@
 package com.chua.evergrocery.rest.endpoint;
 
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.chua.evergrocery.beans.InventoryBean;
 import com.chua.evergrocery.beans.ResultBean;
 import com.chua.evergrocery.rest.handler.InventoryHandler;
 
@@ -21,6 +24,13 @@ public class InventoryEndpoint {
 
 	@Autowired
 	private InventoryHandler inventoryHandler;
+	
+	@GET
+	@Path("/byproduct")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public InventoryBean getProductInventory(@QueryParam("productId") Long productId) {
+		return inventoryHandler.getProductInventory(productId);
+	}
 	
 	@POST
 	@Path("/bycompany")

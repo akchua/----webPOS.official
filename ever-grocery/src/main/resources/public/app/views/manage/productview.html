@@ -8,12 +8,18 @@
 			<div class="tabbable">
 				<ul class="nav nav-tabs">
 					<li class="active"><a href="#info" data-toggle="tab">Info</a></li>
+					<li><a href="#inventory" data-toggle="tab">Inventory</a></li>
 					<li><a href="#stats" data-toggle="tab">Stats</a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="info">
 						<div class="row">
 							<div data-bind="compose: { model: 'viewmodels/manage/productinfo', activationData: { productId : productId } }"></div>
+						</div>
+					</div>
+					<div class="tab-pane" id="inventory">
+						<div class="row">
+							<div data-bind="compose: { model: 'viewmodels/manage/productinventory', activationData: { productId : productId } }"></div>
 						</div>
 					</div>
 					<div class="tab-pane" id="stats">

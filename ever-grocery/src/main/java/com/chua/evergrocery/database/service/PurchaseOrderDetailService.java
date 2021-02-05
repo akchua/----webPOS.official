@@ -14,6 +14,8 @@ public interface PurchaseOrderDetailService
 	
 	ObjectList<PurchaseOrderDetail> findAllWithPagingOrderByLastUpdate(int pageNumber, int resultsPerPage, long purchaseOrderId);
 
+	ObjectList<PurchaseOrderDetail> findAllWithPagingByProductOrderByLastUpdate(int pageNumber, int resultsPerPage, long productId);
+	
 	List<PurchaseOrderDetail> findAllByCompanyAndMonthId(long companyId, int monthId);
 	
 	List<PurchaseOrderDetail> findAllByPurchaseOrderIdOrderByProductName(Long purchaseOrderId);

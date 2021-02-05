@@ -41,6 +41,21 @@ public class PurchaseOrderDetailDAOImpl
 	}
 	
 	@Override
+	public ObjectList<PurchaseOrderDetail> findAllWithPagingAndOrderByProduct(int pageNumber, int resultsPerPage,
+			long productId, Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("po.isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("product.id", productId));
+		
+		String[] associatedPaths = { "purchaseOrder" };
+		String[] aliasNames = { "po" };
+		JoinType[] joinTypes = { JoinType.INNER_JOIN };
+		
+		return findAllByCriterion(pageNumber, resultsPerPage, associatedPaths, aliasNames, joinTypes, orders, conjunction);
+	}
+	
+	@Override
 	public PurchaseOrderDetail findByOrderAndDetailId(long purchaseOrderId, long productDetailId) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));

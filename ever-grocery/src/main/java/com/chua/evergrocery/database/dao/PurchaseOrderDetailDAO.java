@@ -15,6 +15,8 @@ public interface PurchaseOrderDetailDAO extends DAO<PurchaseOrderDetail, Long>, 
 
 	ObjectList<PurchaseOrderDetail> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, long purchaseOrderId, Order[] orders);
 	
+	ObjectList<PurchaseOrderDetail> findAllWithPagingAndOrderByProduct(int pageNumber, int resultsPerPage, long productId, Order[] orders);
+	
 	List<PurchaseOrderDetail> findAllByProductAndDeliveryDate(long productId, Date deliveryStart, Date deliveryEnd);
 	
 	List<PurchaseOrderDetail> findAllByPurchaseOrderIdWithOrder(Long purchaseOrderId, Order[] orders);

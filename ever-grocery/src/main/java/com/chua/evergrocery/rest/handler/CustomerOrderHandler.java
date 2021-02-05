@@ -38,6 +38,8 @@ public interface CustomerOrderHandler {
 	
 	ObjectList<CustomerOrderDetail> getCustomerOrderDetailList(Integer pageNumber, Long customerOrderId);
 	
+	ObjectList<CustomerOrderDetail> getCustomerOrderDetailListByProduct(Integer pageNumber, Long productId);
+	
 	ResultBean addItemByBarcode(String barcode, Long customerOrderId);
 	
 	ResultBean addItemByProductDetailId(Long productDetailId, Long customerOrderId, Float quantity);

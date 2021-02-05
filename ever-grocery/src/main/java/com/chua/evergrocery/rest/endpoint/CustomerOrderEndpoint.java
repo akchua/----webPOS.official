@@ -151,6 +151,13 @@ public class CustomerOrderEndpoint {
 		return customerOrderHandler.getCustomerOrderDetailList(pageNumber, customerOrderId);
 	}
 	
+	@GET
+	@Path("/detaillistbyproduct")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<CustomerOrderDetail> getCustomerOrderDetailListByProduct(@QueryParam("pageNumber") Integer pageNumber, @QueryParam("productId") Long productId) {
+		return customerOrderHandler.getCustomerOrderDetailListByProduct(pageNumber, productId);
+	}
+	
 	@POST
 	@Path("/additembybarcode")
 	@Produces({ MediaType.APPLICATION_JSON })

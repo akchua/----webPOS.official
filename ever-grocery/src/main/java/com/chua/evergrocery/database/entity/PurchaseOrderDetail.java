@@ -17,7 +17,9 @@ import org.hibernate.annotations.Where;
 
 import com.chua.evergrocery.database.entity.base.BaseObject;
 import com.chua.evergrocery.enums.UnitType;
+import com.chua.evergrocery.serializer.json.PurchaseOrderSerializer;
 import com.chua.evergrocery.utility.format.CurrencyFormatter;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity(name = "PurchaseOrderDetail")
 @Table(name = PurchaseOrderDetail.TABLE_NAME)
@@ -27,6 +29,7 @@ public class PurchaseOrderDetail extends BaseObject {
 
 	public static final String TABLE_NAME = "purchase_order_detail";
 	
+	@JsonSerialize(using = PurchaseOrderSerializer.class)
 	private PurchaseOrder purchaseOrder;
 	
 	private ProductDetail productDetail;

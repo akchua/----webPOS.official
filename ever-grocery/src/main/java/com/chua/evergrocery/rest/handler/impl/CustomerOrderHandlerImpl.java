@@ -605,6 +605,11 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	}
 	
 	@Override
+	public ObjectList<CustomerOrderDetail> getCustomerOrderDetailListByProduct(Integer pageNumber, Long productId) {
+		return customerOrderDetailService.findAllWithPagingByProductOrderByLastUpdate(pageNumber, UserContextHolder.getItemsPerPage(), productId);
+	}
+	
+	@Override
 	public ResultBean removeCustomerOrderDetail(Long customerOrderDetailId) {
 		final ResultBean result;
 		final CustomerOrderDetail customerOrderDetail = customerOrderDetailService.find(customerOrderDetailId);

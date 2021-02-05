@@ -481,6 +481,12 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 		return purchaseOrderDetailService.findAllWithPagingOrderByLastUpdate(pageNumber,
 				UserContextHolder.getItemsPerPage(), purchaseOrderId);
 	}
+	
+	@Override
+	public ObjectList<PurchaseOrderDetail> getPurchaseOrderDetailListByProduct(Integer pageNumber, Long productId) {
+		return purchaseOrderDetailService.findAllWithPagingByProductOrderByLastUpdate(pageNumber,
+				UserContextHolder.getItemsPerPage(), productId);
+	}
 
 	@Override
 	public ResultBean addItemByProductDetailId(Long productDetailId, Long purchaseOrderId, Integer quantity) {
