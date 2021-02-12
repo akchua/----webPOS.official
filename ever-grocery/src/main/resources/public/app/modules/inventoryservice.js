@@ -27,6 +27,13 @@ define(['jquery'], function ($) {
     				categoryName: categoryName
     			}
     		});
+    	},
+    	
+    	generateCashierInventory: function() {
+    		return $.ajax({
+    			url: '/services/inventory/cashier',
+    			method: 'POST'
+    		});
     	}
 	};
 });

@@ -45,4 +45,11 @@ public class InventoryEndpoint {
 	public ResultBean generateProductInventoryByCategoryName(@FormParam("categoryName") String categoryName) {
 		return inventoryHandler.generateInventoryByCategoryName(categoryName);
 	}
+	
+	@POST
+	@Path("/cashier")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResultBean generateCashierInventory() {
+		return inventoryHandler.generateCashierInventory();
+	}
 }

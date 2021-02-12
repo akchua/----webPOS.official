@@ -49,16 +49,16 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 		
 	};
 	
-	Cashier.prototype.generateCigaretteInventory = function() {
+	Cashier.prototype.generateCashierInventory = function() {
     	var self = this;
     	self.enableButtons(false);
     	
-    	app.showMessage('<p>Confirm generate cigarette Inventory?',
-				'Generate Cigarette Inventory',
+    	app.showMessage('<p>Confirm generate cashier Inventory?',
+				'Generate Cashier Inventory',
 		[{ text: 'Confirm', value: true }, { text: 'Cancel', value: false }])
 		.then(function(confirm) {
 			if(confirm) {
-		    	inventoryService.generateInventoryByCategoryName('Cigarette').done(function(result) {
+		    	inventoryService.generateCashierInventory().done(function(result) {
 		        	if(result.success) {
 						fileService.downloadInventoryByFileName(result.extras.fileName);
 		    		} else {

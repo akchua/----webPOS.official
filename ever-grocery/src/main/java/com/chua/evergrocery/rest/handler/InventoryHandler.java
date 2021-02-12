@@ -29,5 +29,7 @@ public interface InventoryHandler {
 	
 	ResultBean generateInventoryByCategoryName(String categoryName);
 	
+	ResultBean generateCashierInventory();
+	
 	void checkForStockAdjustment(Long customerOrderId);
 }

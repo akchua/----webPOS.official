@@ -237,6 +237,31 @@ public class InventoryHandlerImpl implements InventoryHandler {
 		
 		return result;
 	}
+	
+	@Override
+	public ResultBean generateCashierInventory() {
+		final ResultBean result;
+		
+		final List<InventoryBean> inventories = getProductInventoryByCategory(categoryService.findByName("Cigarette").getId());
+		inventories.addAll(getProductInventoryByCategory(categoryService.findByName("Counter Item").getId()));
+		
+		// Generate text file of inventory
+		final String fileName = "cashier_inventory_" + DateFormatter.fileSafeShortFormat(new Date()) + ".pdf";
+		final String filePath = fileConstants.getInventoryHome() + fileName;
+		final String temp = new InventoryTemplate(
+				"Cashier",
+				inventories)
+		.merge(velocityEngine);
+		SimplePdfWriter.write(temp, "Ever Bazar", filePath, false);
+		
+		final Map<String, Object> extras = new HashMap<String, Object>();
+		extras.put("fileName", fileName);
+		result = new ResultBean(Boolean.TRUE, "Done");
+		result.setExtras(extras);
+		LOG.info("File name : " + fileName);
+		
+		return result;
+	}
 
 	@Override
 	public void checkForStockAdjustment(Long customerOrderId) {
