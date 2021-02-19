@@ -30,13 +30,13 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'viewmodels/manage/product
     	self.productDetailsFormModel.id(self.product.id);
     	if(!self.hasProductDetail) { 
     		self.productDetailsFormModel.whole = new ProductDetails({ title: 'Whole', quantity: 1, grossPrice: 0, discount: 0,
-    			netPrice: 0, percentProfit: 3.75, sellingPrice: 0, netProfit: 0}, self.wholeEnableConfig);
+    			netPrice: 0, percentProfit: 3.75, sellingPrice: 0, netProfit: 0, content: 0}, self.wholeEnableConfig);
     		self.productDetailsFormModel.piece = new ProductDetails({ title: 'Piece', quantity: 0, grossPrice: 0, discount: 0, 
-    			netPrice: 0, percentProfit: 5, sellingPrice: 0, netProfit: 0}, self.pieceEnableConfig);
+    			netPrice: 0, percentProfit: 5, sellingPrice: 0, netProfit: 0, content: 0}, self.pieceEnableConfig);
     		self.productDetailsFormModel.innerPiece = new ProductDetails({ title: 'Inner Piece', quantity: 0, grossPrice: 0, discount: 0, 
-    			netPrice: 0, percentProfit: 7.5, sellingPrice: 0, netProfit: 0}, self.innerPieceEnableConfig);
+    			netPrice: 0, percentProfit: 7.5, sellingPrice: 0, netProfit: 0, content: 0}, self.innerPieceEnableConfig);
     		self.productDetailsFormModel.secondInnerPiece = new ProductDetails({ title: '2nd Inner Piece', quantity: 0, grossPrice: 0, discount: 0, 
-    			netPrice: 0, percentProfit: 11.25, sellingPrice: 0, netProfit: 0}, self.secondInnerPieceEnableConfig);
+    			netPrice: 0, percentProfit: 11.25, sellingPrice: 0, netProfit: 0, content: 0}, self.secondInnerPieceEnableConfig);
     	} else {
     		var productDetailMap = new Array();
     		for(var c = 0; c < self.productDetailList.length; c++) {
