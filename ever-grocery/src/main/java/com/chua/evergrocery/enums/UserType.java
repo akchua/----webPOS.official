@@ -11,6 +11,8 @@ public enum UserType {
 	
 	ASSISTANT_MANAGER ("Assistant Manager", Integer.valueOf(3)),
 	
+	FLOOR_MANAGER("Floor Manager", Integer.valueOf(3)),
+	
 	STORAGE_MANAGER ("Storage Manager", Integer.valueOf(3)),
 	
 	ROOT ("ROOT", Integer.valueOf(5)),
