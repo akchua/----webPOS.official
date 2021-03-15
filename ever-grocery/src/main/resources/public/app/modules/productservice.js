@@ -25,6 +25,20 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getProductListWithCategoryAndPromoFilter: function(pageNumber, searchKey, promo, companyId, categoryId, async) {
+    		return $.ajax({
+    			url: '/services/product/listcategorypromofilter',
+    			async: async,
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				searchKey: searchKey,
+    				promo: promo,
+    				companyId: companyId,
+    				categoryId: categoryId
+    			}
+    		});
+    	},
+    	
     	getProductListByRank: function(pageNumber, searchKey, companyId, async) {
     		return $.ajax({
     			url: '/services/product/listbyrank',

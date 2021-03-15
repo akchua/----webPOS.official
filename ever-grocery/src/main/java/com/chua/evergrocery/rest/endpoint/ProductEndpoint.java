@@ -47,7 +47,16 @@ public class ProductEndpoint {
 	public ObjectList<Product> getProductListWithCategory(@QueryParam("pageNumber") Integer pageNumber, 
 			@QueryParam("searchKey") String searchKey, @QueryParam("companyId") Long companyId,
 			@QueryParam("categoryId") Long categoryId) {
-		return productHandler.getProductListWithCategory(pageNumber, searchKey, companyId, categoryId);
+		return productHandler.getProductListWithCategory(pageNumber, searchKey, companyId, categoryId, null);
+	}
+	
+	@GET
+	@Path("/listcategorypromofilter")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ObjectList<Product> getProductListWithCategory(@QueryParam("pageNumber") Integer pageNumber, 
+			@QueryParam("searchKey") String searchKey, @QueryParam("companyId") Long companyId,
+			@QueryParam("categoryId") Long categoryId, @QueryParam("promo") Boolean promoOnly) {
+		return productHandler.getProductListWithCategory(pageNumber, searchKey, companyId, categoryId, promoOnly);
 	}
 	
 	@GET

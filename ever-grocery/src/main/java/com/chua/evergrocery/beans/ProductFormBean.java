@@ -16,6 +16,8 @@ public class ProductFormBean extends FormBean {
 	
 	private Long companyId;
 	
+	private Boolean promo;
+	
 	private TaxType taxType;
 	
 	private Boolean allowSeniorDiscount;
@@ -70,6 +72,14 @@ public class ProductFormBean extends FormBean {
 		this.companyId = companyId;
 	}
 	
+	public Boolean getPromo() {
+		return promo;
+	}
+
+	public void setPromo(Boolean promo) {
+		this.promo = promo;
+	}
+
 	public TaxType getTaxType() {
 		return taxType;
 	}

@@ -9,7 +9,9 @@
 				<ul class="nav nav-tabs">
 					<li class="active"><a href="#info" data-toggle="tab">Info</a></li>
 					<li><a href="#inventory" data-toggle="tab">Inventory</a></li>
+					<!-- ko if: allowStats -->
 					<li><a href="#stats" data-toggle="tab">Stats</a></li>
+					<!-- /ko -->
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="info">
@@ -22,11 +24,13 @@
 							<div data-bind="compose: { model: 'viewmodels/manage/productinventory', activationData: { productId : productId } }"></div>
 						</div>
 					</div>
+					<!-- ko if: allowStats -->
 					<div class="tab-pane" id="stats">
 						<div class="row">
 							<div data-bind="compose: { model: 'viewmodels/manage/productstats', activationData: { productId : productId } }"></div>
 						</div>
 					</div>
+					<!-- /ko -->
 				</div>
 			</div>
 		</div>

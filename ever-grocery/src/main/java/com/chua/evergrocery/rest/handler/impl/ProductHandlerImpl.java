@@ -76,11 +76,11 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	@Override
 	public ObjectList<Product> getProductList(Integer pageNumber, String searchKey, Long companyId) {
-		return getProductListWithCategory(pageNumber, searchKey, companyId, null);
+		return getProductListWithCategory(pageNumber, searchKey, null, companyId, null);
 	}
 	
 	@Override
-	public ObjectList<Product> getProductListWithCategory(Integer pageNumber, String searchKey, Long companyId, Long categoryId) {
+	public ObjectList<Product> getProductListWithCategory(Integer pageNumber, String searchKey, Long companyId, Long categoryId, Boolean promoOnly) {
 		if(searchKey != null && searchKey.length() > 6 && searchKey.matches("[0-9]+")) {
 			List<Product> products = new ArrayList<Product>();
 			ProductDetail productDetail = productDetailService.findByBarcode(searchKey);
@@ -91,7 +91,7 @@ public class ProductHandlerImpl implements ProductHandler {
 			productList.setTotal(products.size());
 			return productList;
 		} else {
-			return productService.findAllWithPagingOrderByName(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, companyId, categoryId);
+			return productService.findAllWithPagingOrderByName(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, promoOnly, companyId, categoryId);
 		}
 	}
 	
@@ -290,6 +290,7 @@ public class ProductHandlerImpl implements ProductHandler {
 		/*product.setBrand(brandService.find(productForm.getBrandId()));*/
 		product.setCategory(categoryService.find(productForm.getCategoryId()));
 		product.setCompany(companyService.find(productForm.getCompanyId()));
+		product.setPromo(productForm.getPromo() != null ? productForm.getPromo() : false);
 		product.setTaxType(productForm.getTaxType() != null ? productForm.getTaxType() : TaxType.VAT);
 		product.setAllowSeniorDiscount(productForm.getAllowSeniorDiscount() != null ? productForm.getAllowSeniorDiscount() : false);
 		product.setAllowPWDDiscount(productForm.getAllowPWDDiscount() != null ? productForm.getAllowPWDDiscount() : false);

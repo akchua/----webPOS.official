@@ -12,6 +12,8 @@
 		<dt>Company:</dt>
 		<dd data-bind="text: product.company"></dd>
 		<br>
+		<dt>Promo:</dt>
+		<dd data-bind="text: product.promo"></dd>
 		<dt>Tax Type:</dt>
 		<dd data-bind="text: product.taxType"></dd>
 		<dt>Allow SCD:</dt>
@@ -20,7 +22,7 @@
 		<dd data-bind="text: product.allowPWDDiscount"></dd>
    	</dl>
    	<hr>
-   	<dl class="dl-horizontal">
+   	<dl data-bind="visible: allowStats" class="dl-horizontal">
 		<dt>Purchase Val.(%):</dt>
 		<dd data-bind="text: product.formattedOverallPurchaseValuePercentage"></dd>
 		<dt>Sales Value (%):</dt>
@@ -29,4 +31,7 @@
 		<dd data-bind="text: product.formattedOverallProfitPercentage"></dd>
    	</dl>
 </div>
+<!-- ifnot: allowStats -->
+<br><br><br><br>
+<!-- /ko -->
 <br><br><br><br><br><br><br><br>

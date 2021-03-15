@@ -21,7 +21,9 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
 			
 			formattedPointsEarned : ko.observable(''),
 			totalItems : ko.observable(),
+			formattedCreatedOn: ko.observable(),
 			formattedPaidOn : ko.observable(),
+			formattedServer: ko.observable(),
 			formattedCashier: ko.observable(),
 			
 			formattedCash : ko.observable(),
@@ -60,10 +62,15 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/customerorderserv
     	
     	self.customerOrderViewModel.formattedPointsEarned(self.customerOrder.formattedPointsEarned);
     	self.customerOrderViewModel.totalItems(self.customerOrder.totalItems);
+    	self.customerOrderViewModel.formattedCreatedOn(self.customerOrder.formattedLongCreatedOn);
     	self.customerOrderViewModel.formattedPaidOn(self.customerOrder.formattedPaidOn);
     	if(self.customerOrder.cashier) {
     		self.customerOrderViewModel.formattedCashier(self.customerOrder.cashier.formattedName);
     		self.allowPrint(true);
+    	}
+    	
+    	if(self.customerOrder.creator) {
+    		self.customerOrderViewModel.formattedServer(self.customerOrder.creator.formattedName);
     	}
 
     	self.customerOrderViewModel.formattedCash(self.customerOrder.formattedCash);

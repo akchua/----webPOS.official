@@ -29,11 +29,11 @@ public class ProductServiceImpl
 	
 	@Override
 	public ObjectList<Product> findAllWithPagingOrderByName(int pageNumber, int resultsPerPage, String searchKey,
-			Long companyId, Long categoryId) {
+			Boolean promoOnly, Long companyId, Long categoryId) {
 		if(categoryId != null) {
-			return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, categoryId, new Order[] { Order.desc("mtdOfftake"), Order.asc("name") });
+			return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, promoOnly, companyId, categoryId, new Order[] { Order.desc("mtdOfftake"), Order.asc("name") });
 		} else {
-			return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, categoryId, new Order[] { Order.asc("name") });
+			return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, promoOnly, companyId, categoryId, new Order[] { Order.asc("name") });
 		}
 		
 	}
@@ -41,7 +41,7 @@ public class ProductServiceImpl
 	@Override
 	public ObjectList<Product> findAllWithPagingOrderByProfit(int pageNumber, int resultsPerPage,
 			String searchKey, Long companyId) {
-		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, null, new Order[] { Order.desc("profitPercentage") });
+		return dao.findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, null, companyId, null, new Order[] { Order.desc("profitPercentage") });
 	}
 	
 	@Override

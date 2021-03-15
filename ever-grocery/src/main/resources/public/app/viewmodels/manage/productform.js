@@ -13,6 +13,8 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice'/*
         	categoryId: ko.observable(),
         	companyId: ko.observable(),
         	
+        	promo: ko.observable(false),
+        	
         	taxType: ko.observable(),
         	allowSeniorDiscount: ko.observable(false),
         	allowPWDDiscount: ko.observable(false)
@@ -39,7 +41,9 @@ define(['plugins/dialog', 'durandal/app', 'knockout', 'modules/productservice'/*
     	self.productFormModel.name(self.product.name);
     	self.productFormModel.displayName(self.product.displayName);
     	self.productFormModel.code(self.product.code);
+    	self.productFormModel.promo(self.product.promo);
     	self.productFormModel.allowSeniorDiscount(self.product.allowSeniorDiscount);
+    	self.productFormModel.allowPWDDiscount(self.product.allowPWDDiscount);
     	
     	/*brandService.getBrandListByName().done(function(brandList) {
     		self.brandList(brandList);

@@ -59,6 +59,8 @@ public class Product extends BaseObject {
 	
 	private TaxType taxType;
 	
+	private Boolean promo;
+	
 	private Boolean allowSeniorDiscount;
 	
 	private Boolean allowPWDDiscount;
@@ -172,6 +174,16 @@ public class Product extends BaseObject {
 
 	public void setTaxType(TaxType taxType) {
 		this.taxType = taxType;
+	}
+
+	@Basic
+	@Column(name = "promo")
+	public Boolean getPromo() {
+		return promo;
+	}
+
+	public void setPromo(Boolean promo) {
+		this.promo = promo;
 	}
 
 	@Basic

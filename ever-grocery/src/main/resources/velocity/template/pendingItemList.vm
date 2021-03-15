@@ -1,0 +1,7 @@
+## Template for Customer Order Item List
+## Has a maximum of 44 columns in a line
+
+PENDING ITEMS:
+#foreach( $formattedPendingItem in $t.FormattedPendingItems)
+$formattedPendingItem
+#end

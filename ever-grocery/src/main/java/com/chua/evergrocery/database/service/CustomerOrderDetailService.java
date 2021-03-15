@@ -18,6 +18,8 @@ public interface CustomerOrderDetailService
 	
 	List<CustomerOrderDetail> findAllByCustomerOrderIdOrderByProductName(Long customerOrderId);
 	
+	List<CustomerOrderDetail> findAllPendingByCompanyOrderByProductName(Long companyId);
+	
 	SalesSummaryBean getSalesSummaryByProductAndDatePaid(Long productId, Date datePaidStart, Date datePaidEnd);
 	
 	SalesSummaryBean getSalesSummaryToday();

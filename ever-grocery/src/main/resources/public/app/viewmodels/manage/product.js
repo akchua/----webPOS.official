@@ -9,13 +9,15 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyse
 		this.companyId = ko.observable();
 		this.categoryId = ko.observable();
 		
+		this.promoOnly = ko.observable(false);
+		
 		this.itemsPerPage = ko.observable(app.user.itemsPerPage);
 		this.totalItems = ko.observable();
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
 		
 		this.enableButtons = ko.observable(true);
-		this.allowStats = app.user.userType.authority < 3;
+		this.allowView = app.user.userType.authority < 4;
 		this.allowPromo = app.user.userType.authority < 3;
 	};
 	
@@ -35,6 +37,10 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyse
 			self.refreshProductList();
 		});
 		
+		self.promoOnly.subscribe(function() {
+			self.refreshProductList();
+		});
+		
 		self.searchKey.subscribe(function(searchKey) {
 			if(searchKey.length >= 3) {
 				self.search();
@@ -47,7 +53,7 @@ define(['durandal/app', 'knockout', 'modules/productservice', 'modules/companyse
 	Product.prototype.refreshProductList = function() {
 		var self = this;
 		
-		productService.getProductListWithCategory(self.currentPage(), self.searchKey(), self.companyId(), self.categoryId(), true).done(function(data) {
+		productService.getProductListWithCategoryAndPromoFilter(self.currentPage(), self.searchKey(), self.promoOnly(), self.companyId(), self.categoryId(), true).done(function(data) {
 			self.productList(data.list);
 			self.totalItems(data.total);
 		});

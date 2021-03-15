@@ -29,6 +29,9 @@
 				<label for="inputCategory">Category</label>
 				<select data-bind="options: categoryList, optionsValue: 'id', optionsText: 'name', optionsCaption: '-- Select Category --', value: productFormModel.categoryId" class="form-control" id="inputCategory"></select>
 				<p data-bind="text: errors.category" class="text-danger"></p>
+				<label class="promoCheckbox">
+					<input data-bind="checked: productFormModel.promo" type="checkbox" name="promoCheckbox"> Promo
+				</label>
 			</div>
 			<div class="form-group">
 				<label for="inputCompany">Company</label>

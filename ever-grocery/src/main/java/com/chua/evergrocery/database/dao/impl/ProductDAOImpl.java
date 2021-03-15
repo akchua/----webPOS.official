@@ -21,12 +21,12 @@ public class ProductDAOImpl
 	@Override
 	public ObjectList<Product> findAllWithPaging(int pageNumber, int resultsPerPage, String searchKey, Long companyId)
 	{
-		return findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, companyId, null, null);
+		return findAllWithPagingAndOrder(pageNumber, resultsPerPage, searchKey, null, companyId, null, null);
 	}
 	
 	@Override
 	public ObjectList<Product> findAllWithPagingAndOrder(int pageNumber, int resultsPerPage, String searchKey,
-			Long companyId, Long categoryId, Order[] orders) {
+			Boolean promoOnly, Long companyId, Long categoryId, Order[] orders) {
 		final Junction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
 		
@@ -40,6 +40,10 @@ public class ProductDAOImpl
 			disjunction.add(conjunction2);
 			disjunction.add(Restrictions.ilike("code", searchKey, MatchMode.ANYWHERE));
 			conjunction.add(disjunction);
+		}
+		
+		if(promoOnly != null && promoOnly) {
+			conjunction.add(Restrictions.eq("promo", Boolean.TRUE));
 		}
 		
 		if(companyId != null) {

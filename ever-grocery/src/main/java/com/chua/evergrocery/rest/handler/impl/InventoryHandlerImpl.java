@@ -37,6 +37,7 @@ import com.chua.evergrocery.utility.SimplePdfWriter;
 import com.chua.evergrocery.utility.StringHelper;
 import com.chua.evergrocery.utility.format.DateFormatter;
 import com.chua.evergrocery.utility.template.InventoryTemplate;
+import com.chua.evergrocery.utility.template.PendingItemListTemplate;
 
 /**
  * @author  Adrian Jasper K. Chua
@@ -191,10 +192,16 @@ public class InventoryHandlerImpl implements InventoryHandler {
 			// Generate text file of inventory
 			final String fileName = StringHelper.convertToFileSafeFormat(company.getName()) + "_inventory_" + DateFormatter.fileSafeShortFormat(new Date()) + ".pdf";
 			final String filePath = fileConstants.getInventoryHome() + fileName;
-			final String temp = new InventoryTemplate(
+			String temp = new InventoryTemplate(
 					company.getName(),
 					inventories)
 			.merge(velocityEngine);
+			
+			final List<CustomerOrderDetail> pendingItemList = customerOrderDetailService.findAllPendingByCompanyOrderByProductName(companyId);
+			temp += new PendingItemListTemplate(pendingItemList
+					)
+			.merge(velocityEngine);
+			
 			SimplePdfWriter.write(temp, "Ever Bazar", filePath, false);
 			
 			final Map<String, Object> extras = new HashMap<String, Object>();

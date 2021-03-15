@@ -82,4 +82,9 @@ public class CustomerOrderDetailServiceImpl
 			Date datePaidEnd) {
 		return dao.findAllByCustomerAndDatePaid(customerId, datePaidStart, datePaidEnd);
 	}
+	
+	@Override
+	public List<CustomerOrderDetail> findAllPendingByCompanyOrderByProductName(Long companyId) {
+		return dao.findAllPendingByCompanyWithOrder(companyId, new Order[] { Order.asc("p.name") });
+	}
 }

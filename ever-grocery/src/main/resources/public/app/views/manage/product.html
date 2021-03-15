@@ -19,7 +19,10 @@
 	<br />
 	
 	<div class="row">
-		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-12"></div>
+		<label class="checkbox-inline col-xs-offset-1 col-xs-2">
+			<input data-bind="checked: promoOnly" type="checkbox" name="recentcheckbox">Show Promo Only
+		</label>
+		<div data-bind="widget: { kind: 'pager', config: { numberOfPagesToShow: 5, itemsPerPage: itemsPerPage, totalItems: totalItems, currentPage: currentPage } }" class="col-md-9"></div>
 	</div>
 	
     <div class="row">
@@ -50,7 +53,7 @@
     					<td>
     						<div class="pull-right">
     							<button data-bind="visible: $parent.allowPromo, click: function() { $parent.createPromo(product.id) } " type="button" class="btn btn-success btn-sm" title="Create Promo"><i class="fa fa-dollar"></i></button>
-    							<button data-bind="visible: $parent.allowStats, click: function() { $parent.view(product.id) } " type="button" class="btn btn-info btn-sm" title="View"><i class="fa fa-eye"></i></button>
+    							<button data-bind="visible: $parent.allowView, click: function() { $parent.view(product.id) } " type="button" class="btn btn-info btn-sm" title="View"><i class="fa fa-eye"></i></button>
     							<button data-bind="click: function() { $parent.details(product.id) }, enable: $parent.enableButtons" type="button" class="btn btn-info btn-sm">Details</button>
     							<button data-bind="click: function() { $parent.edit(product.id) }, enable: $parent.enableButtons" type="button" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
     							<button data-bind="click: function() { $parent.remove(product.id, product.name) }, enable: $parent.enableButtons" type="button" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash"></i></button>

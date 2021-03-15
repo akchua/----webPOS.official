@@ -1,5 +1,5 @@
-define(['knockout', 'modules/productservice'], 
-		function (ko, productService) {
+define(['durandal/app', 'knockout', 'modules/productservice'], 
+		function (app, ko, productService) {
     var ProductInfo = function() {
     	this.productId = ko.observable();
     	
@@ -11,6 +11,7 @@ define(['knockout', 'modules/productservice'],
     		category : ko.observable(),
     		company : ko.observable(),
     		
+    		promo: ko.observable(),
     		taxType : ko.observable(),
     		allowSeniorDiscount : ko.observable(),
     		allowPWDDiscount : ko.observable(),
@@ -19,6 +20,8 @@ define(['knockout', 'modules/productservice'],
     		formattedOverallSaleValuePercentage: ko.observable(),
     		formattedOverallProfitPercentage: ko.observable()
 	    };
+    	
+    	this.allowStats = app.user.userType.authority < 3;
     };
     
     ProductInfo.prototype.activate = function(activationData) {
@@ -36,6 +39,7 @@ define(['knockout', 'modules/productservice'],
     		self.product.category(product.category.name);
     		self.product.company(product.company.name);
     		
+    		self.product.promo(product.promo ? "YES" : "NO");
     		self.product.taxType(product.taxType.displayName);
     		self.product.allowSeniorDiscount(product.allowSeniorDiscount ? "YES" : "NO");
     		self.product.allowPWDDiscount(product.allowPWDDiscount ? "YES" : "NO");

@@ -20,6 +20,8 @@ define(['durandal/app', 'knockout', 'modules/inventoryservice', 'modules/purchas
 		this.totalItems2 = ko.observable();
 		this.currentPage2 = ko.observable(1);
 		this.currentPageSubscription2 = null;
+		
+		this.allowStats = app.user.userType.authority < 3;
     };
     
     ProductInventory.prototype.activate = function(activationData) {
@@ -55,7 +57,7 @@ define(['durandal/app', 'knockout', 'modules/inventoryservice', 'modules/purchas
     ProductInventory.prototype.refreshPurchaseOrderDetailList = function() {
     	var self = this;
     	
-    	purchaseOrderService.getPurchaseOrderDetailListByProduct(self.currentPage(), self.productId(), true).done(function(data) { 
+    	purchaseOrderService.getPurchaseOrderDetailListByProduct(self.currentPage(), self.productId(), false).done(function(data) { 
 			self.purchaseOrderDetailList(data.list);
 			self.totalItems(data.total);
 		});

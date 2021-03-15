@@ -81,6 +81,11 @@ public class BaseUpdatable extends BaseEntity
 	public String getFormattedCreatedOn() {
 		return DateFormatter.prettyFormat(createdOn);
 	}
+	
+	@Transient
+	public String getFormattedLongCreatedOn() {
+		return DateFormatter.longFormat(createdOn);
+	}
 
 	@Override
 	public void setUpdatedOn(Date updatedOn)

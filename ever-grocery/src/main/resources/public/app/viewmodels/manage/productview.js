@@ -1,10 +1,12 @@
-define(['plugins/dialog', 'knockout'], 
-			function (dialog, ko) {
+define(['durandal/app', 'plugins/dialog', 'knockout'], 
+			function (app, dialog, ko) {
     var ProductView = function(product) {
     	this.product = product;
     	
     	this.productId = ko.observable();
     	this.productName = ko.observable();
+    	
+    	this.allowStats = app.user.userType.authority < 3;
     };
     
     ProductView.prototype.activate = function() {

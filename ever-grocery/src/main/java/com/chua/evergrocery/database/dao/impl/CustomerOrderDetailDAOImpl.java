@@ -103,6 +103,22 @@ public class CustomerOrderDetailDAOImpl
 		
 		return findAllByCriterionList(associatedPaths, aliasNames, joinTypes, null, conjunction);
 	}
+	
+	@Override
+	public List<CustomerOrderDetail> findAllPendingByCompanyWithOrder(Long companyId, Order[] orders) {
+		final Junction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("isValid", Boolean.TRUE));
+
+		String[] associatedPaths = { "product", "customerOrder" };
+		String[] aliasNames = { "p", "co" };
+		JoinType[] joinTypes = { JoinType.INNER_JOIN, JoinType.INNER_JOIN };
+		
+		conjunction.add(Restrictions.eq("p.company.id", companyId));
+		conjunction.add(Restrictions.eq("co.isValid", Boolean.TRUE));
+		conjunction.add(Restrictions.eq("co.status", Status.SUBMITTED));
+		
+		return findAllByCriterionList(associatedPaths, aliasNames, joinTypes, orders, conjunction);
+	}
 
 	@Override
 	public CustomerOrderDetail findByOrderAndDetailId(long customerOrderId, long productDetailId) {
