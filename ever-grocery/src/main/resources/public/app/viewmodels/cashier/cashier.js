@@ -10,7 +10,7 @@ define(['durandal/app', 'knockout', 'modules/securityservice', 'modules/customer
 		this.currentPage = ko.observable(1);
 		this.currentPageSubscription = null;
 		
-		this.allowedToDeleteOrder = ko.observable(app.user.userType.authority <= 3);
+		this.allowedToDeleteOrder = ko.observable(app.user.userType.authority < 3);
 		this.enableButtons = ko.observable(true);
 	};
 	
