@@ -76,7 +76,7 @@ public class ProductHandlerImpl implements ProductHandler {
 	
 	@Override
 	public ObjectList<Product> getProductList(Integer pageNumber, String searchKey, Long companyId) {
-		return getProductListWithCategory(pageNumber, searchKey, null, companyId, null);
+		return getProductListWithCategory(pageNumber, searchKey, companyId, null, null);
 	}
 	
 	@Override
