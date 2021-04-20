@@ -271,7 +271,7 @@ public class PurchaseOrderHandlerImpl implements PurchaseOrderHandler {
 							// Compute new purchase budget (total budget - (actual
 							// budget - sales))
 							final Double actualStock = inventory.getStockBudget();
-							product.setPurchaseBudget(product.getTotalBudget() - (actualStock > 0.0 ? actualStock : 0.0));
+							product.setPurchaseBudget(product.getTotalBudget() - actualStock);
 							LOG.info("Computed new purchase budget : " + product.getPurchaseBudget());
 	
 							// Applying new sale rate to product
