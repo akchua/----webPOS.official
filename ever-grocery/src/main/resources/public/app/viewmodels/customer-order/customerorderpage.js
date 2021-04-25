@@ -164,7 +164,9 @@ define(['plugins/router', 'durandal/app', 'knockout', 'modules/soundutility', 'm
     	if(self.barcodeKey() === 'e') {
     		self.submit(false);
     	} else if(self.barcodeKey() === 'd') {
-    		self.printCopy();
+    		customerOrderService.refreshCustomerOrder(self.customerOrderPageModel.customerOrderId()).done(function() {
+    			self.printCopy();
+    		});
     	} else if(self.barcodeKey() === 's') {
     		self.search();
     		self.barcodeKey("");

@@ -199,7 +199,7 @@ private AttributedString makeAttributedString(String fontName, int fontSize, Str
       AttributedString str = new AttributedString(text);      
       //now apply attributes for each block
       int start = 0;
-      int end = text.length();      
+      int end = text.length();
       Map attributes = getFontAttributes(fontName, fontSize, bold, italic);
       str.addAttributes(attributes, start, end);
       return str;
