@@ -112,6 +112,11 @@ public class ProductHandlerImpl implements ProductHandler {
 	}
 	
 	@Override
+	public ObjectList<Product> getProductListByCategory(Integer pageNumber, String searchKey, Long categoryId) {
+		return productService.findAllWithPagingByCategoryOrderByProfit(pageNumber, UserContextHolder.getItemsPerPage(), searchKey, categoryId);
+	}
+	
+	@Override
 	public ObjectList<PriceHistory> getSalePriceHistoryList(Integer pageNumber) {
 		return priceHistoryService.findAllSaleTypeWithin30DaysOrderByCreatedOn(pageNumber, UserContextHolder.getItemsPerPage());
 	}
@@ -159,6 +164,7 @@ public class ProductHandlerImpl implements ProductHandler {
 				product.setCurrentProfitRank(0);
 				product.setMtdOfftake(0.0f);
 				product.setMtdOfftakeUnit(UnitType.DEFAULT);
+				product.setCategoryProfitPercentage(0.0f);
 				
 				result = new ResultBean();
 				result.setSuccess(productService.insert(product) != null);

@@ -51,6 +51,18 @@ define(['jquery'], function ($) {
     		});
     	},
     	
+    	getProductListByCategory: function(pageNumber, searchKey, categoryId, async) {
+    		return $.ajax({
+    			url: '/services/product/listbycategory',
+    			async: async,
+    			data: {
+    				pageNumber: pageNumber - 1,
+    				searchKey: searchKey,
+    				categoryId: categoryId
+    			}
+    		});
+    	},
+    	
     	getSalePriceHistoryList: function(pageNumber, async) {
     		return $.ajax({
     			url: '/services/product/salepricehistory',

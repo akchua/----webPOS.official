@@ -78,6 +78,9 @@ public class Product extends BaseObject {
 	
 	private Float profitPercentage;
 	
+	// Percentage in respective category only (previous month only) (net amount is used)
+	private Float categoryProfitPercentage;
+	
 	// Monthly profit ranking
 	private Integer currentProfitRank;
 	
@@ -314,6 +317,21 @@ public class Product extends BaseObject {
 
 	public void setProfitPercentage(Float profitPercentage) {
 		this.profitPercentage = profitPercentage;
+	}
+	
+	@Basic
+	@Column(name = "category_profit_percentage")
+	public Float getCategoryProfitPercentage() {
+		return categoryProfitPercentage;
+	}
+	
+	@Transient 
+	public String getFormattedCategoryProfitPercentage() {
+		return NumberFormatter.toPercent(categoryProfitPercentage);
+	}
+
+	public void setCategoryProfitPercentage(Float categoryProfitPercentage) {
+		this.categoryProfitPercentage = categoryProfitPercentage;
 	}
 
 	@Basic

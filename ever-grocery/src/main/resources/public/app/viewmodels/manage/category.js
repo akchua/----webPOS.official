@@ -1,4 +1,5 @@
-define(['durandal/app', 'knockout', 'modules/categoryservice', 'viewmodels/manage/categoryform'], function (app, ko, categoryService, CategoryForm) {
+define(['durandal/app', 'knockout', 'modules/categoryservice', 'viewmodels/manage/categoryform', 'viewmodels/manage/categoryview'], 
+			function (app, ko, categoryService, CategoryForm, CategoryView) {
 	var Category = function() {
 		this.categoryList = ko.observable();
 		
@@ -50,6 +51,14 @@ define(['durandal/app', 'knockout', 'modules/categoryservice', 'viewmodels/manag
 			self.refreshCategoryList();
 		});
 	};
+	
+	Category.prototype.view = function(categoryId) {
+    	var self = this;
+    	
+    	categoryService.getCategory(categoryId).done(function(category) {
+    		CategoryView.show(category);
+    	});
+    };
 	
 	Category.prototype.edit = function(categoryId) {
 		var self = this;

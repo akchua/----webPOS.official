@@ -1,0 +1,25 @@
+<div class="modal-content modal-lg">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" data-bind="click: cancel">&times;</button>
+			<h3 align="center" data-bind="text: categoryName"></h3>
+		</div>
+	  
+		<div class="modal-body">
+			<div class="tabbable">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#products" data-toggle="tab">Products</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="products">
+						<div class="row">
+							<div data-bind="compose: { model: 'viewmodels/manage/categoryproducts', activationData: { categoryId : categoryId } }"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+  
+		<div class="modal-footer">
+			<button class="btn btn-warning" type="button" data-bind="click: cancel">Done</button>
+		</div>
+</div>

@@ -44,4 +44,6 @@ public interface TransactionSummaryHandler {
 	void updateDailySalesSummaries(int includedDaysAgo);
 	
 	void updateAllProductMTDOfftake();
+	
+	void updateAllProductCategoryProfitPercentage();
 }

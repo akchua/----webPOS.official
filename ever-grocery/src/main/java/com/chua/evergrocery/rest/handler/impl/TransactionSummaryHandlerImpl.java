@@ -18,6 +18,7 @@ import com.chua.evergrocery.beans.ProductPurchaseSummaryBean;
 import com.chua.evergrocery.beans.ProductSalesSummaryBean;
 import com.chua.evergrocery.beans.PurchaseSummaryBean;
 import com.chua.evergrocery.beans.SalesSummaryBean;
+import com.chua.evergrocery.database.entity.Category;
 import com.chua.evergrocery.database.entity.Company;
 import com.chua.evergrocery.database.entity.CompanyDailySalesSummary;
 import com.chua.evergrocery.database.entity.CompanyMTDPurchaseSummary;
@@ -30,6 +31,7 @@ import com.chua.evergrocery.database.entity.ProductDailySalesSummary;
 import com.chua.evergrocery.database.entity.ProductDetail;
 import com.chua.evergrocery.database.entity.ProductMTDPurchaseSummary;
 import com.chua.evergrocery.database.entity.ProductMTDSalesSummary;
+import com.chua.evergrocery.database.service.CategoryService;
 import com.chua.evergrocery.database.service.CompanyDailySalesSummaryService;
 import com.chua.evergrocery.database.service.CompanyMTDPurchaseSummaryService;
 import com.chua.evergrocery.database.service.CompanyMTDSalesSummaryService;
@@ -60,6 +62,9 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 
 	@Autowired
 	private CompanyService companyService;
+	
+	@Autowired
+	private CategoryService categoryService;
 	
 	@Autowired
 	private ProductService productService;
@@ -527,6 +532,22 @@ public class TransactionSummaryHandlerImpl implements TransactionSummaryHandler 
 		}
 		
 		productService.batchUpdate(products);
+	}
+	
+	@Override
+	public void updateAllProductCategoryProfitPercentage() {
+		final List<Category> categories = categoryService.findAllList();
+		
+		for(Category category : categories) {
+			final List<Product> products = productService.findAllByCategoryOrderByName(category.getId());
+			
+			float categoryTotal = 0.0f;
+			
+			for(Product product : products) categoryTotal += product.getOverallProfitPercentage();
+			for(Product product : products) product.setCategoryProfitPercentage(product.getOverallProfitPercentage() / categoryTotal * 100.0f);
+			
+			productService.batchUpdate(products);
+		}
 	}
 	
 	private void clearAllPurchaseValuePercentage() {

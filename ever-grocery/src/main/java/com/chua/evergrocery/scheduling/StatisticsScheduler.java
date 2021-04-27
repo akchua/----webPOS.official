@@ -66,6 +66,23 @@ public class StatisticsScheduler {
 		
 		this.monthlyCustomerSummaryUpdate();
 		this.monthlyProfitRankingUpdate();
+		this.monthlyProductCategoryProfitPercentageUpdate();
+	}
+	
+	/**
+	 * Monthly Product Category Profit Percentage Update
+	 * fired by @monthlySalesStatisticsUpdate after completion
+	 */
+	//@Scheduled(cron = "0 53 16 * * ?")
+	public void monthlyProductCategoryProfitPercentageUpdate() {
+		final Date start = new Date();
+		LOG.info("Starting monthly product category profit percentage update");
+		
+		transactionSummaryHandler.updateAllProductCategoryProfitPercentage();
+		
+		final Date end = new Date();
+		final Float seconds = (end.getTime() - start.getTime()) / 1000.0f;
+		LOG.info("Monthly product category profit percentage update complete. Total execution time : " + seconds + "s");
 	}
 	
 	/**
@@ -179,11 +196,10 @@ public class StatisticsScheduler {
 	}*/
 	
 	/*@Autowired
-	private CustomerOrderHandler customerOrderHandler;
+	private CustomerOrderHandler customerOrderHandler;*/
 	
-	@Scheduled(cron = "0/15 * * * * ?")
+	@Scheduled(cron = "0 14 23 * * ?")
 	public void test() {
-		customerOrderHandler.printReceipt(8l, -12404.4f);
-		System.out.println("RUN#################################");
-	}*/
+		this.monthlyProductCategoryProfitPercentageUpdate();
+	}
 }
