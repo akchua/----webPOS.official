@@ -13,6 +13,8 @@ public enum UnitType {
 	
 	SACK ("Sack", "sck"),
 	
+	TIN("Tin", "tin"),
+	
 	PIECE ("Piece", "pc"),
 	
 	PACK ("Pack", "pk"),

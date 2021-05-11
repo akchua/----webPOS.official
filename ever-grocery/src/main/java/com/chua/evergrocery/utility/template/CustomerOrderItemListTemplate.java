@@ -41,7 +41,7 @@ public class CustomerOrderItemListTemplate extends AbstractTemplate {
 		
 		for(CustomerOrderDetail orderItem : customerOrderItems) {
 			final String categoryName = orderItem.getProductDetail().getProduct().getCategory().getName();
-			if((orderItem.getUnitType().equals(UnitType.CASE) || orderItem.getUnitType().equals(UnitType.BUNDLE) || orderItem.getUnitType().equals(UnitType.SACK))
+			if((orderItem.getUnitType().equals(UnitType.CASE) || orderItem.getUnitType().equals(UnitType.BUNDLE) || orderItem.getUnitType().equals(UnitType.SACK) || orderItem.getUnitType().equals(UnitType.TIN))
 					&& orderItem.getQuantity() >= 1.0f) {
 				wholeItems.add(orderItem);
 			} else if(categoryName.equals("Cigarette") || categoryName.equals("Counter Item")) {
