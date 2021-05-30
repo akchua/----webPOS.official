@@ -657,7 +657,7 @@ public class CustomerOrderHandlerImpl implements CustomerOrderHandler {
 	public ResultBean addItemByBarcode(String barcode, Long customerOrderId) {
 		final ResultBean result;
 		
-		if(barcode != null && barcode.length() > 4) {
+		if(barcode != null && !barcode.isEmpty() && barcode.length() > 4) {
 			final ProductDetail productDetail;
 			String[] temp = barcode.split("\\*|;");
 			if(temp.length == 2) {
