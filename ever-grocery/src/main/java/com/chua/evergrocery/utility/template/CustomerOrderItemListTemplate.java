@@ -45,7 +45,7 @@ public class CustomerOrderItemListTemplate extends AbstractTemplate {
 					|| orderItem.getUnitType().equals(UnitType.BUNDLE)
 					|| orderItem.getUnitType().equals(UnitType.SACK)
 					|| orderItem.getUnitType().equals(UnitType.TIN)
-					|| orderItem.getContentUnit() != null ? orderItem.getContentUnit().equals(UnitType.TIN) : Boolean.FALSE)
+					|| (orderItem.getContentUnit() != null && orderItem.getContentUnit().equals(UnitType.TIN)))
 					&& orderItem.getQuantity() >= 1.0f) {
 				wholeItems.add(orderItem);
 			} else if(categoryName.equals("Cigarette") || categoryName.equals("Counter Item")) {
